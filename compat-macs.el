@@ -82,7 +82,7 @@ attributes are handled, all others are ignored:
          (body `(progn
                   ,(funcall def-fn realname version)
                   (,@(cond
-                      ((or compat--disable-defer force)
+                      (force
                        '(progn))
                       ((or (or (not version)
                                (version< emacs-version version))
