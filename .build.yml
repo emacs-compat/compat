@@ -1,0 +1,10 @@
+image: alpine/edge
+packages:
+- emacs
+tasks:
+- setup: |
+    apk add emacs
+- build: |
+    make -C compat compile
+- check: |
+    make -C compat test

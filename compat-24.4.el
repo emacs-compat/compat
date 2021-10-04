@@ -1,0 +1,142 @@
+;;; compat-24.4.el --- Compatibility Layer for Emacs 24.4  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2021 Free Software Foundation, Inc.
+
+;; Author: Philip Kaludercic <philipk@posteo.net>
+;; Keywords: lisp
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Find here the functionality added in Emacs 24.4, needed by older
+;; versions.
+;;
+;; Do NOT load this library manually.  Instead require `compat'.
+
+;;; Code:
+
+(eval-and-compile (require 'compat-macs))
+
+;;;; Defined in data.c
+
+(compat-advise = (number-or-marker &rest numbers-or-markers)
+  "Handle multiple arguments."
+  (catch 'fail
+    (while numbers-or-markers
+      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+        (throw 'fail nil))
+      (setq number-or-marker (pop numbers-or-markers)))
+    t))
+
+(compat-advise < (number-or-marker &rest numbers-or-markers)
+  "Handle multiple arguments."
+  (catch 'fail
+    (while numbers-or-markers
+      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+        (throw 'fail nil))
+      (setq number-or-marker (pop numbers-or-markers)))
+    t))
+
+(compat-advise > (number-or-marker &rest numbers-or-markers)
+  "Handle multiple arguments."
+  (catch 'fail
+    (while numbers-or-markers
+      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+        (throw 'fail nil))
+      (setq number-or-marker (pop numbers-or-markers)))
+    t))
+
+(compat-advise <= (number-or-marker &rest numbers-or-markers)
+  "Handle multiple arguments."
+  (catch 'fail
+    (while numbers-or-markers
+      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+        (throw 'fail nil))
+      (setq number-or-marker (pop numbers-or-markers)))
+    t))
+
+(compat-advise >= (number-or-marker &rest numbers-or-markers)
+  "Handle multiple arguments."
+  (catch 'fail
+    (while numbers-or-markers
+      (unless (funcall oldfun number-or-marker (pop numbers-or-markers))
+        (throw 'fail nil)))
+    t))
+
+;;;; Defined in subr.el
+
+(compat-defmacro with-eval-after-load (file &rest body)
+  "Execute BODY after FILE is loaded.
+FILE is normally a feature name, but it can also be a file name,
+in case that file does not provide any feature.  See `eval-after-load'
+for more details about the different forms of FILE and their semantics."
+  (declare (indent 1) (debug (form def-body)))
+  `(eval-after-load ,file (lambda () ,@body)))
+
+(compat-defun special-form-p (object)
+  "Non-nil if and only if OBJECT is a special form."
+  (if (and (symbolp object) (fboundp object))
+      (setq object (indirect-function object)))
+  (and (subrp object) (eq (cdr (subr-arity object)) 'unevalled)))
+
+(compat-defun macrop (object)
+  "Non-nil if and only if OBJECT is a macro."
+  (let ((def (indirect-function object)))
+    (when (consp def)
+      (or (eq 'macro (car def))
+          (and (autoloadp def) (memq (nth 4 def) '(macro t)))))))
+
+(compat-defun string-suffix-p (suffix string  &optional ignore-case)
+  "Return non-nil if SUFFIX is a suffix of STRING.
+If IGNORE-CASE is non-nil, the comparison is done without paying
+attention to case differences."
+  (let ((start-pos (- (length string) (length suffix))))
+    (and (>= start-pos 0)
+         (eq t (compare-strings suffix nil nil
+                                string start-pos nil ignore-case)))))
+
+(compat-advise split-string (string &optional separators omit-nulls trim)
+  "Handle optional argument TRIM."
+  (let* ((token (funcall oldfun string separators omit-nulls))
+         (trimmed (if trim
+                      (mapcar
+                       (lambda (token)
+                         (when (string-match (concat "\\`" trim) token)
+                           (setq token (substring token (match-end 0))))
+                         (when (string-match (concat trim "\\'") token)
+                           (setq token (substring token 0 (match-beginning 0))))
+                         token)
+                       token)
+                    token)))
+    (if omit-nulls (delete "" trimmed) trimmed)))
+
+(compat-defun delete-consecutive-dups (list &optional circular)
+  "Destructively remove `equal' consecutive duplicates from LIST.
+First and last elements are considered consecutive if CIRCULAR is
+non-nil."
+  (let ((tail list) last)
+    (while (cdr tail)
+      (if (equal (car tail) (cadr tail))
+          (setcdr tail (cddr tail))
+        (setq last tail
+              tail (cdr tail))))
+    (if (and circular
+             last
+             (equal (car tail) (car list)))
+        (setcdr last nil)))
+  list)
+
+(provide 'compat-24.4)
+;;; compat-24.4.el ends here
