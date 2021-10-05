@@ -159,7 +159,7 @@ attributes (see `compat-generate-common')."
      (lambda (realname)
        (cond
         ((memq type '(func macro))
-         `(fboundp ',realname))
+         `(fboundp ',name))
         ((eq type 'advice)
          ;; TODO: Improve the check if the advice already has been
          ;;       installed or still has to be added.
