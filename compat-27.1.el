@@ -35,19 +35,34 @@
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  (catch 'improper
-    (let ((length 0) prev)
-      (while object
-        (unless (consp object)
-          ;; dotted
-          (throw 'improper nil))
-        (when (memq object prev)
-          ;; circular
-          (throw 'improper nil))
-        (setq prev (cons object prev)
-              object (cdr object)
-              length (1+ length)))
-      length)))
+  :min-version "26.1"
+  :max-version "26.3"
+  :realname compat--proper-list-p-length-signal
+  (condition-case nil
+      (length object)
+    (wrong-type-argument nil)
+    (circular-list nil)))
+
+(compat-defun proper-list-p (object)
+  "Return OBJECT's length if it is a proper list, nil otherwise.
+A proper list is neither circular nor dotted (i.e., its last cdr
+is nil)."
+  :max-version "25.3"
+  :realname compat--proper-list-p-tortoise-hare
+  (when (listp object)
+    (catch 'cycle
+      (let ((hare object) (tortoise object)
+            (max 2) (q 2) )
+        (while (consp hare)
+          (setq hare (cdr hare))
+          (when (and (or (/= 0 (setq q (1- q)))
+                         (ignore
+                          (setq max (ash max 1)
+                                q max
+                                tortoise hare)))
+                     (eq hare tortoise))
+            (throw 'cycle nil)))
+        (and (null hare) (length object))))))
 
 (compat-defun string-distance (string1 string2 &optional bytecompare)
   "Return Levenshtein distance between STRING1 and STRING2.
