@@ -94,7 +94,7 @@ attributes are handled, all others are ignored:
                       ',`((,(concat "\\_<\\("
                                     (regexp-quote (symbol-name name))
                                     "\\)\\_>")
-                           1 font-lock-preprocessor-face))))
+                           1 font-lock-preprocessor-face prepend))))
                  ,(funcall install-fn realname))))
     `(progn
        ,(funcall def-fn realname version)
