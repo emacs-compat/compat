@@ -63,6 +63,9 @@
 
 ;;; Code:
 
+(when (version< emacs-version "28")
+  (error "compat-tests.el requires at least Emacs 28 or newer"))
+
 (require 'ert)
 (require 'compat-macs)
 
