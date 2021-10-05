@@ -82,30 +82,30 @@ attributes are handled, all others are ignored:
                              (match-string 1 file)))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
-         (body `(progn
-                  ,(funcall def-fn realname version)
-                  (,@(cond
-                      (force
-                       '(progn))
-                      ((and (or (not version)
-                                (version< emacs-version version))
-                            (or (not min-version)
-                                (version<= min-version emacs-version))
-                            (or (not max-version)
-                                (version<= emacs-version max-version)))
-                       `(unless ,(funcall check-fn realname)))
-                      ('(compat--ignore)))
-                   ,(unless (plist-get attr :no-highlight)
-                      `(font-lock-add-keywords
-                        'emacs-lisp-mode
-                        `((,(concat "\\_<\\("
+         (body `(,@(cond
+                    (force
+                     '(progn))
+                    ((and (or (not version)
+                              (version< emacs-version version))
+                          (or (not min-version)
+                              (version<= min-version emacs-version))
+                          (or (not max-version)
+                              (version<= emacs-version max-version)))
+                     `(unless ,(funcall check-fn realname)))
+                    ('(compat--ignore)))
+                 ,(unless (plist-get attr :no-highlight)
+                    `(font-lock-add-keywords
+                      'emacs-lisp-mode
+                      ',`((,(concat "\\_<\\("
                                     (regexp-quote (symbol-name name))
                                     "\\)\\_>")
                            1 font-lock-preprocessor-face))))
-                   ,(funcall install-fn realname)))))
-    (if (and feature (not compat--disable-defer))
-        `(eval-after-load ',feature (lambda () ,body))
-      body)))
+                 ,(funcall install-fn realname))))
+    `(progn
+       ,(funcall def-fn realname version)
+       ,(if (and feature (not compat--disable-defer))
+            `(eval-after-load ',feature (lambda () ,body))
+          body))))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
