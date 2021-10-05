@@ -47,6 +47,9 @@
 ;; older versions of Emacs (e.g. subr-x).
 (compat-advise require (feature &optional filename noerror)
   "Avoid throwing an error if library has compatibility code."
+  ;; As the compatibility advise around `require` is more a hack than
+  ;; of of actual value, the highlighting is supressed.
+  :no-highlight t
   :force t
   (condition-case err
       (funcall oldfun feature filename noerror)

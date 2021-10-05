@@ -57,6 +57,9 @@ attributes are handled, all others are ignored:
 - :force :: Non-nil means the compatibility code is installed no
   matter what.
 
+- :no-highlight :: Do not highlight this definition as
+  compatibility function.
+
 - :version :: Manual specification of the version the compatee
   code was defined in (string).
 
@@ -92,6 +95,13 @@ attributes are handled, all others are ignored:
                                 (version<= emacs-version max-version)))
                        `(unless ,(funcall check-fn realname)))
                       ('(compat--ignore)))
+                   ,(unless (plist-get attr :no-highlight)
+                      `(font-lock-add-keywords
+                        'emacs-lisp-mode
+                        `((,(concat "\\_<\\("
+                                    (regexp-quote (symbol-name name))
+                                    "\\)\\_>")
+                           1 font-lock-preprocessor-face))))
                    ,(funcall install-fn realname)))))
     (if (and feature (not compat--disable-defer))
         `(eval-after-load ',feature (lambda () ,body))
