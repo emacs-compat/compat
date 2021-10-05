@@ -321,15 +321,15 @@ Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by
 calling NAME, where the arguments passed to NAME are used
 as the new values of the bound variables in the recursive invocation."
-  ;; :feature subr-x
+  :feature subr-x
   (declare (indent 2) (debug (symbolp (&rest (symbolp form)) body)))
   (let* ((fargs (mapcar (lambda (b) (if (consp b) (car b) b)) bindings))
          (aargs (mapcar (lambda (b) (if (consp b) (cadr b))) bindings))
          (fn (make-symbol "self"))
-         (macro (lambda (&rest args) `(apply ',fn (list ,@args)))))
-    `(letrec ((,fn (lambda ,fargs . ,(macroexpand-all
-                                      (macroexp-progn body)
-                                      (list (cons name macro))))))
+         (macro (lambda (&rest args) `(apply ,fn (list ,@args)))))
+    `(letrec ((,fn (lambda ,fargs ,(macroexpand-all
+                                    (macroexp-progn body)
+                                    (list (cons name macro))))))
        (apply ,fn (list ,@aargs)))))
 
 ;;;; Defined in files.el
