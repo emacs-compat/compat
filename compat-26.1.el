@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(eval-and-compile (require 'compat-macs))
+(eval-when-compile (require 'compat-macs))
 
 ;;;; Defined in fns.c
 
