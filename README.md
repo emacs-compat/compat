@@ -1,4 +1,5 @@
-* COMPATibility Library for Emacs               -*- mode: outline; -*-
+COMPATibility Library for Emacs
+===============================
 
 Find here the source for compat.el, a forwards-compatibility library
 for (GNU) Emacs Lisp.
@@ -8,13 +9,15 @@ package developers that wish to make use of newer functionality, not
 provided in older versions of Emacs, without breaking compatibility
 for users bound to specific Emacs releases.
 
-** Installation
+Installation
+------------
 
-compat.el shouldn't be installed directly, but downloaded from GNU
-ELPA.  If necessary, this can be done using M-x package-install-file
+compat.el shouldn't be installed directly, but downloaded from [GNU
+ELPA].  If necessary, this can be done using M-x package-install-file
 in the current working directory.
 
-** Usage
+Usage
+-----
 
 The intended use-case for this library is for package developers to
 add as a dependency in the header:
@@ -26,25 +29,21 @@ that all the functions and macros that compat.el provides are
 automatically accessible or made accessible as soon as the right
 libraries are loaded.
 
-** Contribute
+Contribute
+----------
 
 As compat.el is distribed as part of GNU ELPA, and therefore requires
-a copyright assignment to the FSF, for all non-trivial code
-contributions:
+a [copyright assignment] to the FSF, for all non-trivial code
+contributions.
 
-    https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
+Source code
+-----------
 
-*** Source code
+The project is managed can be found on [SourceHut] but has a
+(disfavoured) [GitHub] mirror as well.
 
-The project is managed can be found on SourceHut
-
-    https://sr.ht/~pkal/compat
-
-but has a (disfavoured) GitHub mirror as well
-
-    https://github.com/phikal/compat.el
-
-*** Bug and patches
+Bug and patches
+---------------
 
 Patches, bug reports and comments can be sent to the mailing list
 
@@ -56,7 +55,13 @@ the bundled Makefile:
 
     make test
 
-** Distribution
+Distribution
+------------
 
 compat.el and all other files in this directory are distributed under
 the GPL, Version 3 (like Emacs itself).
+
+[GNU ELPA]: http://elpa.gnu.org/packages/compat.html
+[copyright assignment]: https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
+[SourceHut]: https://sr.ht/~pkal/compat
+[GitHub]: https://github.com/phikal/compat.el
