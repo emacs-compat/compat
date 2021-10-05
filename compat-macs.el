@@ -25,11 +25,6 @@
 
 ;;; Code:
 
-(defvar compat--disable-defer nil
-  "Prevent compatibility code from being deferred.
-This is used for testing, and should not be set to a non-nil
-value otherwise.")
-
 (defmacro compat--ignore (&rest _)
   "Ignore all arguments."
   nil)
@@ -103,7 +98,7 @@ attributes are handled, all others are ignored:
                  ,(funcall install-fn realname))))
     `(progn
        ,(funcall def-fn realname version)
-       ,(if (and feature (not compat--disable-defer))
+       ,(if feature
             `(eval-after-load ',feature (lambda () ,body))
           body))))
 
