@@ -44,12 +44,7 @@
   "Apply FUNC to each element of SEQUENCE.
 Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
-  (let (result)
-    (mapc
-     (lambda (elem)
-       (setq result (nconc result (funcall func elem))))
-     sequence)
-    result))
+  (apply #'nconc (mapcar func sequence)))
 
 (compat-advise line-number-at-pos (&optional position absolute)
   "Handle optional argument ABSOLUTE:
