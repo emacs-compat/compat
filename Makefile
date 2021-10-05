@@ -3,14 +3,14 @@
 .SUFFIXES: .el .elc
 
 EMACS = emacs
-BYTEC = compat-24.2.elc \
+BYTEC = compat-macs.elc \
+	compat-24.2.elc \
 	compat-24.3.elc \
 	compat-24.4.elc \
 	compat-25.1.elc \
 	compat-26.1.elc \
 	compat-27.1.elc \
 	compat-28.1.elc \
-	compat-macs.elc \
 	compat.elc
 
 all: compile test
