@@ -42,7 +42,6 @@
 ;; - line-number-at-pos (`compat--line-number-at-pos')
 ;; - macroexp-file-name (`compat--macroexp-file-name')
 ;; - make-nearby-temp-file (`compat--make-nearby-temp-file')
-;; - named-let (`compat--named-let')
 ;; - package-get-version (`compat--package-get-version')
 ;; - recenter (`compat--recenter')
 ;; - replace-regexp-in-region (`compat--replace-regexp-in-region')
@@ -1196,6 +1195,13 @@ the compatibility function."
                (compat--should "Prompt (default abc def): " "Prompt" "abc def")
                (compat--should "Prompt 10: " "Prompt %d" nil 10)
                (compat--should "Prompt \"abc\" (default 3): " "Prompt %S" 3 "abc")))
+
+(ert-deftest compat-named-let ()
+  "Check if `named-let' was implemented properly."
+  (should (= (compat--named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
+             8))
+  (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
+             (expt 2 8))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
