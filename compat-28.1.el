@@ -452,5 +452,22 @@ The previous values will be be restored upon exit."
                variables)
      ,@body))
 
+;;;; Defined in button.el
+
+(compat-defun button-buttonize (string callback &optional data)
+  "Make STRING into a button and return it.
+When clicked, CALLBACK will be called with the DATA as the
+function argument.  If DATA isn't present (or is nil), the button
+itself will be used instead as the function argument."
+  :feature button
+  (propertize string
+              'face 'button
+              'button t
+              'follow-link t
+              'category t
+              'button-data data
+              'keymap button-map
+              'action callback))
+
 (provide 'compat-28.1)
 ;;; compat-28.1.el ends here
