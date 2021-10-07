@@ -62,9 +62,6 @@
 
 ;;; Code:
 
-(when (version< emacs-version "28")
-  (error "compat-tests.el requires at least Emacs 28 or newer"))
-
 (require 'ert)
 
 (eval-when-compile
@@ -86,45 +83,55 @@
   (let ((cfn (or compat--compat-fn
                  (intern (format "compat--%s" compat--current-fn))))
         (rfn compat--current-fn))
-    `(progn
-       (should (equal (,cfn ,@input) ,result))
-       (should (equal (,rfn ,@input) ,result)))))
+    (macroexp-progn
+     (list
+      `(should (equal (,cfn ,@input) ,result))
+      (and (fboundp rfn)
+           `(should (equal (,rfn ,@input) ,result)))))))
 
 (defmacro compat--should* (result &rest input)
   "Generate code for test with INPUT evaluating to RESULT."
   (let ((cfn (or compat--compat-fn
                  (intern (format "compat--%s" compat--current-fn))))
         (rfn compat--current-fn))
-    `(progn
-       (should (equal (funcall (apply-partially #',cfn #',rfn) ,@input) ,result))
-       (should (equal (,rfn ,@input) ,result)))))
+    (macroexp-progn
+     (list
+      `(should (equal (funcall (apply-partially #',cfn #',rfn) ,@input) ,result))
+      (and (fboundp rfn)
+           `(should (equal (,rfn ,@input) ,result)))))))
 
 (defmacro compat--mshould (result &rest input)
   "Generate code for test with INPUT evaluating to RESULT."
   (let ((cfn (or compat--compat-fn
                  (intern (format "compat--%s" compat--current-fn))))
         (rfn compat--current-fn))
-    `(progn
-       (should (equal (macroexpand-all `(,',cfn ,,@input)) ,result))
-       (should (equal (macroexpand-all `(,',rfn ,,@input)) ,result)))))
+    (macroexp-progn
+     (list
+      `(should (equal (macroexpand-all `(,',cfn ,,@input)) ,result))
+      (and (fboundp rfn)
+           `(should (equal (macroexpand-all `(,',rfn ,,@input)) ,result)))))))
 
 (defmacro compat--error (error &rest input)
   "Generate code for test FN with INPUT to signal ERROR."
   (let ((cfn (or compat--compat-fn
                  (intern (format "compat--%s" compat--current-fn))))
         (rfn compat--current-fn))
-    `(progn
-       (should-error (,cfn ,@input) :type ',error)
-       (should-error (,rfn ,@input) :type ',error))))
+    (macroexp-progn
+     (list
+      `(should-error (,cfn ,@input) :type ',error)
+      (and (fboundp rfn)
+           `(should-error (,rfn ,@input) :type ',error))))))
 
 (defmacro compat--error* (error &rest input)
   "Generate code for test FN with INPUT to signal ERROR."
   (let ((cfn (or compat--compat-fn
                  (intern (format "compat--%s" compat--current-fn))))
         (rfn compat--current-fn))
-    `(progn
-       (should-error (funcall (apply-partially #',cfn #',rfn) ,@input) :type ',error)
-       (should-error (,rfn ,@input) :type ',error))))
+    (macroexp-progn
+     (list
+      `(should-error (funcall (apply-partially #',cfn #',rfn) ,@input) :type ',error)
+      (and (fboundp rfn)
+           `(should-error (,rfn ,@input) :type ',error))))))
 
 ;; FIXME: extract the name of the test out of the ERT-test, instead
 ;;        of having to re-declare the name of the test redundantly.
@@ -192,12 +199,17 @@ the compatibility function."
                (compat--should 4 "ab" "abababab" 3)
                (compat--should nil "ab" "ababac" 3)
                (compat--should nil "aaa" "aa")
-               (compat--should 5
-                               (make-string 2 130)
-                               (concat "helló" (make-string 5 130 t) "bár"))
-               (compat--should 5
-                               (make-string 2 127)
-                               (concat "helló" (make-string 5 127 t) "bár"))
+	       ;; The `make-string' calls with three arguments have been replaced
+	       ;; here with the result of their evaluation, to avoid issues with
+	       ;; older versions of Emacs that only support two arguments.
+	       (compat--should 5
+			       (make-string 2 130)
+			       ;; Per (concat "helló" (make-string 5 130 t) "bár")
+			       "hellóbár")
+	       (compat--should 5
+			       (make-string 2 127)
+			       ;; Per (concat "helló" (make-string 5 127 t) "bár")
+			       "hellóbár")
                (compat--should 1 "\377" "a\377ø")
                (compat--should 1 "\377" "a\377a")
                (compat--should nil (make-string 1 255) "a\377ø")
@@ -509,7 +521,16 @@ the compatibility function."
   "Check if `string-distance' was implemented correctly."
   (compat-test string-distance
                (compat--should 3 "kitten" "sitting")     ;from wikipedia
-               (compat--should 0 "" "")                  ;trivial examples
+               (if (version<= "28" emacs-version) ;trivial examples
+                   (compat--should 0 "" "")
+                 ;; Up until Emacs 28, `string-distance' had a bug
+                 ;; when comparing two empty strings. This was fixed
+                 ;; in the following commit:
+                 ;; https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=c44190c
+                 ;;
+                 ;; Therefore, we must make sure, that the test
+                 ;; doesn't fail because of this bug:
+                 (should (= (compat--string-distance "" "") 0)))
                (compat--should 0 "a" "a")
                (compat--should 1 "" "a")
                (compat--should 1 "b" "a")
@@ -526,7 +547,8 @@ the compatibility function."
                  "aaa"                  ;longer string
                  ))
     (should-not (string-match-p (with-no-warnings compat--regexp-unmatchable) str))
-    (should-not (string-match-p regexp-unmatchable str))))
+    (when (boundp 'regexp-unmatchable)
+      (should-not (string-match-p regexp-unmatchable str)))))
 
 (ert-deftest compat-regexp-opt ()
   "Check if `regexp-opt' advice was defined correctly."
@@ -574,35 +596,36 @@ the compatibility function."
                   ("\\.awk\\'" . awk-mode))
                 #'string-match-p)))
 
-(ert-deftest compat-alist-get-1 ()
-  "Check if `alist-get' was advised correctly."
-  (compat-test (alist-get compat--alist-get-handle-testfn)
-               ;; Fallback behaviour:
-               (compat--should* nil 1 nil)                      ;empty list
-               (compat--should* 'a 1 '((1 . a)))                  ;single element list
-               (compat--should* nil 1 '(1))
-               (compat--should* 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
-               (compat--should* nil 2 '(1 2 3))
-               (compat--should* 'b 2 '(1 (2 . b) 3))
-               (compat--should* nil 2 '((1 . a) 2 (3 . c)))
-               (compat--should* 'a 1 '((3 . c) (2 . b) (1 . a)))
-               (compat--should* nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
+(when (fboundp 'alist-get)
+  (ert-deftest compat-alist-get-1 ()
+    "Check if `alist-get' was advised correctly."
+    (compat-test (alist-get compat--alist-get-handle-testfn)
+      ;; Fallback behaviour:
+      (compat--should* nil 1 nil)                      ;empty list
+      (compat--should* 'a 1 '((1 . a)))                  ;single element list
+      (compat--should* nil 1 '(1))
+      (compat--should* 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
+      (compat--should* nil 2 '(1 2 3))
+      (compat--should* 'b 2 '(1 (2 . b) 3))
+      (compat--should* nil 2 '((1 . a) 2 (3 . c)))
+      (compat--should* 'a 1 '((3 . c) (2 . b) (1 . a)))
+      (compat--should* nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
 
-               ;; With testfn (advised behaviour):
-               (compat--should* 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
-               (compat--should* 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
-               (compat--should* '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
-               (compat--should* 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
-                                (lambda (s1 s2) (not (string= s1 s2))))
-               (compat--should* 'emacs-lisp-mode
-                                "file.el"
-                                '(("\\.c\\'" . c-mode)
-                                  ("\\.p\\'" . pascal-mode)
-                                  ("\\.el\\'" . emacs-lisp-mode)
-                                  ("\\.awk\\'" . awk-mode))
-                                nil nil #'string-match-p)
-               (compat--should* 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
-               (compat--should* 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore)))
+      ;; With testfn (advised behaviour):
+      (compat--should* 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
+      (compat--should* 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
+      (compat--should* '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
+      (compat--should* 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
+                       (lambda (s1 s2) (not (string= s1 s2))))
+      (compat--should* 'emacs-lisp-mode
+                       "file.el"
+                       '(("\\.c\\'" . c-mode)
+                         ("\\.p\\'" . pascal-mode)
+                         ("\\.el\\'" . emacs-lisp-mode)
+                         ("\\.awk\\'" . awk-mode))
+                       nil nil #'string-match-p)
+      (compat--should* 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
+      (compat--should* 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
 (ert-deftest compat-alist-get-2 ()
   "Check if `alist-get' was implemented correctly."
@@ -1221,6 +1244,11 @@ the compatibility function."
     (compat--should nil "dir/file")
     (compat--should t "dir/subdir/")
     (compat--should nil "dir/subdir")))
+
+(ert-deftest compat-indirect-function ()
+  "Check if `indirect-function' was advised properly."
+  (compat-test indirect-function
+    ))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
