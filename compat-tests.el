@@ -66,15 +66,17 @@
   (error "compat-tests.el requires at least Emacs 28 or newer"))
 
 (require 'ert)
-(require 'compat-macs)
 
-(load "compat-24.2.el" nil nil nil t)
-(load "compat-24.3.el" nil nil nil t)
-(load "compat-24.4.el" nil nil nil t)
-(load "compat-25.1.el" nil nil nil t)
-(load "compat-26.1.el" nil nil nil t)
-(load "compat-27.1.el" nil nil nil t)
-(load "compat-28.1.el" nil nil nil t)
+(eval-when-compile
+  (require 'compat-macs)
+
+  (load "compat-24.2.el" nil nil nil t)
+  (load "compat-24.3.el" nil nil nil t)
+  (load "compat-24.4.el" nil nil nil t)
+  (load "compat-25.1.el" nil nil nil t)
+  (load "compat-26.1.el" nil nil nil t)
+  (load "compat-27.1.el" nil nil nil t)
+  (load "compat-28.1.el" nil nil nil t))
 
 (defvar compat--current-fn nil)
 (defvar compat--compat-fn nil)
