@@ -1042,6 +1042,7 @@ the compatibility function."
                (compat--should t 'defun)
                (compat--should t 'defmacro)
                (compat--should nil 'defalias)
+               (compat--should nil 'foobar)
                (compat--should nil 'if)
                (compat--should nil '+)
                (compat--should nil 1)
