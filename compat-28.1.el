@@ -133,7 +133,7 @@ continuing as if the error did not occur."
 
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
-  (funcall oldfun (substring string from to)))
+  (funcall oldfun (substring string (or from 0) to)))
 
 ;;;; Defined in dired.c
 
