@@ -57,6 +57,15 @@ This implementation is equivalent to `format'."
 
 ;; TODO advise read-buffer to handle 4th argument
 
+;;;; Defined in fileio.c
+
+(compat-defun directory-name-p (name)
+  "Return non-nil if NAME ends with a directory separator character."
+  (eq (eval-when-compile
+        (if (memq system-type '(cygwin windows-nt ms-dos))
+            ?\\ ?/))
+      (aref name (1- (length name)))))
+
 ;;;; Defined in subr.el
 
 (compat-defun string-greaterp (string1 string2)

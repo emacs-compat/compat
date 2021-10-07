@@ -1203,5 +1203,21 @@ the compatibility function."
   (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
              (expt 2 8))))
 
+(ert-deftest compat-directory-name-p ()
+  "Check if `directory-name-p' was implemented properly."
+  (compat-test directory-name-p
+    (compat--should t "/")
+    (compat--should nil "/file")
+    (compat--should nil "/dir/file")
+    (compat--should t "/dir/")
+    (compat--should nil "/dir")
+    (compat--should t "/dir/subdir/")
+    (compat--should nil "/dir/subdir")
+    (compat--should t "dir/")
+    (compat--should nil "file")
+    (compat--should nil "dir/file")
+    (compat--should t "dir/subdir/")
+    (compat--should nil "dir/subdir")))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
