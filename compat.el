@@ -60,10 +60,6 @@
        (signal (car err) (cdr err))))))
 
 ;; Load the actual compatibility definitions:
-(when (version< emacs-version "24.2")
-  (require 'compat-24.2))
-(when (version< emacs-version "24.3")
-  (require 'compat-24.3))
 (when (version< emacs-version "24.4")
   (require 'compat-24.4))
 (when (version< emacs-version "25")

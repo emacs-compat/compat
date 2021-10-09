@@ -67,8 +67,7 @@
 (eval-when-compile
   (require 'compat-macs)
 
-  (load "compat-24.2.el" nil nil nil t)
-  (load "compat-24.3.el" nil nil nil t)
+  (load "compat.el" nil nil nil t)
   (load "compat-24.4.el" nil nil nil t)
   (load "compat-25.1.el" nil nil nil t)
   (load "compat-26.1.el" nil nil nil t)
@@ -1102,29 +1101,6 @@ the compatibility function."
     (compat--should '(1 2 3 4) '(1 2 3 4))
     (compat--should '(1 2 3 4) '(1 2 2 3 4 4))
     (compat--should '(1 2 3 2 4) '(1 2 2 3 2 4 4))))
-
-(ert-deftest compat-autoloadp ()
-  "Check if `autoloadp' was implemented correctly."
-  (compat-test autoloadp
-    (compat--should t '(autoload . anything))
-    (compat--should nil 'anything)))
-
-(ert-deftest compat-file-name-base ()
-  "Check if `file-name-base' was implemented correctly."
-  (compat-test file-name-base
-    (compat--should "file" "file.txt")
-    (compat--should "file" "/path/to/some/file.txt")
-    (compat--should "file" "/path/to/some/file")))
-
-(ert-deftest compat-posnp ()
-  "Check if `posnp' was implemented correctly."
-  (compat-test posnp
-    ;; FIXME: return an actual posn.
-    ;; (compat--should t (posn-at-point))
-    (compat--should nil (current-buffer))
-    (compat--should nil (point-max))
-    (compat--should nil (point-min))
-    (compat--should nil nil)))
 
 (ert-deftest compat-string-clean-whitespace ()
   "Check if `string-clean-whitespace' was implemented correctly."

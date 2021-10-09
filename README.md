@@ -2,12 +2,16 @@ COMPATibility Library for Emacs
 ===============================
 
 Find here the source for compat.el, a forwards-compatibility library
-for (GNU) Emacs Lisp.
+for (GNU) Emacs Lisp, versions 24.3 and newer.
 
 The intended audience of this library aren't day-to-day users, but
 package developers that wish to make use of newer functionality, not
 provided in older versions of Emacs, without breaking compatibility
 for users bound to specific Emacs releases.
+
+Version 24.3 is chosen as the oldest version, because this is the
+newest version on CentOS 7. It is intended to preserve compatibility
+for at least as the Centos 7 reaches [EOL], 2024.
 
 Installation
 ------------
@@ -61,6 +65,7 @@ Distribution
 compat.el and all other files in this directory are distributed under
 the GPL, Version 3 (like Emacs itself).
 
+[EOL]: https://wiki.centos.org/About/Product
 [GNU ELPA]: http://elpa.gnu.org/packages/compat.html
 [copyright assignment]: https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
 [SourceHut]: https://sr.ht/~pkal/compat

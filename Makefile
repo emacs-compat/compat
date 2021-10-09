@@ -4,8 +4,6 @@
 
 EMACS = emacs
 BYTEC = compat-macs.elc \
-	compat-24.2.elc \
-	compat-24.3.elc \
 	compat-24.4.elc \
 	compat-25.1.elc \
 	compat-26.1.elc \
