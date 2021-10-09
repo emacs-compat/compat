@@ -28,7 +28,18 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-func-arity "compat" (func))
 (declare-function compat-maxargs-/= "compat" (func n))
+
+;;;; Defined in eval.c
+
+(compat-defun func-arity (func)
+  "Return minimum and maximum number of args allowed for FUNC.
+FUNC must be a function of some kind.
+The returned value is a cons cell (MIN . MAX).  MIN is the minimum number
+of args.  MAX is the maximum number, or the symbol ‘many’, for a
+function with ‘&rest’ args, or ‘unevalled’ for a special form."
+  (compat-func-arity func))
 
 ;;;; Defined in fns.c
 
