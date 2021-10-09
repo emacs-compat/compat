@@ -263,6 +263,7 @@ PREFIX is a string, and defaults to \"g\"."
 
 ;;;; Defined in files.el
 
+(declare-function temporary-file-directory nil)
 (compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix)
   "Create a temporary file as close as possible to `default-directory'.
 If PREFIX is a relative file name, and `default-directory' is a
