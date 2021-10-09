@@ -148,8 +148,15 @@ attributes (see `compat-generate-common')."
          ;; function.
          `(defalias ',name #',realname))
         ((eq type 'advice)
-         ;; Advice is installed the usual way.
-         `(advice-add ',name :around #',realname))))
+         ;; nadvice.el was introduced in Emacs 24.4, so
+         ;; older versions have to use `defadvice'.
+         (if (version<= "24.4" emacs-version)
+             `(advice-add ',name :around #',realname)
+           `(ad-add-advice
+             ',name
+             (list ,(format "setup:%S" name)
+                   nil t (cons 'advice ,(lambda ()))
+                   'around 'first))))))
      (lambda ()
        (cond
         ((memq type '(func macro))
