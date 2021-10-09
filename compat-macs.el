@@ -49,8 +49,8 @@ attributes are handled, all others are ignored:
 - :feature :: The library the code is supposed to be loaded
   with (via `eval-after-load').
 
-- :force :: Non-nil means the compatibility code is installed no
-  matter what.
+- :cond :: Only install the compatibility code, iff the value
+  evaluates to non-nil.
 
 - :no-highlight :: Do not highlight this definition as
   compatibility function.
@@ -63,7 +63,7 @@ attributes are handled, all others are ignored:
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
-         (force (plist-get attr :force))
+         (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
                       (let ((file (or (and (boundp 'byte-compile-current-file)
                                            byte-compile-current-file)
@@ -78,15 +78,14 @@ attributes are handled, all others are ignored:
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(,@(cond
-                    (force
-                     '(progn))
+                    ((not (null cond)) `(when ,cond))
                     ((and (or (not version)
                               (version< emacs-version version))
                           (or (not min-version)
                               (version<= min-version emacs-version))
                           (or (not max-version)
                               (version<= emacs-version max-version)))
-                     `(unless ,(funcall check-fn realname)))
+                     `(unless ,(funcall check-fn)))
                     ('(compat--ignore)))
                  ,(unless (plist-get attr :no-highlight)
                     `(font-lock-add-keywords
@@ -151,14 +150,11 @@ attributes (see `compat-generate-common')."
         ((eq type 'advice)
          ;; Advice is installed the usual way.
          `(advice-add ',name :around #',realname))))
-     (lambda (realname)
+     (lambda ()
        (cond
         ((memq type '(func macro))
          `(fboundp ',name))
-        ((eq type 'advice)
-         ;; TODO: Improve the check if the advice already has been
-         ;;       installed or still has to be added.
-         `(advice-member-p ',realname ',name))))
+        ((eq type 'advice) t)))
      rest)))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
@@ -242,8 +238,8 @@ non-nil value."
              `(make-variable-buffer-local ',realname))))))
    (lambda (realname)
      `(defvaralias ',name ',realname))
-   (lambda (realname)
-     `(boundp ',realname))
+   (lambda ()
+     `(boundp ',name))
    attr))
 
 (provide 'compat-macs)

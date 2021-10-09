@@ -50,7 +50,6 @@
   ;; As the compatibility advise around `require` is more a hack than
   ;; of of actual value, the highlighting is supressed.
   :no-highlight t
-  :force t
   (condition-case err
       (funcall oldfun feature filename noerror)
     (file-missing
