@@ -417,6 +417,7 @@ just the selected frame."
 
 ;;;; Defined in thingatpt.el
 
+(declare-function mouse-set-point "mouse" (event &optional promote-to-region))
 (compat-defun thing-at-mouse (event thing &optional no-properties)
   "Return the THING at mouse click.
 Like `thing-at-point', but tries to use the event
