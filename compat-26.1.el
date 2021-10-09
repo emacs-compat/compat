@@ -250,13 +250,16 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   (declare (pure t))
   (cdr (cdr (cdr (cdr x)))))
 
-(let ((counter 0))
-  (compat-defun gensym (&optional prefix)
-    "Return a new uninterned symbol.
+(defvar compat--gensym-counter 0)
+
+(compat-defun gensym (&optional prefix)
+  "Return a new uninterned symbol.
 The name is made by appending `gensym-counter' to PREFIX.
 PREFIX is a string, and defaults to \"g\"."
-    (let ((num (prog1 counter (setq counter (1+ counter)))))
-      (make-symbol (format "%s%d" (or prefix "g") num)))))
+  (let ((num (prog1 compat--gensym-counter
+               (setq compat--gensym-counter
+                     (1+ compat--gensym-counter)))))
+    (make-symbol (format "%s%d" (or prefix "g") num))))
 
 ;;;; Defined in files.el
 
