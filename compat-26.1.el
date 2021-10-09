@@ -279,6 +279,14 @@ same meaning as in `make-temp-file'."
       (let ((temporary-file-directory (temporary-file-directory)))
         (make-temp-file prefix dir-flag suffix)))))
 
+(compat-defvar mounted-file-systems
+    (eval-when-compile
+      (if (memq system-type '(windows-nt cygwin))
+          "^//[^/]+/"
+        (concat
+         "^" (regexp-opt '("/afs/" "/media/" "/mnt" "/net/" "/tmp_mnt/")))))
+  "File systems that ought to be mounted.")
+
 (compat-defun temporary-file-directory ()
   "The directory for writing temporary files.
 In case of a remote `default-directory', this is a directory for
@@ -292,7 +300,7 @@ the variable `temporary-file-directory' is returned."
                   default-directory 'temporary-file-directory)))
     (if handler
         (funcall handler 'temporary-file-directory)
-      (if (string-match mounted-file-systems default-directory)
+      (if (string-match compat--mounted-file-systems default-directory)
           default-directory
         temporary-file-directory))))
 
