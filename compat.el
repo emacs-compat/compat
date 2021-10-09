@@ -123,14 +123,6 @@
 
 ;;;; Etcetera
 
-;; ;;;; Ensure NonGNU ELPA is in `package-archives'
-;; (with-eval-after-load 'package
-;;   (unless (or (rassoc "https://elpa.nongnu.org/nongnu/" package-archives)
-;;            (rassoc "http://elpa.nongnu.org/nongnu/" package-archives)
-;;            (rassoc "https://elpa.nongnu.org/nongnu-devel/" package-archives)
-;;            (rassoc "http://elpa.nongnu.org/nongnu-devel/" package-archives))
-;;     (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))))
-
 ;; To ensure that compat.el is loaded as soon as possible, a require
 ;; call is inserted directly into the autoload file:
 ;;;###autoload (require 'compat)
