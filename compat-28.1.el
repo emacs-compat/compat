@@ -337,8 +337,8 @@ as the new values of the bound variables in the recursive invocation."
 
 ;;;; Defined in files.el
 
-(declare-function compat--string-trim-left "compat-26.1"
-                  (string &optional regexp))
+(declare-function string-trim-left nil)
+(declare-function directory-name-p nil)
 (compat-defun file-name-with-extension (filename extension)
   "Set the EXTENSION of a FILENAME.
 The extension (in a file name) is the part that begins with the last \".\".
@@ -350,7 +350,7 @@ Errors if the FILENAME or EXTENSION are empty, or if the given
 FILENAME has the format of a directory.
 
 See also `file-name-sans-extension'."
-  (let ((extn (compat--string-trim-left extension "[.]")))
+  (let ((extn (string-trim-left extension "[.]")))
     (cond
      ((string= filename "")
       (error "Empty filename"))
