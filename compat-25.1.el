@@ -28,11 +28,15 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
 (compat-advise sort (seq predicate)
   "Handle SEQ of type vector."
+  :cond (condition-case nil
+            (ignore (sort [] #'ignore))
+          (wrong-type-argument t))
   (cond
    ((listp seq)
     (funcall oldfun seq predicate))
@@ -70,6 +74,9 @@ This implementation is equivalent to `format'."
 
 (compat-advise indirect-function (object)
   "Prevent `void-function' from being signalled."
+  :cond (condition-case nil
+            (ignore (indirect-function nil))
+          (void-function t))
   (condition-case nil
       (funcall oldfun object)
     (void-function nil)))

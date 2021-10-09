@@ -28,11 +28,13 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in data.c
 
 (compat-advise = (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
+  :cond (compat-maxargs-/= #'= 'many)
   (catch 'fail
     (while numbers-or-markers
       (unless (funcall oldfun number-or-marker (car numbers-or-markers))
@@ -42,6 +44,7 @@
 
 (compat-advise < (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
+  :cond (compat-maxargs-/= #'= 'many)
   (catch 'fail
     (while numbers-or-markers
       (unless (funcall oldfun number-or-marker (car numbers-or-markers))
@@ -51,6 +54,7 @@
 
 (compat-advise > (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
+  :cond (compat-maxargs-/= #'= 'many)
   (catch 'fail
     (while numbers-or-markers
       (unless (funcall oldfun number-or-marker (car numbers-or-markers))
@@ -60,6 +64,7 @@
 
 (compat-advise <= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
+  :cond (compat-maxargs-/= #'= 'many)
   (catch 'fail
     (while numbers-or-markers
       (unless (funcall oldfun number-or-marker (car numbers-or-markers))
@@ -69,6 +74,7 @@
 
 (compat-advise >= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
+  :cond (compat-maxargs-/= #'= 'many)
   (catch 'fail
     (while numbers-or-markers
       (unless (funcall oldfun number-or-marker (pop numbers-or-markers))
@@ -109,6 +115,7 @@ attention to case differences."
 
 (compat-advise split-string (string &optional separators omit-nulls trim)
   "Handle optional argument TRIM."
+  :cond (compat-maxargs-/= #'assoc 4)
   (let* ((token (funcall oldfun string separators omit-nulls))
          (trimmed (if trim
                       (mapcar

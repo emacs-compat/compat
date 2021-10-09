@@ -28,11 +28,13 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
 (compat-advise assoc (key alist &optional testfn)
   "Handle TESTFN manually."
+  :cond (compat-maxargs-/= #'assoc 3)
   (if testfn
       (catch 'found
         (dolist (ent alist)
@@ -53,6 +55,7 @@ If the buffer is narrowed, the return value by default counts the lines
 from the beginning of the accessible portion of the buffer.  But if the
 second optional argument ABSOLUTE is non-nil, the value counts the lines
 from the absolute start of the buffer, disregarding the narrowing."
+  :cond (compat-maxargs-/= #'assoc 2)
   (if absolute
       (save-restriction
         (widen)
@@ -66,6 +69,7 @@ from the absolute start of the buffer, disregarding the narrowing."
   :min-version "25.1"			;first defined in 25.1
   :max-version "25.3"			;last version without testfn
   :realname compat--alist-get-handle-testfn
+  :cond (compat-maxargs-/= #'assoc 5)
   (if testfn
       (catch 'found
         (dolist (ent alist)

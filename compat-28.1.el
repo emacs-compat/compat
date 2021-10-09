@@ -28,6 +28,7 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
@@ -133,6 +134,7 @@ continuing as if the error did not occur."
 
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
+  :cond (compat-maxargs-/= #'string-width 3)
   (funcall oldfun (substring string (or from 0) to)))
 
 ;;;; Defined in dired.c
@@ -142,6 +144,7 @@ consider, and are interpreted as in `substring'."
 
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
+  :cond (compat-maxargs-/= #'assoc 5)
   (let ((files (funcall oldfun directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
@@ -402,6 +405,7 @@ is included in the return value."
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
+  :cond (compat-maxargs-/= #'assoc 3)
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))

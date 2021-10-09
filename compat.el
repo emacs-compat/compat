@@ -43,6 +43,57 @@
 
 ;;;; Core functionality
 
+;; The implementation is extracted here so that compatibility advice
+;; can check if the right number of arguments are being handled.
+(defun compat-func-arity (func)
+  "A reimplementation of `func-arity' for FUNC."
+  (cond
+   ((null func)
+    (signal 'void-function func))
+   ((and (symbolp func) (not (null func)))
+    (compat-func-arity (indirect-function func)))
+   ((eq (car-safe func) 'macro)
+    (compat-func-arity (cdr func)))
+   ((subrp func)
+    (subr-arity func))
+   ((memq (car-safe func) '(closure lambda))
+    ;; See lambda_arity from eval.c
+    (when (eq (car func) 'closure)
+      (setq func (cdr func)))
+    (let ((syms-left (if (consp func)
+                         (car func)
+                       (signal 'invalid-function func)))
+          (min-args 0) (max-args 0) optional)
+      (catch 'many
+        (dolist (next syms-left)
+          (cond
+           ((not (symbolp next))
+            (signal 'invalid-function func))
+           ((eq next '&rest)
+            (throw 'many (cons min-args 'many)))
+           ((eq next '&optional)
+            (setq optional t))
+           (t (unless optional
+                (setq min-args (1+ min-args)))
+              (setq max-args (1+ max-args)))))
+        (cons min-args max-args))))
+   ((byte-code-function-p func)
+    ;; See get_byte_code_arity from bytecode.c
+    (let ((at (aref func 0)))
+      (cons (logand at 127)
+            (if (= (logand at 128) 0)
+                (ash at -8)
+              'many))))
+   ((autoloadp func)
+    (autoload-do-load func)
+    (compat-func-arity func))
+   ((signal 'invalid-function func))))
+
+(defun compat-maxargs-/= (func n)
+  "Non-nil when FUNC doesn't accept at most N arguments."
+  (not (eq (cdr (compat-func-arity func)) n)))
+
+
 ;; Suppress errors triggered by requiring non-existent libraries in
 ;; older versions of Emacs (e.g. subr-x).
 (compat-advise require (feature &optional filename noerror)

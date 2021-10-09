@@ -28,6 +28,7 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
@@ -108,6 +109,7 @@ Letter-case is significant, but text properties are ignored."
 
 (compat-advise setq-local (&rest pairs)
   "Handle multiple assignments."
+  :cond (compat-maxargs-/= #'setq-local 'many)
   (unless (zerop (mod (length pairs) 2))
     (error "PAIRS must have an even number of variable/value members"))
   (let (body)
