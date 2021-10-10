@@ -94,12 +94,16 @@ for more details about the different forms of FILE and their semantics."
 (compat-defun special-form-p (object)
   "Non-nil if and only if OBJECT is a special form."
   (if (and (symbolp object) (fboundp object))
-      (setq object (indirect-function object)))
+      (setq object (condition-case nil
+                       (indirect-function object)
+                     (void-function nil))))
   (and (subrp object) (eq (cdr (subr-arity object)) 'unevalled)))
 
 (compat-defun macrop (object)
   "Non-nil if and only if OBJECT is a macro."
-  (let ((def (indirect-function object)))
+  (let ((def (condition-case nil
+                 (indirect-function object)
+               (void-function nil))))
     (when (consp def)
       (or (eq 'macro (car def))
           (and (autoloadp def) (memq (nth 4 def) '(macro t)))))))

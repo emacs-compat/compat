@@ -51,7 +51,9 @@
    ((null func)
     (signal 'void-function func))
    ((and (symbolp func) (not (null func)))
-    (compat-func-arity (indirect-function func)))
+    (compat-func-arity (condition-case nil
+                           (indirect-function func)
+                         (void-function nil))))
    ((eq (car-safe func) 'macro)
     (compat-func-arity (cdr func)))
    ((subrp func)

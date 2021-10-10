@@ -70,17 +70,6 @@ This implementation is equivalent to `format'."
             ?\\ ?/))
       (aref name (1- (length name)))))
 
-;;;; Defined in data.c
-
-(compat-advise indirect-function (object)
-  "Prevent `void-function' from being signalled."
-  :cond (condition-case nil
-            (ignore (indirect-function nil))
-          (void-function t))
-  (condition-case nil
-      (funcall oldfun object)
-    (void-function nil)))
-
 ;;;; Defined in subr.el
 
 (compat-defun string-greaterp (string1 string2)

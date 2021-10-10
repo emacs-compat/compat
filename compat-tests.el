@@ -1221,22 +1221,5 @@ the compatibility function."
     (compat--should t "dir/subdir/")
     (compat--should nil "dir/subdir")))
 
-(ert-deftest compat-indirect-function ()
-  "Check if `indirect-function' was advised properly."
-  (compat-test indirect-function
-    ;; A symbol with a function alias should return the function it is
-    ;; aliasing:
-    (compat--should* (indirect-function #'process-send-string)
-                     'send-string)
-    (compat--should* (indirect-function #'string-equal)
-                     'string=)
-    ;; A function should return it self when not aliased:
-    (compat--should* (indirect-function #'string-equal) 'string-equal)
-    ;; A fresh symbol should return nil when no function is associated
-    ;; with it:
-    (compat--should* nil (make-symbol "foobar"))
-    ;; Anything else is return as is:
-    (compat--should* "foobar" "foobar")))
-
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
