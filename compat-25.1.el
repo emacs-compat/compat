@@ -234,6 +234,7 @@ threading."
 
 ;;;; Defined in macroexp.el
 
+(declare macrop nil (object))
 (compat-defun macroexpand-1 (form &optional environment)
   "Perform (at most) one step of macro expansion."
   :feature macroexp
