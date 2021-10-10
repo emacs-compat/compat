@@ -219,7 +219,7 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
-(declare gensym nil (&optional prefix))
+(declare-function gensym nil (&optional prefix))
 (compat-defmacro with-existing-directory (&rest body)
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."

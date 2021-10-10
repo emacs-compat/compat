@@ -127,15 +127,15 @@ This is like `if-let' but doesn't handle a VARLIST of the form
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
   :feature subr-x
-  (declare (indent 1) (debug compat--if-let*))
-  `(compat--if-let* ,varlist ,(macroexp-progn body)))
+  (declare (indent 1) (debug if-let*))
+  `(if-let* ,varlist ,(macroexp-progn body)))
 
 (compat-defmacro and-let* (varlist &rest body)
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature subr-x
-  (declare (indent 1) (debug compat--if-let*))
+  (declare (indent 1) (debug if-let*))
   (let ((empty (make-symbol "s"))
         (last t) list)
     (dolist (var varlist)
@@ -173,7 +173,7 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(compat--if-let* ,spec ,then ,@(macroexp-unprogn else)))
+  `(if-let* ,spec ,then ,@(macroexp-unprogn else)))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
@@ -182,8 +182,8 @@ If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
   :feature subr-x
-  (declare (indent 1) (debug compat--if-let))
-  (list 'compat--if-let spec (macroexp-progn body)))
+  (declare (indent 1) (debug if-let))
+  (list 'if-let spec (macroexp-progn body)))
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.
@@ -234,7 +234,7 @@ threading."
 
 ;;;; Defined in macroexp.el
 
-(declare macrop nil (object))
+(declare-function macrop nil (object))
 (compat-defun macroexpand-1 (form &optional environment)
   "Perform (at most) one step of macro expansion."
   :feature macroexp
