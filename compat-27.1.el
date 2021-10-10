@@ -110,6 +110,7 @@ Letter-case is significant, but text properties are ignored."
 (compat-advise setq-local (&rest pairs)
   "Handle multiple assignments."
   :cond (compat-maxargs-/= #'setq-local 'many)
+  (declare (debug setq))
   (unless (zerop (mod (length pairs) 2))
     (error "PAIRS must have an even number of variable/value members"))
   (let (body)
