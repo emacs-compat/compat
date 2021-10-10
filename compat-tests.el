@@ -96,7 +96,10 @@
     (macroexp-progn
      (list
       `(should (equal (funcall (apply-partially #',cfn #',rfn) ,@input) ,result))
-      (and (fboundp rfn)
+      (and (and (fboundp rfn)
+                (or (not (eq (get cfn 'compat-type) 'advice))
+                    (not (get cfn 'compat-version))
+                    (version<= (get cfn 'compat-version) emacs-version)))
            `(should (equal (,rfn ,@input) ,result)))))))
 
 (defmacro compat--mshould (result &rest input)
@@ -129,7 +132,10 @@
     (macroexp-progn
      (list
       `(should-error (funcall (apply-partially #',cfn #',rfn) ,@input) :type ',error)
-      (and (fboundp rfn)
+      (and (and (fboundp rfn)
+                (or (not (eq (get cfn 'compat-type) 'advice))
+                    (not (get cfn 'compat-version))
+                    (version<= (get cfn 'compat-version) emacs-version)))
            `(should-error (,rfn ,@input) :type ',error))))))
 
 ;; FIXME: extract the name of the test out of the ERT-test, instead
@@ -560,7 +566,7 @@ the compatibility function."
     ;; Test empty list:
     (compat--should* "\\(?:\\`a\\`\\)" '())
     (compat--should* "\\<\\(\\`a\\`\\)\\>" '() 'words))
-  (let ((unmatchable (regexp-opt '())))
+  (let ((unmatchable (compat--regexp-opt #'regexp-opt '())))
     (dolist (str '(""                   ;empty string
                    "a"                  ;simple string
                    "aaa"                ;longer string

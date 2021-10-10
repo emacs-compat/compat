@@ -29,7 +29,7 @@
   "Ignore all arguments."
   nil)
 
-(defun compat-generate-common (name def-fn install-fn check-fn attr)
+(defun compat-generate-common (name def-fn install-fn check-fn attr type)
   "Common code for generating compatibility definitions for NAME.
 The resulting body is constructed by invoking the functions
 DEF-FN (passed the \"realname\" and the version number, returning
@@ -59,7 +59,9 @@ attributes are handled, all others are ignored:
   code was defined in (string).
 
 - :realname :: Manual specification of a \"realname\" to use for
-  the compatibility definition (symbol)."
+  the compatibility definition (symbol).
+
+TYPE is used to set the symbol property `compat-type' for NAME."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
@@ -96,6 +98,8 @@ attributes are handled, all others are ignored:
                            1 font-lock-preprocessor-face prepend))))
                  ,(funcall install-fn realname))))
     `(progn
+       (put ',realname 'compat-type ',type)
+       (put ',realname 'compat-version ,version)
        ,(funcall def-fn realname version)
        ,(if feature
             `(eval-after-load ',feature (lambda () ,body))
@@ -162,7 +166,7 @@ attributes (see `compat-generate-common')."
         ((memq type '(func macro))
          `(fboundp ',name))
         ((eq type 'advice) t)))
-     rest)))
+     rest type)))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility function.
@@ -247,7 +251,7 @@ non-nil value."
      `(defvaralias ',name ',realname))
    (lambda ()
      `(boundp ',name))
-   attr))
+   attr 'variable))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
