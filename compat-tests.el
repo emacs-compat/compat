@@ -63,16 +63,7 @@
 ;;; Code:
 
 (require 'ert)
-
-(eval-when-compile
-  (require 'compat-macs)
-
-  (load "compat.el" nil nil nil t)
-  (load "compat-24.4.el" nil nil nil t)
-  (load "compat-25.1.el" nil nil nil t)
-  (load "compat-26.1.el" nil nil nil t)
-  (load "compat-27.1.el" nil nil nil t)
-  (load "compat-28.1.el" nil nil nil t))
+(require 'compat)
 
 (defvar compat--current-fn nil)
 (defvar compat--compat-fn nil)
