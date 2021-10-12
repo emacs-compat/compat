@@ -80,14 +80,14 @@ TYPE is used to set the symbol property `compat-type' for NAME."
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(,@(cond
-                    ((not (null cond)) `(when ,cond))
                     ((and (or (not version)
                               (version< emacs-version version))
                           (or (not min-version)
                               (version<= min-version emacs-version))
                           (or (not max-version)
                               (version<= emacs-version max-version)))
-                     `(unless ,(funcall check-fn)))
+                     `(when (and ,(if cond cond t)
+                                 ,(funcall check-fn))))
                     ('(compat--ignore)))
                  ,(unless (plist-get attr :no-highlight)
                     `(font-lock-add-keywords
@@ -164,7 +164,7 @@ attributes (see `compat-generate-common')."
      (lambda ()
        (cond
         ((memq type '(func macro))
-         `(fboundp ',name))
+         `(not (fboundp ',name)))
         ((eq type 'advice) t)))
      rest type)))
 
@@ -250,7 +250,7 @@ non-nil value."
    (lambda (realname)
      `(defvaralias ',name ',realname))
    (lambda ()
-     `(boundp ',name))
+     `(not (boundp ',name)))
    attr 'variable))
 
 (provide 'compat-macs)
