@@ -1242,5 +1242,25 @@ the compatibility function."
   (should-not
    (compat--if-let* (((= 5 6))) t nil)))
 
+(ert-deftest compat-and-let* ()
+  "Check if `compat--if-let*' was implemented properly."
+  (should                               ;trivial body
+   (compat--and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true))
+  (should                               ;no body
+   (compat--and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))))
+  (should-not
+   (compat--and-let* (((= 5 6))) t)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
