@@ -253,7 +253,7 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   (declare (pure t))
   (cdr (cdr (cdr (cdr x)))))
 
-(compat-defvar compat--gensym-counter 0
+(compat-defvar gensym-counter 0
   "Number used to construct the name of the next symbol created by `gensym'.")
 
 (compat-defun gensym (&optional prefix)
