@@ -125,17 +125,7 @@ Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature subr-x
   (declare (indent 1) (debug if-let*))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cdr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* (,(nreverse list))
-       (when ,(caar list)
-         ,@body))))
+  `(when-let* ,varlist ,@(or body '(t))))
 
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
