@@ -120,14 +120,15 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
             string)))
     (if i (substring string 0 i) string)))
 
-(declare-function string-trim-left nil (string &optional regexp))
-(declare-function string-trim-right nil (string &optional regexp))
 (compat-defun string-trim (string &optional trim-left trim-right)
   "Trim STRING of leading with and trailing matching TRIM-LEFT and TRIM-RIGHT.
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
-  (string-trim-left
-   (string-trim-right
+  ;; `string-trim-left' and `string-trim-right' were moved from subr-x
+  ;; to subr in Emacs 27, so to avoid loading subr-x we use the
+  ;; compatibility function here:
+  (compat--string-trim-left
+   (compat--string-trim-right
     string
     trim-right)
    trim-left))
