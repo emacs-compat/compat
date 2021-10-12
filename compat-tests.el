@@ -146,7 +146,7 @@ the compatibility function."
 
 
 (ert-deftest compat-string-search ()
-  "Check if `string-search' was implemented correctly."
+  "Check if `compat--string-search' was implemented correctly."
   (compat-test string-search
     ;; Find needle at the beginning of a haystack:
     (compat--should 0 "a" "abb")
@@ -263,7 +263,7 @@ the compatibility function."
                       "foo\303\270"))))
 
 (ert-deftest compat-string-replace ()
-  "Check if `string-replace' was implemented correctly."
+  "Check if `compat--string-replace' was implemented correctly."
   (compat-test string-replace
     (compat--should "bba" "aa" "bb" "aaa")
     (compat--should "AAA" "aa" "bb" "AAA")
@@ -298,7 +298,7 @@ the compatibility function."
     (compat--error wrong-length-argument "" "x" "abc")))
 
 (ert-deftest compat-length= ()
-  "Check if `string-length=' was implemented correctly."
+  "Check if `compat--string-length=' was implemented correctly."
   (compat-test length=
     (compat--should t '() 0)                  ;empty list
     (compat--should t '(1) 1)			;single element
@@ -316,7 +316,7 @@ the compatibility function."
     (compat--error wrong-type-argument 3 nil)))
 
 (ert-deftest compat-length< ()
-  "Check if `length<' was implemented correctly."
+  "Check if `compat--length<' was implemented correctly."
   (compat-test length<
     (compat--should nil '(1) 0)               ;single element
     (compat--should nil '(1 2 3) 2)           ;multiple elements
@@ -332,7 +332,7 @@ the compatibility function."
     (compat--error wrong-type-argument 3 nil)))
 
 (ert-deftest compat-length> ()
-  "Check if `length>' was implemented correctly."
+  "Check if `compat--length>' was implemented correctly."
   (compat-test length>
     (compat--should t '(1) 0)			;single element
     (compat--should t '(1 2 3) 2)             ;multiple elements
@@ -348,7 +348,7 @@ the compatibility function."
     (compat--error wrong-type-argument 3 nil)))
 
 (ert-deftest compat-always ()
-  "Check if `always' was implemented correctly."
+  "Check if `compat--always' was implemented correctly."
   (compat-test always
     (compat--should t)                        ;no arguments
     (compat--should t 1)                      ;single argument
@@ -356,7 +356,7 @@ the compatibility function."
 
 (ert-deftest compat-insert-into-buffer ()
   "Check if `insert-into-buffer' was implemented correctly."
-  ;; Without optional arguments
+  ;; Without optional compat--arguments
   (with-temp-buffer
     (let ((other (current-buffer)))
       (insert "abc")
@@ -406,7 +406,7 @@ the compatibility function."
 	(should (string= (buffer-string) "abce"))))))
 
 (ert-deftest compat-file-name-with-extension ()
-  "Check if `file-name-with-extension' was implemented correctly."
+  "Check if `compat--file-name-with-extension' was implemented correctly."
   (compat-test file-name-with-extension
     (compat--should "file.ext" "file" "ext")
     (compat--should "file.ext" "file" ".ext")
@@ -427,7 +427,7 @@ the compatibility function."
     (compat--error error "/abs/" "ext")))
 
 (ert-deftest compat-file-name-with-extension ()
-  "Check if `file-name-with-extension' was implemented correctly."
+  "Check if `compat--file-name-with-extension' was implemented correctly."
   (compat-test file-name-with-extension
     (compat--should "file.ext" "file" "ext")
     (compat--should "file.ext" "file" ".ext")
@@ -448,7 +448,7 @@ the compatibility function."
     (compat--error error "/abs/" "ext")))
 
 (ert-deftest compat-string-width ()
-  "Check if `string-width' was implemented correctly."
+  "Check if `compat--string-width' was implemented correctly."
   (compat-test string-width
     (compat--should* 0 "")
     (compat--should* 3 "abc")			;no argument
@@ -465,7 +465,7 @@ the compatibility function."
     (compat--should* 0 "a	" 1 1)))
 
 (ert-deftest compat-ensure-list ()
-  "Check if `ensure-list' was implemented correctly."
+  "Check if `compat--ensure-list' was implemented correctly."
   (compat-test ensure-list
     (compat--should nil nil)                        ;empty list
     (compat--should '(1) '(1))                        ;single element list
@@ -473,7 +473,7 @@ the compatibility function."
     (compat--should '(1) 1)))                          ;atom
 
 (ert-deftest compat-proper-list-p-1 ()
-  "Check if `proper-list-p' was implemented correctly (>=26.1)."
+  "Check if `compat--proper-list-p' was implemented correctly (>=26.1)."
   (compat-test (proper-list-p compat--proper-list-p-length-signal)
     (compat--should 0 ())				;empty list
     (compat--should 1 '(1))				;single element
@@ -485,7 +485,7 @@ the compatibility function."
                           l))))
 
 (ert-deftest compat-proper-list-p-1 ()
-  "Check if `proper-list-p' was implemented correctly (<25.3)."
+  "Check if `compat--proper-list-p' was implemented correctly (<25.3)."
   (compat-test (proper-list-p compat--proper-list-p-tortoise-hare)
     (compat--should 0 ())				;empty list
     (compat--should 1 '(1))				;single element
@@ -497,7 +497,7 @@ the compatibility function."
                           l))))
 
 (ert-deftest compat-flatten-tree ()
-  "Check if `flatten-tree' was implemented correctly."
+  "Check if `compat--flatten-tree' was implemented correctly."
   (compat-test flatten-tree
     ;; Example from docstring:
     (compat--should '(1 2 3 4 5 6 7) '(1 (2 . 3) nil (4 5 (6)) 7))
@@ -517,7 +517,7 @@ the compatibility function."
     (compat--should '(1 2 3 4) '(((1 nil)) 2 (((3 nil nil) 4))))))
 
 (ert-deftest compat-xor ()
-  "Check if `xor' was implemented correctly."
+  "Check if `compat--xor' was implemented correctly."
   (compat-test xor
     (compat--should t t nil)
     (compat--should t nil t)
@@ -525,7 +525,7 @@ the compatibility function."
     (compat--should nil t t)))
 
 (ert-deftest compat-string-distance ()
-  "Check if `string-distance' was implemented correctly."
+  "Check if `compat--string-distance' was implemented correctly."
   (compat-test string-distance
     (compat--should 3 "kitten" "sitting")     ;from wikipedia
     (if (version<= "28" emacs-version) ;trivial examples
@@ -548,7 +548,7 @@ the compatibility function."
     (compat--should 1 "a" "あ")))
 
 (ert-deftest compat-regexp-unmatchable ()
-  "Check if `string-distance' was implemented correctly."
+  "Check if `compat--string-distance' was implemented correctly."
   (dolist (str '(""                     ;empty string
                  "a"                    ;simple string
                  "aaa"                  ;longer string
@@ -558,7 +558,7 @@ the compatibility function."
       (should-not (string-match-p regexp-unmatchable str)))))
 
 (ert-deftest compat-regexp-opt ()
-  "Check if `regexp-opt' advice was defined correctly."
+  "Check if `compat--regexp-opt' advice was defined correctly."
   (compat-test regexp-opt
     ;; Ensure `compat--regexp-opt' doesn't change the existing
     ;; behaviour:
@@ -576,7 +576,7 @@ the compatibility function."
       (should-not (string-match-p unmatchable str)))))
 
 (ert-deftest compat-assoc ()
-  "Check if `assoc' advice was advised correctly."
+  "Check if `compat--assoc' advice was advised correctly."
   (compat-test assoc
     ;; Fallback behaviour:
     (compat--should* nil 1 nil)               ;empty list
@@ -605,7 +605,7 @@ the compatibility function."
 
 (when (fboundp 'alist-get)
   (ert-deftest compat-alist-get-1 ()
-    "Check if `alist-get' was advised correctly."
+    "Check if `compat--alist-get' was advised correctly."
     (compat-test (alist-get compat--alist-get-handle-testfn)
       ;; Fallback behaviour:
       (compat--should* nil 1 nil)                      ;empty list
@@ -635,7 +635,7 @@ the compatibility function."
       (compat--should* 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
 (ert-deftest compat-alist-get-2 ()
-  "Check if `alist-get' was implemented correctly."
+  "Check if `compat--alist-get' was implemented correctly."
   (compat-test (alist-get compat--alist-get-full-elisp)
     ;; Fallback behaviour:
     (compat--should nil 1 nil)                      ;empty list
@@ -665,7 +665,7 @@ the compatibility function."
     (compat--should 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore)))
 
 (ert-deftest compat-string-trim-left ()
-  "Check if `string-trim-left' was implemented correctly."
+  "Check if `compat--string-trim-left' was implemented correctly."
   (compat-test string-trim-left'
     (compat--should "" "")                          ;empty string
     (compat--should "a" "a")                        ;"full" string
@@ -688,7 +688,7 @@ the compatibility function."
     (compat--should "a  \n" "\n  \ta  \n")))
 
 (ert-deftest compat-string-trim-right ()
-  "Check if `string-trim-right' was implemented correctly."
+  "Check if `compat--string-trim-right' was implemented correctly."
   (compat-test string-trim-right
     (compat--should "" "")                          ;empty string
     (compat--should "a" "a")                        ;"full" string
@@ -711,7 +711,7 @@ the compatibility function."
     (compat--should "\n  \ta" "\n  \ta  \n")))
 
 (ert-deftest compat-string-trim ()
-  "Check if `string-trim' was implemented correctly."
+  "Check if `compat--string-trim' was implemented correctly."
   (compat-test string-trim
     (compat--should "" "")                          ;empty string
     (compat--should "a" "a")                        ;"full" string
@@ -734,7 +734,7 @@ the compatibility function."
     (compat--should "a" "\n  \ta  \n")))
 
 (ert-deftest compat-mapcan ()
-  "Check if `mapcan' was implemented correctly."
+  "Check if `compat--mapcan' was implemented correctly."
   (compat-test mapcan
     (compat--should nil #'identity nil)
     (compat--should (list 1)
@@ -769,146 +769,146 @@ the compatibility function."
   "Testcase for cXXXXr functions.")
 
 (ert-deftest compat-caaar ()
-  "Check if `caaar' was implemented correctly."
+  "Check if `compat--caaar' was implemented correctly."
   (compat-test caaar
     (compat--should nil ())
     (compat--should 'a compat-cXXXr-test)))
 
 (ert-deftest compat-caadr ()
-  "Check if `caadr' was implemented correctly."
+  "Check if `compat--caadr' was implemented correctly."
   (compat-test caadr
     (compat--should nil ())
     (compat--should 'e compat-cXXXr-test)))
 
 (ert-deftest compat-cadar ()
-  "Check if `cadar' was implemented correctly."
+  "Check if `compat--cadar' was implemented correctly."
   (compat-test cadar
     (compat--should nil ())
     (compat--should 'c compat-cXXXr-test)))
 
 (ert-deftest compat-caddr ()
-  "Check if `caddr' was implemented correctly."
+  "Check if `compat--caddr' was implemented correctly."
   (compat-test caddr
     (compat--should nil ())
     (compat--should 'g compat-cXXXr-test)))
 
 (ert-deftest compat-cdaar ()
-  "Check if `cdaar' was implemented correctly."
+  "Check if `compat--cdaar' was implemented correctly."
   (compat-test cdaar
     (compat--should nil ())
     (compat--should 'b compat-cXXXr-test)))
 
 (ert-deftest compat-cdadr ()
-  "Check if `cdadr' was implemented correctly."
+  "Check if `compat--cdadr' was implemented correctly."
   (compat-test cdadr
     (compat--should nil ())
     (compat--should 'f compat-cXXXr-test)))
 
 (ert-deftest compat-cddar ()
-  "Check if `cddar' was implemented correctly."
+  "Check if `compat--cddar' was implemented correctly."
   (compat-test cddar
     (compat--should nil ())
     (compat--should 'd compat-cXXXr-test)))
 
 (ert-deftest compat-cdddr ()
-  "Check if `cdddr' was implemented correctly."
+  "Check if `compat--cdddr' was implemented correctly."
   (compat-test cdddr
     (compat--should nil ())
     (compat--should 'h compat-cXXXr-test)
     #'cdddr))
 
 (ert-deftest compat-caaaar ()
-  "Check if `caaaar' was implemented correctly."
+  "Check if `compat--caaaar' was implemented correctly."
   (compat-test caaaar
     (compat--should nil ())
     (compat--should 'a compat-cXXXXr-test)))
 
 (ert-deftest compat-caaadr ()
-  "Check if `caaadr' was implemented correctly."
+  "Check if `compat--caaadr' was implemented correctly."
   (compat-test caaadr
     (compat--should nil ())
     (compat--should 'i compat-cXXXXr-test)))
 
 (ert-deftest compat-caadar ()
-  "Check if `caadar' was implemented correctly."
+  "Check if `compat--caadar' was implemented correctly."
   (compat-test caadar
     (compat--should nil ())
     (compat--should 'e compat-cXXXXr-test)))
 
 (ert-deftest compat-caaddr ()
-  "Check if `caaddr' was implemented correctly."
+  "Check if `compat--caaddr' was implemented correctly."
   (compat-test caaddr
     (compat--should nil ())
     (compat--should 'm compat-cXXXXr-test)))
 
 (ert-deftest compat-cadaar ()
-  "Check if `cadaar' was implemented correctly."
+  "Check if `compat--cadaar' was implemented correctly."
   (compat-test cadaar
     (compat--should nil ())
     (compat--should 'c compat-cXXXXr-test)))
 
 (ert-deftest compat-cadadr ()
-  "Check if `cadadr' was implemented correctly."
+  "Check if `compat--cadadr' was implemented correctly."
   (compat-test cadadr
     (compat--should nil ())
     (compat--should 'k compat-cXXXXr-test)))
 
 (ert-deftest compat-caddar ()
-  "Check if `caddar' was implemented correctly."
+  "Check if `compat--caddar' was implemented correctly."
   (compat-test caddar
     (compat--should nil ())
     (compat--should 'g compat-cXXXXr-test)))
 
 (ert-deftest compat-cadddr ()
-  "Check if `cadddr' was implemented correctly."
+  "Check if `compat--cadddr' was implemented correctly."
   (compat-test cadddr
     (compat--should nil ())
     (compat--should 'o compat-cXXXXr-test)))
 
 (ert-deftest compat-cdaaar ()
-  "Check if `cdaaar' was implemented correctly."
+  "Check if `compat--cdaaar' was implemented correctly."
   (compat-test cdaaar
     (compat--should nil ())
     (compat--should 'b compat-cXXXXr-test)))
 
 (ert-deftest compat-cdaadr ()
-  "Check if `cdaadr' was implemented correctly."
+  "Check if `compat--cdaadr' was implemented correctly."
   (compat-test cdaadr
     (compat--should nil ())
     (compat--should 'j compat-cXXXXr-test)))
 
 (ert-deftest compat-cdadar ()
-  "Check if `cdadar' was implemented correctly."
+  "Check if `compat--cdadar' was implemented correctly."
   (compat-test cdadar
     (compat--should nil ())
     (compat--should 'f compat-cXXXXr-test)))
 
 (ert-deftest compat-cdaddr ()
-  "Check if `cdaddr' was implemented correctly."
+  "Check if `compat--cdaddr' was implemented correctly."
   (compat-test cdaddr
     (compat--should nil ())
     (compat--should 'j compat-cXXXXr-test)))
 
 (ert-deftest compat-cddaar ()
-  "Check if `cddaar' was implemented correctly."
+  "Check if `compat--cddaar' was implemented correctly."
   (compat-test cddaar
     (compat--should nil ())
     (compat--should 'd compat-cXXXXr-test)))
 
 (ert-deftest compat-cddadr ()
-  "Check if `cddadr' was implemented correctly."
+  "Check if `compat--cddadr' was implemented correctly."
   (compat-test cddadr
     (compat--should nil ())
     (compat--should 'l compat-cXXXXr-test)))
 
 (ert-deftest compat-cdddar ()
-  "Check if `cdddar' was implemented correctly."
+  "Check if `compat--cdddar' was implemented correctly."
   (compat-test cdddar
     (compat--should nil ())
     (compat--should 'h compat-cXXXXr-test)))
 
 (ert-deftest compat-string-greaterp ()
-  "Check if `string-greaterp' was implemented correctly."
+  "Check if `compat--string-greaterp' was implemented correctly."
   (compat-test string-greaterp
     (compat--should t "b" "a")
     (compat--should nil "a" "b")
@@ -916,7 +916,7 @@ the compatibility function."
     (compat--should nil "aaaa" "aaab")))
 
 (ert-deftest compat-sort ()
-  "Check if `sort' was advised correctly."
+  "Check if `compat--sort' was advised correctly."
   (compat-test sort
     (compat--should* (list 1 2 3) (list 1 2 3) #'<)
     (compat--should* (list 1 2 3) (list 3 2 1) #'<)
@@ -924,7 +924,7 @@ the compatibility function."
     (compat--should* '[1 2 3] '[3 2 1] #'<)))
 
 (ert-deftest compat-= ()
-  "Check if `=' was advised correctly."
+  "Check if `compat--=' was advised correctly."
   (compat-test =
     (compat--should* t 0 0)
     (compat--should* t 0 0 0)
@@ -942,7 +942,7 @@ the compatibility function."
     (compat--should* nil 0.0 0.0 0.0 0.1)))
 
 (ert-deftest compat-< ()
-  "Check if `<' was advised correctly."
+  "Check if `compat--<' was advised correctly."
   (compat-test <
     (compat--should* nil 0 0)
     (compat--should* nil 0 0 0)
@@ -966,7 +966,7 @@ the compatibility function."
     (compat--should* t -0.1 0 0.2 0.4)))
 
 (ert-deftest compat-> ()
-  "Check if `>' was advised correctly."
+  "Check if `compat-->' was advised correctly."
   (compat-test >
     (compat--should* nil 0 0)
     (compat--should* nil 0 0 0)
@@ -990,7 +990,7 @@ the compatibility function."
     (compat--should* t 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat-<= ()
-  "Check if `<=' was advised correctly."
+  "Check if `compat--<=' was advised correctly."
   (compat-test <=
     (compat--should* t 0 0)
     (compat--should* t 0 0 0)
@@ -1024,7 +1024,7 @@ the compatibility function."
     (compat--should* nil 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat->= ()
-  "Check if `>=' was implemented correctly."
+  "Check if `compat-->=' was implemented correctly."
   (compat-test >=
     (compat--should* t 0 0)
     (compat--should* t 0 0 0)
@@ -1056,7 +1056,7 @@ the compatibility function."
     (compat--should* t 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat-special-form-p ()
-  "Check if `special-form-p' was implemented correctly."
+  "Check if `compat--special-form-p' was implemented correctly."
   (compat-test special-form-p
     (compat--should t 'if)
     (compat--should t 'cond)
@@ -1068,7 +1068,7 @@ the compatibility function."
     (compat--should nil '(macro . +))))
 
 (ert-deftest compat-macrop ()
-  "Check if `macrop' was implemented correctly."
+  "Check if `compat--macrop' was implemented correctly."
   (compat-test macrop
     (compat--should t 'lambda)
     (compat--should t 'defun)
@@ -1083,7 +1083,7 @@ the compatibility function."
     (compat--should t '(macro . +))))
 
 (ert-deftest compat-string-suffix-p ()
-  "Check if `string-suffix-p' was implemented correctly."
+  "Check if `compat--string-suffix-p' was implemented correctly."
   (compat-test string-suffix-p
     (compat--should t "a" "abba")
     (compat--should t "ba" "abba")
@@ -1097,21 +1097,21 @@ the compatibility function."
     (compat--should nil "aabba" "abba")))
 
 (ert-deftest compat-split-string ()
-  "Check if `split-string' was advised correctly."
+  "Check if `compat--split-string' was advised correctly."
   (compat-test split-string
     (compat--should* '("a" "b" "c") "a b c")
     (compat--should* '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
     (compat--should* '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+")))
 
 (ert-deftest compat-delete-consecutive-dups ()
-  "Check if `delete-consecutive-dups' was implemented correctly."
+  "Check if `compat--delete-consecutive-dups' was implemented correctly."
   (compat-test delete-consecutive-dups
     (compat--should '(1 2 3 4) '(1 2 3 4))
     (compat--should '(1 2 3 4) '(1 2 2 3 4 4))
     (compat--should '(1 2 3 2 4) '(1 2 2 3 2 4 4))))
 
 (ert-deftest compat-string-clean-whitespace ()
-  "Check if `string-clean-whitespace' was implemented correctly."
+  "Check if `compat--string-clean-whitespace' was implemented correctly."
   (compat-test string-clean-whitespace
     (compat--should "a b c" "a b c")
     (compat--should "a b c" "   a b c")
@@ -1133,7 +1133,7 @@ the compatibility function."
     (compat--should "aa bb cc" "   aa    bb    cc    ")))
 
 (ert-deftest compat-string-fill ()
-  "Check if `string-fill' was implemented correctly."
+  "Check if `compat--string-fill' was implemented correctly."
   (compat-test string-fill
     (compat--should "a a a a a" "a a a a a" 9)
     (compat--should "a a a a a" "a a a a a" 10)
@@ -1144,7 +1144,7 @@ the compatibility function."
     (compat--should "a\na\na\na\na" "a a a a a" 1)))
 
 (ert-deftest compat-string-lines ()
-  "Check if `string-lines' was implemented correctly."
+  "Check if `compat--string-lines' was implemented correctly."
   (compat-test string-lines
     (compat--should '("a" "b" "c") "a\nb\nc")
     (compat--should '("a" "b" "c" "") "a\nb\nc\n")
@@ -1153,7 +1153,7 @@ the compatibility function."
     (compat--should '(" abc" " bcd " "cde ") " abc\n bcd \ncde ")))
 
 (ert-deftest compat-string-pad ()
-  "Check if `string-pad' was implemented correctly."
+  "Check if `compat--string-pad' was implemented correctly."
   (compat-test string-pad
     (compat--should "a   " "a" 4)
     (compat--should "aaaa" "aaaa" 4)
@@ -1163,7 +1163,7 @@ the compatibility function."
     (compat--should "...a" "a" 4 ?. t)))
 
 (ert-deftest compat-string-chop-newline ()
-  "Check if `string-chop-newline' was implemented correctly."
+  "Check if `compat--string-chop-newline' was implemented correctly."
   (compat-test string-chop-newline
     (compat--should "" "")
     (compat--should "" "\n")
@@ -1172,14 +1172,14 @@ the compatibility function."
     (compat--should "aaa\n" "aaa\n\n")))
 
 (ert-deftest compat-macroexpand-1 ()
-  "Check if `macroexpand-1' was implemented correctly."
+  "Check if `compat--macroexpand-1' was implemented correctly."
   (compat-test macroexpand-1
     (compat--should '(if a b c) '(if a b c))
     (compat--should '(if a (progn b)) '(when a b))
     (compat--should '(if a (progn (unless b c))) '(when a (unless b c)))))
 
 (ert-deftest compat-file-size-human-readable ()
-  "Check if `file-size-human-readable' was advised properly."
+  "Check if `compat--file-size-human-readable' was advised properly."
   (compat-test file-size-human-readable
     (compat--should* "1000" 1000)
     (compat--should* "1k" 1024)
@@ -1197,7 +1197,7 @@ the compatibility function."
     (compat--should* "1 kA" 1000 'si " " "A")))
 
 (ert-deftest compat-format-prompt ()
-  "Check if `file-size-human-readable' was implemented properly."
+  "Check if `compat--file-size-human-readable' was implemented properly."
   (compat-test format-prompt
     (compat--should "Prompt: " "Prompt" nil)
     (compat--should "Prompt (default 3): " "Prompt" 3)
@@ -1207,14 +1207,14 @@ the compatibility function."
     (compat--should "Prompt \"abc\" (default 3): " "Prompt %S" 3 "abc")))
 
 (ert-deftest compat-named-let ()
-  "Check if `named-let' was implemented properly."
+  "Check if `compat--named-let' was implemented properly."
   (should (= (compat--named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
   (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
              (expt 2 8))))
 
 (ert-deftest compat-directory-name-p ()
-  "Check if `directory-name-p' was implemented properly."
+  "Check if `compat--directory-name-p' was implemented properly."
   (compat-test directory-name-p
     (compat--should t "/")
     (compat--should nil "/file")
