@@ -43,17 +43,43 @@
 
 ;;;; Core functionality
 
+(declare-function ad-is-advised "advice" (function))
+(declare-function ad-is-active "advice" (function))
+(declare-function ad-get-advice-info-field "advice" (function field))
+
 ;; The implementation is extracted here so that compatibility advice
 ;; can check if the right number of arguments are being handled.
-(defun compat-func-arity (func)
-  "A reimplementation of `func-arity' for FUNC."
+(defun compat-func-arity (func &optional handle-advice)
+  "A reimplementation of `func-arity' for FUNC.
+If HANDLE-ADVICE is non-nil, return the effective arity of the
+advice."
   (cond
-   ((null func)
+   ((or (null func) (and (symbolp func) (not (fboundp func))) )
     (signal 'void-function func))
+   ((and handle-advice
+         (featurep 'nadvice)
+         (advice--p func))
+    (let* ((adv (advice--car (symbol-function #'alist-get)))
+           (arity (compat-func-arity adv)))
+      (cons (1- (car arity))
+            (if (numberp (cdr arity))
+                (1- (cdr arity))
+              (cdr arity)))))
+   ((and handle-advice
+         (featurep 'advice)
+         ;; See `ad-advice-p'
+         (ad-is-advised func)
+         (ad-is-active func))
+    (let* ((adv (symbol-function
+                 (ad-get-advice-info-field
+                  func 'advicefunname)))
+           (arity (compat-func-arity adv)))
+      (cons (1- (car arity))
+            (if (numberp (cdr arity))
+                (1- (cdr arity))
+              (cdr arity)))))
    ((and (symbolp func) (not (null func)))
-    (compat-func-arity (condition-case nil
-                           (indirect-function func)
-                         (void-function nil))))
+    (compat-func-arity (symbol-function func)))
    ((eq (car-safe func) 'macro)
     (compat-func-arity (cdr func)))
    ((subrp func)
@@ -93,8 +119,9 @@
 
 (defun compat-maxargs-/= (func n)
   "Non-nil when FUNC doesn't accept at most N arguments."
-  (not (eq (cdr (compat-func-arity func)) n)))
-
+  (condition-case nil
+      (not (eq (cdr (compat-func-arity func t)) n))
+    (void-function t)))
 
 ;; Suppress errors triggered by requiring non-existent libraries in
 ;; older versions of Emacs (e.g. subr-x).
