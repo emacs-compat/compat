@@ -119,7 +119,7 @@ attention to case differences."
 
 (compat-advise split-string (string &optional separators omit-nulls trim)
   "Handle optional argument TRIM."
-  :cond (compat-maxargs-/= #'assoc 4)
+  :cond (compat-maxargs-/= #'split-string 4)
   (let* ((token (funcall oldfun string separators omit-nulls))
          (trimmed (if trim
                       (mapcar

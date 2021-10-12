@@ -144,7 +144,7 @@ consider, and are interpreted as in `substring'."
 
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
-  :cond (compat-maxargs-/= #'assoc 5)
+  :cond (compat-maxargs-/= #'directory-files 5)
   (let ((files (funcall oldfun directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
@@ -404,7 +404,7 @@ is included in the return value."
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
-  :cond (compat-maxargs-/= #'assoc 3)
+  :cond (compat-maxargs-/= #'count-windows 3)
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))
