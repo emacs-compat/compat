@@ -1229,5 +1229,18 @@ the compatibility function."
     (compat--should t "dir/subdir/")
     (compat--should nil "dir/subdir")))
 
+(ert-deftest compat-if-let* ()
+  "Check if `compat--if-let*' was implemented properly."
+  (should
+   (compat--if-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true nil))
+  (should-not
+   (compat--if-let* (((= 5 6))) t nil)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
