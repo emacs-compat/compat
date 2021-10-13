@@ -1295,6 +1295,17 @@ the compatibility function."
         (should (equal (gethash "key" obj) ["abc" 2]))
         (should (equal (gethash "yek" obj) :null))))))
 
+(ert-deftest compat-lookup-key ()
+  "Check if `compat-lookup-key' was implemented properly."
+  (let ((a-map (make-sparse-keymap))
+        (b-map (make-sparse-keymap)))
+    (define-key a-map "x" 'foo)
+    (define-key b-map "x" 'bar)
+    (compat-test lookup-key
+      (compat--should* 'foo a-map "x")
+      (compat--should* 'bar b-map "x")
+      (compat--should* 'foo (list a-map b-map) "x")
+      (compat--should* 'bar (list b-map a-map) "x"))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
