@@ -1262,5 +1262,39 @@ the compatibility function."
   (should-not
    (compat--and-let* (((= 5 6))) t)))
 
+(ert-deftest compat-json-parse-string ()
+  "Check if `compat--json-parse-string' was implemented properly."
+  (compat-test json-parse-string
+    (compat--should 0 "0")
+    (compat--should 1 "1")
+    (compat--should 0.5 "0.5")
+    (compat--should [1 2 3] "[1,2,3]")
+    (compat--should ["a" 2 3] "[\"a\",2,3]")
+    (compat--should [["a" 2] 3] "[[\"a\",2],3]")
+    (compat--should '(("a" 2) 3) "[[\"a\",2],3]" :array-type 'list)
+    (compat--should 'foo "null" :null-object 'foo)
+    (compat--should ["false" t] "[false, true]" :false-object "false"))
+  (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
+    (let ((obj (compat--json-parse-string input)))
+      (should (equal (gethash "key" obj) ["abc" 2]))
+      (should (equal (gethash "yek" obj) :null)))
+    (let ((obj (compat--json-parse-string input :object-type 'alist)))
+      (should (equal (cdr (assq 'key obj)) ["abc" 2]))
+      (should (equal (cdr (assq 'yek obj)) :null)))
+    (let ((obj (compat--json-parse-string input :object-type 'plist)))
+      (should (equal (plist-get obj :key) ["abc" 2]))
+      (should (equal (plist-get obj :yek) :null)))
+    (when (fboundp 'json-parse-string)
+      (let ((obj (json-parse-string input :object-type 'alist)))
+        (should (equal (cdr (assq 'key obj)) ["abc" 2]))
+        (should (equal (cdr (assq 'yek obj)) :null)))
+      (let ((obj (json-parse-string input :object-type 'plist)))
+        (should (equal (plist-get obj :key) ["abc" 2]))
+        (should (equal (plist-get obj :yek) :null)))
+      (let ((obj (json-parse-string input)))
+        (should (equal (gethash "key" obj) ["abc" 2]))
+        (should (equal (gethash "yek" obj) :null))))))
+
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
