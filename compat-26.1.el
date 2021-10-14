@@ -75,6 +75,8 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 ;;;; Defined in subr.el
 
+(declare-function compat--alist-get-full-elisp "compat-25.1"
+                  (key alist &optional default remove testfn))
 (compat-advise alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."
   :min-version "25.1"			;first defined in 25.1
@@ -82,12 +84,8 @@ from the absolute start of the buffer, disregarding the narrowing."
   :realname compat--alist-get-handle-testfn
   :cond (compat-maxargs-/= #'alist-get 5)
   (if testfn
-      (catch 'found
-        (dolist (ent alist)
-          (when (and (consp ent) (funcall testfn (car ent) key))
-            (throw 'found (cdr ent))))
-        default)
-    (funcall oldfun key alist default remove testfn)))
+      (compat--alist-get-full-elisp key alist default remove testfn)
+    (funcall oldfun key alist default remove)))
 
 (compat-defun string-trim-left (string &optional regexp)
   "Trim STRING of leading string matching REGEXP.
