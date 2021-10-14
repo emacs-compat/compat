@@ -162,6 +162,8 @@ attributes (see `compat-generate-common')."
                 (defvar ,oldfun (indirect-function ',name))
                 (defalias ',name
                   (lambda (&rest args)
+                    ,(format "[Compatibility advice using `%s']\n\n%s"
+                             realname (documentation name))
                     (apply #',realname (cons ,oldfun args))))))))))
      (lambda ()
        (cond
