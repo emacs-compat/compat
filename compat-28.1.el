@@ -338,6 +338,8 @@ as the new values of the bound variables in the recursive invocation."
 
 ;;;; Defined in files.el
 
+(declare-function compat--string-trim-left "compat-26.1" (string &optional regexp))
+(declare-function compat--directory-name-p "compat-25.1" (name))
 (compat-defun file-name-with-extension (filename extension)
   "Set the EXTENSION of a FILENAME.
 The extension (in a file name) is the part that begins with the last \".\".
