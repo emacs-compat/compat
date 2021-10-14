@@ -123,6 +123,9 @@ bindings, used when nothing else in the keymap applies; this makes it
 usable as a general function for probing keymaps.  However, if the
 third optional argument ACCEPT-DEFAULT is non-nil, `lookup-key' will
 recognize the default bindings, just as `read-key-sequence' does."
+  :cond (condition-case err
+            (lookup-key '(x) nil)
+          (wrong-type-argument (equal err '(keymapp (x)))))
   (cond
    ((keymapp keymap)
     (funcall oldfun keymap key accept-default))
