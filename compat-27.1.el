@@ -181,7 +181,7 @@ any JSON false values."
 This is the same as (insert (json-serialize OBJECT)), but potentially
 faster.  See the function `json-serialize' for allowed values of
 OBJECT."
-  (insert (apply #'json-serialize object args)))
+  (insert (apply #'compat--json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
   "Parse the JSON STRING into a Lisp object.

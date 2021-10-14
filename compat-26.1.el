@@ -244,8 +244,9 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   "Return a new uninterned symbol.
 The name is made by appending `gensym-counter' to PREFIX.
 PREFIX is a string, and defaults to \"g\"."
-  (let ((num (prog1 gensym-counter
-               (setq gensym-counter (1+ gensym-counter)))))
+  (let ((num (prog1 compat--gensym-counter
+               (setq compat--gensym-counter
+                     (1+ compat--gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
 ;;;; Defined in files.el
@@ -287,7 +288,7 @@ the variable `temporary-file-directory' is returned."
                   default-directory 'temporary-file-directory)))
     (if handler
         (funcall handler 'temporary-file-directory)
-      (if (string-match mounted-file-systems default-directory)
+      (if (string-match compat--mounted-file-systems default-directory)
           default-directory
         temporary-file-directory))))
 
