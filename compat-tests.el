@@ -137,7 +137,10 @@ If FN is a list, the car should be the actual function, and cadr
 the compatibility function."
   (declare (indent 1))
   (if (consp fn)
-      (setq compat--current-fn (car fn)
+      (setq compat--current-fn (if (symbolp (car fn))
+                                   (car fn)
+                                 ;; Handle expressions
+                                 (eval (car fn) t))
             compat--compat-fn (cadr fn))
     (setq compat--current-fn fn
           compat--compat-fn nil))
@@ -646,8 +649,9 @@ the compatibility function."
     (compat--should 'b 2 '(1 (2 . b) 3))
     (compat--should nil 2 '((1 . a) 2 (3 . c)))
     (compat--should 'a 1 '((3 . c) (2 . b) (1 . a)))
-    (compat--should nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
-
+    (compat--should nil "a" '(("a" . 1) ("b" . 2) ("c" . 3))))  ;non-primitive elements
+  (compat-test ((and (version<= "26.1" emacs-version) #'alist-get)
+                compat--alist-get-full-elisp)
     ;; With testfn (advised behaviour):
     (compat--should 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
     (compat--should 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
