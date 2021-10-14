@@ -46,6 +46,8 @@
 (declare-function ad-is-advised "advice" (function))
 (declare-function ad-is-active "advice" (function))
 (declare-function ad-get-advice-info-field "advice" (function field))
+(declare-function advice--p "nadvice" (func))
+(declare-function advice--car "nadvice" (func))
 
 ;; The implementation is extracted here so that compatibility advice
 ;; can check if the right number of arguments are being handled.
