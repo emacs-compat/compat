@@ -27,16 +27,13 @@
 ;; test these in or their tests are trivial -- or a combination of
 ;; both.  The current list of untested functions, macros, etc. are:
 ;;
-;; - and-let* (`compat--and-let*')
 ;; - buffer-local-boundp (`buffer-local-boundp')
 ;; - count-windows (`compat--count-windows')
-;; - defmacro (`compat--defmacro')
 ;; - directory-empty-p (`compat--directory-empty-p')
 ;; - directory-files (`compat--directory-files')
 ;; - dlet (`compat--dlet')
 ;; - garbage-collect-maybe (`compat--garbage-collect-maybe')
 ;; - if-let (`compat--if-let')
-;; - if-let* (`compat--if-let*')
 ;; - ignore-error (`compat--ignore-error')
 ;; - insert-into-buffer (`compat--insert-into-buffer')
 ;; - line-number-at-pos (`compat--line-number-at-pos')
