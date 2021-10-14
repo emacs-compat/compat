@@ -89,20 +89,6 @@ from the absolute start of the buffer, disregarding the narrowing."
         default)
     (funcall oldfun key alist default remove testfn)))
 
-(compat-defun alist-get (key alist &optional default remove testfn)
-  "Find the first element of ALIST whose `car' equals KEY and return its `cdr'.
-If KEY is not found in ALIST, return DEFAULT.
-Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  :max-version "24.5"
-  :realname compat--alist-get-full-elisp
-  (ignore remove)
-  (unless testfn (setq testfn #'eq))
-  (catch 'found
-    (dolist (ent alist)
-      (when (and (consp ent) (funcall testfn (car ent) key))
-        (throw 'found (cdr ent))))
-    default))
-
 (compat-defun string-trim-left (string &optional regexp)
   "Trim STRING of leading string matching REGEXP.
 

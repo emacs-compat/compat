@@ -90,6 +90,26 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
+(compat-defun alist-get (key alist &optional default remove testfn)
+  "Find the first element of ALIST whose `car' equals KEY and return its `cdr'.
+If KEY is not found in ALIST, return DEFAULT.
+Equality with KEY is tested by TESTFN, defaulting to `eq'."
+  :max-version "24.5"
+  :realname compat--alist-get-full-elisp
+  (ignore remove)
+  (let (entry)
+    (cond
+     ((or (null testfn) (eq testfn 'eq))
+      (setq entry (assq key alist)))
+     ((eq testfn 'equal)
+      (setq entry (assoc key alist)))
+     ((catch 'found
+        (dolist (ent alist)
+          (when (and (consp ent) (funcall testfn (car ent) key))
+            (throw 'found (setq entry ent))))
+        default)))
+    (if entry (cdr entry) default)))
+
 ;;;; Defined in subr-x.el
 
 (compat-defmacro if-let* (varlist then &rest else)
