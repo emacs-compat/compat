@@ -43,8 +43,8 @@ contributions.
 Source code
 -----------
 
-The project is managed can be found on [SourceHut] but has a
-(disfavoured) [GitHub] mirror as well.
+The project is managed can be found on [SourceHut] but has a [GitHub]
+mirror as well.
 
 Bug and patches
 ---------------
@@ -52,6 +52,9 @@ Bug and patches
 Patches, bug reports and comments can be sent to the mailing list
 
     ~pkal/public-inbox@lists.sr.ht
+
+or via GitHub. These may include issues in the compatibility code,
+missing definitions or performance issues.
 
 When contributing, make sure to provide test and use the existing
 tests defined in compat-test.el.  These can be easily executed using
