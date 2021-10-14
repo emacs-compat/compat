@@ -59,7 +59,7 @@ advice."
    ((and handle-advice
          (featurep 'nadvice)
          (advice--p func))
-    (let* ((adv (advice--car (symbol-function #'alist-get)))
+    (let* ((adv (advice--car (symbol-function func)))
            (arity (compat-func-arity adv)))
       (cons (1- (car arity))
             (if (numberp (cdr arity))
