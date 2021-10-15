@@ -96,7 +96,7 @@ TYPE is used to set the symbol property `compat-type' for NAME."
                                     (regexp-quote (symbol-name name))
                                     "\\)\\_>")
                            1 font-lock-preprocessor-face prepend))))
-                 ,(funcall install-fn realname))))
+                 ,(funcall install-fn realname version))))
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
@@ -146,7 +146,7 @@ attributes (see `compat-generate-common')."
          ,(and (eq type 'advice) '(ignore oldfun))
          ;; Insert the actual body now.
          ,@body))
-     (lambda (realname)
+     (lambda (realname version)
        (cond
         ((memq type '(func macro))
          ;; Functions and macros are installed by
@@ -165,8 +165,9 @@ attributes (see `compat-generate-common')."
                 (put ',name 'compat-advice-fn #',realname)
                 (defalias ',name
                   (lambda (&rest args)
-                    ,(format "[Manual compatibility advice for %S]\n\n%s"
-                             name (documentation name))
+                    ,(format
+                      "[Manual compatibility advice for `%S', defined in Emacs %s]\n\n%s"
+                      name version (documentation name))
                     (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
      (lambda ()
        (cond
@@ -254,7 +255,7 @@ non-nil value."
              `(put ',realname 'permanent-local t))
             (localp
              `(make-variable-buffer-local ',realname))))))
-   (lambda (realname)
+   (lambda (realname _version)
      `(defvaralias ',name ',realname))
    (lambda ()
      `(not (boundp ',name)))
