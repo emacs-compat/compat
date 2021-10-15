@@ -298,7 +298,8 @@ the compatibility function."
     (compat--should "ccc" "ab" "" "abcabcabc")
     (compat--should "aaaaaa" "a" "aa" "aaa")
     (compat--should "defg" "abc" "defg" "abc")
-    (compat--error wrong-length-argument "" "x" "abc")))
+    (compat--error (wrong-type-argument wrong-length-argument)
+                   "" "x" "abc")))
 
 (ert-deftest compat-length= ()
   "Check if `compat--string-length=' was implemented correctly."
