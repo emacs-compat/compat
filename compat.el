@@ -43,9 +43,7 @@
 
 ;;;; Core functionality
 
-(declare-function ad-is-advised "advice" (function))
 (declare-function ad-is-active "advice" (function))
-(declare-function ad-get-advice-info-field "advice" (function field))
 (declare-function advice--p "nadvice" (func))
 (declare-function advice--car "nadvice" (func))
 
@@ -67,10 +65,8 @@ advice."
             (if (numberp (cdr arity))
                 (1- (cdr arity))
               (cdr arity)))))
-   ((and handle-advice
-         (featurep 'advice)
-         ;; See `ad-advice-p'
-         (ad-is-active func))
+   ((and handle-advice (get func 'compat-advice-fn))
+    ;; Handle manual advising:
     (let* ((adv (get func 'compat-advice-fn))
            (arity (compat-func-arity adv)))
       (cons (1- (car arity))

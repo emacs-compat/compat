@@ -156,18 +156,16 @@ attributes (see `compat-generate-common')."
          `(defalias ',name #',realname))
         ((eq type 'advice)
          ;; nadvice.el was introduced in Emacs 24.4, so older versions
-         ;; have to manually advise the old function.
+         ;; have to advise the function using advice.el's `defadvice'.
          (if (version<= "24.4" emacs-version)
              `(advice-add ',name :around #',realname)
-           ;; FIXME consider using advice.el and `ad-add-advice'.
            (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
              `(progn
                 (defvar ,oldfun (indirect-function ',name))
                 (put ',name 'compat-advice-fn #',realname)
-                (defadvice ,name (around
-                                  ,(intern (format "ad--%S" realname))
-                                  (&rest args) activate)
-                  (apply #',realname (cons ,oldfun args)))))))))
+                (defalias ',name
+                  (lambda (&rest args)
+                    (apply #',realname (cons ,oldfun args))))))))))
      (lambda ()
        (cond
         ((memq type '(func macro))
