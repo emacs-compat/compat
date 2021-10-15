@@ -145,14 +145,22 @@ advice."
 (compat-advise require (feature &optional filename noerror)
   "Avoid throwing an error if library has compatibility code."
   ;; As the compatibility advise around `require` is more a hack than
-  ;; of of actual value, the highlighting is supressed.
+  ;; of of actual value, the highlighting is suppressed.
   :no-highlight t
   (condition-case err
-      (funcall oldfun feature filename noerror)
+      (funcall oldfun feature filename)
     (file-missing
-     ;; FIXME: avoid false negatives, check if compat defined a
-     ;;        feature.
-     (unless (assq feature after-load-alist)
+     (let ((entry (assq feature after-load-alist)))
+       (unless (and entry
+                    (get feature 'setup-deferred-p)
+                    (null noerror))
+         (signal (car err) (cdr err)))
+       (let ((load-file-name nil))
+         (dolist (form (cdr entry))
+           (funcall (eval form t))))
+       feature))
+    (error
+     (unless noerror
        (signal (car err) (cdr err))))))
 
 ;; Load the actual compatibility definitions:
