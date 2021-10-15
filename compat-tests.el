@@ -299,8 +299,11 @@ the compatibility function."
     (compat--should "ccc" "ab" "" "abcabcabc")
     (compat--should "aaaaaa" "a" "aa" "aaa")
     (compat--should "defg" "abc" "defg" "abc")
-    (compat--error (wrong-type-argument wrong-length-argument)
-                   "" "x" "abc")))
+    (when (version<= "24.4" emacs-version)
+      ;; FIXME: Emacs 24.3 do not know of `wrong-length-argument' and
+      ;; therefore fail this test, even if the right symbol is being
+      ;; thrown.
+      (compat--error wrong-length-argument "" "x" "abc"))))
 
 (ert-deftest compat-length= ()
   "Check if `compat--string-length=' was implemented correctly."
