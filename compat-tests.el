@@ -138,7 +138,10 @@ the compatibility function."
                                    (car fn)
                                  ;; Handle expressions
                                  (eval (car fn) t))
-            compat--compat-fn (cadr fn))
+            compat--compat-fn (if (symbolp (cadr fn))
+                                   (cadr fn)
+                                 ;; Handle expressions
+                                 (eval (cadr fn) t)))
     (setq compat--current-fn fn
           compat--compat-fn nil))
   (macroexp-progn body))
@@ -1265,7 +1268,10 @@ the compatibility function."
 
 (ert-deftest compat-json-parse-string ()
   "Check if `compat--json-parse-string' was implemented properly."
-  (compat-test json-parse-string
+  (compat-test (json-parse-string (if (version<= "28" emacs-version)
+                                      (apply-partially #'compat--json-parse-string-handle-tlo
+                                                       #'json-parse-string)
+                                    #'compat--json-parse-string))
     (compat--should 0 "0")
     (compat--should 1 "1")
     (compat--should 0.5 "0.5")

@@ -150,6 +150,75 @@ If COUNT is non-nil and a natural number, the function will
       (setf (nthcdr count files) nil))
     files))
 
+;;;; Defined in json.c
+
+(compat-advise json-serialize (object &rest args)
+  "Handle top-level JSON values."
+  :cond (condition-case err
+            ;; Use `random' to prevent byte compiler from optimising
+            ;; the "pure" `json-serialize' call.
+            (ignore (json-serialize (if (random) 0 0)))
+          (wrong-type-argument (eq (cadr err) 'json-value-p)))
+  :realname compat--json-serialize-handle-tlo
+  :min-version "27"
+  (if (or (listp object) (vectorp object))
+      (apply oldfun object args)
+    (substring (json-serialize (list object)) 1 -1)))
+
+(compat-advise json-insert (object &rest args)
+  "Handle top-level JSON values."
+  :cond (condition-case err
+            ;; Use `random' to prevent byte compiler from optimising
+            ;; the "pure" `json-serialize' call.
+            (ignore (json-serialize (if (random) 0 0)))
+          (wrong-type-argument (eq (cadr err) 'json-value-p)))
+  :realname compat--json-insert-handle-tlo
+  :min-version "27"
+  (if (or (listp object) (vectorp object))
+      (apply oldfun object args)
+    (insert (apply #'compat--json-serialize-handle-tlo oldfun object args))))
+
+(compat-advise json-parse-string (string &rest args)
+  "Handle top-level JSON values."
+  :cond (condition-case nil
+            ;; Use `random' to prevent byte compiler from optimising
+            ;; the "pure" `json-serialize' call.
+            (ignore (json-parse-string (if (random) "0" "0")))
+          (json-parse-error t))
+  :realname compat--json-parse-string-handle-tlo
+  :min-version "27"
+  (if (string-match-p "\\`[[:space:]]*[[{]" string)
+      (apply oldfun string args)
+    ;; Wrap the string in an array, and extract the value back using
+    ;; `elt', to ensure that no matter what the value of `:array-type'
+    ;; is we can access the first element.
+    (elt (apply oldfun (concat "[" string "]") args) 0)))
+
+(compat-advise json-parse-buffer (&rest args)
+  "Handle top-level JSON values."
+  :cond (condition-case nil
+            ;; Use `random' to prevent byte compiler from optimising
+            ;; the "pure" `json-serialize' call.
+            (ignore (json-parse-string (if (random) "0" "0")))
+          (json-parse-error t))
+  :realname compat--json-parse-buffer-handle-tlo
+  :min-version "27"
+  (if (looking-at-p "[[:space:]]*[[{]")
+      (apply oldfun args)
+    (catch 'escape
+      (atomic-change-group
+        (with-syntax-table
+            (let ((st (make-syntax-table)))
+              (modify-syntax-entry ?\" "\"" st)
+              (modify-syntax-entry ?. "_" st)
+              st)
+          (let ((inhibit-read-only t))
+            (save-excursion
+            (insert "[")
+            (forward-sexp 1)
+            (insert "]"))))
+        (throw 'escape (elt (apply oldfun args) 0))))))
+
 ;;;; Defined in subr.el
 
 (compat-defun string-replace (fromstring tostring instring)
