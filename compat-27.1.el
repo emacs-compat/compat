@@ -453,6 +453,7 @@ in all cases, since that is the standard symbol for byte."
 
 (compat-advise regexp-opt (strings &optional paren)
   "Handle an empty list of strings."
+  :feature regexp-opt
   (if (null strings)
       (let ((re "\\`a\\`"))
         (cond ((null paren)
