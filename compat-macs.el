@@ -165,7 +165,7 @@ attributes (see `compat-generate-common')."
                 (put ',name 'compat-advice-fn #',realname)
                 (defalias ',name
                   (lambda (&rest args)
-                    (apply #',realname (cons ,oldfun args))))))))))
+                    (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
      (lambda ()
        (cond
         ((memq type '(func macro))
