@@ -169,7 +169,7 @@ attributes (see `compat-generate-common')."
                   (lambda (&rest args)
                     ,(format
                       "[Manual compatibility advice for `%S', defined in Emacs %s]\n\n%s"
-                      name version (documentation name))
+                      name version (if (fboundp name) (documentation name) docstring))
                     (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
      (lambda ()
        (cond
