@@ -159,12 +159,12 @@ attributes (see `compat-generate-common')."
            ;; FIXME consider using advice.el and `ad-add-advice'.
            (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
              `(progn
-                (defvar ,oldfun (indirect-function ,name))
+                (defvar ,oldfun (indirect-function ',name))
                 (put ',name 'compat-advice-fn #',realname)
                 (defadvice ,name (around
                                   ,(intern (format "ad--%S" realname))
                                   (&rest args) activate)
-                  (apply #',realname (cons oldfun args)))))))))
+                  (apply #',realname (cons ,oldfun args)))))))))
      (lambda ()
        (cond
         ((memq type '(func macro))
