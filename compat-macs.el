@@ -165,6 +165,8 @@ attributes (see `compat-generate-common')."
                 (put ',name 'compat-advice-fn #',realname)
                 (defalias ',name
                   (lambda (&rest args)
+                    ,(format "[Manual compatibility advice for %S]\n\n%s"
+                             name (documentation name))
                     (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
      (lambda ()
        (cond
