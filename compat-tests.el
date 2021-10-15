@@ -29,6 +29,7 @@
 ;;
 ;; - buffer-local-boundp (`buffer-local-boundp')
 ;; - count-windows (`compat--count-windows')
+;; - define-error (`compat--define-error')
 ;; - directory-empty-p (`compat--directory-empty-p')
 ;; - directory-files (`compat--directory-files')
 ;; - dlet (`compat--dlet')
