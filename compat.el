@@ -70,11 +70,8 @@ advice."
    ((and handle-advice
          (featurep 'advice)
          ;; See `ad-advice-p'
-         (ad-is-advised func)
          (ad-is-active func))
-    (let* ((adv (symbol-function
-                 (ad-get-advice-info-field
-                  func 'advicefunname)))
+    (let* ((adv (get func 'compat-advice-fn))
            (arity (compat-func-arity adv)))
       (cons (1- (car arity))
             (if (numberp (cdr arity))

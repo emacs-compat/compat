@@ -157,14 +157,14 @@ attributes (see `compat-generate-common')."
          (if (version<= "24.4" emacs-version)
              `(advice-add ',name :around #',realname)
            ;; FIXME consider using advice.el and `ad-add-advice'.
-           (let ((oldfun (make-symbol (format "oldfun-%S" name))))
+           (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
              `(progn
-                (defvar ,oldfun (indirect-function ',name))
-                (defalias ',name
-                  (lambda (&rest args)
-                    ,(format "[Compatibility advice using `%s']\n\n%s"
-                             realname (documentation name))
-                    (apply #',realname (cons ,oldfun args))))))))))
+                (defvar ,oldfun (indirect-function ,name))
+                (put ',name 'compat-advice-fn #',realname)
+                (defadvice ,name (around
+                                  ,(intern (format "ad--%S" realname))
+                                  (&rest args) activate)
+                  (apply #',realname (cons oldfun args)))))))))
      (lambda ()
        (cond
         ((memq type '(func macro))
