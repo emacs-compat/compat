@@ -396,14 +396,72 @@ calling NAME, where the arguments passed to NAME are used
 as the new values of the bound variables in the recursive invocation."
   :feature subr-x
   (declare (indent 2) (debug (symbolp (&rest (symbolp form)) body)))
-  (let* ((fargs (mapcar (lambda (b) (if (consp b) (car b) b)) bindings))
-         (aargs (mapcar (lambda (b) (if (consp b) (cadr b))) bindings))
-         (fn (make-symbol "self"))
-         (macro (lambda (&rest args) `(apply ,fn (list ,@args)))))
-    `(letrec ((,fn (lambda ,fargs ,(macroexpand-all
-                                    (macroexp-progn body)
-                                    (list (cons name macro))))))
-       (apply ,fn (list ,@aargs)))))
+  (let ((fargs (mapcar (lambda (b)
+                         (let ((var (if (consp b) (car b) b)))
+                           (make-symbol (symbol-name var))))
+                       bindings))
+        (aargs (mapcar (lambda (b) (if (consp b) (cadr b))) bindings))
+        rargs)
+    (dotimes (i (length bindings))
+      (let ((b (nth i bindings)))
+        (push (list (if (consp b) (car b) b) (nth i fargs))
+              rargs)
+        (setf (if (consp b) (car b) b)
+              (nth i fargs))))
+    (letrec
+        ((quit (make-symbol "quit")) (self (make-symbol "self"))
+         (total-tco t)
+         (macro (lambda (&rest args)
+                  (setq total-tco nil)
+                  `(apply ,self (list ,@args))))
+         ;; Based on `cl--self-tco':
+         (tco-progn (lambda (exprs)
+                      (append
+                       (butlast exprs)
+                       (list (funcall tco (car (last exprs)))))))
+         (tco (lambda (expr)
+                (cond
+                 ((eq (car-safe expr) 'if)
+                  (append (list 'if
+                                (cadr expr)
+                                (funcall tco (caddr expr)))
+                          (funcall tco-progn (cdddr expr))))
+                 ((eq (car-safe expr) 'cond)
+                  (cons 'cond
+                        (mapcar (lambda (branch)
+                                  (list
+                                   (car branch)
+                                   (funcall tco-progn (cdr expr))))
+                                (cdr expr))))
+                 ((eq (car-safe expr) 'or)
+                  (if (cddr expr)
+                      (let ((var (make-symbol "var")))
+                        `(let ((,var ,(cadr expr)))
+                           (if ,var ,(funcall tco var)
+                             ,(funcall tco (cons 'or (cddr expr))))))
+                    (funcall tco (cadr expr))))
+                 ((memq (car-safe expr) '(and progn))
+                  (cons (car expr) (funcall tco-progn (cdr expr))))
+                 ((memq (car-safe expr) '(let let*))
+                  (append (list (car expr) (cadr expr))
+                          (funcall tco-progn (cddr expr))))
+                 ((eq (car-safe expr) name)
+                  (let (sets)
+                    (dolist (farg fargs)
+                      (push (list farg (pop (cdr expr)))
+                            sets))
+                    (cons 'setq (apply #'nconc (nreverse sets)))))
+                 (`(throw ',quit ,expr))))))
+      (let ((tco-body (funcall tco (macroexpand-all (macroexp-progn body)))))
+        (when tco-body
+          (setq body `((catch ',quit
+                         (while t (let ,rargs ,@(macroexp-unprogn tco-body))))))))
+      (let ((expand (macroexpand-all (macroexp-progn body) (list (cons name macro)))))
+        (if total-tco
+            `(let ,bindings ,expand)
+          `(funcall
+            (letrec ((,self (lambda ,fargs ,expand))) ,self)
+            ,@aargs))))))
 
 ;;;; Defined in files.el
 

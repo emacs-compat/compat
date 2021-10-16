@@ -1219,6 +1219,8 @@ the compatibility function."
   "Check if `compat--named-let' was implemented properly."
   (should (= (compat--named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
+  (should (= (compat--named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
+             100000))
   (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
              (expt 2 8))))
 
