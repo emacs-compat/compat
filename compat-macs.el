@@ -145,9 +145,9 @@ attributes (see `compat-generate-common')."
          ;; Advice may use the implicit variable `oldfun', but
          ;; to avoid triggering the byte compiler, we make
          ;; sure the argument is used at least once.
-         ,(and (eq type 'advice) '(ignore oldfun))
-         ;; Insert the actual body now.
-         ,@body))
+         ,@(if (eq type 'advice)
+               (cons '(ignore oldfun) body)
+             body)))
      (lambda (realname version)
        (cond
         ((memq type '(func macro))
