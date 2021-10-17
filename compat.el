@@ -151,14 +151,13 @@ advice."
       (funcall oldfun feature filename)
     (file-missing
      (let ((entry (assq feature after-load-alist)))
-       (unless (and entry
-                    (get feature 'setup-deferred-p)
-                    (null noerror))
+       (when (and entry
+                  (get feature 'setup-deferred-p)
+                  (null noerror))
          (signal (car err) (cdr err)))
        (let ((load-file-name nil))
          (dolist (form (cdr entry))
-           (funcall (eval form t))))
-       feature))
+           (funcall (eval form t))))))
     (error
      (unless noerror
        (signal (car err) (cdr err))))))
