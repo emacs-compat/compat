@@ -134,11 +134,12 @@ advice."
     (compat-func-arity func))
    ((signal 'invalid-function func))))
 
-(defun compat-maxargs-/= (func n)
-  "Non-nil when FUNC doesn't accept at most N arguments."
-  (condition-case nil
-      (not (eq (cdr (compat-func-arity func t)) n))
-    (void-function t)))
+(eval-and-compile
+  (defun compat-maxargs-/= (func n)
+    "Non-nil when FUNC doesn't accept at most N arguments."
+    (condition-case nil
+        (not (eq (cdr (compat-func-arity func t)) n))
+      (void-function t))))
 
 ;; Suppress errors triggered by requiring non-existent libraries in
 ;; older versions of Emacs (e.g. subr-x).
