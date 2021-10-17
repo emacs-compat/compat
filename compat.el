@@ -164,11 +164,11 @@ advice."
        (signal (car err) (cdr err))))))
 
 ;; Load the actual compatibility definitions:
-(load "compat-24.4")
-(load "compat-25.1")
-(load "compat-26.1")
-(load "compat-27.1")
-(load "compat-28.1")
+(require 'compat-24.4)
+(require 'compat-25.1)
+(require 'compat-26.1)
+(require 'compat-27.1)
+(require 'compat-28.1)
 
 ;;;; Etcetera
 
