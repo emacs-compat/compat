@@ -1,3 +1,7 @@
 compat-tests.el
 Makefile
-.build.yml
+.dir-locals.el
+.github
+.elpaignore
+COPYING
+README.md
