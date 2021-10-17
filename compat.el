@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Philip Kaludercic <philipk@posteo.net>
-;; Version: 28.1.0.0-dev
+;; Version: 28.1.0.0-rc
 ;; URL: https://git.sr.ht/~pkal/compat/
 ;; Package-Requires: ((emacs "24.1"))
 ;; Keywords: lisp
