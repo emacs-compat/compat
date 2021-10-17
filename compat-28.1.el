@@ -533,7 +533,7 @@ is included in the return value."
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
-  :cond (compat-maxargs-/= #'count-windows 3)
+  :cond (compat-maxargs-/= #'count-windows 2)
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))
