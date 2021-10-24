@@ -102,10 +102,8 @@ TYPE is used to set the symbol property `compat-type' for NAME."
        (put ',realname 'compat-version ,version)
        ,(funcall def-fn realname version)
        ,(if feature
-            ;; Warning: This might be able throw an error if the code
-            ;; is not byte compiled, as explained in:
-            ;; https://nullprogram.com/blog/2018/02/22/.
-            `(eval-after-load ',feature (lambda () ,body))
+            ;; See https://nullprogram.com/blog/2018/02/22/:
+            `(eval-after-load 'feature `(funcall ,(lambda () ,@body)))
           body))))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
