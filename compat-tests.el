@@ -1221,6 +1221,23 @@ the compatibility function."
              8))
   (should (= (compat--named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
              100000))
+  (should (= (compat--named-let l ((i 0))
+               (condition-case nil
+                   (if (= i 100000) i (l (1+ i)))
+                 (error nil)))
+             100000))
+  (should (= (compat--named-let l ((i 0))
+               (condition-case nil
+                   (if (= i 100000) i (l (1+ i)))
+                 (error nil)))
+             100000))
+  (should (= (compat--named-let l ((i 0))
+               (cond
+                ((= i 100000) i)
+                ((= (mod i 2) 0)
+                 (l (+ i 2)))
+                ((l (+ i 3)))))
+             100000))
   (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
              (expt 2 8))))
 

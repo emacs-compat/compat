@@ -428,11 +428,13 @@ as the new values of the bound variables in the recursive invocation."
                           (funcall tco-progn (cdddr expr))))
                  ((eq (car-safe expr) 'cond)
                   (cons 'cond
-                        (mapcar (lambda (branch)
-                                  (list
-                                   (car branch)
-                                   (funcall tco-progn (cdr expr))))
-                                (cdr expr))))
+                        (mapcar
+                         (lambda (branch)
+                           (if (cdr branch)
+                               (cons (car branch)
+                                     (funcall tco-progn (cdr branch)))
+                             (list `(progn ,(funcall tco (car branch)) t))))
+                         (cdr expr))))
                  ((eq (car-safe expr) 'or)
                   (if (cddr expr)
                       (let ((var (make-symbol "var")))
