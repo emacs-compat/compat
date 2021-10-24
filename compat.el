@@ -141,28 +141,6 @@ advice."
         (not (eq (cdr (compat-func-arity func t)) n))
       (void-function t))))
 
-;; Suppress errors triggered by requiring non-existent libraries in
-;; older versions of Emacs (e.g. subr-x).
-(compat-advise require (feature &optional filename noerror)
-  "Avoid throwing an error if library has compatibility code."
-  ;; As the compatibility advise around `require` is more a hack than
-  ;; of of actual value, the highlighting is suppressed.
-  :no-highlight t
-  (condition-case err
-      (funcall oldfun feature filename)
-    (file-missing
-     (let ((entry (assq feature after-load-alist)))
-       (when (and entry
-                  (get feature 'setup-deferred-p)
-                  (null noerror))
-         (signal (car err) (cdr err)))
-       (let ((load-file-name nil))
-         (dolist (form (cdr entry))
-           (funcall (eval form t))))))
-    (error
-     (unless noerror
-       (signal (car err) (cdr err))))))
-
 ;; Load the actual compatibility definitions:
 (require 'compat-24.4)
 (require 'compat-25.1)

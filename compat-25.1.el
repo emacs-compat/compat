@@ -112,6 +112,19 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
 
 ;;;; Defined in subr-x.el
 
+(compat-advise require (feature &rest args)
+  "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
+  ;; As the compatibility advise around `require` is more a hack than
+  ;; of of actual value, the highlighting is suppressed.
+  :no-highlight t
+  :max-version "24.5"
+  (if (eq 'feature 'subr-x)
+      (let ((entry (assq feature after-load-alist)))
+        (let ((load-file-name nil))
+          (dolist (form (cdr entry))
+            (funcall (eval form t)))))
+    (apply oldfun feature args)))
+
 (compat-defmacro if-let* (varlist then &rest else)
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
