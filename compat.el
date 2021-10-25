@@ -43,7 +43,6 @@
 
 ;;;; Core functionality
 
-(declare-function ad-is-active "advice" (function))
 (declare-function advice--p "nadvice" (func))
 (declare-function advice--car "nadvice" (func))
 
