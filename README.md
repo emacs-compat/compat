@@ -1,6 +1,10 @@
 COMPATibility Library for Emacs
 ===============================
 
+> **Note to package developers:** compat.el hasn't yet been published,
+> and should not yet be added as a dependency.  The official release
+> of the package will coincide with the release of Emacs 28.1.
+
 Find here the source for compat.el, a forwards-compatibility library
 for (GNU) Emacs Lisp, versions 24.3 and newer.
 
