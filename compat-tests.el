@@ -1194,16 +1194,6 @@ the compatibility function."
   (should (= (compat--named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
              100000))
   (should (= (compat--named-let l ((i 0))
-               (condition-case nil
-                   (if (= i 100000) i (l (1+ i)))
-                 (error nil)))
-             100000))
-  (should (= (compat--named-let l ((i 0))
-               (condition-case nil
-                   (if (= i 100000) i (l (1+ i)))
-                 (error nil)))
-             100000))
-  (should (= (compat--named-let l ((i 0))
                (cond
                 ((= i 100000) i)
                 ((= (mod i 2) 0)
@@ -1211,7 +1201,21 @@ the compatibility function."
                 ((l (+ i 3)))))
              100000))
   (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
-             (expt 2 8))))
+             (expt 2 8)))
+  (should (eq (compat--named-let loop ((x 1))
+                (if (> x 0)
+                    (condition-case nil
+                        (loop (1- x))
+                      (arith-error 'ok))
+                  (/ 1 x)))
+              'ok))
+  (should (eq (compat--named-let loop ((n 10000))
+                (if (> n 0)
+                    (condition-case nil
+                        (/ n 0)
+                      (arith-error (loop (1- n))))
+                  'ok))
+              'ok)))
 
 (ert-deftest compat-directory-name-p ()
   "Check if `compat--directory-name-p' was implemented properly."
