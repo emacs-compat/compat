@@ -1219,6 +1219,17 @@ the compatibility function."
   (should (eq (compat--named-let loop ((x nil))
                 (cond (x)
                       (t 'ok)))
+              'ok))
+  (should (eq (compat--named-let loop ((x 100000))
+                (cond ((= x 0) 'ok)
+                      ((loop (1- x)))))
+              'ok))
+  (should (eq (compat--named-let loop ((x 100000))
+                (cond
+                 ((= x -1) nil)
+                 ((= x 0) 'ok)
+                 ((loop -1))
+                 ((loop (1- x)))))
               'ok)))
 
 (ert-deftest compat-directory-name-p ()
