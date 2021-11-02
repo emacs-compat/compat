@@ -436,7 +436,6 @@ as the new values of the bound variables in the recursive invocation."
                                ((null conds) ;last element
                                 (list t (funcall tco (car branch))))
                                ((progn
-                                  (message "=> %S" branch)
                                   branch)))
                               body)))
                     (cons 'cond (nreverse body))))
