@@ -103,7 +103,7 @@ TYPE is used to set the symbol property `compat-type' for NAME."
        ,(funcall def-fn realname version)
        ,(if feature
             ;; See https://nullprogram.com/blog/2018/02/22/:
-            `(eval-after-load 'feature `(funcall ,(lambda () ,@body)))
+            `(eval-after-load 'feature `(funcall ,(lambda () ,body)))
           body))))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
