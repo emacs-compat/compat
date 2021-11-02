@@ -413,7 +413,7 @@ as the new values of the bound variables in the recursive invocation."
          (total-tco t)
          (macro (lambda (&rest args)
                   (setq total-tco nil)
-                  `(apply ,self (list ,@args))))
+                  `(funcall ,self . ,args)))
          ;; Based on `cl--self-tco':
          (tco-progn (lambda (exprs)
                       (append
@@ -427,18 +427,19 @@ as the new values of the bound variables in the recursive invocation."
                                 (funcall tco (caddr expr)))
                           (funcall tco-progn (cdddr expr))))
                  ((eq (car-safe expr) 'cond)
-                  (let ((last-branch (car (last expr))))
-                    (cons 'cond
-                          (mapcar
-                           (lambda (branch)
-                             (cond
-                              ((cdr branch)
-                               (funcall tco-progn branch))
-                              ((and (eq (car-safe (car branch)) name)
-                                    (eq last-branch branch))
-                               (list t (funcall tco (car branch))))
-                              (branch)))
-                           (cdr expr)))))
+                  (let ((conds (cdr expr)) body)
+                    (while conds
+                      (let ((branch (pop conds)))
+                        (push (cond
+                               ((cdr branch) ;has tail
+                                (funcall tco-progn branch))
+                               ((null conds) ;last element
+                                (list t (funcall tco (car branch))))
+                               ((progn
+                                  (message "=> %S" branch)
+                                  branch)))
+                              body)))
+                    (cons 'cond (nreverse body))))
                  ((eq (car-safe expr) 'or)
                   (if (cddr expr)
                       (let ((var (make-symbol "var")))
@@ -459,9 +460,9 @@ as the new values of the bound variables in the recursive invocation."
                   (append (list (car expr) (cadr expr))
                           (funcall tco-progn (cddr expr))))
                  ((eq (car-safe expr) name)
-                  (let (sets)
+                  (let (sets (args (cdr expr)))
                     (dolist (farg fargs)
-                      (push (list farg (pop (cdr expr)))
+                      (push (list farg (pop args))
                             sets))
                     (cons 'setq (apply #'nconc (nreverse sets)))))
                  (`(throw ',quit ,expr))))))

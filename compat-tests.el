@@ -1230,6 +1230,20 @@ the compatibility function."
                  ((= x 0) 'ok)
                  ((loop -1))
                  ((loop (1- x)))))
+              'ok))
+  (should (eq (compat--named-let loop ((x 10000))
+                (cond ((= x 0) 'ok)
+                      ((and t (loop (1- x))))))
+              'ok))
+  (should (eq (eval
+               (let ((branch '((loop (and (setq b (not b)) (1+ i))))))
+                 `(let ((b t))
+                    (compat--named-let loop ((i 0))
+                      (cond ((null i) nil)
+                            ((= i 10000) 'ok)
+                            ,branch
+                            ,branch))))
+               t)
               'ok)))
 
 (ert-deftest compat-directory-name-p ()
