@@ -464,7 +464,7 @@ the compatibility function."
                           (setf (nthcdr 3 l) l)
                           l))))
 
-(ert-deftest compat-proper-list-p-1 ()
+(ert-deftest compat-proper-list-p-2 ()
   "Check if `compat--proper-list-p' was implemented correctly (<25.3)."
   (compat-test (proper-list-p compat--proper-list-p-tortoise-hare)
     (compat--should 0 ())				;empty list
