@@ -40,7 +40,7 @@ is nil)."
   :max-version "26.3"
   :realname compat--proper-list-p-length-signal
   (condition-case nil
-      (length object)
+      (and (listp object) (length object))
     (wrong-type-argument nil)
     (circular-list nil)))
 

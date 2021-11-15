@@ -462,7 +462,12 @@ the compatibility function."
     (compat--should nil '(1 2 . 3))			;dotted
     (compat--should nil (let ((l (list 1 2 3)))		;circular
                           (setf (nthcdr 3 l) l)
-                          l))))
+                          l))
+    (compat--should nil 1)                              ;non-lists
+    (compat--should nil "")
+    (compat--should nil "abc")
+    (compat--should nil [])
+    (compat--should nil [1 2 3])))
 
 (ert-deftest compat-proper-list-p-2 ()
   "Check if `compat--proper-list-p' was implemented correctly (<25.3)."
@@ -474,7 +479,13 @@ the compatibility function."
     (compat--should nil '(1 2 . 3))			;dotted
     (compat--should nil (let ((l (list 1 2 3)))		;circular
                           (setf (nthcdr 3 l) l)
-                          l))))
+                          l))
+    (compat--should nil 1)                              ;non-lists
+    (compat--should nil "")
+    (compat--should nil "abc")
+    (compat--should nil [])
+    (compat--should nil [1 2 3])))
+
 
 (ert-deftest compat-flatten-tree ()
   "Check if `compat--flatten-tree' was implemented correctly."
