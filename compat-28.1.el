@@ -617,5 +617,27 @@ itself will be used instead as the function argument."
               'keymap button-map
               'action callback))
 
+;;;; Defined in autoload.el
+
+(defvar generated-autoload-file)
+(compat-defun make-directory-autoloads (dir output-file)
+  "Update autoload definitions for Lisp files in the directories DIRS.
+DIR can be either a single directory or a list of
+directories.  (The latter usage is discouraged.)
+
+The autoloads will be written to OUTPUT-FILE.  If any Lisp file
+binds `generated-autoload-file' as a file-local variable, write
+its autoloads into the specified file instead.
+
+The function does NOT recursively descend into subdirectories of the
+directory or directories specified."
+  (let ((generated-autoload-file output-file))
+    ;; We intentionally don't sharp-quote
+    ;; `update-directory-autoloads', because it was deprecated in
+    ;; Emacs 28 and we don't want to trigger the byte compiler for
+    ;; newer versions.
+    (apply 'update-directory-autoloads
+           (if (listp dir) dir (list dir)))))
+
 (provide 'compat-28.1)
 ;;; compat-28.1.el ends here
