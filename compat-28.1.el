@@ -45,9 +45,9 @@ It must be between zero and the length of HAYSTACK, inclusive.
 Case is always significant and text properties are ignored."
   (when (and start-pos (< start-pos 0))
     (signal 'args-out-of-range (list start-pos)))
-  (let ((inhibit-changing-match-data t)
-        (case-fold-search nil))
-    (string-match (regexp-quote needle) haystack start-pos)))
+  (save-match-data
+    (let ((case-fold-search nil))
+      (string-match (regexp-quote needle) haystack start-pos))))
 
 (compat-defun length= (sequence length)
   "Returns non-nil if SEQUENCE has a length equal to LENGTH."
