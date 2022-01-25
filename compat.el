@@ -153,5 +153,55 @@ advice."
 ;; call is inserted directly into the autoload file:
 ;;;###autoload (require 'compat)
 
+;;;;; Update defaults
+
+;; This section updates default values that have been updated in
+;; "future" versions of Emacs, and are relevant to users on older
+;; versions of Emacs.
+;;
+;; To prevent these changes from taking effect, set
+;; `setup-preserve-defaults' to t in your early-init.el on Emacs 27 or
+;; before calling `package-initialize' before Emacs 27.
+
+(defvar setup-preserve-defaults nil)
+
+;;;;;; Add NonGNU ELPA to the list of package archives
+(defvar package-archives)
+(unless setup-preserve-defaults
+  (eval-after-load 'package
+    (lambda ()
+      (when (or (equal '(("gnu" . "https://elpa.gnu.org/packages/"))
+                       package-archives)
+                (equal '(("gnu" . "http://elpa.gnu.org/packages/"))
+                       package-archives))
+        (push (cons "nongnu"
+                    (format "http%s://elpa.nongnu.org/nongnu/"
+                            (if (and (fboundp 'gnutls-available-p)
+                                     (gnutls-available-p))
+                                "s" "")))
+              package-archives)))))
+
+;; Change the default IRC server from Freenode to Libera.
+(defvar rcirc-server-alist)
+(defvar erc-default-server)
+(unless setup-preserve-defaults
+  (eval-after-load 'rcirc
+    (lambda ()
+      (when (equal '(("chat.freenode.net" :channels ("#rcirc")))
+                   rcirc-server-alist)
+        (setq rcirc-server-alist
+              (if (and (fboundp 'gnutls-available-p)
+                       (gnutls-available-p))
+                  ;; The #emacs channel is not added here (even though
+                  ;; it was added in 28.1), since that is a separate
+                  ;; feature that doesn't need to be added here.
+                  '(("irc.libera.chat" :channels ("#rcirc")
+                     :port 6697 :encryption tls))
+                '(("irc.libera.chat" :channels ("#rcirc"))))))))
+  (eval-after-load 'erc
+    (lambda ()
+      (when (equal erc-default-server "irc.freenode.net")
+        (setq erc-default-server "irc.libera.chat")))))
+
 (provide 'compat)
 ;;; compat.el ends here
