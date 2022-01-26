@@ -89,7 +89,9 @@ FILE is normally a feature name, but it can also be a file name,
 in case that file does not provide any feature.  See `eval-after-load'
 for more details about the different forms of FILE and their semantics."
   (declare (indent 1) (debug (form def-body)))
-  `(eval-after-load ,file (lambda () ,@body)))
+  ;; See https://nullprogram.com/blog/2018/02/22/ on how
+  ;; `eval-after-load' is used to preserve compatibility with 24.3.
+  `(eval-after-load ,file `(funcall ',,`(lambda () ,@body))))
 
 (compat-defun special-form-p (object)
   "Non-nil if and only if OBJECT is a special form."
