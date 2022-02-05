@@ -443,8 +443,8 @@ as the new values of the bound variables in the recursive invocation."
                  ((eq (car-safe expr) 'if)
                   (append (list 'if
                                 (cadr expr)
-                                (funcall tco (caddr expr)))
-                          (funcall tco-progn (cdddr expr))))
+                                (funcall tco (nth 2 expr)))
+                          (funcall tco-progn (nthcdr 3 expr))))
                  ((eq (car-safe expr) 'cond)
                   (let ((conds (cdr expr)) body)
                     (while conds
@@ -466,12 +466,12 @@ as the new values of the bound variables in the recursive invocation."
                              ,(funcall tco (cons 'or (cddr expr))))))
                     (funcall tco (cadr expr))))
                  ((eq (car-safe expr) 'condition-case)
-                  (append (list 'condition-case (cadr expr) (caddr expr))
+                  (append (list 'condition-case (cadr expr) (nth 2 expr))
                           (mapcar
                            (lambda (handler)
                              (cons (car handler)
                                    (funcall tco-progn (cdr handler))))
-                           (cdddr expr))))
+                           (nthcdr 3 expr))))
                  ((memq (car-safe expr) '(and progn))
                   (cons (car expr) (funcall tco-progn (cdr expr))))
                  ((memq (car-safe expr) '(let let*))
