@@ -3,7 +3,8 @@
 .SUFFIXES: .el .elc
 
 EMACS = emacs
-BYTEC = compat-macs.elc \
+BYTEC = compat-help.elc \
+	compat-macs.elc \
 	compat-24.4.elc \
 	compat-25.1.elc \
 	compat-26.1.elc \

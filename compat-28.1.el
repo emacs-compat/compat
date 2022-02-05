@@ -43,6 +43,10 @@ HAYSTACK and defaults to zero (start at the beginning).
 It must be between zero and the length of HAYSTACK, inclusive.
 
 Case is always significant and text properties are ignored."
+  :note "Prior to Emacs 27 `string-match' has issues handling
+multibyte regular expressions.  As the compatibility function
+for `string-search' is implemented via `string-match', these
+issues are inherited."
   (when (and start-pos (< start-pos 0))
     (signal 'args-out-of-range (list start-pos)))
   (save-match-data
@@ -109,6 +113,7 @@ positive number N, it means to run GC if more than 1/Nth of the
 allocations needed to trigger automatic allocation took place.
 Therefore, as N gets higher, this is more likely to perform a GC.
 Returns non-nil if GC happened, and nil otherwise."
+  :note "For releases of Emacs before version 28, this function will do nothing."
   ;; Do nothing
   nil)
 

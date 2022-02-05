@@ -61,6 +61,9 @@ attributes are handled, all others are ignored:
 - :realname :: Manual specification of a \"realname\" to use for
   the compatibility definition (symbol).
 
+- :notes :: Additional notes that a developer using this
+  compatibility function should keep in mind.
+
 TYPE is used to set the symbol property `compat-type' for NAME."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
@@ -100,6 +103,8 @@ TYPE is used to set the symbol property `compat-type' for NAME."
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
+       (put ',realname 'compat-doc ,(plist-get attr :note))
+       (put ',name 'compat-def ',realname)
        ,(funcall def-fn realname version)
        ,(if feature
             ;; See https://nullprogram.com/blog/2018/02/22/:
