@@ -165,11 +165,11 @@ advice."
 
 (defvar setup-preserve-defaults nil)
 
-;;;;;; Add NonGNU ELPA to the list of package archives
-(defvar package-archives)
 (unless setup-preserve-defaults
-  (eval-after-load 'package
-    (lambda ()
+  ;; Add NonGNU ELPA to the list of package archives
+  (defvar package-archives)
+  (unless setup-preserve-defaults
+    (with-eval-after-load 'package
       (when (or (equal '(("gnu" . "https://elpa.gnu.org/packages/"))
                        package-archives)
                 (equal '(("gnu" . "http://elpa.gnu.org/packages/"))
@@ -179,14 +179,11 @@ advice."
                             (if (and (fboundp 'gnutls-available-p)
                                      (gnutls-available-p))
                                 "s" "")))
-              package-archives)))))
+              package-archives))))
 
-;; Change the default IRC server from Freenode to Libera.
-(defvar rcirc-server-alist)
-(defvar erc-default-server)
-(unless setup-preserve-defaults
-  (eval-after-load 'rcirc
-    (lambda ()
+  ;; Change the default IRC server from Freenode to Libera.
+  (defvar rcirc-server-alist)
+  (with-eval-after-load 'rcirc
       (when (equal '(("chat.freenode.net" :channels ("#rcirc")))
                    rcirc-server-alist)
         (setq rcirc-server-alist
@@ -197,11 +194,12 @@ advice."
                   ;; feature that doesn't need to be added here.
                   '(("irc.libera.chat" :channels ("#rcirc")
                      :port 6697 :encryption tls))
-                '(("irc.libera.chat" :channels ("#rcirc"))))))))
-  (eval-after-load 'erc
-    (lambda ()
+                '(("irc.libera.chat" :channels ("#rcirc")))))))
+
+  (defvar erc-default-server)
+    (with-eval-after-load 'erc
       (when (equal erc-default-server "irc.freenode.net")
-        (setq erc-default-server "irc.libera.chat")))))
+        (setq erc-default-server "irc.libera.chat"))))
 
 (provide 'compat)
 ;;; compat.el ends here
