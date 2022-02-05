@@ -94,7 +94,6 @@ MODES is as for `set-default-file-modes'."
   "Find the first element of ALIST whose `car' equals KEY and return its `cdr'.
 If KEY is not found in ALIST, return DEFAULT.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
-  :max-version "24.5"
   :realname compat--alist-get-full-elisp
   (ignore remove)
   (let (entry)
