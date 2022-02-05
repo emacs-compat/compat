@@ -116,6 +116,12 @@ attributes (see `compat-generate-common')."
   (let ((body rest))
     (while (keywordp (car body))
       (setq body (cddr body)))
+    ;; It might be possible to set these properties otherwise.  That
+    ;; should be looked into and implemented if it is the case.
+    (when (and (listp (car-safe body)) (eq (caar body) 'declare))
+      (when (version<= "25" emacs-version)
+        (delq (assq 'side-effect-free (car body)) (car body))
+        (delq (assq 'pure (car body)) (car body))))
     (compat-generate-common
      name
      (lambda (realname version)
