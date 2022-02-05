@@ -108,21 +108,7 @@ Letter-case is significant, but text properties are ignored."
 ;;;; Defined in keymap.c
 
 (compat-advise lookup-key (keymap key &optional accept-default)
-  "Look up key sequence KEY in KEYMAP.  Return the definition.
-A value of nil means undefined.  See doc of `define-key'
-for kinds of definitions.
-
-A number as value means KEY is \"too long\"; that is, characters
-or symbols in it except for the last one fail to be a valid
-sequence of prefix characters in KEYMAP.  The number is how many
-characters at the front of KEY it takes to reach a non-prefix
-key.  KEYMAP can also be a list of keymaps.
-
-Normally, `lookup-key' ignores bindings for t, which act as default
-bindings, used when nothing else in the keymap applies; this makes it
-usable as a general function for probing keymaps.  However, if the
-third optional argument ACCEPT-DEFAULT is non-nil, `lookup-key' will
-recognize the default bindings, just as `read-key-sequence' does."
+  "Allow for KEYMAP to be a list of keymaps."
   :cond (condition-case err
             (lookup-key '(x) nil)
           (wrong-type-argument (equal err '(keymapp (x)))))
