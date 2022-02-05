@@ -140,12 +140,44 @@ advice."
         (not (eq (cdr (compat-func-arity func t)) n))
       (void-function t))))
 
-;; Load the actual compatibility definitions:
-(require 'compat-24.4)
-(require 'compat-25.1)
-(require 'compat-26.1)
-(require 'compat-27.1)
-(require 'compat-28.1)
+;; To accelerate the loading process, we insert the contents of
+;; compat-N.M.el directly into the compat.elc.
+(eval-and-compile
+  (defmacro compat-insert (version)
+    (if (boundp 'compat-testing)
+        (load (format "compat-%s.el" version))
+      (let* ((file (expand-file-name
+                    (format "compat-%s.el" version)
+                    (file-name-directory
+                     (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
+                         load-file-name
+                         buffer-file-name))))
+             (byte-compile-current-file file)
+             defs)
+        (unless (file-exists-p file)
+          (error "Cannot load %S" file))
+        (let ((load-file-name file))
+          (with-temp-buffer
+            (insert-file-contents file)
+            (emacs-lisp-mode)
+            (while (progn
+                     (forward-comment 1)
+                     (not (eobp)))
+              (let ((sexp (read (current-buffer))))
+                (push (if (or (eq (car-safe sexp) 'compat-defun)
+                              (eq (car-safe sexp) 'compat-defmacro)
+                              (eq (car-safe sexp) 'compat-advise)
+                              (eq (car-safe sexp) 'compat-defvar))
+                          (macroexpand-all sexp)
+                        sexp)
+                      defs)))
+            (cons 'progn (nreverse defs))))))))
+
+(compat-insert "24.4")
+(compat-insert "25.1")
+(compat-insert "26.1")
+(compat-insert "27.1")
+(compat-insert "28.1")
 
 ;;;; Etcetera
 
