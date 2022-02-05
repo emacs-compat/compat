@@ -433,20 +433,21 @@ the compatibility function."
 
 (ert-deftest compat-proper-list-p-1 ()
   "Check if `compat--proper-list-p' was implemented correctly (>=26.1)."
-  (compat-test (proper-list-p compat--proper-list-p-length-signal)
-    (compat--should 0 ())				;empty list
-    (compat--should 1 '(1))				;single element
-    (compat--should 3 '(1 2 3))			;multiple elements
-    (compat--should nil '(1 . 2))			;cons
-    (compat--should nil '(1 2 . 3))			;dotted
-    (compat--should nil (let ((l (list 1 2 3)))		;circular
-                          (setf (nthcdr 3 l) l)
-                          l))
-    (compat--should nil 1)                              ;non-lists
-    (compat--should nil "")
-    (compat--should nil "abc")
-    (compat--should nil [])
-    (compat--should nil [1 2 3])))
+  (unless (version< emacs-version "26")
+    (compat-test (proper-list-p compat--proper-list-p-length-signal)
+      (compat--should 0 ())				;empty list
+      (compat--should 1 '(1))				;single element
+      (compat--should 3 '(1 2 3))			;multiple elements
+      (compat--should nil '(1 . 2))			;cons
+      (compat--should nil '(1 2 . 3))			;dotted
+      (compat--should nil (let ((l (list 1 2 3)))		;circular
+                            (setf (nthcdr 3 l) l)
+                            l))
+      (compat--should nil 1)                              ;non-lists
+      (compat--should nil "")
+      (compat--should nil "abc")
+      (compat--should nil [])
+      (compat--should nil [1 2 3]))))
 
 (ert-deftest compat-proper-list-p-2 ()
   "Check if `compat--proper-list-p' was implemented correctly (<25.3)."
