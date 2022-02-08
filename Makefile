@@ -10,6 +10,7 @@ BYTEC = compat-help.elc \
 	compat-26.1.elc \
 	compat-27.1.elc \
 	compat-28.1.elc \
+	compat-29.1.elc \
 	compat.elc
 
 all: compile test

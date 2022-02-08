@@ -146,6 +146,7 @@ advice."
 (require 'compat-26.1)
 (require 'compat-27.1)
 (require 'compat-28.1)
+(require 'compat-29.1)
 
 ;;;; Etcetera
 
