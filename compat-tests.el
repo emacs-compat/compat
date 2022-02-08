@@ -1334,5 +1334,33 @@ the compatibility function."
       (compat--should* 'foo (list a-map b-map) "x")
       (compat--should* 'bar (list b-map a-map) "x"))))
 
+(ert-deftest compat-string-limit ()
+  "Check if `compat-string-limit' was implemented properly."
+  (compat-test string-limit
+    (compat--should "" "" 0)
+    (compat--should "" "" 1)
+    (compat--should "" "" 100)
+    (compat--should "" "1234567890" 0)
+    (compat--should "1" "1234567890" 1)
+    (compat--should "12" "1234567890" 2)
+    (compat--should "123456789" "1234567890" 9)
+    (compat--should "1234567890" "1234567890" 10)
+    (compat--should "1234567890" "1234567890" 11)
+    (compat--should "1234567890" "1234567890" 20)
+    (compat--should "a" "a\U00010f98z" 1)
+    (compat--should "a𐾘" "a\U00010f98z" 2)
+    (compat--should "a𐾘z" "a\U00010f98z" 3)
+    (compat--should "a𐾘z" "a\U00010f98z" 4)
+    (compat--should [] [1 2 3] 0)
+    (compat--should [1] [1 2 3] 1)
+    (compat--should [1 2] [1 2 3] 2)
+    (compat--should [1 2 3] [1 2 3] 3)
+    (compat--should [1 2 3] [1 2 3] 4)
+    (compat--error wrong-type-argument "abc" -1)
+    (compat--error wrong-type-argument "abc" 'a)
+    (compat--error wrong-type-argument 'a 2)
+    (compat--error wrong-type-argument 'a 'b)))
+
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
