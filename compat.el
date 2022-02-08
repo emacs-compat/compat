@@ -6,7 +6,7 @@
 ;; Maintainer: Philip Kaludercic <philipk@posteo.net>
 ;; Version: 28.1.0.0-rc
 ;; URL: https://git.sr.ht/~pkal/compat/
-;; Package-Requires: ((emacs "24.1"))
+;; Package-Requires: ((emacs "24.1") (nadvice "0.3"))
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -43,35 +43,13 @@
 
 ;;;; Core functionality
 
-(declare-function advice--p "nadvice" (func))
-(declare-function advice--car "nadvice" (func))
-
 ;; The implementation is extracted here so that compatibility advice
 ;; can check if the right number of arguments are being handled.
-(defun compat-func-arity (func &optional handle-advice)
-  "A reimplementation of `func-arity' for FUNC.
-If HANDLE-ADVICE is non-nil, return the effective arity of the
-advice."
+(defun compat-func-arity (func)
+  "A reimplementation of `func-arity' for FUNC."
   (cond
    ((or (null func) (and (symbolp func) (not (fboundp func))) )
     (signal 'void-function func))
-   ((and handle-advice
-         (featurep 'nadvice)
-         (advice--p func))
-    (let* ((adv (advice--car (symbol-function func)))
-           (arity (compat-func-arity adv)))
-      (cons (1- (car arity))
-            (if (numberp (cdr arity))
-                (1- (cdr arity))
-              (cdr arity)))))
-   ((and handle-advice (get func 'compat-advice-fn))
-    ;; Handle manual advising:
-    (let* ((adv (get func 'compat-advice-fn))
-           (arity (compat-func-arity adv)))
-      (cons (1- (car arity))
-            (if (numberp (cdr arity))
-                (1- (cdr arity))
-              (cdr arity)))))
    ((and (symbolp func) (not (null func)))
     (compat-func-arity (symbol-function func)))
    ((eq (car-safe func) 'macro)
@@ -137,7 +115,7 @@ advice."
   (defun compat-maxargs-/= (func n)
     "Non-nil when FUNC doesn't accept at most N arguments."
     (condition-case nil
-        (not (eq (cdr (compat-func-arity func t)) n))
+        (not (eq (cdr (compat-func-arity func)) n))
       (void-function t))))
 
 ;; Load the actual compatibility definitions:

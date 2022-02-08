@@ -155,7 +155,7 @@ attributes (see `compat-generate-common')."
          ,@(if (eq type 'advice)
                (cons '(ignore oldfun) body)
              body)))
-     (lambda (realname version)
+     (lambda (realname _version)
        (cond
         ((memq type '(func macro))
          ;; Functions and macros are installed by
@@ -164,21 +164,7 @@ attributes (see `compat-generate-common')."
          ;; function.
          `(defalias ',name #',realname))
         ((eq type 'advice)
-         ;; nadvice.el was introduced in Emacs 24.4, so older versions
-         ;; have to advise the function using advice.el's `defadvice'.
-         (if (or (version<= "24.4" emacs-version)
-                 (fboundp 'advice-add)) ;via ELPA
-             `(advice-add ',name :around #',realname)
-           (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
-             `(progn
-                (defvar ,oldfun (indirect-function ',name))
-                (put ',name 'compat-advice-fn #',realname)
-                (defalias ',name
-                  (lambda (&rest args)
-                    ,(format
-                      "[Manual compatibility advice for `%S', defined in Emacs %s]\n\n%s"
-                      name version (if (fboundp name) (documentation name) docstring))
-                    (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
+         `(advice-add ',name :around #',realname))))
      (lambda ()
        (cond
         ((memq type '(func macro))
