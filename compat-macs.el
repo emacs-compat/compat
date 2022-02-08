@@ -166,7 +166,8 @@ attributes (see `compat-generate-common')."
         ((eq type 'advice)
          ;; nadvice.el was introduced in Emacs 24.4, so older versions
          ;; have to advise the function using advice.el's `defadvice'.
-         (if (version<= "24.4" emacs-version)
+         (if (or (version<= "24.4" emacs-version)
+                 (fboundp 'advice-add)) ;via ELPA
              `(advice-add ',name :around #',realname)
            (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
              `(progn
