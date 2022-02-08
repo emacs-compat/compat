@@ -29,16 +29,18 @@
   "Ignore all arguments."
   nil)
 
-(defun compat-generate-common (name def-fn install-fn check-fn attr type)
-  "Common code for generating compatibility definitions for NAME.
-The resulting body is constructed by invoking the functions
-DEF-FN (passed the \"realname\" and the version number, returning
-the compatibility definition), the INSTALL-FN (passed the
-\"realname\" and returning the installation code),
-CHECK-FN (passed the \"realname\" and returning a check to see if
-the compatibility definition should be installed).  ATTR is a
-plist used to modify the generated code.  The following
-attributes are handled, all others are ignored:
+(defvar compat--generate-function #'compat--generate-verbose
+  "Function used to generate compatibility code.
+The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
+CHECK-FN, ATTR and TYPE.  The resulting body is constructed by
+invoking the functions DEF-FN (passed the \"realname\" and the
+version number, returning the compatibility definition), the
+INSTALL-FN (passed the \"realname\" and returning the
+installation code), CHECK-FN (passed the \"realname\" and
+returning a check to see if the compatibility definition should
+be installed).  ATTR is a plist used to modify the generated
+code.  The following attributes are handled, all others are
+ignored:
 
 - :min-version :: Prevent the compatibility definition from begin
   installed in versions older than indicated (string).
@@ -64,7 +66,66 @@ attributes are handled, all others are ignored:
 - :notes :: Additional notes that a developer using this
   compatibility function should keep in mind.
 
-TYPE is used to set the symbol property `compat-type' for NAME."
+- :alias :: Force create an alias starting with `compat--' or as
+  defined by :realname.
+
+TYPE is used to set the symbol property `compat-type' for NAME.")
+
+(defun compat--generate-minimal (name def-fn install-fn check-fn attr type)
+  "Generate a leaner compatibility definition.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (let* ((min-version (plist-get attr :min-version))
+         (max-version (plist-get attr :max-version))
+         (feature (plist-get attr :feature))
+         (cond (plist-get attr :cond))
+         (version (or (plist-get attr :version)
+                      (let ((file (or (and (boundp 'byte-compile-current-file)
+                                           byte-compile-current-file)
+                                      load-file-name
+                                      (buffer-file-name))))
+                        ;; Guess the version from the file the macro is
+                        ;; being defined in.
+                        (and (string-match
+                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                              file)
+                             (match-string 1 file)))))
+         (realname (or (plist-get attr :realname)
+                       (intern (format "compat--%S" name))))
+         (check (cond
+                 ((and (or (not version)
+                           (version< emacs-version version))
+                       (or (not min-version)
+                           (version<= min-version emacs-version))
+                       (or (not max-version)
+                           (version<= emacs-version max-version)))
+                  `(when (and ,(if cond cond t)
+                              ,(funcall check-fn))))
+                 ('(compat--ignore))) ))
+    (let* ((body (if (eq type 'advice)
+                     `(,@check
+                       ,(funcall def-fn realname version)
+                       ,(funcall install-fn realname version))
+                   `(,@check ,(funcall def-fn name version))))
+           (body1 (if feature
+                      ;; See https://nullprogram.com/blog/2018/02/22/:
+                      `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
+                    body)))
+      (if (plist-get attr :alias)
+          `(progn
+             ,body1
+             ,(cond
+               ((memq type '(func advice macro))
+                `(defalias ',realname #',name))
+               ((memq type '(variable))
+                `(defvaralias ',realname ',name))
+               ((error "Unknown type %s" type))))
+        body1))))
+
+(defun compat--generate-verbose (name def-fn install-fn check-fn attr type)
+  "Generate a more verbose compatibility definition, fit for testing.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
@@ -110,6 +171,13 @@ TYPE is used to set the symbol property `compat-type' for NAME."
             ;; See https://nullprogram.com/blog/2018/02/22/:
             `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
           body))))
+
+(defun compat-generate-common (name def-fn install-fn check-fn attr type)
+  "Common code for generating compatibility definitions.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (funcall compat--generate-function
+           name def-fn install-fn check-fn attr type))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.

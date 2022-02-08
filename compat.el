@@ -142,11 +142,15 @@ advice."
 
 ;; To accelerate the loading process, we insert the contents of
 ;; compat-N.M.el directly into the compat.elc.
-(eval-and-compile
+(eval-when-compile
   (defmacro compat-insert (version)
-    (if (boundp 'compat-testing)
-        (load (format "compat-%s.el" version))
-      (let* ((file (expand-file-name
+    (cond
+     ((bound-and-true-p compat-testing)
+      `(load ,(format "compat-%s" version)))
+     ((version<= version emacs-version)
+      ;; We don't need to do anything.
+      nil)
+     ((let* ((file (expand-file-name
                     (format "compat-%s.el" version)
                     (file-name-directory
                      (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
@@ -163,16 +167,10 @@ advice."
             (while (progn
                      (forward-comment 1)
                      (not (eobp)))
-              (let ((sexp (read (current-buffer))))
-                (push (if (or (eq (car-safe sexp) 'compat-defun)
-                              (eq (car-safe sexp) 'compat-defmacro)
-                              (eq (car-safe sexp) 'compat-advise)
-                              (eq (car-safe sexp) 'compat-defvar))
-                          (macroexpand-all sexp)
-                        sexp)
-                      defs)))
-            (cons 'progn (nreverse defs))))))))
+              (push (read (current-buffer)) defs))
+            (cons 'progn (nreverse defs)))))))))
 
+(setq-default compat--generate-function 'compat--generate-minimal)
 (compat-insert "24.4")
 (compat-insert "25.1")
 (compat-insert "26.1")

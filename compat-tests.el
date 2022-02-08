@@ -33,7 +33,10 @@
 ;;; Code:
 
 (require 'ert)
-(require 'compat)
+
+(defvar compat-testing)
+(let ((compat-testing t))
+  (load "compat.el"))
 
 (defvar compat--current-fn nil)
 (defvar compat--compat-fn nil)
