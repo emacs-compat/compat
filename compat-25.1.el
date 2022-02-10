@@ -126,7 +126,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 2)
            (debug ((&rest [&or symbolp (symbolp form) (form)])
                    body)))
@@ -145,7 +145,7 @@ This is like `if-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 1) (debug if-let*))
   `(compat--if-let* ,varlist ,(macroexp-progn body)))
 
@@ -153,7 +153,7 @@ This is like `when-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 1) (debug if-let*))
   `(compat--when-let* ,varlist ,@(or body '(t))))
 
@@ -173,7 +173,7 @@ SYMBOL is checked for nil.
 As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 2)
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
@@ -190,7 +190,7 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 1) (debug if-let))
   `(compat-if-let ,spec ,(macroexp-progn body)))
 
@@ -207,7 +207,7 @@ Is equivalent to:
     (+ (- (/ (+ 5 20) 25)) 40)
 Note how the single `-' got converted into a list before
 threading."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 1)
            (debug (form &rest [&or symbolp (sexp &rest form)])))
   (let ((body (car forms)))
@@ -232,7 +232,7 @@ Is equivalent to:
     (+ 40 (- (/ 25 (+ 20 5))))
 Note how the single `-' got converted into a list before
 threading."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 1) (debug thread-first))
   (let ((body (car forms)))
     (dolist (form (cdr forms))
@@ -246,7 +246,7 @@ threading."
 (declare-function macrop nil (object))
 (compat-defun macroexpand-1 (form &optional environment)
   "Perform (at most) one step of macro expansion."
-  :feature macroexp
+  :feature 'macroexp
   (cond
    ((consp form)
     (let* ((head (car form))
