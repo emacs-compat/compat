@@ -64,6 +64,9 @@ attributes are handled, all others are ignored:
 - :notes :: Additional notes that a developer using this
   compatibility function should keep in mind.
 
+- :prefix :: Add a `compat-' prefix to the name, and define the
+  compatibility code unconditionally.
+
 TYPE is used to set the symbol property `compat-type' for NAME."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
@@ -83,15 +86,17 @@ TYPE is used to set the symbol property `compat-type' for NAME."
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(,@(cond
-                    ((and (or (not version)
-                              (version< emacs-version version))
-                          (or (not min-version)
-                              (version<= min-version emacs-version))
-                          (or (not max-version)
-                              (version<= emacs-version max-version)))
-                     `(when (and ,(if cond cond t)
-                                 ,(funcall check-fn))))
-                    ('(compat--ignore)))
+                    ((or (and min-version
+                              (version< emacs-version min-version))
+                         (and max-version
+                              (version< max-version emacs-version)))
+                     '(compat--ignore))
+                    ((plist-get attr :prefix)
+                     '(progn))
+                    ((and version (version<= version emacs-version))
+                     '(compat--ignore))
+                    (`(when (and ,(if cond cond t)
+                                 ,(funcall check-fn)))))
                  ,(unless (plist-get attr :no-highlight)
                     `(font-lock-add-keywords
                       'emacs-lisp-mode
@@ -127,6 +132,9 @@ attributes (see `compat-generate-common')."
       (when (version<= "25" emacs-version)
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
+    ;; Check if we want an explicitly prefixed function
+    (when (plist-get rest :prefix)
+      (setq name (intern (format "compat-%s" name))))
     (compat-generate-common
      name
      (lambda (realname version)
@@ -229,6 +237,9 @@ local with a value of `permanent' or just buffer local with any
 non-nil value."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
+  ;; Check if we want an explicitly prefixed function
+  (when (plist-get attr :prefix)
+    (setq name (intern (format "compat-%s" name))))
   (compat-generate-common
    name
    (lambda (realname version)
