@@ -22,6 +22,13 @@ loading `compat-help` (on your system, not in a package) to get
 relevant notes inserted into the help buffers of functions that are
 implemented or advised in compat.el.
 
+Note that compat.el provides a few prefixed function, ie. functions
+with a `compat-` prefix.  These are used to provide extended
+functionality for commands that are already defined (`sort`, `assoc`,
+...).  It might be possible to transform these into advised functions
+later on, so that the modified functionality is accessible without a
+prefix.  Feedback on this point is appreciated.
+
 Installation
 ------------
 
