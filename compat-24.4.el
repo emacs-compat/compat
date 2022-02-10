@@ -32,52 +32,52 @@
 
 ;;;; Defined in data.c
 
-(compat-advise = (number-or-marker &rest numbers-or-markers)
+(compat-defun = (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :cond (compat-maxargs-/= #'= 'many)
+  :prefix t
   (catch 'fail
     (while numbers-or-markers
-      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+      (unless (= number-or-marker (car numbers-or-markers))
         (throw 'fail nil))
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-advise < (number-or-marker &rest numbers-or-markers)
+(compat-defun < (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :cond (compat-maxargs-/= #'= 'many)
+  :prefix t
   (catch 'fail
     (while numbers-or-markers
-      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+      (unless (< number-or-marker (car numbers-or-markers))
         (throw 'fail nil))
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-advise > (number-or-marker &rest numbers-or-markers)
+(compat-defun > (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :cond (compat-maxargs-/= #'= 'many)
+  :prefix t
   (catch 'fail
     (while numbers-or-markers
-      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+      (unless (> number-or-marker (car numbers-or-markers))
         (throw 'fail nil))
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-advise <= (number-or-marker &rest numbers-or-markers)
+(compat-defun <= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :cond (compat-maxargs-/= #'= 'many)
+  :prefix t
   (catch 'fail
     (while numbers-or-markers
-      (unless (funcall oldfun number-or-marker (car numbers-or-markers))
+      (unless (<= number-or-marker (car numbers-or-markers))
         (throw 'fail nil))
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-advise >= (number-or-marker &rest numbers-or-markers)
+(compat-defun >= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :cond (compat-maxargs-/= #'= 'many)
+  :prefix t
   (catch 'fail
     (while numbers-or-markers
-      (unless (funcall oldfun number-or-marker (pop numbers-or-markers))
+      (unless (>= number-or-marker (pop numbers-or-markers))
         (throw 'fail nil)))
     t))
 
@@ -119,10 +119,12 @@ attention to case differences."
          (eq t (compare-strings suffix nil nil
                                 string start-pos nil ignore-case)))))
 
-(compat-advise split-string (string &optional separators omit-nulls trim)
-  "Handle optional argument TRIM."
-  :cond (compat-maxargs-/= #'split-string 4)
-  (let* ((token (funcall oldfun string separators omit-nulls))
+(compat-defun split-string (string &optional separators omit-nulls trim)
+  "Extend `split-string' by a TRIM argument.
+The remaining arguments STRING, SEPARATORS and OMIT-NULLS are
+handled just as with `split-string'."
+  :prefix t
+  (let* ((token (split-string string separators omit-nulls))
          (trimmed (if trim
                       (mapcar
                        (lambda (token)

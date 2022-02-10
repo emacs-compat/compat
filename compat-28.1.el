@@ -119,13 +119,14 @@ Returns non-nil if GC happened, and nil otherwise."
 
 ;;;; Defined in filelock.c
 
-(compat-advise unlock-buffer ()
+(compat-defun unlock-buffer ()
   "Handle `file-error' conditions:
 
 Handles file system errors by calling ‘display-warning’ and
 continuing as if the error did not occur."
+  :prefix t
   (condition-case error
-      (funcall oldfun)
+      (unlock-buffer)
     (file-error
      (display-warning
       '(unlock-file)
@@ -134,23 +135,23 @@ continuing as if the error did not occur."
 
 ;;;; Defined in characters.c
 
-(compat-advise string-width (string &optional from to)
+(compat-defun string-width (string &optional from to)
   "Handle optional arguments FROM and TO:
 
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
-  :cond (compat-maxargs-/= #'string-width 3)
-  (funcall oldfun (substring string (or from 0) to)))
+  :prefix t
+  (string-width (substring string (or from 0) to)))
 
 ;;;; Defined in dired.c
 
-(compat-advise directory-files (directory &optional full match nosort count)
+(compat-defun directory-files (directory &optional full match nosort count)
   "Handle additional optional argument COUNT:
 
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
-  :cond (compat-maxargs-/= #'directory-files 5)
-  (let ((files (funcall oldfun directory full match nosort)))
+  :prefix t
+  (let ((files (directory-files directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
     files))
@@ -565,20 +566,19 @@ is included in the return value."
 
 ;;;; Defined in windows.el
 
-(compat-advise count-windows (&optional minibuf all-frames)
+(compat-defun count-windows (&optional minibuf all-frames)
   "Handle optional argument ALL-FRAMES:
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
-  :cond (compat-maxargs-/= #'count-windows 2)
+  :prefix t
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))
           (with-selected-frame frame
-            (setq sum (+ (funcall oldfun minibuf)
-                         sum))))
+            (setq sum (+ (count-windows minibuf) sum))))
         sum)
-    (funcall oldfun minibuf)))
+    (count-windows minibuf)))
 
 ;;;; Defined in thingatpt.el
 

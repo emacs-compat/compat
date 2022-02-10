@@ -408,20 +408,20 @@ the compatibility function."
 
 (ert-deftest compat-string-width ()
   "Check if `compat--string-width' was implemented correctly."
-  (compat-test string-width
-    (compat--should* 0 "")
-    (compat--should* 3 "abc")			;no argument
-    (compat--should* 5 "abcあ")
-    (compat--should* (1+ tab-width) "a	")
-    (compat--should* 2 "abc" 1)               ;with from
-    (compat--should* 4 "abcあ" 1)
-    (compat--should* tab-width "a	" 1)
-    (compat--should* 2 "abc" 0 2)             ;with to
-    (compat--should* 3 "abcあ" 0 3)
-    (compat--should* 1 "a	" 0 1)
-    (compat--should* 1 "abc" 1 2)             ;with from and to
-    (compat--should* 2 "abcあ" 3 4)
-    (compat--should* 0 "a	" 1 1)))
+  (compat-test compat-string-width
+    (compat--should 0 "")
+    (compat--should 3 "abc")			;no argument
+    (compat--should 5 "abcあ")
+    (compat--should (1+ tab-width) "a	")
+    (compat--should 2 "abc" 1)               ;with from
+    (compat--should 4 "abcあ" 1)
+    (compat--should tab-width "a	" 1)
+    (compat--should 2 "abc" 0 2)             ;with to
+    (compat--should 3 "abcあ" 0 3)
+    (compat--should 1 "a	" 0 1)
+    (compat--should 1 "abc" 1 2)             ;with from and to
+    (compat--should 2 "abcあ" 3 4)
+    (compat--should 0 "a	" 1 1)))
 
 (ert-deftest compat-ensure-list ()
   "Check if `compat--ensure-list' was implemented correctly."
@@ -530,16 +530,16 @@ the compatibility function."
 
 (ert-deftest compat-regexp-opt ()
   "Check if `compat--regexp-opt' advice was defined correctly."
-  (compat-test regexp-opt
-    ;; Ensure `compat--regexp-opt' doesn't change the existing
-    ;; behaviour:
-    (compat--should* (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
-    (compat--should* (regexp-opt '("abc" "def" "ghe")) '("abc" "def" "ghe"))
-    (compat--should* (regexp-opt '("a" "b" "c") 'words) '("a" "b" "c") 'words)
-    ;; Test empty list:
-    (compat--should* "\\(?:\\`a\\`\\)" '())
-    (compat--should* "\\<\\(\\`a\\`\\)\\>" '() 'words))
-  (let ((unmatchable (compat--regexp-opt #'regexp-opt '())))
+  (compat-test compat-regexp-opt
+               ;; Ensure `compat--regexp-opt' doesn't change the existing
+               ;; behaviour:
+               (compat--should (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
+               (compat--should (regexp-opt '("abc" "def" "ghe")) '("abc" "def" "ghe"))
+               (compat--should (regexp-opt '("a" "b" "c") 'words) '("a" "b" "c") 'words)
+               ;; Test empty list:
+               (compat--should "\\(?:\\`a\\`\\)" '())
+               (compat--should "\\<\\(\\`a\\`\\)\\>" '() 'words))
+  (let ((unmatchable (compat--compat-regexp-opt '())))
     (dolist (str '(""                   ;empty string
                    "a"                  ;simple string
                    "aaa"                ;longer string
@@ -548,24 +548,24 @@ the compatibility function."
 
 (ert-deftest compat-assoc ()
   "Check if `compat--assoc' advice was advised correctly."
-  (compat-test assoc
+  (compat-test compat-assoc
     ;; Fallback behaviour:
-    (compat--should* nil 1 nil)               ;empty list
-    (compat--should* '(1) 1 '((1)))            ;single element list
-    (compat--should* nil 1 '(1))
-    (compat--should* '(2) 2 '((1) (2) (3)))    ;multiple element list
-    (compat--should* nil 2 '(1 2 3))
-    (compat--should* '(2) 2 '(1 (2) 3))
-    (compat--should* nil 2 '((1) 2 (3)))
-    (compat--should* '(1) 1 '((3) (2) (1)))
-    (compat--should* '("a") "a" '(("a") ("b") ("c")))  ;non-primitive elements
-    (compat--should* '("a" 0) "a" '(("c" . "a") "b" ("a" 0)))
+    (compat--should nil 1 nil)               ;empty list
+    (compat--should '(1) 1 '((1)))            ;single element list
+    (compat--should nil 1 '(1))
+    (compat--should '(2) 2 '((1) (2) (3)))    ;multiple element list
+    (compat--should nil 2 '(1 2 3))
+    (compat--should '(2) 2 '(1 (2) 3))
+    (compat--should nil 2 '((1) 2 (3)))
+    (compat--should '(1) 1 '((3) (2) (1)))
+    (compat--should '("a") "a" '(("a") ("b") ("c")))  ;non-primitive elements
+    (compat--should '("a" 0) "a" '(("c" . "a") "b" ("a" 0)))
     ;; With testfn (advised behaviour):
-    (compat--should* '(1) 3 '((10) (4) (1) (9)) #'<)
-    (compat--should* '("a") "b" '(("c") ("a") ("b")) #'string-lessp)
-    (compat--should* '("b") "a" '(("a") ("a") ("b"))
+    (compat--should '(1) 3 '((10) (4) (1) (9)) #'<)
+    (compat--should '("a") "b" '(("c") ("a") ("b")) #'string-lessp)
+    (compat--should '("b") "a" '(("a") ("a") ("b"))
                      (lambda (s1 s2) (not (string= s1 s2))))
-    (compat--should*
+    (compat--should
      '("\\.el\\'" . emacs-lisp-mode)
      "file.el"
      '(("\\.c\\'" . c-mode)
@@ -574,36 +574,36 @@ the compatibility function."
        ("\\.awk\\'" . awk-mode))
      #'string-match-p)))
 
-(when (fboundp 'alist-get)
-  (ert-deftest compat-alist-get-1 ()
-    "Check if `compat--alist-get' was advised correctly."
-    (compat-test (alist-get compat--alist-get-handle-testfn)
-      ;; Fallback behaviour:
-      (compat--should* nil 1 nil)                      ;empty list
-      (compat--should* 'a 1 '((1 . a)))                  ;single element list
-      (compat--should* nil 1 '(1))
-      (compat--should* 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
-      (compat--should* nil 2 '(1 2 3))
-      (compat--should* 'b 2 '(1 (2 . b) 3))
-      (compat--should* nil 2 '((1 . a) 2 (3 . c)))
-      (compat--should* 'a 1 '((3 . c) (2 . b) (1 . a)))
-      (compat--should* nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
+;; (when (fboundp 'alist-get)
+;;   (ert-deftest compat-alist-get-1 ()
+;;     "Check if `compat--alist-get' was advised correctly."
+;;     (compat-test compat-alist-get
+;;       ;; Fallback behaviour:
+;;       (compat--should nil 1 nil)                      ;empty list
+;;       (compat--should 'a 1 '((1 . a)))                  ;single element list
+;;       (compat--should nil 1 '(1))
+;;       (compat--should 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
+;;       (compat--should nil 2 '(1 2 3))
+;;       (compat--should 'b 2 '(1 (2 . b) 3))
+;;       (compat--should nil 2 '((1 . a) 2 (3 . c)))
+;;       (compat--should 'a 1 '((3 . c) (2 . b) (1 . a)))
+;;       (compat--should nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
 
-      ;; With testfn (advised behaviour):
-      (compat--should* 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
-      (compat--should* 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
-      (compat--should* '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
-      (compat--should* 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
-                       (lambda (s1 s2) (not (string= s1 s2))))
-      (compat--should* 'emacs-lisp-mode
-                       "file.el"
-                       '(("\\.c\\'" . c-mode)
-                         ("\\.p\\'" . pascal-mode)
-                         ("\\.el\\'" . emacs-lisp-mode)
-                         ("\\.awk\\'" . awk-mode))
-                       nil nil #'string-match-p)
-      (compat--should* 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
-      (compat--should* 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
+;;       ;; With testfn (advised behaviour):
+;;       (compat--should 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
+;;       (compat--should 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
+;;       (compat--should '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
+;;       (compat--should 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
+;;                        (lambda (s1 s2) (not (string= s1 s2))))
+;;       (compat--should 'emacs-lisp-mode
+;;                        "file.el"
+;;                        '(("\\.c\\'" . c-mode)
+;;                          ("\\.p\\'" . pascal-mode)
+;;                          ("\\.el\\'" . emacs-lisp-mode)
+;;                          ("\\.awk\\'" . awk-mode))
+;;                        nil nil #'string-match-p)
+;;       (compat--should 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
+;;       (compat--should 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
 (ert-deftest compat-alist-get-2 ()
   "Check if `compat--alist-get' was implemented correctly."
@@ -889,143 +889,143 @@ the compatibility function."
 
 (ert-deftest compat-sort ()
   "Check if `compat--sort' was advised correctly."
-  (compat-test sort
-    (compat--should* (list 1 2 3) (list 1 2 3) #'<)
-    (compat--should* (list 1 2 3) (list 3 2 1) #'<)
-    (compat--should* '[1 2 3] '[1 2 3] #'<)
-    (compat--should* '[1 2 3] '[3 2 1] #'<)))
+  (compat-test compat-sort
+    (compat--should (list 1 2 3) (list 1 2 3) #'<)
+    (compat--should (list 1 2 3) (list 3 2 1) #'<)
+    (compat--should '[1 2 3] '[1 2 3] #'<)
+    (compat--should '[1 2 3] '[3 2 1] #'<)))
 
 (ert-deftest compat-= ()
   "Check if `compat--=' was advised correctly."
-  (compat-test =
-    (compat--should* t 0 0)
-    (compat--should* t 0 0 0)
-    (compat--should* t 0 0 0 0)
-    (compat--should* t 0 0 0 0 0)
-    (compat--should* t 0.0 0.0)
-    (compat--should* t +0.0 -0.0)
-    (compat--should* t 0.0 0.0 0.0)
-    (compat--should* t 0.0 0.0 0.0 0.0)
-    (compat--should* nil 0 1)
-    (compat--should* nil 0 0 1)
-    (compat--should* nil 0 0 0 0 1)
-    (compat--error* wrong-type-argument 0 0 'a)
-    (compat--should* nil 0 1 'a)
-    (compat--should* nil 0.0 0.0 0.0 0.1)))
+  (compat-test compat-=
+    (compat--should t 0 0)
+    (compat--should t 0 0 0)
+    (compat--should t 0 0 0 0)
+    (compat--should t 0 0 0 0 0)
+    (compat--should t 0.0 0.0)
+    (compat--should t +0.0 -0.0)
+    (compat--should t 0.0 0.0 0.0)
+    (compat--should t 0.0 0.0 0.0 0.0)
+    (compat--should nil 0 1)
+    (compat--should nil 0 0 1)
+    (compat--should nil 0 0 0 0 1)
+    (compat--error wrong-type-argument 0 0 'a)
+    (compat--should nil 0 1 'a)
+    (compat--should nil 0.0 0.0 0.0 0.1)))
 
 (ert-deftest compat-< ()
   "Check if `compat--<' was advised correctly."
-  (compat-test <
-    (compat--should* nil 0 0)
-    (compat--should* nil 0 0 0)
-    (compat--should* nil 0 0 0 0)
-    (compat--should* nil 0 0 0 0 0)
-    (compat--should* nil 0.0 0.0)
-    (compat--should* nil +0.0 -0.0)
-    (compat--should* nil 0.0 0.0 0.0)
-    (compat--should* nil 0.0 0.0 0.0 0.0)
-    (compat--should* t 0 1)
-    (compat--should* nil 1 0)
-    (compat--should* nil 0 0 1)
-    (compat--should* t 0 1 2)
-    (compat--should* nil 2 1 0)
-    (compat--should* nil 0 0 0 0 1)
-    (compat--should* t 0 1 2 3 4)
-    (compat--error* wrong-type-argument 0 1 'a)
-    (compat--should* nil 0 0 'a)
-    (compat--should* nil 0.0 0.0 0.0 0.1)
-    (compat--should* t -0.1 0.0 0.2 0.4)
-    (compat--should* t -0.1 0 0.2 0.4)))
+  (compat-test compat-<
+    (compat--should nil 0 0)
+    (compat--should nil 0 0 0)
+    (compat--should nil 0 0 0 0)
+    (compat--should nil 0 0 0 0 0)
+    (compat--should nil 0.0 0.0)
+    (compat--should nil +0.0 -0.0)
+    (compat--should nil 0.0 0.0 0.0)
+    (compat--should nil 0.0 0.0 0.0 0.0)
+    (compat--should t 0 1)
+    (compat--should nil 1 0)
+    (compat--should nil 0 0 1)
+    (compat--should t 0 1 2)
+    (compat--should nil 2 1 0)
+    (compat--should nil 0 0 0 0 1)
+    (compat--should t 0 1 2 3 4)
+    (compat--error wrong-type-argument 0 1 'a)
+    (compat--should nil 0 0 'a)
+    (compat--should nil 0.0 0.0 0.0 0.1)
+    (compat--should t -0.1 0.0 0.2 0.4)
+    (compat--should t -0.1 0 0.2 0.4)))
 
 (ert-deftest compat-> ()
   "Check if `compat-->' was advised correctly."
-  (compat-test >
-    (compat--should* nil 0 0)
-    (compat--should* nil 0 0 0)
-    (compat--should* nil 0 0 0 0)
-    (compat--should* nil 0 0 0 0 0)
-    (compat--should* nil 0.0 0.0)
-    (compat--should* nil +0.0 -0.0)
-    (compat--should* nil 0.0 0.0 0.0)
-    (compat--should* nil 0.0 0.0 0.0 0.0)
-    (compat--should* t 1 0)
-    (compat--should* nil 1 0 0)
-    (compat--should* nil 0 1 2)
-    (compat--should* t 2 1 0)
-    (compat--should* nil 1 0 0 0 0)
-    (compat--should* t 4 3 2 1 0)
-    (compat--should* nil 4 3 2 1 1)
-    (compat--error* wrong-type-argument 1 0 'a)
-    (compat--should* nil 0 0 'a)
-    (compat--should* nil 0.1 0.0 0.0 0.0)
-    (compat--should* t 0.4 0.2 0.0 -0.1)
-    (compat--should* t 0.4 0.2 0 -0.1)))
+  (compat-test compat->
+    (compat--should nil 0 0)
+    (compat--should nil 0 0 0)
+    (compat--should nil 0 0 0 0)
+    (compat--should nil 0 0 0 0 0)
+    (compat--should nil 0.0 0.0)
+    (compat--should nil +0.0 -0.0)
+    (compat--should nil 0.0 0.0 0.0)
+    (compat--should nil 0.0 0.0 0.0 0.0)
+    (compat--should t 1 0)
+    (compat--should nil 1 0 0)
+    (compat--should nil 0 1 2)
+    (compat--should t 2 1 0)
+    (compat--should nil 1 0 0 0 0)
+    (compat--should t 4 3 2 1 0)
+    (compat--should nil 4 3 2 1 1)
+    (compat--error wrong-type-argument 1 0 'a)
+    (compat--should nil 0 0 'a)
+    (compat--should nil 0.1 0.0 0.0 0.0)
+    (compat--should t 0.4 0.2 0.0 -0.1)
+    (compat--should t 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat-<= ()
   "Check if `compat--<=' was advised correctly."
-  (compat-test <=
-    (compat--should* t 0 0)
-    (compat--should* t 0 0 0)
-    (compat--should* t 0 0 0 0)
-    (compat--should* t 0 0 0 0 0)
-    (compat--should* t 0.0 0.0)
-    (compat--should* t +0.0 -0.0)
-    (compat--should* t 0.0 0.0 0.0)
-    (compat--should* t 0.0 0.0 0.0 0.0)
-    (compat--should* nil 1 0)
-    (compat--should* nil 1 0 0)
-    (compat--should* t 0 1 2)
-    (compat--should* nil 2 1 0)
-    (compat--should* nil 1 0 0 0 0)
-    (compat--should* nil 4 3 2 1 0)
-    (compat--should* nil 4 3 2 1 1)
-    (compat--should* t 0 1 2 3 4)
-    (compat--should* t 1 1 2 3 4)
-    (compat--error* wrong-type-argument 0 0 'a)
-    (compat--error* wrong-type-argument 0 1 'a)
-    (compat--should* nil 1 0 'a)
-    (compat--should* nil 0.1 0.0 0.0 0.0)
-    (compat--should* t 0.0 0.0 0.0 0.1)
-    (compat--should* t -0.1 0.0 0.2 0.4)
-    (compat--should* t -0.1 0.0 0.0 0.2 0.4)
-    (compat--should* t -0.1 0.0 0 0.2 0.4)
-    (compat--should* t -0.1 0 0.2 0.4)
-    (compat--should* nil 0.4 0.2 0.0 -0.1)
-    (compat--should* nil 0.4 0.2 0.0 0.0 -0.1)
-    (compat--should* nil 0.4 0.2 0 0.0 0.0 -0.1)
-    (compat--should* nil 0.4 0.2 0 -0.1)))
+  (compat-test compat-<=
+    (compat--should t 0 0)
+    (compat--should t 0 0 0)
+    (compat--should t 0 0 0 0)
+    (compat--should t 0 0 0 0 0)
+    (compat--should t 0.0 0.0)
+    (compat--should t +0.0 -0.0)
+    (compat--should t 0.0 0.0 0.0)
+    (compat--should t 0.0 0.0 0.0 0.0)
+    (compat--should nil 1 0)
+    (compat--should nil 1 0 0)
+    (compat--should t 0 1 2)
+    (compat--should nil 2 1 0)
+    (compat--should nil 1 0 0 0 0)
+    (compat--should nil 4 3 2 1 0)
+    (compat--should nil 4 3 2 1 1)
+    (compat--should t 0 1 2 3 4)
+    (compat--should t 1 1 2 3 4)
+    (compat--error wrong-type-argument 0 0 'a)
+    (compat--error wrong-type-argument 0 1 'a)
+    (compat--should nil 1 0 'a)
+    (compat--should nil 0.1 0.0 0.0 0.0)
+    (compat--should t 0.0 0.0 0.0 0.1)
+    (compat--should t -0.1 0.0 0.2 0.4)
+    (compat--should t -0.1 0.0 0.0 0.2 0.4)
+    (compat--should t -0.1 0.0 0 0.2 0.4)
+    (compat--should t -0.1 0 0.2 0.4)
+    (compat--should nil 0.4 0.2 0.0 -0.1)
+    (compat--should nil 0.4 0.2 0.0 0.0 -0.1)
+    (compat--should nil 0.4 0.2 0 0.0 0.0 -0.1)
+    (compat--should nil 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat->= ()
   "Check if `compat-->=' was implemented correctly."
-  (compat-test >=
-    (compat--should* t 0 0)
-    (compat--should* t 0 0 0)
-    (compat--should* t 0 0 0 0)
-    (compat--should* t 0 0 0 0 0)
-    (compat--should* t 0.0 0.0)
-    (compat--should* t +0.0 -0.0)
-    (compat--should* t 0.0 0.0 0.0)
-    (compat--should* t 0.0 0.0 0.0 0.0)
-    (compat--should* t 1 0)
-    (compat--should* t 1 0 0)
-    (compat--should* nil 0 1 2)
-    (compat--should* t 2 1 0)
-    (compat--should* t 1 0 0 0 0)
-    (compat--should* t 4 3 2 1 0)
-    (compat--should* t 4 3 2 1 1)
-    (compat--error* wrong-type-argument 0 0 'a)
-    (compat--error* wrong-type-argument 1 0 'a)
-    (compat--should* nil 0 1 'a)
-    (compat--should* t 0.1 0.0 0.0 0.0)
-    (compat--should* nil 0.0 0.0 0.0 0.1)
-    (compat--should* nil -0.1 0.0 0.2 0.4)
-    (compat--should* nil -0.1 0.0 0.0 0.2 0.4)
-    (compat--should* nil -0.1 0.0 0 0.2 0.4)
-    (compat--should* nil -0.1 0 0.2 0.4)
-    (compat--should* t 0.4 0.2 0.0 -0.1)
-    (compat--should* t 0.4 0.2 0.0 0.0 -0.1)
-    (compat--should* t 0.4 0.2 0 0.0 0.0 -0.1)
-    (compat--should* t 0.4 0.2 0 -0.1)))
+  (compat-test compat->=
+    (compat--should t 0 0)
+    (compat--should t 0 0 0)
+    (compat--should t 0 0 0 0)
+    (compat--should t 0 0 0 0 0)
+    (compat--should t 0.0 0.0)
+    (compat--should t +0.0 -0.0)
+    (compat--should t 0.0 0.0 0.0)
+    (compat--should t 0.0 0.0 0.0 0.0)
+    (compat--should t 1 0)
+    (compat--should t 1 0 0)
+    (compat--should nil 0 1 2)
+    (compat--should t 2 1 0)
+    (compat--should t 1 0 0 0 0)
+    (compat--should t 4 3 2 1 0)
+    (compat--should t 4 3 2 1 1)
+    (compat--error wrong-type-argument 0 0 'a)
+    (compat--error wrong-type-argument 1 0 'a)
+    (compat--should nil 0 1 'a)
+    (compat--should t 0.1 0.0 0.0 0.0)
+    (compat--should nil 0.0 0.0 0.0 0.1)
+    (compat--should nil -0.1 0.0 0.2 0.4)
+    (compat--should nil -0.1 0.0 0.0 0.2 0.4)
+    (compat--should nil -0.1 0.0 0 0.2 0.4)
+    (compat--should nil -0.1 0 0.2 0.4)
+    (compat--should t 0.4 0.2 0.0 -0.1)
+    (compat--should t 0.4 0.2 0.0 0.0 -0.1)
+    (compat--should t 0.4 0.2 0 0.0 0.0 -0.1)
+    (compat--should t 0.4 0.2 0 -0.1)))
 
 (ert-deftest compat-special-form-p ()
   "Check if `compat--special-form-p' was implemented correctly."
@@ -1070,10 +1070,10 @@ the compatibility function."
 
 (ert-deftest compat-split-string ()
   "Check if `compat--split-string' was advised correctly."
-  (compat-test split-string
-    (compat--should* '("a" "b" "c") "a b c")
-    (compat--should* '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
-    (compat--should* '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+")))
+  (compat-test compat-split-string
+    (compat--should '("a" "b" "c") "a b c")
+    (compat--should '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
+    (compat--should '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+")))
 
 (ert-deftest compat-delete-consecutive-dups ()
   "Check if `compat--delete-consecutive-dups' was implemented correctly."
@@ -1152,21 +1152,21 @@ the compatibility function."
 
 (ert-deftest compat-file-size-human-readable ()
   "Check if `compat--file-size-human-readable' was advised properly."
-  (compat-test file-size-human-readable
-    (compat--should* "1000" 1000)
-    (compat--should* "1k" 1024)
-    (compat--should* "1M" (* 1024 1024))
-    (compat--should* "1G" (expt 1024 3))
-    (compat--should* "1T" (expt 1024 4))
-    (compat--should* "1k" 1000 'si)
-    (compat--should* "1KiB" 1024 'iec)
-    (compat--should* "1KiB" 1024 'iec)
-    (compat--should* "1 KiB" 1024 'iec " ")
-    (compat--should* "1KiA" 1024 'iec nil "A")
-    (compat--should* "1 KiA" 1024 'iec " " "A")
-    (compat--should* "1kA" 1000 'si nil "A")
-    (compat--should* "1 k" 1000 'si " ")
-    (compat--should* "1 kA" 1000 'si " " "A")))
+  (compat-test compat-file-size-human-readable
+    (compat--should "1000" 1000)
+    (compat--should "1k" 1024)
+    (compat--should "1M" (* 1024 1024))
+    (compat--should "1G" (expt 1024 3))
+    (compat--should "1T" (expt 1024 4))
+    (compat--should "1k" 1000 'si)
+    (compat--should "1KiB" 1024 'iec)
+    (compat--should "1KiB" 1024 'iec)
+    (compat--should "1 KiB" 1024 'iec " ")
+    (compat--should "1KiA" 1024 'iec nil "A")
+    (compat--should "1 KiA" 1024 'iec " " "A")
+    (compat--should "1kA" 1000 'si nil "A")
+    (compat--should "1 k" 1000 'si " ")
+    (compat--should "1 kA" 1000 'si " " "A")))
 
 (ert-deftest compat-format-prompt ()
   "Check if `compat--file-size-human-readable' was implemented properly."
@@ -1328,11 +1328,11 @@ the compatibility function."
         (b-map (make-sparse-keymap)))
     (define-key a-map "x" 'foo)
     (define-key b-map "x" 'bar)
-    (compat-test lookup-key
-      (compat--should* 'foo a-map "x")
-      (compat--should* 'bar b-map "x")
-      (compat--should* 'foo (list a-map b-map) "x")
-      (compat--should* 'bar (list b-map a-map) "x"))))
+    (compat-test compat-lookup-key
+      (compat--should 'foo a-map "x")
+      (compat--should 'bar b-map "x")
+      (compat--should 'foo (list a-map b-map) "x")
+      (compat--should 'bar (list b-map a-map) "x"))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

@@ -43,15 +43,19 @@ function with ‘&rest’ args, or ‘unevalled’ for a special form."
 
 ;;;; Defined in fns.c
 
-(compat-advise assoc (key alist &optional testfn)
-  "Handle TESTFN manually."
-  :cond (compat-maxargs-/= #'assoc 3)
+(compat-defun assoc (key alist &optional testfn)
+  "Handle the optional argument TESTFN.
+Equality is defined by the function TESTFN, defaulting to
+‘equal’.  TESTFN is called with 2 arguments: a car of an alist
+element and KEY.  With no optional argument, the function behaves
+just like `assoc'."
+  :prefix t
   (if testfn
       (catch 'found
         (dolist (ent alist)
           (when (funcall testfn (car ent) key)
             (throw 'found ent))))
-    (funcall oldfun key alist)))
+    (assoc key alist)))
 
 (compat-defun mapcan (func sequence)
   "Apply FUNC to each element of SEQUENCE.
@@ -59,33 +63,33 @@ Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
   (apply #'nconc (mapcar func sequence)))
 
-(compat-advise line-number-at-pos (&optional position absolute)
+(compat-defun line-number-at-pos (&optional position absolute)
   "Handle optional argument ABSOLUTE:
 
 If the buffer is narrowed, the return value by default counts the lines
 from the beginning of the accessible portion of the buffer.  But if the
 second optional argument ABSOLUTE is non-nil, the value counts the lines
 from the absolute start of the buffer, disregarding the narrowing."
-  :cond (compat-maxargs-/= #'line-number-at-pos 2)
+  :prefix t
   (if absolute
       (save-restriction
         (widen)
-        (funcall oldfun position))
-    (funcall oldfun position)))
+        (line-number-at-pos position))
+    (line-number-at-pos position)))
 
 ;;;; Defined in subr.el
 
 (declare-function compat--alist-get-full-elisp "compat-25.1"
                   (key alist &optional default remove testfn))
-(compat-advise alist-get (key alist &optional default remove testfn)
+(compat-defun alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."
   :min-version "25.1"			;first defined in 25.1
   :max-version "25.3"			;last version without testfn
   :realname compat--alist-get-handle-testfn
-  :cond (compat-maxargs-/= #'alist-get 5)
+  :prefix t
   (if testfn
       (compat--alist-get-full-elisp key alist default remove testfn)
-    (funcall oldfun key alist default remove)))
+    (alist-get key alist default remove)))
 
 (compat-defun string-trim-left (string &optional regexp)
   "Trim STRING of leading string matching REGEXP.

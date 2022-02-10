@@ -32,14 +32,12 @@
 
 ;;;; Defined in fns.c
 
-(compat-advise sort (seq predicate)
-  "Handle SEQ of type vector."
-  :cond (condition-case nil
-            (ignore (sort [] #'ignore))
-          (wrong-type-argument t))
+(compat-defun sort (seq predicate)
+  "Extend `sort' to sort SEQ as a vector."
+  :prefix t
   (cond
    ((listp seq)
-    (funcall oldfun seq predicate))
+    (sort seq predicate))
    ((vectorp seq)
     (let ((cseq (sort (append seq nil) predicate)))
       (dotimes (i (length cseq))
