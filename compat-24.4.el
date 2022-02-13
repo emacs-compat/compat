@@ -28,7 +28,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
-(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in data.c
 

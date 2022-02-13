@@ -29,7 +29,6 @@
 
 (eval-when-compile (require 'compat-macs))
 (declare-function compat-func-arity "compat" (func))
-(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in eval.c
 
