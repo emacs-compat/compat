@@ -123,7 +123,7 @@ TYPE is one of `func', for functions and `macro' for macros, and
 DOCSTRING is prepended with a compatibility note.  REST contains
 the remaining definition, that may begin with a property list of
 attributes (see `compat-generate-common')."
-  (let ((body rest))
+  (let ((oldname name) (body rest))
     (while (keywordp (car body))
       (setq body (cddr body)))
     ;; It might be possible to set these properties otherwise.  That
@@ -153,10 +153,10 @@ attributes (see `compat-generate-common')."
             (if version
                 (format
                  "[Compatibility %s for `%S', defined in Emacs %s]\n\n%s"
-                 type name version docstring)
+                 type oldname version docstring)
               (format
                "[Compatibility %s for `%S']\n\n%s"
-               type name docstring)))
+               type oldname docstring)))
          ;; Advice may use the implicit variable `oldfun', but
          ;; to avoid triggering the byte compiler, we make
          ;; sure the argument is used at least once.
@@ -238,35 +238,36 @@ non-nil value."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
   ;; Check if we want an explicitly prefixed function
-  (when (plist-get attr :prefix)
-    (setq name (intern (format "compat-%s" name))))
-  (compat-generate-common
-   name
-   (lambda (realname version)
-     (let ((localp (plist-get attr :local)))
-       `(progn
-          (,(if (plist-get attr :constant) 'defconst 'defvar)
-           ,realname ,initval
-           ;; Prepend compatibility notice to the actual
-           ;; documentation string.
-           ,(if version
+  (let ((oldname name))
+    (when (plist-get attr :prefix)
+      (setq name (intern (format "compat-%s" name))))
+    (compat-generate-common
+     name
+     (lambda (realname version)
+       (let ((localp (plist-get attr :local)))
+         `(progn
+            (,(if (plist-get attr :constant) 'defconst 'defvar)
+             ,realname ,initval
+             ;; Prepend compatibility notice to the actual
+             ;; documentation string.
+             ,(if version
+                  (format
+                   "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
+                   oldname version docstring)
                 (format
-                 "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                 name version docstring)
-              (format
-               "[Compatibility variable for `%S']\n\n%s"
-               name docstring)))
-          ;; Make variable as local if necessary
-          ,(cond
-            ((eq localp 'permanent)
-             `(put ',realname 'permanent-local t))
-            (localp
-             `(make-variable-buffer-local ',realname))))))
-   (lambda (realname _version)
-     `(defvaralias ',name ',realname))
-   (lambda ()
-     `(not (boundp ',name)))
-   attr 'variable))
+                 "[Compatibility variable for `%S']\n\n%s"
+                 oldname docstring)))
+            ;; Make variable as local if necessary
+            ,(cond
+              ((eq localp 'permanent)
+               `(put ',realname 'permanent-local t))
+              (localp
+               `(make-variable-buffer-local ',realname))))))
+     (lambda (realname _version)
+       `(defvaralias ',name ',realname))
+     (lambda ()
+       `(not (boundp ',name)))
+     attr 'variable)))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
