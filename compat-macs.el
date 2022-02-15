@@ -85,36 +85,37 @@ TYPE is used to set the symbol property `compat-type' for NAME."
                              (match-string 1 file)))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
-         (body `(,@(cond
-                    ((or (and min-version
-                              (version< emacs-version min-version))
-                         (and max-version
-                              (version< max-version emacs-version)))
-                     '(compat--ignore))
-                    ((plist-get attr :prefix)
-                     '(progn))
-                    ((and version (version<= version emacs-version))
-                     '(compat--ignore))
-                    (`(when (and ,(if cond cond t)
-                                 ,(funcall check-fn)))))
-                 ,(unless (plist-get attr :no-highlight)
-                    `(font-lock-add-keywords
-                      'emacs-lisp-mode
-                      ',`((,(concat "\\_<\\("
-                                    (regexp-quote (symbol-name name))
-                                    "\\)\\_>")
-                           1 font-lock-preprocessor-face prepend))))
-                 ,(funcall install-fn realname version))))
+         (body `(progn
+                  ,(unless (plist-get attr :no-highlight)
+                     `(font-lock-add-keywords
+                       'emacs-lisp-mode
+                       ',`((,(concat "\\_<\\("
+                                     (regexp-quote (symbol-name name))
+                                     "\\)\\_>")
+                            1 font-lock-preprocessor-face prepend))))
+                  ,(funcall install-fn realname version))))
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
        (put ',name 'compat-def ',realname)
        ,(funcall def-fn realname version)
-       ,(if feature
-            ;; See https://nullprogram.com/blog/2018/02/22/:
-            `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-          body))))
+       (,@(cond
+           ((or (and min-version
+                     (version< emacs-version min-version))
+                (and max-version
+                     (version< max-version emacs-version)))
+            '(compat--ignore))
+           ((plist-get attr :prefix)
+            '(progn))
+           ((and version (version<= version emacs-version))
+            '(compat--ignore))
+           (`(when (and ,(if cond cond t)
+                        ,(funcall check-fn)))))
+        ,(if feature
+             ;; See https://nullprogram.com/blog/2018/02/22/:
+             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+           body)))))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
