@@ -28,7 +28,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
-(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
@@ -99,26 +98,25 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in window.c
 
-(compat-advise recenter (&optional arg redisplay)
+(compat-defun recenter (&optional arg redisplay)
   "Handle optional argument REDISPLAY."
-  (funcall oldfun arg)
+  :prefix t
+  (recenter arg)
   (when (and redisplay recenter-redisplay)
     (redisplay)))
 
 ;;;; Defined in keymap.c
 
-(compat-advise lookup-key (keymap key &optional accept-default)
+(compat-defun lookup-key (keymap key &optional accept-default)
   "Allow for KEYMAP to be a list of keymaps."
-  :cond (condition-case err
-            (lookup-key '(x) nil)
-          (wrong-type-argument (equal err '(keymapp (x)))))
+  :prefix t
   (cond
    ((keymapp keymap)
-    (funcall oldfun keymap key accept-default))
+    (lookup-key keymap key accept-default))
    ((listp keymap)
     (catch 'found
       (dolist (map keymap)
-        (let ((fn (funcall oldfun map key accept-default)))
+        (let ((fn (lookup-key map key accept-default)))
           (when fn (throw 'found fn))))))
    ((signal 'wrong-type-argument (list 'keymapp keymap)))))
 
@@ -262,10 +260,9 @@ represent a JSON false value.  It defaults to `:false'."
 
 ;;;; Defined in subr.el
 
-(compat-advise setq-local (&rest pairs)
+(compat-defun setq-local (&rest pairs)
   "Handle multiple assignments."
-  :cond (compat-maxargs-/= #'setq-local 'many)
-  (declare (debug setq))
+  :prefix t
   (unless (zerop (mod (length pairs) 2))
     (error "PAIRS must have an even number of variable/value members"))
   (let (body)
@@ -397,7 +394,7 @@ the number of seconds east of Greenwich."
 
 ;;;; Defined in files.el
 
-(compat-advise file-size-human-readable (file-size &optional flavor space unit)
+(compat-defun file-size-human-readable (file-size &optional flavor space unit)
   "Handle the optional third and forth argument:
 
 Optional third argument SPACE is a string put between the number and unit.
@@ -408,6 +405,7 @@ position.
 Optional fourth argument UNIT is the unit to use.  It defaults to \"B\"
 when FLAVOR is `iec' and the empty string otherwise.  We recommend \"B\"
 in all cases, since that is the standard symbol for byte."
+  :prefix t
   (let ((power (if (or (null flavor) (eq flavor 'iec))
                    1024.0
                  1000.0))
@@ -438,9 +436,9 @@ in all cases, since that is the standard symbol for byte."
 
 ;;;; Defined in regexp-opt.el
 
-(compat-advise regexp-opt (strings &optional paren)
+(compat-defun regexp-opt (strings &optional paren)
   "Handle an empty list of strings."
-  :feature regexp-opt
+  :prefix t
   (if (null strings)
       (let ((re "\\`a\\`"))
         (cond ((null paren)
@@ -452,7 +450,7 @@ in all cases, since that is the standard symbol for byte."
               ((eq paren 'symbols)
                (concat "\\_\\(<" re "\\)\\_>"))
               ((concat "\\(" re "\\)"))))
-    (funcall oldfun strings paren)))
+    (regexp-opt strings paren)))
 
 ;;;; Defined in package.el
 

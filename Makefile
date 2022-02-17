@@ -21,7 +21,7 @@ test:
 	$(EMACS) -Q --batch -L . -l compat-tests.el -f ert-run-tests-batch-and-exit
 
 clean:
-	rm -f $(BYTEC)
+	$(RM) $(BYTEC)
 
 .el.elc:
 	$(EMACS) -Q --batch -L . -f batch-byte-compile $^
