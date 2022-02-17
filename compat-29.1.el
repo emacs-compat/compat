@@ -30,6 +30,35 @@
 (eval-when-compile (require 'compat-macs))
 (declare-function compat-maxargs-/= "compat" (func n))
 
+;;;; Defined in xdisp.c
+
+(compat-defun get-display-property (position prop &optional object properties)
+  "Get the value of the `display' property PROP at POSITION.
+If OBJECT, this should be a buffer or string where the property is
+fetched from.  If omitted, OBJECT defaults to the current buffer.
+
+If PROPERTIES, look for value of PROP in PROPERTIES instead of
+the properties at POSITION."
+  (if properties
+      (unless (listp properties)
+        (signal 'wrong-type-argument (list 'listp properties)))
+    (setq properties (get-text-property position 'display object)))
+  (cond
+   ((vectorp properties)
+    (catch 'found
+      (dotimes (i (length properties))
+        (let ((ent (aref properties i)))
+          (when (eq (car ent) prop)
+            (throw 'found (cadr ent )))))))
+   ((consp (car properties))
+    (condition-case nil
+        (cadr (assq prop properties))
+      ;; Silently handle improper lists:
+      (wrong-type-argument nil)))
+   ((and (consp (cdr properties))
+         (eq (car properties) prop))
+    (cadr properties))))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)

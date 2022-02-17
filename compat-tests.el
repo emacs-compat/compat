@@ -1383,5 +1383,66 @@ the compatibility function."
       (compat--error cyclic-function-indirection a)
       (compat--should (list b) a t))))
 
+(ert-deftest compat-get-display-property ()
+  "Check if `compat--function-alias-p' was implemented properly."
+  ;; Based on tests from xdisp-test.el
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '(height 2.0))
+            " bar")
+    (compat-test get-display-property
+      (compat--should 2.0 1 'height)
+      (compat--should 2.0 2 'height)
+      (compat--should nil 2 'width)
+      (compat--should nil 5 'height)
+      (compat--should nil 5 'height)
+      (compat--should nil 2 'bold)
+      (compat--should nil 5 'bold)))
+  (let ((str (concat
+              (propertize "foo" 'face 'bold 'display '(height 2.0))
+              " bar")))
+    (compat-test get-display-property
+      (compat--should 2.0 1 'height str)
+      (compat--should 2.0 2 'height str)
+      (compat--should nil 2 'width str)
+      (compat--should nil 5 'height str)
+      (compat--should nil 5 'height str)
+      (compat--should nil 2 'bold str)
+      (compat--should nil 5 'bold str)))
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '((height 2.0)
+                                                     (space-width 4.0)))
+            " bar")
+    (compat-test get-display-property
+      (compat--should 2.0 1 'height)
+      (compat--should 2.0 2 'height)
+      (compat--should nil 5 'height)
+      (compat--should 4.0 1 'space-width)
+      (compat--should 4.0 2 'space-width)
+      (compat--should nil 5 'space-width)
+      (compat--should nil 2 'width)
+      (compat--should nil 5 'width)
+      (compat--should nil 2 'bold)
+      (compat--should nil 5 'bold)))
+  (with-temp-buffer
+    (insert (propertize "foo bar" 'face 'bold
+                        'display '[(height 2.0)
+                                   (space-width 20)])
+            " baz")
+    (compat-test get-display-property
+      (compat--should 2.0 1 'height)
+      (compat--should 2.0 2 'height)
+      (compat--should 2.0 5 'height)
+      (compat--should nil 8 'height)
+      (compat--should 20 1 'space-width)
+      (compat--should 20 2 'space-width)
+      (compat--should 20 5 'space-width)
+      (compat--should nil 8 'space-width)
+      (compat--should nil 2 'width)
+      (compat--should nil 5 'width)
+      (compat--should nil 8 'width)
+      (compat--should nil 2 'bold)
+      (compat--should nil 5 'bold)
+      (compat--should nil 8 'width))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
