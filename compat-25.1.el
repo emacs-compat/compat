@@ -114,7 +114,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
   ;; of of actual value, the highlighting is suppressed.
   :no-highlight t
   :max-version "24.5"
-  (if (eq 'feature 'subr-x)
+  (if (eq feature 'subr-x)
       (let ((entry (assq feature after-load-alist)))
         (let ((load-file-name nil))
           (dolist (form (cdr entry))
