@@ -30,6 +30,30 @@
 (eval-when-compile (require 'compat-macs))
 (declare-function compat-maxargs-/= "compat" (func n))
 
+;;;; Defined in subr.el
+
+(compat-defun function-alias-p (func &optional noerror)
+  "Return nil if FUNC is not a function alias.
+If FUNC is a function alias, return the function alias chain.
+
+If the function alias chain contains loops, an error will be
+signalled.  If NOERROR, the non-loop parts of the chain is returned."
+  (declare (side-effect-free t))
+  (let ((chain nil)
+        (orig-func func))
+    (nreverse
+     (catch 'loop
+       (while (and (symbolp func)
+                   (setq func (symbol-function func))
+                   (symbolp func))
+         (when (or (memq func chain)
+                   (eq func orig-func))
+           (if noerror
+               (throw 'loop chain)
+             (signal 'cyclic-function-indirection (list orig-func))))
+         (push func chain))
+       chain))))
+
 ;;;; Defined in subr-x.el
 
 (compat-defun string-limit (string length &optional end coding-system)
@@ -51,7 +75,7 @@ character.
 When shortening strings for display purposes,
 `truncate-string-to-width' is almost always a better alternative
 than this function."
-  :feature subr-x
+  :feature 'subr-x
   (unless (natnump length)
     (signal 'wrong-type-argument (list 'natnump length)))
   (if coding-system

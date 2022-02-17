@@ -1361,6 +1361,27 @@ the compatibility function."
     (compat--error wrong-type-argument 'a 2)
     (compat--error wrong-type-argument 'a 'b)))
 
+(ert-deftest compat-function-alias-p ()
+  "Check if `compat--function-alias-p' was implemented properly."
+  (let* ((f (gensym))
+         (g (gensym)) (h (gensym))
+         (a (gensym)) (b (gensym)))
+    (defalias f #'ignore)
+    (defalias g f)
+    (defalias h g)
+    (defalias a b)
+    (defalias b a)
+
+    (compat-test function-alias-p
+      (compat--should nil nil)
+      (compat--should nil "")
+      (compat--should nil #'ignore)
+      (compat--should nil #'ignore)
+      (compat--should (list #'ignore) f)
+      (compat--should (list f #'ignore) g)
+      (compat--should (list g f #'ignore) h)
+      (compat--error cyclic-function-indirection a)
+      (compat--should (list b) a t))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
