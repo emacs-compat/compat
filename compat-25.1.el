@@ -113,7 +113,6 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
   ;; As the compatibility advise around `require` is more a hack than
   ;; of of actual value, the highlighting is suppressed.
   :no-highlight t
-  :max-version "24.5"
   (if (eq feature 'subr-x)
       (let ((entry (assq feature after-load-alist)))
         (let ((load-file-name nil))
