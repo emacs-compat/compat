@@ -63,15 +63,16 @@ contributions.
 Source code
 -----------
 
-The project is managed can be found on [SourceHut] but has a [GitHub]
-mirror as well.
+Compat is developed on [SourceHut]. A restricted [GitHub] mirror is
+also provided.
 
 Bug and patches
 ---------------
 
 Patches, bug reports and comments can be sent to the [development
-mailing list][compat-devel] or via [GitHub]. These may include issues
-in the compatibility code, missing definitions or performance issues.
+mailing list][compat-devel].  [GitHub] can also be used to submit
+patches ("Pull Request").  These may include issues in the
+compatibility code, missing definitions or performance issues.
 
 When contributing, make sure to provide test and use the existing
 tests defined in compat-test.el.  These can be easily executed using
