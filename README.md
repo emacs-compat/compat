@@ -49,6 +49,10 @@ that all the functions and macros that compat.el provides are
 automatically accessible or made accessible as soon as the right
 libraries are loaded.
 
+It is recommended to subscribe to the [compat-announce] mailing list
+to be notified when new versions are released or relevant changes are
+made.
+
 Contribute
 ----------
 
@@ -65,12 +69,9 @@ mirror as well.
 Bug and patches
 ---------------
 
-Patches, bug reports and comments can be sent to the mailing list
-
-    ~pkal/public-inbox@lists.sr.ht
-
-or via GitHub. These may include issues in the compatibility code,
-missing definitions or performance issues.
+Patches, bug reports and comments can be sent to the [development
+mailing list][compat-devel] or via [GitHub]. These may include issues
+in the compatibility code, missing definitions or performance issues.
 
 When contributing, make sure to provide test and use the existing
 tests defined in compat-test.el.  These can be easily executed using
@@ -89,3 +90,5 @@ the GPL, Version 3 (like Emacs itself).
 [copyright assignment]: https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
 [SourceHut]: https://sr.ht/~pkal/compat
 [GitHub]: https://github.com/phikal/compat.el
+[compat-announce]: https://lists.sr.ht/~pkal/compat-announce
+[compat-devel]: https://lists.sr.ht/~pkal/compat-devel
