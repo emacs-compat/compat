@@ -121,6 +121,11 @@ the compatibility function."
 
 
 
+(require 'package)
+(package-initialize)
+(unless (package-installed-p 'nadvice)
+  (package-install 'nadvice))
+
 (ert-deftest compat-string-search ()
   "Check if `compat--string-search' was implemented correctly."
   (compat-test string-search
