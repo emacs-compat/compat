@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Maintainer: Philip Kaludercic <~pkal/public-inbox@lists.sr.ht>
+;; Maintainer: Philip Kaludercic <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 28.1.0.0-rc
 ;; URL: https://git.sr.ht/~pkal/compat/
 ;; Package-Requires: ((emacs "24.1") (nadvice "0.3"))
