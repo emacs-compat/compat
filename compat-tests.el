@@ -121,9 +121,9 @@ the compatibility function."
 
 
 
-(require 'package)
-(package-initialize)
-(unless (package-installed-p 'nadvice)
+(unless (fboundp 'nadvice)
+  (require 'package)
+  (package-initialize)
   (package-install 'nadvice))
 
 (ert-deftest compat-string-search ()
