@@ -264,7 +264,7 @@ represent a JSON false value.  It defaults to `:false'."
 
 ;;;; Defined in subr.el
 
-(compat-defun setq-local (&rest pairs)
+(compat-defmacro setq-local (&rest pairs)
   "Handle multiple assignments."
   :prefix t
   (unless (zerop (mod (length pairs) 2))
