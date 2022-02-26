@@ -3,10 +3,10 @@
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Maintainer: Philip Kaludercic <philipk@posteo.net>
+;; Maintainer: Philip Kaludercic <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 28.1.0.0-rc
 ;; URL: https://git.sr.ht/~pkal/compat/
-;; Package-Requires: ((emacs "24.1"))
+;; Package-Requires: ((emacs "24.1") (nadvice "0.3"))
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -43,35 +43,13 @@
 
 ;;;; Core functionality
 
-(declare-function advice--p "nadvice" (func))
-(declare-function advice--car "nadvice" (func))
-
 ;; The implementation is extracted here so that compatibility advice
 ;; can check if the right number of arguments are being handled.
-(defun compat-func-arity (func &optional handle-advice)
-  "A reimplementation of `func-arity' for FUNC.
-If HANDLE-ADVICE is non-nil, return the effective arity of the
-advice."
+(defun compat-func-arity (func)
+  "A reimplementation of `func-arity' for FUNC."
   (cond
    ((or (null func) (and (symbolp func) (not (fboundp func))) )
     (signal 'void-function func))
-   ((and handle-advice
-         (featurep 'nadvice)
-         (advice--p func))
-    (let* ((adv (advice--car (symbol-function func)))
-           (arity (compat-func-arity adv)))
-      (cons (1- (car arity))
-            (if (numberp (cdr arity))
-                (1- (cdr arity))
-              (cdr arity)))))
-   ((and handle-advice (get func 'compat-advice-fn))
-    ;; Handle manual advising:
-    (let* ((adv (get func 'compat-advice-fn))
-           (arity (compat-func-arity adv)))
-      (cons (1- (car arity))
-            (if (numberp (cdr arity))
-                (1- (cdr arity))
-              (cdr arity)))))
    ((and (symbolp func) (not (null func)))
     (compat-func-arity (symbol-function func)))
    ((eq (car-safe func) 'macro)
@@ -137,7 +115,7 @@ advice."
   (defun compat-maxargs-/= (func n)
     "Non-nil when FUNC doesn't accept at most N arguments."
     (condition-case nil
-        (not (eq (cdr (compat-func-arity func t)) n))
+        (not (eq (cdr (compat-func-arity func)) n))
       (void-function t))))
 
 ;; To accelerate the loading process, we insert the contents of
@@ -182,53 +160,6 @@ advice."
 ;; To ensure that compat.el is loaded as soon as possible, a require
 ;; call is inserted directly into the autoload file:
 ;;;###autoload (require 'compat)
-
-;;;;; Update defaults
-
-;; This section updates default values that have been updated in
-;; "future" versions of Emacs, and are relevant to users on older
-;; versions of Emacs.
-;;
-;; To prevent these changes from taking effect, set
-;; `compat-preserve-defaults' to t in your early-init.el on Emacs 27 or
-;; before calling `package-initialize' before Emacs 27.
-
-(defvar compat-preserve-defaults nil)
-
-(unless compat-preserve-defaults
-  ;; Add NonGNU ELPA to the list of package archives
-  (defvar package-archives)
-  (with-eval-after-load 'package
-    (when (or (equal '(("gnu" . "https://elpa.gnu.org/packages/"))
-                     package-archives)
-              (equal '(("gnu" . "http://elpa.gnu.org/packages/"))
-                     package-archives))
-      (push (cons "nongnu"
-                  (format "http%s://elpa.nongnu.org/nongnu/"
-                          (if (and (fboundp 'gnutls-available-p)
-                                   (gnutls-available-p))
-                              "s" "")))
-            package-archives)))
-
-  ;; Change the default IRC server from Freenode to Libera.
-  (defvar rcirc-server-alist)
-  (with-eval-after-load 'rcirc
-    (when (equal '(("chat.freenode.net" :channels ("#rcirc")))
-                 rcirc-server-alist)
-      (setq rcirc-server-alist
-            (if (and (fboundp 'gnutls-available-p)
-                     (gnutls-available-p))
-                ;; The #emacs channel is not added here (even though
-                ;; it was added in 28.1), since that is a separate
-                ;; feature that doesn't need to be added here.
-                '(("irc.libera.chat" :channels ("#rcirc")
-                   :port 6697 :encryption tls))
-              '(("irc.libera.chat" :channels ("#rcirc")))))))
-
-  (defvar erc-default-server)
-  (with-eval-after-load 'erc
-    (when (equal erc-default-server "irc.freenode.net")
-      (setq erc-default-server "irc.libera.chat"))))
 
 (provide 'compat)
 ;;; compat.el ends here

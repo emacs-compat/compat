@@ -22,6 +22,13 @@ loading `compat-help` (on your system, not in a package) to get
 relevant notes inserted into the help buffers of functions that are
 implemented or advised in compat.el.
 
+Note that compat.el provides a few prefixed function, ie. functions
+with a `compat-` prefix.  These are used to provide extended
+functionality for commands that are already defined (`sort`, `assoc`,
+...).  It might be possible to transform these into advised functions
+later on, so that the modified functionality is accessible without a
+prefix.  Feedback on this point is appreciated.
+
 Installation
 ------------
 
@@ -42,6 +49,10 @@ that all the functions and macros that compat.el provides are
 automatically accessible or made accessible as soon as the right
 libraries are loaded.
 
+It is recommended to subscribe to the [compat-announce] mailing list
+to be notified when new versions are released or relevant changes are
+made.
+
 Contribute
 ----------
 
@@ -52,18 +63,16 @@ contributions.
 Source code
 -----------
 
-The project is managed can be found on [SourceHut] but has a [GitHub]
-mirror as well.
+Compat is developed on [SourceHut]. A restricted [GitHub] mirror is
+also provided.
 
 Bug and patches
 ---------------
 
-Patches, bug reports and comments can be sent to the mailing list
-
-    ~pkal/public-inbox@lists.sr.ht
-
-or via GitHub. These may include issues in the compatibility code,
-missing definitions or performance issues.
+Patches, bug reports and comments can be sent to the [development
+mailing list][compat-devel].  [GitHub] can also be used to submit
+patches ("Pull Request").  These may include issues in the
+compatibility code, missing definitions or performance issues.
 
 When contributing, make sure to provide test and use the existing
 tests defined in compat-test.el.  These can be easily executed using
@@ -82,3 +91,5 @@ the GPL, Version 3 (like Emacs itself).
 [copyright assignment]: https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
 [SourceHut]: https://sr.ht/~pkal/compat
 [GitHub]: https://github.com/phikal/compat.el
+[compat-announce]: https://lists.sr.ht/~pkal/compat-announce
+[compat-devel]: https://lists.sr.ht/~pkal/compat-devel

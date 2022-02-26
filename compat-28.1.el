@@ -28,7 +28,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
-(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in fns.c
 
@@ -119,13 +118,14 @@ Returns non-nil if GC happened, and nil otherwise."
 
 ;;;; Defined in filelock.c
 
-(compat-advise unlock-buffer ()
+(compat-defun unlock-buffer ()
   "Handle `file-error' conditions:
 
 Handles file system errors by calling ‘display-warning’ and
 continuing as if the error did not occur."
+  :prefix t
   (condition-case error
-      (funcall oldfun)
+      (unlock-buffer)
     (file-error
      (display-warning
       '(unlock-file)
@@ -134,23 +134,23 @@ continuing as if the error did not occur."
 
 ;;;; Defined in characters.c
 
-(compat-advise string-width (string &optional from to)
+(compat-defun string-width (string &optional from to)
   "Handle optional arguments FROM and TO:
 
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
-  :cond (compat-maxargs-/= #'string-width 3)
-  (funcall oldfun (substring string (or from 0) to)))
+  :prefix t
+  (string-width (substring string (or from 0) to)))
 
 ;;;; Defined in dired.c
 
-(compat-advise directory-files (directory &optional full match nosort count)
+(compat-defun directory-files (directory &optional full match nosort count)
   "Handle additional optional argument COUNT:
 
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
-  :cond (compat-maxargs-/= #'directory-files 5)
-  (let ((files (funcall oldfun directory full match nosort)))
+  :prefix t
+  (let ((files (directory-files directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
     files))
@@ -354,7 +354,7 @@ not a list, return a one-element list containing OBJECT."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature subr-x
+  :feature 'subr-x
   (let ((blank "[[:blank:]\r\n]+"))
     (replace-regexp-in-string
      "^[[:blank:]\r\n]+\\|[[:blank:]\r\n]+$"
@@ -367,7 +367,7 @@ removed."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature subr-x
+  :feature 'subr-x
   (with-temp-buffer
     (insert string)
     (goto-char (point-min))
@@ -379,7 +379,7 @@ removed."
 (compat-defun string-lines (string &optional omit-nulls)
   "Split STRING into a list of lines.
 If OMIT-NULLS, empty lines will be removed from the results."
-  :feature subr-x
+  :feature 'subr-x
   (split-string string "\n" omit-nulls))
 
 (compat-defun string-pad (string length &optional padding start)
@@ -393,7 +393,7 @@ is done.
 If START is nil (or not present), the padding is done to the end
 of the string, and if non-nil, padding is done to the start of
 the string."
-  :feature subr-x
+  :feature 'subr-x
   (unless (natnump length)
     (signal 'wrong-type-argument (list 'natnump length)))
   (let ((pad-length (- length (length string))))
@@ -407,7 +407,7 @@ the string."
 
 (compat-defun string-chop-newline (string)
   "Remove the final newline (if any) from STRING."
-  :feature subr-x
+  :feature 'subr-x
   (if (and (>= (length string) 1) (= (aref string (1- (length string))) ?\n))
       (substring string 0 -1)
     string))
@@ -418,7 +418,7 @@ Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by
 calling NAME, where the arguments passed to NAME are used
 as the new values of the bound variables in the recursive invocation."
-  :feature subr-x
+  :feature 'subr-x
   (declare (indent 2) (debug (symbolp (&rest (symbolp form)) body)))
   (let ((fargs (mapcar (lambda (b)
                          (let ((var (if (consp b) (car b) b)))
@@ -565,20 +565,19 @@ is included in the return value."
 
 ;;;; Defined in windows.el
 
-(compat-advise count-windows (&optional minibuf all-frames)
+(compat-defun count-windows (&optional minibuf all-frames)
   "Handle optional argument ALL-FRAMES:
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
-  :cond (compat-maxargs-/= #'count-windows 2)
+  :prefix t
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))
           (with-selected-frame frame
-            (setq sum (+ (funcall oldfun minibuf)
-                         sum))))
+            (setq sum (+ (count-windows minibuf) sum))))
         sum)
-    (funcall oldfun minibuf)))
+    (count-windows minibuf)))
 
 ;;;; Defined in thingatpt.el
 
@@ -587,7 +586,7 @@ just the selected frame."
   "Return the THING at mouse click.
 Like `thing-at-point', but tries to use the event
 where the mouse button is clicked to find a thing nearby."
-  :feature thingatpt
+  :feature 'thingatpt
   (save-excursion
     (mouse-set-point event)
     (thing-at-point thing no-properties)))
@@ -601,7 +600,7 @@ A non-nil result is expected to be reliable when called from a macro in order
 to find the file in which the macro's call was found, and it should be
 reliable as well when used at the top-level of a file.
 Other uses risk returning non-nil value that point to the wrong file."
-  :feature macroexp
+  :feature 'macroexp
   (let ((file (car (last current-load-list))))
     (or (if (stringp file) file)
         (bound-and-true-p byte-compile-current-file))))
@@ -631,7 +630,7 @@ The previous values will be be restored upon exit."
 When clicked, CALLBACK will be called with the DATA as the
 function argument.  If DATA isn't present (or is nil), the button
 itself will be used instead as the function argument."
-  :feature button
+  :feature 'button
   (propertize string
               'face 'button
               'button t

@@ -69,6 +69,9 @@ ignored:
 - :alias :: Force create an alias starting with `compat--' or as
   defined by :realname.
 
+- :prefix :: Add a `compat-' prefix to the name, and define the
+  compatibility code unconditionally.
+
 TYPE is used to set the symbol property `compat-type' for NAME.")
 
 (defun compat--generate-minimal (name def-fn install-fn check-fn attr type)
@@ -137,40 +140,46 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                                       (buffer-file-name))))
                         ;; Guess the version from the file the macro is
                         ;; being defined in.
-                        (and (string-match
+                        (and file
+                             (string-match
                               "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
                               file)
                              (match-string 1 file)))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
-         (body `(,@(cond
-                    ((and (or (not version)
-                              (version< emacs-version version))
-                          (or (not min-version)
-                              (version<= min-version emacs-version))
-                          (or (not max-version)
-                              (version<= emacs-version max-version)))
-                     `(when (and ,(if cond cond t)
-                                 ,(funcall check-fn))))
-                    ('(compat--ignore)))
-                 ,(unless (plist-get attr :no-highlight)
-                    `(font-lock-add-keywords
-                      'emacs-lisp-mode
-                      ',`((,(concat "\\_<\\("
-                                    (regexp-quote (symbol-name name))
-                                    "\\)\\_>")
-                           1 font-lock-preprocessor-face prepend))))
-                 ,(funcall install-fn realname version))))
+         (body `(progn
+                  (when (get ',name 'compat-def)
+                    (error "Duplicate compatibility definition: %s" ',name))
+                  (put ',name 'compat-def ',realname)
+                  ,(unless (plist-get attr :no-highlight)
+                     `(font-lock-add-keywords
+                       'emacs-lisp-mode
+                       ',`((,(concat "\\_<\\("
+                                     (regexp-quote (symbol-name name))
+                                     "\\)\\_>")
+                            1 font-lock-preprocessor-face prepend))))
+                  ,(funcall install-fn realname version))))
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
-       (put ',name 'compat-def ',realname)
        ,(funcall def-fn realname version)
-       ,(if feature
-            ;; See https://nullprogram.com/blog/2018/02/22/:
-            `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
-          body))))
+       (,@(cond
+           ((or (and min-version
+                     (version< emacs-version min-version))
+                (and max-version
+                     (version< max-version emacs-version)))
+            '(compat--ignore))
+           ((plist-get attr :prefix)
+            '(progn))
+           ((and version (version<= version emacs-version))
+            '(compat--ignore))
+           (`(when (and ,(if cond cond t)
+                        ,(funcall check-fn)))))
+        ,(if feature
+             ;; See https://nullprogram.com/blog/2018/02/22/:
+             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+           body)))))
 
 (defun compat-generate-common (name def-fn install-fn check-fn attr type)
   "Common code for generating compatibility definitions.
@@ -186,7 +195,7 @@ TYPE is one of `func', for functions and `macro' for macros, and
 DOCSTRING is prepended with a compatibility note.  REST contains
 the remaining definition, that may begin with a property list of
 attributes (see `compat-generate-common')."
-  (let ((body rest))
+  (let ((oldname name) (body rest))
     (while (keywordp (car body))
       (setq body (cddr body)))
     ;; It might be possible to set these properties otherwise.  That
@@ -195,6 +204,9 @@ attributes (see `compat-generate-common')."
       (when (version<= "25" emacs-version)
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
+    ;; Check if we want an explicitly prefixed function
+    (when (plist-get rest :prefix)
+      (setq name (intern (format "compat-%s" name))))
     (compat-generate-common
      name
      (lambda (realname version)
@@ -213,17 +225,17 @@ attributes (see `compat-generate-common')."
             (if version
                 (format
                  "[Compatibility %s for `%S', defined in Emacs %s]\n\n%s"
-                 type name version docstring)
+                 type oldname version docstring)
               (format
                "[Compatibility %s for `%S']\n\n%s"
-               type name docstring)))
+               type oldname docstring)))
          ;; Advice may use the implicit variable `oldfun', but
          ;; to avoid triggering the byte compiler, we make
          ;; sure the argument is used at least once.
          ,@(if (eq type 'advice)
                (cons '(ignore oldfun) body)
              body)))
-     (lambda (realname version)
+     (lambda (realname _version)
        (cond
         ((memq type '(func macro))
          ;; Functions and macros are installed by
@@ -232,21 +244,7 @@ attributes (see `compat-generate-common')."
          ;; function.
          `(defalias ',name #',realname))
         ((eq type 'advice)
-         ;; nadvice.el was introduced in Emacs 24.4, so older versions
-         ;; have to advise the function using advice.el's `defadvice'.
-         (if (or (version<= "24.4" emacs-version)
-                 (fboundp 'advice-add)) ;via ELPA
-             `(advice-add ',name :around #',realname)
-           (let ((oldfun (make-symbol (format "compat--oldfun-%S" realname))))
-             `(progn
-                (defvar ,oldfun (indirect-function ',name))
-                (put ',name 'compat-advice-fn #',realname)
-                (defalias ',name
-                  (lambda (&rest args)
-                    ,(format
-                      "[Manual compatibility advice for `%S', defined in Emacs %s]\n\n%s"
-                      name version (if (fboundp name) (documentation name) docstring))
-                    (apply #',realname (cons (autoload-do-load ,oldfun) args))))))))))
+         `(advice-add ',name :around #',realname))))
      (lambda ()
        (cond
         ((memq type '(func macro))
@@ -311,33 +309,37 @@ local with a value of `permanent' or just buffer local with any
 non-nil value."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat-generate-common
-   name
-   (lambda (realname version)
-     (let ((localp (plist-get attr :local)))
-       `(progn
-          (,(if (plist-get attr :constant) 'defconst 'defvar)
-           ,realname ,initval
-           ;; Prepend compatibility notice to the actual
-           ;; documentation string.
-           ,(if version
+  ;; Check if we want an explicitly prefixed function
+  (let ((oldname name))
+    (when (plist-get attr :prefix)
+      (setq name (intern (format "compat-%s" name))))
+    (compat-generate-common
+     name
+     (lambda (realname version)
+       (let ((localp (plist-get attr :local)))
+         `(progn
+            (,(if (plist-get attr :constant) 'defconst 'defvar)
+             ,realname ,initval
+             ;; Prepend compatibility notice to the actual
+             ;; documentation string.
+             ,(if version
+                  (format
+                   "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
+                   oldname version docstring)
                 (format
-                 "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                 name version docstring)
-              (format
-               "[Compatibility variable for `%S']\n\n%s"
-               name docstring)))
-          ;; Make variable as local if necessary
-          ,(cond
-            ((eq localp 'permanent)
-             `(put ',realname 'permanent-local t))
-            (localp
-             `(make-variable-buffer-local ',realname))))))
-   (lambda (realname _version)
-     `(defvaralias ',name ',realname))
-   (lambda ()
-     `(not (boundp ',name)))
-   attr 'variable))
+                 "[Compatibility variable for `%S']\n\n%s"
+                 oldname docstring)))
+            ;; Make variable as local if necessary
+            ,(cond
+              ((eq localp 'permanent)
+               `(put ',realname 'permanent-local t))
+              (localp
+               `(make-variable-buffer-local ',realname))))))
+     (lambda (realname _version)
+       `(defvaralias ',name ',realname))
+     (lambda ()
+       `(not (boundp ',name)))
+     attr 'variable)))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
