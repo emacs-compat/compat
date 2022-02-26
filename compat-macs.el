@@ -79,7 +79,8 @@ TYPE is used to set the symbol property `compat-type' for NAME."
                                       (buffer-file-name))))
                         ;; Guess the version from the file the macro is
                         ;; being defined in.
-                        (and (string-match
+                        (and file
+                             (string-match
                               "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
                               file)
                              (match-string 1 file)))))
