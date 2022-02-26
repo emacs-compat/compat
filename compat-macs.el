@@ -87,6 +87,9 @@ TYPE is used to set the symbol property `compat-type' for NAME."
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn
+                  (when (get ',name 'compat-def)
+                    (error "Duplicate compatibility definition: %s" ',name))
+                  (put ',name 'compat-def ',realname)
                   ,(unless (plist-get attr :no-highlight)
                      `(font-lock-add-keywords
                        'emacs-lisp-mode
@@ -99,9 +102,6 @@ TYPE is used to set the symbol property `compat-type' for NAME."
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
-       (when (get ',name 'compat-def)
-         (error "Duplicate compatibility definition: %s" ',name))
-       (put ',name 'compat-def ',realname)
        ,(funcall def-fn realname version)
        (,@(cond
            ((or (and min-version
