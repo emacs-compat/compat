@@ -157,7 +157,8 @@ In you specify the same value for `:null-object' and `:false-object',
 a potentially ambiguous situation, the JSON output will not contain
 any JSON false values."
   :cond (condition-case nil
-            (json-parse-string "[]")
+            (let ((inhibit-message t))
+              (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
   (require 'json)
@@ -171,7 +172,8 @@ This is the same as (insert (json-serialize OBJECT)), but potentially
 faster.  See the function `json-serialize' for allowed values of
 OBJECT."
   :cond (condition-case nil
-            (json-parse-string "[]")
+            (let ((inhibit-message t))
+              (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
   (insert (apply #'compat--json-serialize object args)))
@@ -201,7 +203,8 @@ to represent a JSON null value.  It defaults to `:null'.
 The keyword argument `:false-object' specifies which object to use to
 represent a JSON false value.  It defaults to `:false'."
   :cond (condition-case nil
-            (json-parse-string "[]")
+            (let ((inhibit-message t))
+              (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
   (require 'json)
@@ -244,7 +247,8 @@ to represent a JSON null value.  It defaults to `:null'.
 The keyword argument `:false-object' specifies which object to use to
 represent a JSON false value.  It defaults to `:false'."
   :cond (condition-case nil
-            (json-parse-string "[]")
+            (let ((inhibit-message t))
+              (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
   (require 'json)
