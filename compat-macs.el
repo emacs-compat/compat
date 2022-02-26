@@ -152,13 +152,6 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                   (when (get ',name 'compat-def)
                     (error "Duplicate compatibility definition: %s" ',name))
                   (put ',name 'compat-def ',realname)
-                  ,(unless (plist-get attr :no-highlight)
-                     `(font-lock-add-keywords
-                       'emacs-lisp-mode
-                       ',`((,(concat "\\_<\\("
-                                     (regexp-quote (symbol-name name))
-                                     "\\)\\_>")
-                            1 font-lock-preprocessor-face prepend))))
                   ,(funcall install-fn realname version))))
     `(progn
        (put ',realname 'compat-type ',type)

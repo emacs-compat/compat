@@ -122,33 +122,36 @@
 ;; compat-N.M.el directly into the compat.elc.
 (eval-when-compile
   (defmacro compat-insert (version)
-    (cond
-     ((bound-and-true-p compat-testing)
-      `(load ,(format "compat-%s" version)))
-     ((version<= version emacs-version)
-      ;; We don't need to do anything.
-      nil)
-     ((let* ((file (expand-file-name
-                    (format "compat-%s.el" version)
-                    (file-name-directory
-                     (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
-                         load-file-name
-                         buffer-file-name))))
-             (byte-compile-current-file file)
-             defs)
-        (unless (file-exists-p file)
-          (error "Cannot load %S" file))
-        (let ((load-file-name file))
-          (with-temp-buffer
-            (insert-file-contents file)
-            (emacs-lisp-mode)
-            (while (progn
-                     (forward-comment 1)
-                     (not (eobp)))
-              (push (read (current-buffer)) defs))
-            (cons 'progn (nreverse defs)))))))))
+    (let ((compat--generate-function
+           (if (eq compat--generate-function 'compat--generate-verbose)
+               'compat--generate-minimal
+             compat--generate-function)))
+      (cond
+       ((bound-and-true-p compat-testing)
+        `(load ,(format "compat-%s" version)))
+       ((version<= version emacs-version)
+        ;; We don't need to do anything.
+        nil)
+       ((let* ((file (expand-file-name
+                      (format "compat-%s.el" version)
+                      (file-name-directory
+                       (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
+                           load-file-name
+                           buffer-file-name))))
+               (byte-compile-current-file file)
+               defs)
+          (unless (file-exists-p file)
+            (error "Cannot load %S" file))
+          (let ((load-file-name file))
+            (with-temp-buffer
+              (insert-file-contents file)
+              (emacs-lisp-mode)
+              (while (progn
+                       (forward-comment 1)
+                       (not (eobp)))
+                (push (read (current-buffer)) defs))
+              (cons 'progn (nreverse defs))))))))))
 
-(setq-default compat--generate-function 'compat--generate-minimal)
 (compat-insert "24.4")
 (compat-insert "25.1")
 (compat-insert "26.1")
