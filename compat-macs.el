@@ -78,52 +78,53 @@ TYPE is used to set the symbol property `compat-type' for NAME.")
   "Generate a leaner compatibility definition.
 See `compat-generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
-  (let* ((min-version (plist-get attr :min-version))
-         (max-version (plist-get attr :max-version))
-         (feature (plist-get attr :feature))
-         (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      (let ((file (or (and (boundp 'byte-compile-current-file)
-                                           byte-compile-current-file)
-                                      load-file-name
-                                      (buffer-file-name))))
-                        ;; Guess the version from the file the macro is
-                        ;; being defined in.
-                        (and (string-match
-                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                              file)
-                             (match-string 1 file)))))
-         (realname (or (plist-get attr :realname)
-                       (intern (format "compat--%S" name))))
-         (check (cond
-                 ((and (or (not version)
-                           (version< emacs-version version))
-                       (or (not min-version)
-                           (version<= min-version emacs-version))
-                       (or (not max-version)
-                           (version<= emacs-version max-version)))
-                  `(when (and ,(if cond cond t)
-                              ,(funcall check-fn))))
-                 ('(compat--ignore))) ))
-    (let* ((body (if (eq type 'advice)
-                     `(,@check
-                       ,(funcall def-fn realname version)
-                       ,(funcall install-fn realname version))
-                   `(,@check ,(funcall def-fn name version))))
-           (body1 (if feature
-                      ;; See https://nullprogram.com/blog/2018/02/22/:
-                      `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
-                    body)))
-      (if (plist-get attr :alias)
-          `(progn
-             ,body1
-             ,(cond
-               ((memq type '(func advice macro))
-                `(defalias ',realname #',name))
-               ((memq type '(variable))
-                `(defvaralias ',realname ',name))
-               ((error "Unknown type %s" type))))
-        body1))))
+  (unless (plist-get attr :prefix)
+    (let* ((min-version (plist-get attr :min-version))
+           (max-version (plist-get attr :max-version))
+           (feature (plist-get attr :feature))
+           (cond (plist-get attr :cond))
+           (version (or (plist-get attr :version)
+                        (let ((file (or (and (boundp 'byte-compile-current-file)
+                                             byte-compile-current-file)
+                                        load-file-name
+                                        (buffer-file-name))))
+                          ;; Guess the version from the file the macro is
+                          ;; being defined in.
+                          (and (string-match
+                                "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                                file)
+                               (match-string 1 file)))))
+           (realname (or (plist-get attr :realname)
+                         (intern (format "compat--%S" name))))
+           (check (cond
+                   ((and (or (not version)
+                             (version< emacs-version version))
+                         (or (not min-version)
+                             (version<= min-version emacs-version))
+                         (or (not max-version)
+                             (version<= emacs-version max-version)))
+                    `(when (and ,(if cond cond t)
+                                ,(funcall check-fn))))
+                   ('(compat--ignore))) ))
+      (let* ((body (if (eq type 'advice)
+                       `(,@check
+                         ,(funcall def-fn realname version)
+                         ,(funcall install-fn realname version))
+                     `(,@check ,(funcall def-fn name version))))
+             (body1 (if feature
+                        ;; See https://nullprogram.com/blog/2018/02/22/:
+                        `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
+                      body)))
+        (if (plist-get attr :alias)
+            `(progn
+               ,body1
+               ,(cond
+                 ((memq type '(func advice macro))
+                  `(defalias ',realname #',name))
+                 ((memq type '(variable))
+                  `(defvaralias ',realname ',name))
+                 ((error "Unknown type %s" type))))
+          body1)))))
 
 (defun compat--generate-verbose (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
