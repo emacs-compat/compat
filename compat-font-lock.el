@@ -1,6 +1,6 @@
 ;;; compat-font-lock.el ---                          -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Philip Kaludercic
+;; Copyright (C) 2022 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Keywords:
