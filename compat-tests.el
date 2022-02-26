@@ -121,7 +121,7 @@ the compatibility function."
 
 
 
-(unless (fboundp 'nadvice)
+(unless (fboundp 'advice-add)
   (require 'package)
   (package-initialize)
   (package-install 'nadvice))
