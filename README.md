@@ -44,10 +44,16 @@ add as a dependency in the header:
 
     ;; Package-Requires: ((emacs "24.3") (compat "28.1.0.0"))
 
-No further action should be required afterwards.  The effect should be
-that all the functions and macros that compat.el provides are
-automatically accessible or made accessible as soon as the right
-libraries are loaded.
+and later on a
+
+	(require 'compat)
+
+This will load all non-prefixed definitions (functions and macros with
+a loading `compat-`).  To load these, an additional
+
+	(require 'compat-XY.Z) ; e.g. 26.1
+
+will be necessary, to load compatibility code for Emacs version XY.Z.
 
 It is recommended to subscribe to the [compat-announce] mailing list
 to be notified when new versions are released or relevant changes are
