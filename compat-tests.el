@@ -34,6 +34,10 @@
 
 (require 'ert)
 
+(unless (fboundp 'advice-add)
+  (require 'package)
+  (package-install 'nadvice))
+
 (defvar compat-testing)
 (let ((compat-testing t))
   (load "compat.el"))
@@ -123,11 +127,6 @@ the compatibility function."
   (macroexp-progn body))
 
 
-
-(unless (fboundp 'advice-add)
-  (require 'package)
-  (package-initialize)
-  (package-install 'nadvice))
 
 (ert-deftest compat-string-search ()
   "Check if `compat--string-search' was implemented correctly."
