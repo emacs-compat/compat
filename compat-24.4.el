@@ -172,5 +172,19 @@ Defaults to `error'."
          (delete-dups (copy-sequence (cons name conditions))))
     (when message (put name 'error-message message))))
 
+;;;; Defined in subr-x.el
+
+(compat-advise require (feature &rest args)
+  "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
+  ;; As the compatibility advise around `require` is more a hack than
+  ;; of of actual value, the highlighting is suppressed.
+  :no-highlight t
+  (if (eq feature 'subr-x)
+      (let ((entry (assq feature after-load-alist)))
+        (let ((load-file-name nil))
+          (dolist (form (cdr entry))
+            (funcall (eval form t)))))
+    (apply oldfun feature args)))
+
 (provide 'compat-24.4)
 ;;; compat-24.4.el ends here
