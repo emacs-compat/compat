@@ -149,8 +149,10 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn
-                  (when (get ',name 'compat-def)
-                    (error "Duplicate compatibility definition: %s" ',name))
+                  (unless (or (null (get ',name 'compat-def))
+                              (eq (get ',name 'compat-def) ',realname))
+                    (error "Duplicate compatibility definition: %s (was %s, now %s)"
+                           ',name (get ',name 'compat-def) ',realname))
                   (put ',name 'compat-def ',realname)
                   ,(funcall install-fn realname version))))
     `(progn
