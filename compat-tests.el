@@ -1339,5 +1339,85 @@ the compatibility function."
       (compat--should 'foo (list a-map b-map) "x")
       (compat--should 'bar (list b-map a-map) "x"))))
 
+(ert-deftest compat-hash-table-keys ()
+  "Check if `compat--hash-table-keys' was implemented properly."
+  (let ((ht (make-hash-table)))
+    (compat-test hash-table-keys
+      (compat--should '() ht)
+      (puthash 1 'one ht)
+      (compat--should '(1) ht)
+      (puthash 1 'one ht)
+      (compat--should '(1) ht)
+      (remhash 1 ht)
+      (compat--should '() ht)
+      (puthash 2 'two ht)
+      (compat--should '(2) ht))))
+
+(ert-deftest compat-hash-table-values ()
+  "Check if `compat--hash-table-values' was implemented properly."
+  (let ((ht (make-hash-table)))
+    (compat-test hash-table-values
+      (compat--should '() ht)
+      (puthash 1 'one ht)
+      (compat--should '(one) ht)
+      (puthash 1 'one ht)
+      (compat--should '(one) ht)
+      (remhash 1 ht)
+      (compat--should '() ht)
+      (puthash 2 'two ht)
+      (compat--should '(two) ht))))
+
+(ert-deftest compat-string-empty-p ()
+  "Check if `compat--string-empty-p' was implemented properly."
+  (compat-test string-empty-p
+    (compat--should t "")
+    (compat--should nil " ")
+    (compat--should t (make-string 0 ?x))
+    (compat--should nil (make-string 1 ?x))))
+
+(ert-deftest compat-string-join ()
+  "Check if `compat--string-join' was implemented properly."
+  (compat-test string-join
+    (compat--should "" '(""))
+    (compat--should "" '("") " ")
+    (compat--should "a" '("a"))
+    (compat--should "a" '("a") " ")
+    (compat--should "abc" '("a" "b" "c"))
+    (compat--should "a b c" '("a" "b" "c") " ")))
+
+(ert-deftest compat-string-blank-p ()
+  "Check if `compat--string-blank-p' was implemented properly."
+  (compat-test string-blank-p
+    (compat--should 0 "")
+    (compat--should 0 " ")
+    (compat--should 0 (make-string 0 ?x))
+    (compat--should nil (make-string 1 ?x))))
+
+(ert-deftest compat-string-remove-prefix ()
+  "Check if `compat--string-remove-prefix was implemented properly."
+  (compat-test string-remove-prefix
+    (compat--should "" "" "")
+    (compat--should "a" "" "a")
+    (compat--should "" "a" "")
+    (compat--should "bc" "a" "abc")
+    (compat--should "abc" "c" "abc")
+    (compat--should "bbcc" "aa" "aabbcc")
+    (compat--should "aabbcc" "bb" "aabbcc")
+    (compat--should "aabbcc" "cc" "aabbcc")
+    (compat--should "aabbcc" "dd" "aabbcc")))
+
+(ert-deftest compat-string-remove-suffix ()
+  "Check if `compat--string-remove-suffix was implemented properly."
+  (compat-test string-remove-suffix
+    (compat--should "" "" "")
+    (compat--should "a" "" "a")
+    (compat--should "" "a" "")
+    (compat--should "abc" "a" "abc")
+    (compat--should "ab" "c" "abc")
+    (compat--should "aabbcc" "aa" "aabbcc")
+    (compat--should "aabbcc" "bb" "aabbcc")
+    (compat--should "aabb" "cc" "aabbcc")
+    (compat--should "aabbcc" "dd" "aabbcc")))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
