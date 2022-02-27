@@ -125,11 +125,5 @@
 (require 'compat-27.1)
 (require 'compat-28.1)
 
-;;;; Etcetera
-
-;; To ensure that compat.el is loaded as soon as possible, a require
-;; call is inserted directly into the autoload file:
-;;;###autoload (require 'compat)
-
 (provide 'compat)
 ;;; compat.el ends here
