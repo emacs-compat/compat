@@ -38,8 +38,10 @@
   (require 'package)
   (package-install 'nadvice))
 
+(require 'compat-macs)
 (defvar compat-testing)
-(let ((compat-testing t))
+(let ((compat--generate-function #'compat--generate-verbose)
+      (compat-testing t))
   (load "compat.el"))
 
 (defvar compat--current-fn nil)

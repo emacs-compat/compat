@@ -29,7 +29,7 @@
   "Ignore all arguments."
   nil)
 
-(defvar compat--generate-function #'compat--generate-verbose
+(defvar compat--generate-function #'compat--generate-minimal
   "Function used to generate compatibility code.
 The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
 CHECK-FN, ATTR and TYPE.  The resulting body is constructed by
@@ -66,9 +66,6 @@ ignored:
 - :notes :: Additional notes that a developer using this
   compatibility function should keep in mind.
 
-- :alias :: Force create an alias starting with `compat--' or as
-  defined by :realname.
-
 - :prefix :: Add a `compat-' prefix to the name, and define the
   compatibility code unconditionally.
 
@@ -78,53 +75,61 @@ TYPE is used to set the symbol property `compat-type' for NAME.")
   "Generate a leaner compatibility definition.
 See `compat-generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
-  (unless (plist-get attr :prefix)
-    (let* ((min-version (plist-get attr :min-version))
-           (max-version (plist-get attr :max-version))
-           (feature (plist-get attr :feature))
-           (cond (plist-get attr :cond))
-           (version (or (plist-get attr :version)
-                        (let ((file (or (and (boundp 'byte-compile-current-file)
-                                             byte-compile-current-file)
-                                        load-file-name
-                                        (buffer-file-name))))
-                          ;; Guess the version from the file the macro is
-                          ;; being defined in.
-                          (and (string-match
-                                "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                                file)
-                               (match-string 1 file)))))
-           (realname (or (plist-get attr :realname)
-                         (intern (format "compat--%S" name))))
-           (check (cond
-                   ((and (or (not version)
-                             (version< emacs-version version))
-                         (or (not min-version)
-                             (version<= min-version emacs-version))
-                         (or (not max-version)
-                             (version<= emacs-version max-version)))
-                    `(when (and ,(if cond cond t)
-                                ,(funcall check-fn))))
-                   ('(compat--ignore))) ))
+  (let* ((min-version (plist-get attr :min-version))
+         (max-version (plist-get attr :max-version))
+         (feature (plist-get attr :feature))
+         (cond (plist-get attr :cond))
+         (version (or (plist-get attr :version)
+                      (let ((file (or (and (boundp 'byte-compile-current-file)
+                                           byte-compile-current-file)
+                                      load-file-name
+                                      (buffer-file-name))))
+                        ;; Guess the version from the file the macro is
+                        ;; being defined in.
+                        (and (string-match
+                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                              file)
+                             (match-string 1 file)))))
+         (realname (or (plist-get attr :realname)
+                       (intern (format "compat--%S" name))))
+         (check (cond
+                 ((or (and min-version
+                           (version< emacs-version min-version))
+                      (and max-version
+                           (version< max-version emacs-version)))
+                  '(compat--ignore))
+                 ((plist-get attr :prefix)
+                  '(progn))
+                 ((and version (version<= version emacs-version))
+                  '(compat--ignore))
+                 (`(when (and ,(if cond cond t)
+                              ,(funcall check-fn)))))))
+    (if (and (not (plist-get attr :prefix))
+             (plist-get attr :realname))
+        `(progn
+           ,(funcall def-fn realname version)
+           (,@check
+            ,(let ((body (funcall install-fn realname version)))
+               (if feature
+                   ;; See https://nullprogram.com/blog/2018/02/22/:
+                   `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+                 body))))
       (let* ((body (if (eq type 'advice)
                        `(,@check
                          ,(funcall def-fn realname version)
                          ,(funcall install-fn realname version))
-                     `(,@check ,(funcall def-fn name version))))
-             (body1 (if feature
-                        ;; See https://nullprogram.com/blog/2018/02/22/:
-                        `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
-                      body)))
-        (if (plist-get attr :alias)
-            `(progn
-               ,body1
-               ,(cond
-                 ((memq type '(func advice macro))
-                  `(defalias ',realname #',name))
-                 ((memq type '(variable))
-                  `(defvaralias ',realname ',name))
-                 ((error "Unknown type %s" type))))
-          body1)))))
+                     `(,@check ,(funcall def-fn name version)))))
+        (if feature
+            ;; See https://nullprogram.com/blog/2018/02/22/:
+            `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+          body)))))
+
+(defun compat--generate-minimal-no-prefix (name def-fn install-fn check-fn attr type)
+  "Generate a leaner compatibility definition.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (unless (plist-get attr :prefix)
+    (compat--generate-minimal name def-fn install-fn check-fn attr type)))
 
 (defun compat--generate-verbose (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
