@@ -118,12 +118,51 @@
         (not (eq (cdr (compat-func-arity func)) n))
       (void-function t))))
 
-;; Load the actual compatibility definitions:
-(require 'compat-24.4)
-(require 'compat-25.1)
-(require 'compat-26.1)
-(require 'compat-27.1)
-(require 'compat-28.1)
+;; To accelerate the loading process, we insert the contents of
+;; compat-N.M.el directly into the compat.elc.
+(eval-when-compile
+  (defvar compat--generate-function)
+  (defmacro compat-insert (version)
+    (cond
+     ((bound-and-true-p compat-testing)
+      `(load ,(format "compat-%s.el" version)))
+     ;; ((version<= version emacs-version)
+     ;;  ;; We don't need to do anything.
+     ;;  nil)
+     ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
+             (file (expand-file-name
+                    (format "compat-%s.el" version)
+                    (file-name-directory
+                     (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
+                         load-file-name
+                         buffer-file-name))))
+             (byte-compile-current-file file)
+             defs)
+        (unless (file-exists-p file)
+          (error "Cannot load %S" file))
+        (let ((load-file-name file))
+          (with-temp-buffer
+            (insert-file-contents file)
+            (emacs-lisp-mode)
+            (while (progn
+                     (forward-comment 1)
+                     (not (eobp)))
+              (let ((form (read (current-buffer))))
+                (when (memq (car-safe form)
+                            '(declare-function
+                              compat-defun
+                              compat-defmacro
+                              compat-advise
+                              defvar))
+                  (push form defs))))))
+        (macroexpand-all
+         (cons 'progn (nreverse defs))))))))
+
+(compat-insert "24.4")
+(compat-insert "25.1")
+(compat-insert "26.1")
+(compat-insert "27.1")
+(compat-insert "28.1")
 
 (provide 'compat)
 ;;; compat.el ends here

@@ -33,7 +33,16 @@
 ;;; Code:
 
 (require 'ert)
-(require 'compat)
+
+(unless (fboundp 'advice-add)
+  (require 'package)
+  (package-install 'nadvice))
+
+(require 'compat-macs)
+(defvar compat-testing)
+(let ((compat--generate-function #'compat--generate-verbose)
+      (compat-testing t))
+  (load "compat.el"))
 
 (defvar compat--current-fn nil)
 (defvar compat--compat-fn nil)
@@ -120,11 +129,6 @@ the compatibility function."
   (macroexp-progn body))
 
 
-
-(unless (fboundp 'advice-add)
-  (require 'package)
-  (package-initialize)
-  (package-install 'nadvice))
 
 (ert-deftest compat-string-search ()
   "Check if `compat--string-search' was implemented correctly."

@@ -62,6 +62,7 @@ This implementation is equivalent to `format'."
 
 (compat-defun directory-name-p (name)
   "Return non-nil if NAME ends with a directory separator character."
+  :realname compat--directory-name-p
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
             ?\\ ?/))
