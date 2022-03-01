@@ -51,9 +51,9 @@ and later on a
 This will load all non-prefixed definitions (functions and macros with
 a loading `compat-`).  To load these, an additional
 
-	(require 'compat-XY.Z) ; e.g. 26.1
+	(require 'compat-XY) ; e.g. 26
 
-will be necessary, to load compatibility code for Emacs version XY.Z.
+will be necessary, to load compatibility code for Emacs version XY.
 
 It is recommended to subscribe to the [compat-announce] mailing list
 to be notified when new versions are released or relevant changes are
