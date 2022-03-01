@@ -5,11 +5,11 @@
 EMACS = emacs
 BYTEC = compat-help.elc \
 	compat-macs.elc \
-	compat-24.4.elc \
-	compat-25.1.elc \
-	compat-26.1.elc \
-	compat-27.1.elc \
-	compat-28.1.elc \
+	compat-24.elc \
+	compat-25.elc \
+	compat-26.elc \
+	compat-27.elc \
+	compat-28.elc \
 	compat.elc
 
 all: compile test

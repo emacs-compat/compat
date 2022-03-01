@@ -1,4 +1,4 @@
-;;; compat-27.1.el --- Compatibility Layer for Emacs 27.1  -*- lexical-binding: t; -*-
+;;; compat-27.el --- Compatibility Layer for Emacs 27.1  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
@@ -176,7 +176,7 @@ OBJECT."
               (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
-  (insert (apply #'compat--json-serialize object args)))
+  (insert (apply #'json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
   "Parse the JSON STRING into a Lisp object.
@@ -494,5 +494,5 @@ The return value is a string (or nil in case we can’t find it)."
             (or (lm-header "package-version")
                 (lm-header "version")))))))))
 
-(provide 'compat-27.1)
-;;; compat-27.1.el ends here
+(provide 'compat-27)
+;;; compat-27.el ends here

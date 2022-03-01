@@ -1,4 +1,4 @@
-;;; compat-26.1.el --- Compatibility Layer for Emacs 26.1  -*- lexical-binding: t; -*-
+;;; compat-26.el --- Compatibility Layer for Emacs 26.1  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
@@ -78,7 +78,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 ;;;; Defined in subr.el
 
-(declare-function compat--alist-get-full-elisp "compat-25.1"
+(declare-function compat--alist-get-full-elisp "compat-25"
                   (key alist &optional default remove testfn))
 (compat-defun alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."
@@ -295,5 +295,5 @@ the variable `temporary-file-directory' is returned."
           default-directory
         temporary-file-directory))))
 
-(provide 'compat-26.1)
-;;; compat-26.1.el ends here
+(provide 'compat-26)
+;;; compat-26.el ends here

@@ -1,4 +1,4 @@
-;;; compat-25.1.el --- Compatibility Layer for Emacs 25.1  -*- lexical-binding: t; -*-
+;;; compat-25.el --- Compatibility Layer for Emacs 25.1  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021 Free Software Foundation, Inc.
 
@@ -256,5 +256,5 @@ threading."
                 form))))))))
    (t form)))
 
-(provide 'compat-25.1)
-;;; compat-25.1.el ends here
+(provide 'compat-25)
+;;; compat-25.el ends here
