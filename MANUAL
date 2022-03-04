@@ -412,6 +412,7 @@ implemented in 28.1:
 - The function ~process-lines-ignore-status~.
 - The function ~require-theme~.
 - The function ~syntax-class-to-char~.
+- The function ~null-device~ and ~path-separator~.
 
 * Development
 Compat is developed on [[https://sr.ht/~pkal/compat][SourceHut]]. A restricted [[https://github.com/phikal/compat.el][GitHub mirror]] is also
