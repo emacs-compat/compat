@@ -145,6 +145,7 @@ implemented in 24.4:
 - The ~add-face-text-property~ function.
 - No ~tty-setup-hook~ hook.
 - The ~get-pos-property~ function.
+- The ~define-advice~ macro.
 
 ** Emacs 24.5
 No special support for 24.5 was deemed necessary.
