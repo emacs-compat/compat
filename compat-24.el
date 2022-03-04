@@ -453,5 +453,56 @@ carriage return."
       (substring string 0 (- (length string) (length suffix)))
     string))
 
+;;;; Defined in faces.el
+
+(compat-defun face-spec-set (face spec &optional spec-type)
+  "Set the FACE's spec SPEC, define FACE, and recalculate its attributes.
+See `defface' for the format of SPEC.
+
+The appearance of each face is controlled by its specs (set via
+this function), and by the internal frame-specific face
+attributes (set via `set-face-attribute').
+
+This function also defines FACE as a valid face name if it is not
+already one, and (re)calculates its attributes on existing
+frames.
+
+The optional argument SPEC-TYPE determines which spec to set:
+  nil, omitted or `face-override-spec' means the override spec,
+    which overrides all the other types of spec mentioned below
+    (this is usually what you want if calling this function
+    outside of Custom code);
+  `customized-face' or `saved-face' means the customized spec or
+    the saved custom spec;
+  `face-defface-spec' means the default spec
+    (usually set only via `defface');
+  `reset' means to ignore SPEC, but clear the `customized-face'
+    and `face-override-spec' specs;
+Any other value means not to set any spec, but to run the
+function for defining FACE and recalculating its attributes."
+  :version "24.4"
+  (if (get face 'face-alias)
+      (setq face (get face 'face-alias)))
+  ;; Save SPEC to the relevant symbol property.
+  (unless spec-type
+    (setq spec-type 'face-override-spec))
+  (if (memq spec-type '(face-defface-spec face-override-spec
+			customized-face saved-face))
+      (put face spec-type spec))
+  (if (memq spec-type '(reset saved-face))
+      (put face 'customized-face nil))
+  ;; Setting the face spec via Custom empties out any override spec,
+  ;; similar to how setting a variable via Custom changes its values.
+  (if (memq spec-type '(customized-face saved-face reset))
+      (put face 'face-override-spec nil))
+  ;; If we reset the face based on its custom spec, it is unmodified
+  ;; as far as Custom is concerned.
+  (unless (eq face 'face-override-spec)
+    (put face 'face-modified nil))
+  ;; Initialize the face if it does not exist, then recalculate.
+  (make-empty-face face)
+  (dolist (frame (frame-list))
+    (face-spec-recalc face frame)))
+
 (provide 'compat-24)
 ;;; compat-24.el ends here

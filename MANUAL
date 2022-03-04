@@ -119,6 +119,7 @@ provided by compat by default:
 - Function ~completion-table-merge~ :: See [[info:elisp#Basic Completion][(elisp) Basic Completion]].
 - Function ~completion-table-with-cache~ :: See [[info:elisp#Programmed Completion][(elisp) Programmed
   Completion]].
+- Function ~face-spec-set~ :: See [[info:elisp#Defining Faces][(elisp) Defining Faces]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-24~ is required:
