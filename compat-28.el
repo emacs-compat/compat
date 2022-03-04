@@ -332,6 +332,33 @@ Point in BUFFER will be placed after the inserted text."
     (with-current-buffer buffer
       (insert-buffer-substring current start end))))
 
+(compat-defun replace-string-in-region (string replacement &optional start end)
+  "Replace STRING with REPLACEMENT in the region from START to END.
+The number of replaced occurrences are returned, or nil if STRING
+doesn't exist in the region.
+
+If START is nil, use the current point.  If END is nil, use `point-max'.
+
+Comparisons and replacements are done with fixed case."
+  (if start
+      (when (< start (point-min))
+        (error "Start before start of buffer"))
+    (setq start (point)))
+  (if end
+      (when (> end (point-max))
+        (error "End after end of buffer"))
+    (setq end (point-max)))
+  (save-excursion
+    (let ((matches 0)
+          (case-fold-search nil))
+      (goto-char start)
+      (while (search-forward string end t)
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert replacement)
+        (setq matches (1+ matches)))
+      (and (not (zerop matches))
+           matches))))
+
 (compat-defun replace-regexp-in-region (regexp replacement &optional start end)
   "Replace REGEXP with REPLACEMENT in the region from START to END.
 The number of replaced occurrences are returned, or nil if REGEXP

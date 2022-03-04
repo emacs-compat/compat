@@ -331,6 +331,7 @@ provided by compat by default:
 - Function ~always~ :: [[info:elisp#Calling Functions][(elisp) Calling Functions]].
 - Function ~insert-into-buffer~ :: See [[info:elisp#Insertion][(elisp) Insertion]].
 - Function ~replace-regexp-in-region~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function ~replace-string-in-region~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
 - Function ~buffer-local-boundp~ :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
 - Function ~with-existing-directory~ :: See [[info:elisp#Testing Accessibility][(elisp) Testing Accessibility]].
 - Macro ~dlet~ :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
