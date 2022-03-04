@@ -3,3 +3,5 @@
 \#*\#
 /compat-pkg.el
 /compat-autoloads.el
+/compat.texi
+/compat.info
