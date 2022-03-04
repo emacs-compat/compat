@@ -195,6 +195,7 @@ implemented in 25.1:
 - The function ~window-font-height~ and ~window-font-width~.
 - The function ~window-max-chars-per-line~.
 - The function ~set-binary-mode~.
+- The functions ~bufferpos-to-filepos~ and ~filepos-to-bufferpos~.
 
 ** Emacs 26.1
 The following functions and macros implemented in 26.1, and are
