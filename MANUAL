@@ -164,6 +164,8 @@ provided by compat by default:
 - Macro ~thread-first~ :: Defined in ~subr-x.el~.
 - Macro ~thread-last~ :: Defined in ~subr-x.el~.
 - Function ~macroexpand-1~ :: See [[info:elisp#Expansion][(elisp) Expansion]].
+- Function ~directory-files-recursively~ :: See [[info:elisp#Contents of Directories][(elisp) Contents of
+  Directories]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-25~ is required:
