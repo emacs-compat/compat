@@ -340,6 +340,53 @@ Defaults to `error'."
          (delete-dups (copy-sequence (cons name conditions))))
     (when message (put name 'error-message message))))
 
+;;;; Defined in minibuffer.el
+
+(compat-defun completion-table-with-cache (fun &optional ignore-case)
+  "Create dynamic completion table from function FUN, with cache.
+This is a wrapper for `completion-table-dynamic' that saves the last
+argument-result pair from FUN, so that several lookups with the
+same argument (or with an argument that starts with the first one)
+only need to call FUN once.  This can be useful when FUN performs a
+relatively slow operation, such as calling an external process.
+
+When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
+  :version "24.4"
+  (let* (last-arg last-result
+         (new-fun
+          (lambda (arg)
+            (if (and last-arg (string-prefix-p last-arg arg ignore-case))
+                last-result
+              (prog1
+                  (setq last-result (funcall fun arg))
+                (setq last-arg arg))))))
+    (completion-table-dynamic new-fun)))
+
+(compat-defun completion-table-merge (&rest tables)
+  "Create a completion table that collects completions from all TABLES."
+  :version "24.4"
+  (lambda (string pred action)
+    (cond
+     ((null action)
+      (let ((retvals (mapcar (lambda (table)
+                               (try-completion string table pred))
+                             tables)))
+        (if (member string retvals)
+            string
+          (try-completion string
+                          (mapcar (lambda (value)
+                                    (if (eq value t) string value))
+                                  (delq nil retvals))
+                          pred))))
+     ((eq action t)
+      (apply #'append (mapcar (lambda (table)
+                                (all-completions string table pred))
+                              tables)))
+     (t
+      (completion--some (lambda (table)
+                          (complete-with-action action table string pred))
+                        tables)))))
+
 ;;;; Defined in subr-x.el
 
 (compat-advise require (feature &rest args)

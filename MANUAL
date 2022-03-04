@@ -116,6 +116,9 @@ provided by compat by default:
 - Function ~bool-vector-subsetp~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
 - Function ~bool-vector-count-consecutive~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
 - Function ~bool-vector-count-population~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~completion-table-merge~ :: See [[info:elisp#Basic Completion][(elisp) Basic Completion]].
+- Function ~completion-table-with-cache~ :: See [[info:elisp#Programmed Completion][(elisp) Programmed
+  Completion]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-24~ is required:
