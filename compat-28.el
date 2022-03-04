@@ -663,6 +663,27 @@ the leading `-' char."
        (if (zerop (logand   1 mode)) ?- ?x)
      (if (zerop (logand   1 mode)) ?T ?t))))
 
+(compat-defun file-backup-file-names (filename)
+  "Return a list of backup files for FILENAME.
+The list will be sorted by modification time so that the most
+recent files are first."
+  ;; `make-backup-file-name' will get us the right directory for
+  ;; ordinary or numeric backups.  It might create a directory for
+  ;; backups as a side-effect, according to `backup-directory-alist'.
+  (let* ((filename (file-name-sans-versions
+		    (make-backup-file-name (expand-file-name filename))))
+         (dir (file-name-directory filename)))
+    (sort
+     (seq-filter
+      (lambda (candidate)
+        (and (backup-file-name-p candidate)
+             (string= (file-name-sans-versions candidate) filename)))
+      (mapcar
+       (lambda (file)
+         (concat dir file))
+       (file-name-all-completions (file-name-nondirectory filename) dir)))
+     #'file-newer-than-file-p)))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defun format-prompt (prompt default &rest format-args)

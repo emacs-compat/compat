@@ -355,6 +355,7 @@ provided by compat by default:
 - Function ~color-values-from-color-spec~ :: Defined in ~xfaces.c~.
 - Function ~file-modes-number-to-symbolic~ :: See [[info:elisp#Changing Files][(elisp) Changing
   Files]].
+- Function ~file-backup-file-names~ :: See [[info:elisp#Backup Names][(elisp) Backup Names]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:
