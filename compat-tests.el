@@ -1275,6 +1275,19 @@ the compatibility function."
   (should-not
    (compat--if-let* (((= 5 6))) t nil)))
 
+(ert-deftest compat-if-let ()
+  "Check if `compat--if-let' was implemented properly."
+  (should (compat--if-let ((e (memq 0 '(1 2 3 0 5 6))))
+              e))
+  (should-not (compat--if-let ((e (memq 0 '(1 2 3 5 6)))
+                               (d (memq 0 '(1 2 3 0 5 6))))
+                  t))
+  (should-not (compat--if-let ((d (memq 0 '(1 2 3 0 5 6)))
+                               (e (memq 0 '(1 2 3 5 6))))
+                  t))
+  (should-not
+   (compat--if-let (((= 5 6))) t nil)))
+
 (ert-deftest compat-and-let* ()
   "Check if `compat--if-let*' was implemented properly."
   (should                               ;trivial body

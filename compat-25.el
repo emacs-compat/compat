@@ -169,7 +169,7 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(compat--if-let* ,spec ,then ,@(macroexp-unprogn else)))
+  `(compat--if-let* ,spec ,then ,(macroexp-progn else)))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
