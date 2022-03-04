@@ -312,12 +312,11 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
-(declare-function gensym nil (&optional prefix))
 (compat-defmacro with-existing-directory (&rest body)
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."
   (declare (indent 0) (debug t))
-  (let ((quit (gensym)))
+  (let ((quit (make-symbol "with-existing-directory-quit")))
     `(catch ',quit
        (dolist (dir (list default-directory
                           (expand-file-name "~/")
