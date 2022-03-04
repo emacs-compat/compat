@@ -52,7 +52,7 @@ is nil)."
   (when (listp object)
     (catch 'cycle
       (let ((hare object) (tortoise object)
-            (max 2) (q 2) )
+            (max 2) (q 2))
         (while (consp hare)
           (setq hare (cdr hare))
           (when (and (or (/= 0 (setq q (1- q)))
