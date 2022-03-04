@@ -256,5 +256,14 @@ threading."
                 form))))))))
    (t form)))
 
+;;;; Defined in byte-run.el
+
+(compat-defun function-put (func prop value)
+  "Set FUNCTION's property PROP to VALUE.
+The namespace for PROP is shared with symbols.
+So far, FUNCTION can only be a symbol, not a lambda expression."
+  :version "24.4"
+  (put func prop value))
+
 (provide 'compat-25)
 ;;; compat-25.el ends here
