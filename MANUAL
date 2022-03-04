@@ -140,6 +140,7 @@ implemented in 24.4:
 - The ~face-spec-set~ function.
 - The ~add-face-text-property~ function.
 - No ~tty-setup-hook~ hook.
+- The ~get-pos-property~ function.
 
 ** Emacs 24.5
 No special support for 24.5 was deemed necessary.
