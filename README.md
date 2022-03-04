@@ -49,7 +49,7 @@ and later on a
 	(require 'compat)
 
 This will load all non-prefixed definitions (functions and macros with
-a loading `compat-`).  To load these, an additional
+a leading `compat-`).  To load these, an additional
 
 	(require 'compat-XY) ; e.g. 26
 
