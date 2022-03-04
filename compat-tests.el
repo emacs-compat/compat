@@ -40,8 +40,8 @@
 
 (require 'compat-macs)
 (defvar compat-testing)
-(let ((compat--generate-function #'compat--generate-verbose)
-      (compat-testing t))
+(setq compat--generate-function #'compat--generate-verbose)
+(let ((compat-testing t))
   (load "compat.el"))
 
 (defvar compat--current-fn nil)
