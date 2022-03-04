@@ -1398,7 +1398,7 @@ the compatibility function."
     (compat--should nil (make-string 1 ?x))))
 
 (ert-deftest compat-string-remove-prefix ()
-  "Check if `compat--string-remove-prefix was implemented properly."
+  "Check if `compat--string-remove-prefix' was implemented properly."
   (compat-test string-remove-prefix
     (compat--should "" "" "")
     (compat--should "a" "" "a")
@@ -1411,7 +1411,7 @@ the compatibility function."
     (compat--should "aabbcc" "dd" "aabbcc")))
 
 (ert-deftest compat-string-remove-suffix ()
-  "Check if `compat--string-remove-suffix was implemented properly."
+  "Check if `compat--string-remove-suffix' was implemented properly."
   (compat-test string-remove-suffix
     (compat--should "" "" "")
     (compat--should "a" "" "a")
