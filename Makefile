@@ -3,6 +3,7 @@
 .SUFFIXES: .el .elc
 
 EMACS = emacs
+MAKEINFO = makeinfo
 BYTEC = compat-help.elc \
 	compat-macs.elc \
 	compat-24.elc \
@@ -12,16 +13,22 @@ BYTEC = compat-help.elc \
 	compat-28.elc \
 	compat.elc
 
-all: compile test
+all: compile compat.info
 
 compile: $(BYTEC)
 
-test:
+test: compile
 	$(EMACS) -Q --batch -L . -l compat-tests.el -f ert-run-tests-batch-and-exit
 
 clean:
-	$(RM) $(BYTEC)
+	$(RM) $(BYTEC) compat.texi compat.info
 
 .el.elc:
 	$(EMACS) -Q --batch -L . -f batch-byte-compile $^
 
+compat.texi: MANUAL
+	$(EMACS) -Q --batch $< -f org-texinfo-export-to-texinfo --kill
+	mv $<.texi $@
+
+compat.info: compat.texi
+	$(MAKEINFO) $<

@@ -1,0 +1,427 @@
+#			-*- mode: org; -*-
+#+title:		"compat" Manual
+#+author:		Philip Kaludercic
+#+texinfo_filename:	compat.info
+
+This manual documents the usage of the "compat" Emacs lisp library,
+the forward-compatibility library for Emacs Lisp, corresponding to
+version 28.1.0.0.
+
+#+texinfo: @insertcopying
+
+* Introduction
+** Overview
+The objective of compat is to provide "forwards compatibility"
+library for Emacs Lisp.  That is to say by using compat, an Elisp
+package does not have to make the decision to either use new and
+useful functionality or support old versions of Emacs.
+
+Version 24.3 is chosen as the oldest version, because this is the
+newest version on CentOS 7. It is intended to preserve compatibility
+for at least as the Centos 7 reaches [[https://wiki.centos.org/About/Product][EOL]], 2024.
+
+If you are developing a package with compat in mind, consider loading
+`compat-help` (on your system, not in a package) to get relevant notes
+inserted into the help buffers of functions that are implemented or
+advised in compat.
+
+Note that compat provides a few prefixed function, ie. functions with
+a ~compat-~ prefix.  These are used to provide extended functionality
+for commands that are already defined (~sort~, ~assoc~, ~seq~, ...).
+It might be possible to transform these into advised functions later
+on, so that the modified functionality is accessible without a prefix.
+Feedback on this point is appreciated.
+
+** Usage
+The intended use-case for this library is for package developers to
+add as a dependency in the header:
+
+: ;; Package-Requires: ((emacs "24.3") (compat "28.1.0.0"))
+
+and later on a
+
+: (require 'compat)
+
+This will load all non-prefixed definitions (functions and macros with
+a leading `compat-`).  To load these, an additional
+
+: (require 'compat-XY) ; e.g. 26
+
+will be necessary, to load compatibility code for Emacs version XY.
+
+It is recommended to subscribe to the [[https://lists.sr.ht/~pkal/compat-announce][compat-announce]] mailing list to
+be notified when new versions are released or relevant changes are
+made.
+
+*** Additional libraries
+These libraries are packages with compat, but are disabled by default.
+To use them you can use ~M-x load-library~:
+
+- compat-help :: Add notes to ~*Help*~ buffer, if a compatibility
+  definition has something to warn you about.
+- compat-font-lock :: Highlight functions that are implemented as
+  compatibility definitions.
+
+** Intentions
+The library intends to provide support back until Emacs 24.3.  The
+intended audience are package developers that are interested in using
+newer developments, without having to break compatibility.
+
+Sadly, total backwards compatibility cannot be provided for technical
+reasons.  These might include:
+
+- An existing function or macro was extended by some new functionality.  To
+  support these cases, the function or macro would have to be advised.
+  As this is usually regarded as invasive and is shown to be a
+  significant overhead, even when the new feature is not used, this
+  approach is not used.
+
+  As a compromise, prefixed functions and macros (starting with a
+  ~compat-~ prefix) can be provided.
+
+- New functionality was implemented in the core, and depends on
+  external libraries that cannot be reasonably duplicated in the scope
+  of a compatibility library.
+
+- New functionality depends on an entire new, non-trivial library.
+  Sometimes these are provided via ELPA (xref, project, ...), but other
+  times it would be infeasible to duplicate an entire library within
+  compat while also providing the necessary backwards compatibility.
+
+- It just wasn't added, and there is no good reason (though good
+  excuses might exist).  If you happen to find such a function,
+  [[*Development][reporting]] it would be much appreciated.
+
+  Always begin by assuming that this might be the case, unless proven
+  otherwise.
+
+* Support
+This section goes into the features that compat manages and doesn't
+manage to provide for each Emacs version.
+
+** Emacs 24.4
+The following functions and macros implemented in 24.4, and are
+provided by compat by default:
+
+- Macro ~with-eval-after-load~ :: See [[info:elisp#Hooks for Loading][(elisp) Hooks for Loading]].
+- Function ~special-form-p~ :: See [[info:elisp#Special Forms][(elisp) Special Forms]].
+- Function ~macrop~ :: See [[info:elisp#Simple Macro][(elisp) Simple Macro]].
+- Function ~string-suffix-p~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function ~delete-consecutive-dups~ :: Defined in ~subr.el~.
+- Function ~define-error~ :: See [[info:elisp#Error Symbols][(elisp) Error Symbols]].
+- Function ~bool-vector-exclusive-or~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-union~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-intersection~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-not~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-subsetp~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-count-consecutive~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function ~bool-vector-count-population~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+
+These functions are prefixed with ~compat~ prefix, and are only loaded
+when ~compat-24~ is required:
+
+- ~=~, ~<~, ~>~, ~<=~, ~>=~ :: See [[info:elisp#Comparison of Numbers][(elisp) Comparison of Numbers]].
+
+  Allows for more than two arguments to be compared.
+- ~split-string~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+
+  Takes optional argument TRIM.
+
+Compat does not provide support for the following Lisp features
+implemented in 24.4:
+
+- Allowing the second optional argument to ~eval~ to specify a lexical
+  environment.
+- The ~define-alternatives~ macro.
+- Support for the ~defalias-fset-function~ symbol property.
+- The ~group-gid~ and ~groupd-read-gid~ functions.
+- The ~pre-redisplay-function~ hook.
+- Allowing for ~with-demoted-errors~ to take a additional argument ~format~.
+- The ~face-spec-set~ function.
+- The ~add-face-text-property~ function.
+- No ~tty-setup-hook~ hook.
+
+** Emacs 24.5
+No special support for 24.5 was deemed necessary.
+** Emacs 25.1
+The following functions and macros implemented in 25.1, and are
+provided by compat by default:
+
+- Function ~format-message~ :: See [[info:elisp#Formatting Strings][(elisp) Formatting Strings]].
+- Function ~directory-name-p~ :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
+- Function ~string-greaterp~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Macro ~with-file-modes~ :: See [[info:elisp#Changing Files][(elisp) Changing Files]].
+- Function ~alist-get~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Macro ~if-let*~ :: Defined in ~subr-x.el~.
+- Macro ~when-let*~ :: Defined in ~subr-x.el~.
+- Macro ~if-let~ :: Defined in ~subr-x.el~.
+- Macro ~when-let~ :: Defined in ~subr-x.el~.
+- Macro ~thread-first~ :: Defined in ~subr-x.el~.
+- Macro ~thread-last~ :: Defined in ~subr-x.el~.
+- Function ~macroexpand-1~ :: See [[info:elisp#Expansion][(elisp) Expansion]].
+
+These functions are prefixed with ~compat~ prefix, and are only loaded
+when ~compat-25~ is required:
+
+- ~sort~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+
+  Adds support for vectors to be sorted, next to just lists.
+
+Compat does not provide support for the following Lisp features
+implemented in 25.1:
+
+- New ~pcase~ patterns.
+- The hook ~prefix-command-echo-keystrokes-functions~ and
+  ~prefix-command-preserve-state-hook~.
+- The hook ~pre-redisplay-functions~.
+- The function ~make-process~.
+- Support for the variable ~inhibit-message~.
+- The ~define-inline~ functionality.
+- The functions ~string-collate-lessp~ and ~string-collate-equalp~.
+- Support for ~alist-get~ as a generalised variable.
+- The function ~funcall-interactivly~.
+- The function ~buffer-substring-with-bidi-context~.
+- The function ~font-info~.
+- The function ~default-font-width~.
+- The function ~window-font-height~ and ~window-font-width~.
+- The function ~window-max-chars-per-line~.
+- The function ~set-binary-mode~.
+
+** Emacs 26.1
+The following functions and macros implemented in 26.1, and are
+provided by compat by default:
+
+- Function ~func-arity~ :: See [[info:elisp#What Is a Function][(elisp) What Is a Function]].
+- Function ~mapcan~ :: See [[info:elisp#Mapping Functions][(elisp) Mapping Functions]].
+- Function ~string-trim-left~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-trim-right~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-trim~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~c[ad]{3,4}r~ :: See [[info:elisp#List Elements][(elisp) List Elements]].
+- Variable ~gensym-counter~ :: See ~gensym~.
+- Function ~gensym~ :: See [[info:elisp#Creating Symbols][(elisp) Creating Symbols]].
+- Function ~make-nearby-temp-file~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+- Variable ~mounted-file-systems~ ::  Defined in ~files.el~.
+- Function ~temporary-file-directory~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+
+These functions are prefixed with ~compat~ prefix, and are only loaded
+when ~compat-26~ is required:
+
+- ~assoc~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+
+  Handle the optional argument TESTFN.
+- ~line-number-at-pos~ :: See [[info:elisp#Text Lines][(elisp) Text Lines]].
+
+  Handle the optional argument ABSOLUTE.
+- ~alist-get~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+
+  Handle the optional argument TESTFN.
+
+Compat does not provide support for the following Lisp features
+implemented in 26.1:
+
+- The function ~secure-hash-algorithms~.
+- The function ~gnutls-avalaible-p~.
+- Support for records and record functions.
+- The function ~mapbacktrace~.
+- The function ~file-name-case-insensitive-p~.
+- The file-attributes constructors.
+- The function ~read-multiple-choice~.
+- The additional elements of ~parse-partial-sexp~.
+- The function ~add-variable-watcher~.
+- The function ~undo-amalgamate-change-group~.
+- The function ~char-from-name~
+- Signalling errors when ~length~ or ~member~ deal with list cycles.
+- The function ~frame-list-z-order~.
+- The function ~frame-restack~.
+- Support for side windows and atomic windows.
+- All changes related to ~display-buffer~.
+- The function ~window-swap-states~.
+
+** Emacs 27.1
+The following functions and macros implemented in 27.1, and are
+provided by compat by default:
+
+- Function ~proper-list-p~ :: See [[info:elisp#List-related Predicates][(elisp) List-related Predicates]].
+- Function ~string-distance~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function ~json-serialize~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function ~json-insert~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function ~json-parse-string~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function ~json-parse-buffer~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Macro ~ignore-error~ :: See [[info:elisp#Handling Errors][(elisp) Handling Errors]].
+- Macro ~dolist-with-progress-reporter~ :: See [[info:elisp#Progress][(elisp) Progress]].
+- Function ~flatten-tree~ :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
+- Function ~xor~ :: See [[info:elisp#Combining Conditions][(elisp) Combining Conditions]].
+- Variable ~regexp-unmatchable~ :: Defined in ~subr.el~.
+- Function ~decoded-time-second~ :: Defined in ~simple.el~.
+- Function ~decoded-time-minute~ :: Defined in ~simple.el~.
+- Function ~decoded-time-hour~ :: Defined in ~simple.el~.
+- Function ~decoded-time-day~ :: Defined in ~simple.el~.
+- Function ~decoded-time-month~ :: Defined in ~simple.el~.
+- Function ~decoded-time-year~ :: Defined in ~simple.el~.
+- Function ~decoded-time-weekday~ :: Defined in ~simple.el~.
+- Function ~decoded-time-dst~ :: Defined in ~simple.el~.
+- Function ~decoded-time-zone~ :: Defined in ~simple.el~.
+- Function ~package-get-version~ :: Defined in ~package.el~.
+
+These functions are prefixed with ~compat~ prefix, and are only loaded
+when ~compat-27~ is required:
+
+- Function ~recenter~ :: See [[info:elisp#Textual Scrolling][(elisp) Textual Scrolling]].
+
+  Adds the optional argument REDISPLAY.
+- Function ~lookup-key~ :: See [[info:elisp#Low-Level Key Binding][(elisp) Low-Level Key Binding]].
+
+  Allows KEYMAP to be a list of keymaps.
+- Macro ~setq-local~ :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
+
+  Allow for more than one variable to be set.
+- Function ~regexp-opt~ :: See [[info:elisp#Regexp Functions][(elisp) Regexp Functions]].
+
+  Handle an empty list of strings.
+- Function ~file-size-human-readable~ :: Defined in ~files.el~.
+
+  Handle the optional third (SPACE) and forth (UNIT) arguments.
+
+Compat does not provide support for the following Lisp features
+implemented in 27.1:
+
+- Bigint support.
+- The function ~time-convert~.
+- All ~iso8601-*~ functions.
+- The function ~time-equal-p~.
+- The function ~date-days-in-month~.
+- The macro ~benchmark-progn~.
+- The function ~read-char-from-minibuffer~.
+- The minor mode ~reveal-mode~.
+- The macro ~with-suppressed-warnings~.
+- Support for ~condition-case~ to handle t.
+- The functions ~major-mode-suspend~ and ~major-mode-restore~.
+- The function ~provided-mode-derived-p~.
+- The function ~assoc-delete-all~'s optional predicate.
+- The function ~file-system-info~.
+- The more consistent treatment of NaN values.
+- The function ~ring-resize~.
+- The function ~group-name~.
+- Additional ~format-spec~ modifiers.
+- Support for additional body forms for
+  ~define-globalized-minor-mode~.
+
+** Emacs 28.1
+The following functions and macros implemented in 28.1, and are
+provided by compat by default:
+
+- Function ~string-search~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function ~length=~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function ~length<~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function ~length>~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function ~file-name-concat~ :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
+- Function ~garbage-collect-maybe~ :: Defined in ~alloc.c~.
+- Function ~string-replace~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function ~always~ :: [[info:elisp#Calling Functions][(elisp) Calling Functions]].
+- Function ~insert-into-buffer~ :: See [[info:elisp#Insertion][(elisp) Insertion]].
+- Function ~replace-regexp-in-region~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function ~buffer-local-boundp~ :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
+- Function ~with-existing-directory~ :: See [[info:elisp#Testing Accessibility][(elisp) Testing Accessibility]].
+- Macro ~dlet~ :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
+- Function ~ensure-list~ :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
+- Function ~string-clean-whitespace~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-fill~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-lines~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-pad~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function ~string-chop-newline~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Macro ~named-let~ :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
+- Function ~file-name-with-extension~ :: See [[info:elisp#File Name Components][(elisp) File Name
+  Components]].
+- Function ~directory-empty-p~ :: See [[info:elisp#Contents of Directories][(elisp) Contents of Directories]].
+- Function ~format-prompt~ :: See [[info:elisp#Text from Minibuffer][(elisp) Text from Minibuffer]].
+- Function ~thing-at-mouse~ :: Defined in ~thingatpt.el~.
+- Function ~macroexp-file-name~ :: Defined in ~macroexp~.
+- Macro ~with-environment-variables~ :: See [[info:elisp#System Environment][(elisp) System
+  Environment]].
+- Function ~button-buttonize~ :: Defined in ~button.el~.
+- Function ~make-directory-autoloads~ :: See [[info:elisp#Autoload][(elisp) Autoload]].
+
+These functions are prefixed with ~compat~ prefix, and are only loaded
+when ~compat-28~ is required:
+
+- Function ~unlock-buffer~ :: See [[info:elisp#File Locks][(elisp) File Locks]].
+
+  Handle ~file-error~ conditions.
+
+- Function ~string-width~ :: See [[info:elisp#Size of Displayed Text][(elisp) Size of Displayed Text]].
+
+  Handle optional arguments FROM and TO.
+
+- Function ~json-serialize~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+
+  Handle primitive, top-level JSON values.
+- Function ~json-insert~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+
+  Handle primitive, top-level JSON values.
+- Function ~json-parse-string~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+
+  Handle primitive, top-level JSON values.
+- Function ~json-parse-buffer~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+
+  Handle primitive, top-level JSON values.
+- Function ~count-windows~ :: Defined in ~window.el~.
+
+  Handle optional argument ALL-FRAMES.
+
+Compat does not provide support for the following Lisp features
+implemented in 28.1:
+
+- Support for ~interactive~ or ~declare~ to list applicable modes.
+- Support for ~:interactive~ argument to ~define-minor-mode~ and
+  ~define-derived-mode~.
+- Support for ~:predicate~ argument to ~define-globalized-minor-mode~.
+- "Success handler" for ~condition-case~.
+- The function ~benchmark-call~.
+- Support for the ~natnum~ defcustom type.
+- The function ~macroexp-compiling-p~.
+- The function ~macroexp-warn-and-return~.
+- Additional Edebug keywords.
+- Shorthand support.
+- The function ~custom-add-choice~.
+- The function ~decoded-time-period~.
+- The function ~dom-print~.
+- The function ~dom-remove-attribute~.
+- The function ~dns-query-asynchronous~.
+- The function ~get-locale-names~.
+- The function ~json-avaliable-p~.
+- The function ~mail-header-parse-addresses-lax~.
+- The function ~mail-header-parse-address-lax~.
+- The function ~make-separator-line~.
+- The function ~num-processors~.
+- The function ~object-intervals~.
+- The function ~process-lines-ignore-status~.
+- The function ~require-theme~.
+- The function ~syntax-class-to-char~.
+
+* Development
+Compat is developed on [[https://sr.ht/~pkal/compat][SourceHut]]. A restricted [[https://github.com/phikal/compat.el][GitHub mirror]] is also
+maintained.
+
+Patches, bug reports and comments can be sent to the [[https://lists.sr.ht/~pkal/compat-devel][development
+mailing list]] ([[mailto:~pkal/compat-devel@lists.sr.ht][~pkal/compat-devel@lists.sr.ht]]).  The GitHub mirror can
+also be used to submit patches.  These may include issues in the
+compatibility code, missing definitions or performance issues.
+
+Please note that as a GNU ELPA package, compat requires contributors
+to have signed the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html][FSF copyright assignment]], before any non-trivial
+contribution (roughly 15 lines of code) can be applied.
+
+* Distribution
+Copyright (C) 2022  Free Software Foundation, Inc.
+
+#+begin_quote
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being “A GNU Manual,” and
+with the Back-Cover Texts as in (a) below.  A copy of the license is
+included in the section entitled “GNU Free Documentation License.”
+
+(a) The FSF’s Back-Cover Text is: “You have the freedom to copy and
+modify this GNU manual.”
+#+end_quote
