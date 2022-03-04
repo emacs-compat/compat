@@ -1685,5 +1685,19 @@ the compatibility function."
     ;; (compat--should nil "rgbi: 0/ 0/ 0")
     (compat--should nil "rgbi : 0/0/0")))
 
+(ert-deftest compat-file-modes-number-to-symbolic ()
+  "Check if `compat--file-modes-number-to-symbolic' was implemented properly."
+  (compat-test file-modes-number-to-symbolic
+    (compat--should "-rwx------" #o700)
+    (compat--should "-rwxrwx---" #o770)
+    (compat--should "-rwx---rwx" #o707)
+    (compat--should "-rw-r-xr--" #o654)
+    (compat--should "--wx-w---x" #o321)
+    (compat--should "drwx------" #o700 ?d)
+    (compat--should "?rwx------" #o700 ??)
+    (compat--should "lrwx------" #o120700)
+    (compat--should "prwx------" #o10700)
+    (compat--should "-rwx------" #o30700)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
