@@ -31,6 +31,7 @@
 
 ;;;; Defined in fns.c
 
+;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
 (compat-defun string-search (needle haystack &optional start-pos)
   "Search for the string NEEDLE in the strign HAYSTACK.
 
@@ -105,6 +106,7 @@ inserted before contatenating."
 
 ;;;; Defined in alloc.c
 
+;;* UNTESTED (but also not necessary)
 (compat-defun garbage-collect-maybe (_factor)
   "Call ‘garbage-collect’ if enough allocation happened.
 FACTOR determines what \"enough\" means here: If FACTOR is a
@@ -144,6 +146,7 @@ consider, and are interpreted as in `substring'."
 
 ;;;; Defined in dired.c
 
+;;* UNTESTED
 (compat-defun directory-files (directory &optional full match nosort count)
   "Handle additional optional argument COUNT:
 
@@ -308,6 +311,7 @@ and BLUE, is normalized to have its value in [0,65535]."
 
 ;;;; Defined in subr.el
 
+;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
 (compat-defun string-replace (fromstring tostring instring)
   "Replace FROMSTRING with TOSTRING in INSTRING each time it occurs."
   (when (equal fromstring "")
@@ -324,6 +328,7 @@ This function accepts any number of ARGUMENTS, but ignores them.
 Also see `ignore'."
   t)
 
+;;* UNTESTED
 (compat-defun insert-into-buffer (buffer &optional start end)
   "Insert the contents of the current buffer into BUFFER.
 If START/END, only insert that region from the current buffer.
@@ -332,6 +337,7 @@ Point in BUFFER will be placed after the inserted text."
     (with-current-buffer buffer
       (insert-buffer-substring current start end))))
 
+;;* UNTESTED
 (compat-defun replace-string-in-region (string replacement &optional start end)
   "Replace STRING with REPLACEMENT in the region from START to END.
 The number of replaced occurrences are returned, or nil if STRING
@@ -359,6 +365,7 @@ Comparisons and replacements are done with fixed case."
       (and (not (zerop matches))
            matches))))
 
+;;* UNTESTED
 (compat-defun replace-regexp-in-region (regexp replacement &optional start end)
   "Replace REGEXP with REPLACEMENT in the region from START to END.
 The number of replaced occurrences are returned, or nil if REGEXP
@@ -393,6 +400,7 @@ REPLACEMENT can use the following special elements:
       (and (not (zerop matches))
            matches))))
 
+;;* UNTESTED
 (compat-defun buffer-local-boundp (symbol buffer)
   "Return non-nil if SYMBOL is bound in BUFFER.
 Also see `local-variable-p'."
@@ -402,6 +410,7 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
+;;* UNTESTED
 (compat-defmacro with-existing-directory (&rest body)
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."
@@ -419,6 +428,7 @@ If `default-directory' is already an existing directory, it's not changed."
            (throw ',quit (let ((default-directory dir))
                            ,@body)))))))
 
+;;* UNTESTED
 (compat-defmacro dlet (binders &rest body)
   "Like `let' but using dynamic scoping."
   (declare (indent 1) (debug let))
@@ -615,6 +625,7 @@ See also `file-name-sans-extension'."
      (t
       (concat (file-name-sans-extension filename) "." extn)))))
 
+;;* UNTESTED
 (compat-defun directory-empty-p (dir)
   "Return t if DIR names an existing directory containing no other files.
 Return nil if DIR does not name a directory, or if there was
@@ -663,6 +674,7 @@ the leading `-' char."
        (if (zerop (logand   1 mode)) ?- ?x)
      (if (zerop (logand   1 mode)) ?T ?t))))
 
+;;* UNTESTED
 (compat-defun file-backup-file-names (filename)
   "Return a list of backup files for FILENAME.
 The list will be sorted by modification time so that the most
@@ -713,6 +725,7 @@ is included in the return value."
 
 ;;;; Defined in windows.el
 
+;;* UNTESTED
 (compat-defun count-windows (&optional minibuf all-frames)
   "Handle optional argument ALL-FRAMES:
 
@@ -730,6 +743,8 @@ just the selected frame."
 ;;;; Defined in thingatpt.el
 
 (declare-function mouse-set-point "mouse" (event &optional promote-to-region))
+
+;;* UNTESTED
 (compat-defun thing-at-mouse (event thing &optional no-properties)
   "Return the THING at mouse click.
 Like `thing-at-point', but tries to use the event
@@ -741,6 +756,7 @@ where the mouse button is clicked to find a thing nearby."
 
 ;;;; Defined in macroexp.el
 
+;;* UNTESTED
 (compat-defun macroexp-file-name ()
   "Return the name of the file from which the code comes.
 Returns nil when we do not know.
@@ -755,6 +771,7 @@ Other uses risk returning non-nil value that point to the wrong file."
 
 ;;;; Defined in env.el
 
+;;* UNTESTED
 (compat-defmacro with-environment-variables (variables &rest body)
   "Set VARIABLES in the environent and execute BODY.
 VARIABLES is a list of variable settings of the form (VAR VALUE),
@@ -773,6 +790,7 @@ The previous values will be be restored upon exit."
 
 ;;;; Defined in button.el
 
+;;* UNTESTED
 (compat-defun button-buttonize (string callback &optional data)
   "Make STRING into a button and return it.
 When clicked, CALLBACK will be called with the DATA as the
@@ -791,6 +809,8 @@ itself will be used instead as the function argument."
 ;;;; Defined in autoload.el
 
 (defvar generated-autoload-file)
+
+;;* UNTESTED
 (compat-defun make-directory-autoloads (dir output-file)
   "Update autoload definitions for Lisp files in the directories DIRS.
 DIR can be either a single directory or a list of

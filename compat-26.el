@@ -62,6 +62,7 @@ Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
   (apply #'nconc (mapcar func sequence)))
 
+;;* UNTESTED
 (compat-defun line-number-at-pos (&optional position absolute)
   "Handle optional argument ABSOLUTE:
 
@@ -273,6 +274,8 @@ Elements of ALIST that are not conses are ignored."
 ;;;; Defined in files.el
 
 (declare-function temporary-file-directory nil)
+
+;;* UNTESTED
 (compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix)
   "Create a temporary file as close as possible to `default-directory'.
 If PREFIX is a relative file name, and `default-directory' is a
@@ -296,6 +299,7 @@ same meaning as in `make-temp-file'."
          "^" (regexp-opt '("/afs/" "/media/" "/mnt" "/net/" "/tmp_mnt/")))))
   "File systems that ought to be mounted.")
 
+;;* UNTESTED
 (compat-defun temporary-file-directory ()
   "The directory for writing temporary files.
 In case of a remote `default-directory', this is a directory for

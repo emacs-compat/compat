@@ -243,6 +243,7 @@ return value from A's length."
 
 ;;;; Defined in subr.el
 
+;;* UNTESTED
 (compat-defmacro with-eval-after-load (file &rest body)
   "Execute BODY after FILE is loaded.
 FILE is normally a feature name, but it can also be a file name,
@@ -319,6 +320,7 @@ non-nil."
         (setcdr last nil)))
   list)
 
+;;* UNTESTED
 (compat-defun define-error (name message &optional parent)
   "Define NAME as a new error signal.
 MESSAGE is a string that will be output to the echo area if such an error
@@ -342,6 +344,7 @@ Defaults to `error'."
 
 ;;;; Defined in minibuffer.el
 
+;;* UNTESTED
 (compat-defun completion-table-with-cache (fun &optional ignore-case)
   "Create dynamic completion table from function FUN, with cache.
 This is a wrapper for `completion-table-dynamic' that saves the last
@@ -362,6 +365,7 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
                 (setq last-arg arg))))))
     (completion-table-dynamic new-fun)))
 
+;;* UNTESTED
 (compat-defun completion-table-merge (&rest tables)
   "Create a completion table that collects completions from all TABLES."
   :version "24.4"
@@ -389,6 +393,7 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 ;;;; Defined in subr-x.el
 
+;;* UNTESTED
 (compat-advise require (feature &rest args)
   "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
   :version "24.4"
@@ -455,6 +460,7 @@ carriage return."
 
 ;;;; Defined in faces.el
 
+;;* UNTESTED
 (compat-defun face-spec-set (face spec &optional spec-type)
   "Set the FACE's spec SPEC, define FACE, and recalculate its attributes.
 See `defface' for the format of SPEC.

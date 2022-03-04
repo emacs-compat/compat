@@ -76,6 +76,7 @@ Case is significant.
 Symbols are also allowed; their print names are used instead."
   (string-lessp string2 string1))
 
+;;* UNTESTED
 (compat-defmacro with-file-modes (modes &rest body)
   "Execute BODY with default file permissions temporarily set to MODES.
 MODES is as for `set-default-file-modes'."
@@ -258,6 +259,7 @@ threading."
 
 ;;;; Defined in byte-run.el
 
+;;* UNTESTED
 (compat-defun function-put (func prop value)
   "Set FUNCTION's property PROP to VALUE.
 The namespace for PROP is shared with symbols.
@@ -267,6 +269,7 @@ So far, FUNCTION can only be a symbol, not a lambda expression."
 
 ;;;; Defined in files.el
 
+;;* UNTESTED
 (compat-defun directory-files-recursively
     (dir regexp &optional include-directories predicate follow-symlinks)
   "Return list of all files under directory DIR whose names match REGEXP.
