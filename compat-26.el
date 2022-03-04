@@ -252,6 +252,24 @@ PREFIX is a string, and defaults to \"g\"."
                      (1+ gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
+(compat-defun assoc-delete-all (key alist &optional test)
+  "Delete from ALIST all elements whose car is KEY.
+Compare keys with TEST.  Defaults to `equal'.
+Return the modified alist.
+Elements of ALIST that are not conses are ignored."
+  :version "26.2"
+  (unless test (setq test #'equal))
+  (while (and (consp (car alist))
+	      (funcall test (caar alist) key))
+    (setq alist (cdr alist)))
+  (let ((tail alist) tail-cdr)
+    (while (setq tail-cdr (cdr tail))
+      (if (and (consp (car tail-cdr))
+	       (funcall test (caar tail-cdr) key))
+	  (setcdr tail (cdr tail-cdr))
+	(setq tail tail-cdr))))
+  alist)
+
 ;;;; Defined in files.el
 
 (declare-function temporary-file-directory nil)

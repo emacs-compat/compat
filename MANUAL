@@ -212,6 +212,7 @@ provided by compat by default:
 - Function ~make-nearby-temp-file~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
 - Variable ~mounted-file-systems~ ::  Defined in ~files.el~.
 - Function ~temporary-file-directory~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+- Function ~assoc-delete-all~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:

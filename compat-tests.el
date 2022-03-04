@@ -1571,5 +1571,34 @@ the compatibility function."
     (compat--should  3 (bool-vector t nil t t))
     (compat--error wrong-type-argument (vector))))
 
+(ert-deftest compat-assoc-delete-all ()
+  "Check if `compat--assoc-delete-all was implemented properly."
+  (compat-test assoc-delete-all
+    (compat--should (list) 0 (list))
+    ;; Test `eq'
+    (compat--should '((1 . one)) 0 (list (cons 1 'one)))
+    (compat--should '((1 . one) a) 0 (list (cons 1 'one) 'a))
+    (compat--should '((1 . one)) 0 (list (cons 0 'zero) (cons 1 'one)))
+    (compat--should '((1 . one)) 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one)))
+    (compat--should '((1 . one)) 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero)))
+    (compat--should '((1 . one) a) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)))
+    (compat--should '(a (1 . one)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)))
+    ;; Test `equal'
+    (compat--should '(("one" . one)) "zero" (list (cons "one" 'one)))
+    (compat--should '(("one" . one) a) "zero" (list (cons "one" 'one) 'a))
+    (compat--should '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "one" 'one)))
+    (compat--should '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "zero" 'zero) (cons "one" 'one)))
+    (compat--should '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero)))
+    (compat--should '(("one" . one) a) "zero" (list (cons "zero" 'zero) (cons "one" 'one) 'a  (cons "zero" 'zero)))
+    (compat--should '(a ("one" . one)) "zero" (list 'a (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero)))
+    ;; Test custom predicate
+    (compat--should '() 0 (list (cons 1 'one)) #'/=)
+    (compat--should '(a) 0 (list (cons 1 'one) 'a) #'/=)
+    (compat--should '((0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one)) #'/=)
+    (compat--should '((0 . zero) (0 . zero)) 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one)) #'/=)
+    (compat--should '((0 . zero) (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)
+    (compat--should '((0 . zero) a (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=)
+    (compat--should '(a (0 . zero) (0 . zero)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
