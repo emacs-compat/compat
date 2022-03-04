@@ -85,6 +85,162 @@
         (throw 'fail nil)))
     t))
 
+(compat-defun bool-vector-exclusive-or (a b &optional c)
+  "Return A ^ B, bitwise exclusive or.
+If optional third argument C is given, store result into C.
+A, B, and C must be bool vectors of the same length.
+Return the destination vector if it changed or nil otherwise."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (bool-vector-p b)
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (unless (or (null c) (bool-vector-p c))
+    (signal 'wrong-type-argument (list 'bool-vector-p c)))
+  (when (/= (length a) (length b))
+    (signal 'wrong-length-argument (list (length a) (length b))))
+  (let ((dest (or c (make-bool-vector (length a) nil))) changed)
+    (when (/= (length a) (length dest))
+      (signal 'wrong-length-argument (list (length a) (length dest))))
+    (dotimes (i (length dest))
+      (let ((val (not (eq (aref a i) (aref b i)))))
+        (unless (eq val (aref dest i))
+          (setq changed t))
+        (aset dest i val)))
+    (if c (and changed c) dest)))
+
+(compat-defun bool-vector-union (a b &optional c)
+  "Return A | B, bitwise or.
+If optional third argument C is given, store result into C.
+A, B, and C must be bool vectors of the same length.
+Return the destination vector if it changed or nil otherwise."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (bool-vector-p b)
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (unless (or (null c) (bool-vector-p c))
+    (signal 'wrong-type-argument (list 'bool-vector-p c)))
+  (when (/= (length a) (length b))
+    (signal 'wrong-length-argument (list (length a) (length b))))
+  (let ((dest (or c (make-bool-vector (length a) nil))) changed)
+    (when (/= (length a) (length dest))
+      (signal 'wrong-length-argument (list (length a) (length dest))))
+    (dotimes (i (length dest))
+      (let ((val (or (aref a i) (aref b i))))
+        (unless (eq val (aref dest i))
+          (setq changed t))
+        (aset dest i val)))
+    (if c (and changed c) dest)))
+
+(compat-defun bool-vector-intersection (a b &optional c)
+  "Return A & B, bitwise and.
+If optional third argument C is given, store result into C.
+A, B, and C must be bool vectors of the same length.
+Return the destination vector if it changed or nil otherwise."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (bool-vector-p b)
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (unless (or (null c) (bool-vector-p c))
+    (signal 'wrong-type-argument (list 'bool-vector-p c)))
+  (when (/= (length a) (length b))
+    (signal 'wrong-length-argument (list (length a) (length b))))
+  (let ((dest (or c (make-bool-vector (length a) nil))) changed)
+    (when (/= (length a) (length dest))
+      (signal 'wrong-length-argument (list (length a) (length dest))))
+    (dotimes (i (length dest))
+      (let ((val (and (aref a i) (aref b i))))
+        (unless (eq val (aref dest i))
+          (setq changed t))
+        (aset dest i val)))
+    (if c (and changed c) dest)))
+
+(compat-defun bool-vector-set-difference (a b &optional c)
+  "Return A &~ B, set difference.
+If optional third argument C is given, store result into C.
+A, B, and C must be bool vectors of the same length.
+Return the destination vector if it changed or nil otherwise."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (bool-vector-p b)
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (unless (or (null c) (bool-vector-p c))
+    (signal 'wrong-type-argument (list 'bool-vector-p c)))
+  (when (/= (length a) (length b))
+    (signal 'wrong-length-argument (list (length a) (length b))))
+  (let ((dest (or c (make-bool-vector (length a) nil))) changed)
+    (when (/= (length a) (length dest))
+      (signal 'wrong-length-argument (list (length a) (length dest))))
+    (dotimes (i (length dest))
+      (let ((val (and (aref a i) (not (aref b i)))))
+        (unless (eq val (aref dest i))
+          (setq changed t))
+        (aset dest i val)))
+    (if c (and changed c) dest)))
+
+(compat-defun bool-vector-not (a &optional b)
+  "Compute ~A, set complement.
+If optional second argument B is given, store result into B.
+A and B must be bool vectors of the same length.
+Return the destination vector."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (or (null b) (bool-vector-p b))
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (let ((dest (or b (make-bool-vector (length a) nil))))
+    (when (/= (length a) (length dest))
+      (signal 'wrong-length-argument (list (length a) (length dest))))
+    (dotimes (i (length dest))
+      (aset dest i (not (aref a i))))
+    dest))
+
+(compat-defun bool-vector-subsetp (a b)
+  "Return t if every t value in A is also t in B, nil otherwise.
+A and B must be bool vectors of the same length."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (unless (bool-vector-p b)
+    (signal 'wrong-type-argument (list 'bool-vector-p b)))
+  (when (/= (length a) (length b))
+    (signal 'wrong-length-argument (list (length a) (length b))))
+  (catch 'not-subset
+    (dotimes (i (length a))
+      (when (if (aref a i) (not (aref b i)) nil)
+        (throw 'not-subset nil)))
+    t))
+
+(compat-defun bool-vector-count-consecutive (a b i)
+  "Count how many consecutive elements in A equal B starting at I.
+A is a bool vector, B is t or nil, and I is an index into A."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (setq b (and b t))                    ;normalise to nil or t
+  (unless (< i (length a))
+    (signal 'args-out-of-range (list a i)))
+  (let ((len (length a)) (n i))
+    (while (and (< i len) (eq (aref a i) b))
+      (setq i (1+ i)))
+    (- i n)))
+
+(compat-defun bool-vector-count-population (a)
+  "Count how many elements in A are t.
+A is a bool vector.  To count A's nil elements, subtract the
+return value from A's length."
+  :version "24.4"
+  (unless (bool-vector-p a)
+    (signal 'wrong-type-argument (list 'bool-vector-p a)))
+  (let ((n 0))
+    (dotimes (i (length a))
+      (when (aref a i)
+        (setq n (1+ n))))
+    n))
+
 ;;;; Defined in subr.el
 
 (compat-defmacro with-eval-after-load (file &rest body)
