@@ -243,6 +243,69 @@ If COUNT is non-nil and a natural number, the function will
             (insert "]"))))
         (throw 'escape (elt (apply oldfun args) 0))))))
 
+;;;; xfaces.c
+
+(compat-defun color-values-from-color-spec (spec)
+  "Parse color SPEC as a numeric color and return (RED GREEN BLUE).
+This function recognises the following formats for SPEC:
+
+ #RGB, where R, G and B are hex numbers of equal length, 1-4 digits each.
+ rgb:R/G/B, where R, G, and B are hex numbers, 1-4 digits each.
+ rgbi:R/G/B, where R, G and B are floating-point numbers in [0,1].
+
+If SPEC is not in one of the above forms, return nil.
+
+Each of the 3 integer members of the resulting list, RED, GREEN,
+and BLUE, is normalized to have its value in [0,65535]."
+  (save-match-data
+    (cond
+     ((string-match
+       ;; (rx bos "#"
+       ;;     (or (: (group-n 1 (= 1 hex)) (group-n 2 (= 1 hex)) (group-n 3 (= 1 hex)))
+       ;;         (: (group-n 1 (= 2 hex)) (group-n 2 (= 2 hex)) (group-n 3 (= 2 hex)))
+       ;;         (: (group-n 1 (= 3 hex)) (group-n 2 (= 3 hex)) (group-n 3 (= 3 hex)))
+       ;;         (: (group-n 1 (= 4 hex)) (group-n 2 (= 4 hex)) (group-n 3 (= 4 hex))))
+       ;;     eos)
+       "\\`#\\(?:\\(?1:[[:xdigit:]]\\{1\\}\\)\\(?2:[[:xdigit:]]\\{1\\}\\)\\(?3:[[:xdigit:]]\\{1\\}\\)\\|\\(?1:[[:xdigit:]]\\{2\\}\\)\\(?2:[[:xdigit:]]\\{2\\}\\)\\(?3:[[:xdigit:]]\\{2\\}\\)\\|\\(?1:[[:xdigit:]]\\{3\\}\\)\\(?2:[[:xdigit:]]\\{3\\}\\)\\(?3:[[:xdigit:]]\\{3\\}\\)\\|\\(?1:[[:xdigit:]]\\{4\\}\\)\\(?2:[[:xdigit:]]\\{4\\}\\)\\(?3:[[:xdigit:]]\\{4\\}\\)\\)\\'"
+       spec)
+      (let ((max (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4)))))
+        (list (/ (* (string-to-number (match-string 1 spec) 16) 65535) max)
+              (/ (* (string-to-number (match-string 2 spec) 16) 65535) max)
+              (/ (* (string-to-number (match-string 3 spec) 16) 65535) max))))
+     ((string-match
+       ;; (rx bos "rgb:"
+       ;;     (group (** 1 4 hex)) "/"
+       ;;     (group (** 1 4 hex)) "/"
+       ;;     (group (** 1 4 hex))
+       ;;     eos)
+       "\\`rgb:\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)\\'"
+       spec)
+      (list (/ (* (string-to-number (match-string 1 spec) 16) 65535)
+               (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4))))
+            (/ (* (string-to-number (match-string 2 spec) 16) 65535)
+               (1- (ash 1 (* (- (match-end 2) (match-beginning 2)) 4))))
+            (/ (* (string-to-number (match-string 3 spec) 16) 65535)
+               (1- (ash 1 (* (- (match-end 3) (match-beginning 3)) 4))))))
+     ((string-match
+       ;; (rx bos "rgbi:" (* space)
+       ;;     (group (or (: "0" (? "." (* digit)))
+       ;;                (: "." (+ digit))
+       ;;                (: "1" (? "." (* "0")))))
+       ;;     "/" (* space)
+       ;;     (group (or (: "0" (? "." (* digit)))
+       ;;                (: "." (+ digit))
+       ;;                (: "1" (? "." (* "0")))))
+       ;;     "/" (* space)
+       ;;     (group (or (: "0" (? "." (* digit)))
+       ;;                (: "." (+ digit))
+       ;;                (: "1" (? "." (* "0")))))
+       ;;     eos)
+       "\\`rgbi:[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)/[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)/[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)\\'"
+       spec)
+      (list (round (* (string-to-number (match-string 1 spec)) 65535))
+            (round (* (string-to-number (match-string 2 spec)) 65535))
+            (round (* (string-to-number (match-string 3 spec)) 65535)))))))
+
 ;;;; Defined in subr.el
 
 (compat-defun string-replace (fromstring tostring instring)

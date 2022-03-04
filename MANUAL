@@ -351,6 +351,7 @@ provided by compat by default:
   Environment]].
 - Function ~button-buttonize~ :: Defined in ~button.el~.
 - Function ~make-directory-autoloads~ :: See [[info:elisp#Autoload][(elisp) Autoload]].
+- Function ~color-values-from-color-spec~ :: Defined in ~xfaces.c~.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:
