@@ -153,6 +153,7 @@
                               compat-defun
                               compat-defmacro
                               compat-advise
+                              compat-defvar
                               defvar))
                   (push form defs))))))
         (cons 'progn (nreverse defs)))))))
