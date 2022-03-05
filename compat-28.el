@@ -683,18 +683,16 @@ recent files are first."
   ;; ordinary or numeric backups.  It might create a directory for
   ;; backups as a side-effect, according to `backup-directory-alist'.
   (let* ((filename (file-name-sans-versions
-		    (make-backup-file-name (expand-file-name filename))))
-         (dir (file-name-directory filename)))
-    (sort
-     (seq-filter
-      (lambda (candidate)
-        (and (backup-file-name-p candidate)
-             (string= (file-name-sans-versions candidate) filename)))
-      (mapcar
-       (lambda (file)
-         (concat dir file))
-       (file-name-all-completions (file-name-nondirectory filename) dir)))
-     #'file-newer-than-file-p)))
+                    (make-backup-file-name (expand-file-name filename))))
+         (dir (file-name-directory filename))
+         files)
+    (dolist (file (file-name-all-completions
+                   (file-name-nondirectory filename) dir))
+      (let ((candidate (concat dir file)))
+        (when (and (backup-file-name-p candidate)
+                   (string= (file-name-sans-versions candidate) filename))
+          (push candidate files))))
+    (sort files #'file-newer-than-file-p)))
 
 ;;;; Defined in minibuffer.el
 
