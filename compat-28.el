@@ -163,7 +163,7 @@ If COUNT is non-nil and a natural number, the function will
 (declare-function json-serialize nil (object &rest args))
 (declare-function json-parse-string nil (string &rest args))
 
-(compat-advise json-serialize (object &rest args)
+(compat-defun json-serialize (object &rest args)
   "Handle top-level JSON values."
   :cond (condition-case err
             ;; Use `random' to prevent byte compiler from optimising
@@ -174,13 +174,13 @@ If COUNT is non-nil and a natural number, the function will
           ;; have to check if an error was raised that the function
           ;; was not defined.
           (void-function (eq (cadr err) 'json-serialize)))
-  :realname compat--json-serialize-handle-tlo
+  :prefix t
   :min-version "27"
   (if (or (listp object) (vectorp object))
-      (apply oldfun object args)
+      (apply #'json-serialize object args)
     (substring (json-serialize (list object)) 1 -1)))
 
-(compat-advise json-insert (object &rest args)
+(compat-defun json-insert (object &rest args)
   "Handle top-level JSON values."
   :cond (condition-case err
             ;; Use `random' to prevent byte compiler from optimising
@@ -191,13 +191,13 @@ If COUNT is non-nil and a natural number, the function will
           ;; have to check if an error was raised that the function
           ;; was not defined.
           (void-function (eq (cadr err) 'json-serialize)))
-  :realname compat--json-insert-handle-tlo
+  :prefix t
   :min-version "27"
   (if (or (listp object) (vectorp object))
-      (apply oldfun object args)
-    (insert (apply #'compat--json-serialize-handle-tlo oldfun object args))))
+      (apply #'json-insert object args)
+    (insert (apply #'compat-json-serialize object args))))
 
-(compat-advise json-parse-string (string &rest args)
+(compat-defun json-parse-string (string &rest args)
   "Handle top-level JSON values."
   :cond (condition-case err
             ;; Use `random' to prevent byte compiler from optimising
@@ -208,16 +208,16 @@ If COUNT is non-nil and a natural number, the function will
           ;; we have to check if an error was raised that the function
           ;; was not defined.
           (void-function (eq (cadr err) 'json-parse-error)))
-  :realname compat--json-parse-string-handle-tlo
+  :prefix t
   :min-version "27"
   (if (string-match-p "\\`[[:space:]]*[[{]" string)
-      (apply oldfun string args)
+      (apply #'json-parse-string string args)
     ;; Wrap the string in an array, and extract the value back using
     ;; `elt', to ensure that no matter what the value of `:array-type'
     ;; is we can access the first element.
-    (elt (apply oldfun (concat "[" string "]") args) 0)))
+    (elt (apply #'json-parse-string (concat "[" string "]") args) 0)))
 
-(compat-advise json-parse-buffer (&rest args)
+(compat-defun json-parse-buffer (&rest args)
   "Handle top-level JSON values."
   :cond (condition-case err
             ;; Use `random' to prevent byte compiler from optimising
@@ -228,10 +228,10 @@ If COUNT is non-nil and a natural number, the function will
           ;; we have to check if an error was raised that the function
           ;; was not defined.
           (void-function (eq (cadr err) 'json-parse-error)))
-  :realname compat--json-parse-buffer-handle-tlo
+  :prefix t
   :min-version "27"
   (if (looking-at-p "[[:space:]]*[[{]")
-      (apply oldfun args)
+      (apply #'json-parse-buffer args)
     (catch 'escape
       (atomic-change-group
         (with-syntax-table
@@ -244,7 +244,7 @@ If COUNT is non-nil and a natural number, the function will
             (insert "[")
             (forward-sexp 1)
             (insert "]"))))
-        (throw 'escape (elt (apply oldfun args) 0))))))
+        (throw 'escape (elt (apply #'json-parse-buffer args) 0))))))
 
 ;;;; xfaces.c
 
