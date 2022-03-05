@@ -161,6 +161,7 @@ any JSON false values."
               (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
+  :realname compat--json-serialize
   (require 'json)
   (let ((json-false (or (plist-get args :false-object) :false))
         (json-null (or (plist-get args :null-object) :null)))
@@ -176,7 +177,7 @@ OBJECT."
               (equal (json-parse-string "[]") nil))
           (json-unavailable t)
           (void-function t))
-  (insert (apply #'json-serialize object args)))
+  (insert (apply #'compat--json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
   "Parse the JSON STRING into a Lisp object.
