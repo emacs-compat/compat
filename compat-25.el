@@ -291,6 +291,7 @@ subdirectory is to be descended into).
 If FOLLOW-SYMLINKS is non-nil, symbolic links that point to
 directories are followed.  Note that this can lead to infinite
 recursion."
+  :realname compat--directory-files-recursively
   (let* ((result nil)
          (files nil)
          (dir (directory-file-name dir))
@@ -314,11 +315,11 @@ recursion."
                 (let ((sub-files
                        (if (eq predicate t)
                            (condition-case nil
-                               (directory-files-recursively
+                               (compat--directory-files-recursively
                                 full-file regexp include-directories
                                 predicate follow-symlinks)
                              (file-error nil))
-                         (directory-files-recursively
+                         (compat--directory-files-recursively
                           full-file regexp include-directories
                           predicate follow-symlinks))))
                   (setq result (nconc result sub-files))))
