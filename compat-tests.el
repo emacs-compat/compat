@@ -1655,5 +1655,5 @@ being compared against."
   (ought "prwx------" #o10700)
   (ought "-rwx------" #o30700))
 
-(provide 'compat-deftests)
+(provide 'compat-tests)
 ;;; compat-tests.el ends here
