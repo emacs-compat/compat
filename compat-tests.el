@@ -1567,6 +1567,9 @@ being compared against."
   (ought '(0 0 65535) "#000000fff")
   (ought '(0 0 65535) "#00000000ffff")
   (ought '(0 0 65535) "#00000000ffFF")
+  (ought '(#xffff #x0000 #x5555) "#f05")
+  (ought '(#x1f1f #xb0b0 #xc5c5) "#1fb0C5")
+  (ought '(#x1f83 #xb0ad #xc5e2) "#1f83b0ADC5e2")
   (ought nil "")
   (ought nil "#")
   (ought nil "#0")
@@ -1580,6 +1583,9 @@ being compared against."
   (ought nil " #000000")
   (ought nil "#000000 ")
   (ought nil " #000000 ")
+  (ought nil "#1f83b0ADC5e2g")
+  (ought nil "#1f83b0ADC5e20")
+  (ought nil "#12345")
   ;; rgb: notation
   (ought '(0 0 0) "rgb:0/0/0")
   (ought '(0 0 0) "rgb:0/0/00")
@@ -1590,6 +1596,8 @@ being compared against."
   (ought '(65535 0 65535) "rgb:FFF/0000/F")
   (ought '(65535 0 65535) "rgb:FFFF/0000/FFFF")
   (ought '(0 255 65535) "rgb:0/00FF/FFFF")
+  (ought '(#xffff #x2323 #x28a2) "rgb:f/23/28a")
+  (ought '(#x1234 #x5678 #x09ab) "rgb:1234/5678/09ab")
   (ought nil "rgb:/0000/FFFF")
   (ought nil "rgb:0000/0000/FFFG")
   (ought nil "rgb:0000/0000/FFFFF")
@@ -1602,6 +1610,7 @@ being compared against."
   (ought nil "  rgb:0000/0000/0000")
   (ought nil "rgb:0000/ 0000 /0000")
   (ought nil "rgb: 0000 /0000 /0000")
+  (ought nil "rgb:0//0")
   ;; rgbi: notation
   (ought '(0 0 0) "rgbi:0/0/0")
   (ought '(0 0 0) "rgbi:0.0/0.0/0.0")
@@ -1616,6 +1625,8 @@ being compared against."
   (ought '(65535 0 0) "rgbi:1.0/0/0.0000")
   (ought '(65535 32768 0) "rgbi:1.0/0.5/0.0000")
   (ought '(6554 21843 65469) "rgbi:0.1/0.3333/0.999")
+  (ought '(0 32768 6554) "rgbi:0/0.5/0.1")
+  (ought '(66 655 65535) "rgbi:1e-3/1.0e-2/1e0")
   (ought '(6554 21843 65469) "rgbi:1e-1/+0.3333/0.00999e2")
   (ought nil "rgbi:1.0001/0/0")
   (ought nil "rgbi:2/0/0")
@@ -1634,7 +1645,8 @@ being compared against."
   ;;
   ;; (ought nil "rgbi: 0/0/0")
   ;; (ought nil "rgbi: 0/ 0/ 0")
-  (ought nil "rgbi : 0/0/0"))
+  (ought nil "rgbi : 0/0/0")
+  (ought nil "rgbi:0/0.5/10"))
 
 (compat-deftest file-modes-number-to-symbolic
   (ought "-rwx------" #o700)
