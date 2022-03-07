@@ -202,7 +202,7 @@ attributes (see `compat-generate-common')."
     ;; It might be possible to set these properties otherwise.  That
     ;; should be looked into and implemented if it is the case.
     (when (and (listp (car-safe body)) (eq (caar body) 'declare))
-      (when (version<= "25" emacs-version)
+      (when (version<= emacs-version "25")
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
     ;; Check if we want an explicitly prefixed function
