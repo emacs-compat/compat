@@ -88,11 +88,7 @@ being compared against."
                       :name ',real-test
                       :tags '(,name)
                       :body (lambda ()
-                              (condition-case nil
-                                  (progn
-                                    (,name ,@args)
-                                    (ert-fail :fail-reason "did not signal an error"))
-                                (,code t)))))))
+                              (should-error (,name ,@args) :type ,code))))))
              (and (fboundp compat)
                   `(ert-set-test
                     ',comp-test
@@ -100,11 +96,7 @@ being compared against."
                      :name ',comp-test
                      :tags '(,name)
                      :body (lambda ()
-                             (condition-case nil
-                                 (progn
-                                   (,compat ,@args)
-                                   (ert-fail :fail-reason "did not signal an error"))
-                               (,code t)))))))))))
+                             (should-error (,compat ,@args) :type ,code))))))))))
 
 (defmacro compat-deftest (name &rest body)
   "Test NAME in BODY."
