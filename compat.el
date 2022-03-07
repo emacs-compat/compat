@@ -49,7 +49,8 @@
   (defvar compat--generate-function)
   (defmacro compat-insert (version)
     (cond
-     ((bound-and-true-p compat-testing)
+     ((or (not (eq compat--generate-function 'compat--generate-minimal))
+          (bound-and-true-p compat-testing))
       `(load ,(format "compat-%s.el" version)))
      ;; ((version<= version emacs-version)
      ;;  ;; We don't need to do anything.
