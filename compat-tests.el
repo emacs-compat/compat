@@ -33,10 +33,7 @@
 ;;; Code:
 
 (require 'ert)
-
-(unless (fboundp 'advice-add)
-  (require 'package)
-  (package-install 'nadvice))
+(require 'nadvice)
 
 (require 'compat-macs)
 (defvar compat-testing)
