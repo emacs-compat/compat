@@ -1624,6 +1624,7 @@ being compared against."
   (ought '(65535 0 0) "rgbi:1.0/0/0.0000")
   (ought '(65535 32768 0) "rgbi:1.0/0.5/0.0000")
   (ought '(6554 21843 65469) "rgbi:0.1/0.3333/0.999")
+  (ought '(6554 21843 65469) "rgbi:1e-1/+0.3333/0.00999e2")
   (ought nil "rgbi:1.0001/0/0")
   (ought nil "rgbi:2/0/0")
   (ought nil "rgbi:0.a/0/0")

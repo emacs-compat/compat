@@ -260,54 +260,66 @@ If SPEC is not in one of the above forms, return nil.
 
 Each of the 3 integer members of the resulting list, RED, GREEN,
 and BLUE, is normalized to have its value in [0,65535]."
-  (save-match-data
-    (cond
-     ((string-match
-       ;; (rx bos "#"
-       ;;     (or (: (group-n 1 (= 1 hex)) (group-n 2 (= 1 hex)) (group-n 3 (= 1 hex)))
-       ;;         (: (group-n 1 (= 2 hex)) (group-n 2 (= 2 hex)) (group-n 3 (= 2 hex)))
-       ;;         (: (group-n 1 (= 3 hex)) (group-n 2 (= 3 hex)) (group-n 3 (= 3 hex)))
-       ;;         (: (group-n 1 (= 4 hex)) (group-n 2 (= 4 hex)) (group-n 3 (= 4 hex))))
-       ;;     eos)
-       "\\`#\\(?:\\(?1:[[:xdigit:]]\\{1\\}\\)\\(?2:[[:xdigit:]]\\{1\\}\\)\\(?3:[[:xdigit:]]\\{1\\}\\)\\|\\(?1:[[:xdigit:]]\\{2\\}\\)\\(?2:[[:xdigit:]]\\{2\\}\\)\\(?3:[[:xdigit:]]\\{2\\}\\)\\|\\(?1:[[:xdigit:]]\\{3\\}\\)\\(?2:[[:xdigit:]]\\{3\\}\\)\\(?3:[[:xdigit:]]\\{3\\}\\)\\|\\(?1:[[:xdigit:]]\\{4\\}\\)\\(?2:[[:xdigit:]]\\{4\\}\\)\\(?3:[[:xdigit:]]\\{4\\}\\)\\)\\'"
-       spec)
-      (let ((max (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4)))))
-        (list (/ (* (string-to-number (match-string 1 spec) 16) 65535) max)
-              (/ (* (string-to-number (match-string 2 spec) 16) 65535) max)
-              (/ (* (string-to-number (match-string 3 spec) 16) 65535) max))))
-     ((string-match
-       ;; (rx bos "rgb:"
-       ;;     (group (** 1 4 hex)) "/"
-       ;;     (group (** 1 4 hex)) "/"
-       ;;     (group (** 1 4 hex))
-       ;;     eos)
-       "\\`rgb:\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)\\'"
-       spec)
-      (list (/ (* (string-to-number (match-string 1 spec) 16) 65535)
-               (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4))))
-            (/ (* (string-to-number (match-string 2 spec) 16) 65535)
-               (1- (ash 1 (* (- (match-end 2) (match-beginning 2)) 4))))
-            (/ (* (string-to-number (match-string 3 spec) 16) 65535)
-               (1- (ash 1 (* (- (match-end 3) (match-beginning 3)) 4))))))
-     ((string-match
-       ;; (rx bos "rgbi:" (* space)
-       ;;     (group (or (: "0" (? "." (* digit)))
-       ;;                (: "." (+ digit))
-       ;;                (: "1" (? "." (* "0")))))
-       ;;     "/" (* space)
-       ;;     (group (or (: "0" (? "." (* digit)))
-       ;;                (: "." (+ digit))
-       ;;                (: "1" (? "." (* "0")))))
-       ;;     "/" (* space)
-       ;;     (group (or (: "0" (? "." (* digit)))
-       ;;                (: "." (+ digit))
-       ;;                (: "1" (? "." (* "0")))))
-       ;;     eos)
-       "\\`rgbi:[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)/[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)/[[:space:]]*\\(0\\(?:\\.[[:digit:]]*\\)?\\|\\.[[:digit:]]+\\|1\\(?:\\.0*\\)?\\)\\'"
-       spec)
-      (list (round (* (string-to-number (match-string 1 spec)) 65535))
-            (round (* (string-to-number (match-string 2 spec)) 65535))
-            (round (* (string-to-number (match-string 3 spec)) 65535)))))))
+  (let ((case-fold-search nil))
+    (save-match-data
+      (cond
+       ((string-match
+         ;; (rx bos "#"
+         ;;     (or (: (group-n 1 (= 1 hex)) (group-n 2 (= 1 hex)) (group-n 3 (= 1 hex)))
+         ;;         (: (group-n 1 (= 2 hex)) (group-n 2 (= 2 hex)) (group-n 3 (= 2 hex)))
+         ;;         (: (group-n 1 (= 3 hex)) (group-n 2 (= 3 hex)) (group-n 3 (= 3 hex)))
+         ;;         (: (group-n 1 (= 4 hex)) (group-n 2 (= 4 hex)) (group-n 3 (= 4 hex))))
+         ;;     eos)
+         "\\`#\\(?:\\(?1:[[:xdigit:]]\\{1\\}\\)\\(?2:[[:xdigit:]]\\{1\\}\\)\\(?3:[[:xdigit:]]\\{1\\}\\)\\|\\(?1:[[:xdigit:]]\\{2\\}\\)\\(?2:[[:xdigit:]]\\{2\\}\\)\\(?3:[[:xdigit:]]\\{2\\}\\)\\|\\(?1:[[:xdigit:]]\\{3\\}\\)\\(?2:[[:xdigit:]]\\{3\\}\\)\\(?3:[[:xdigit:]]\\{3\\}\\)\\|\\(?1:[[:xdigit:]]\\{4\\}\\)\\(?2:[[:xdigit:]]\\{4\\}\\)\\(?3:[[:xdigit:]]\\{4\\}\\)\\)\\'"
+         spec)
+        (let ((max (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4)))))
+          (list (/ (* (string-to-number (match-string 1 spec) 16) 65535) max)
+                (/ (* (string-to-number (match-string 2 spec) 16) 65535) max)
+                (/ (* (string-to-number (match-string 3 spec) 16) 65535) max))))
+       ((string-match
+         ;; (rx bos "rgb:"
+         ;;     (group (** 1 4 hex)) "/"
+         ;;     (group (** 1 4 hex)) "/"
+         ;;     (group (** 1 4 hex))
+         ;;     eos)
+         "\\`rgb:\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)/\\([[:xdigit:]]\\{1,4\\}\\)\\'"
+         spec)
+        (list (/ (* (string-to-number (match-string 1 spec) 16) 65535)
+                 (1- (ash 1 (* (- (match-end 1) (match-beginning 1)) 4))))
+              (/ (* (string-to-number (match-string 2 spec) 16) 65535)
+                 (1- (ash 1 (* (- (match-end 2) (match-beginning 2)) 4))))
+              (/ (* (string-to-number (match-string 3 spec) 16) 65535)
+                 (1- (ash 1 (* (- (match-end 3) (match-beginning 3)) 4))))))
+       ;; The "RGBi" (RGB Intensity) specification is defined by
+       ;; XCMS[0], see [1] for the implementation in Xlib.
+       ;;
+       ;; [0] http://www.nic.funet.fi/pub/X11/X11R4/DOCS/color/Xcms.text
+       ;; [1] https://gitlab.freedesktop.org/xorg/lib/libx11/-/blob/master/src/xcms/LRGB.c#L1392
+       ((string-match
+         (rx bos "rgbi:" (* space)
+             (group (? (or "-" "+"))
+                    (or (: (+ digit) (? "." (* digit)))
+                        (: "." (+ digit)))
+                    (? "e" (? (or "-" "+")) (+ digit)))
+             "/" (* space)
+             (group (? (or "-" "+"))
+                    (or (: (+ digit) (? "." (* digit)))
+                        (: "." (+ digit)))
+                    (? "e" (? (or "-" "+")) (+ digit)))
+             "/" (* space)
+             (group (? (or "-" "+"))
+                    (or (: (+ digit) (? "." (* digit)))
+                        (: "." (+ digit)))
+                    (? "e" (? (or "-" "+")) (+ digit)))
+             eos)
+         spec)
+        (let ((r (round (* (string-to-number (match-string 1 spec)) 65535)))
+              (g (round (* (string-to-number (match-string 2 spec)) 65535)))
+              (b (round (* (string-to-number (match-string 3 spec)) 65535))))
+          (when (and (<= 0 r) (<= r 65535)
+                     (<= 0 g) (<= g 65535)
+                     (<= 0 b) (<= b 65535))
+            (list r g b))))))))
 
 ;;;; Defined in subr.el
 
