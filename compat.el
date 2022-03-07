@@ -43,13 +43,6 @@
 
 ;;;; Core functionality
 
-(eval-and-compile
-  (defun compat-maxargs-/= (func n)
-    "Non-nil when FUNC doesn't accept at most N arguments."
-    (condition-case nil
-        (not (eq (cdr (compat-func-arity func)) n))
-      (void-function t))))
-
 ;; To accelerate the loading process, we insert the contents of
 ;; compat-N.M.el directly into the compat.elc.
 (eval-when-compile
