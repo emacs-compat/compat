@@ -31,6 +31,21 @@
 
 (eval-when-compile (require 'compat-macs))
 
+;;;; Defined in alloc.c
+
+(compat-defun bool-vector (&rest objects)
+  "Return a new bool-vector with specified arguments as elements.
+Allows any number of arguments, including zero.
+usage: (bool-vector &rest OBJECTS)"
+  (let ((vec (make-bool-vector (length objects) nil))
+        (i 0))
+    (while objects
+      (when (car objects)
+        (aset vec i t))
+      (setq objects (cdr objects)
+            i (1+ i)))
+    vec))
+
 ;;;; Defined in fns.c
 
 (compat-defun sort (seq predicate)
