@@ -237,7 +237,7 @@ being compared against."
                     (string-to-multibyte "o\303\270")
                     "foo\303\270")))
 
-(compat-deftest compat-string-search
+(compat-deftest string-search
   ;; Find needle at the beginning of a haystack:
   (ought 0 "a" "abb")
   ;; Find needle at the begining of a haystack, with more potential
