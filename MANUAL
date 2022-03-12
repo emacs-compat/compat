@@ -175,6 +175,7 @@ provided by compat by default:
 - Function ~macroexpand-1~ :: See [[info:elisp#Expansion][(elisp) Expansion]].
 - Function ~directory-files-recursively~ :: See [[info:elisp#Contents of Directories][(elisp) Contents of
   Directories]].
+- Function ~bool-vector :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-25~ is required:
