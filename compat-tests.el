@@ -71,9 +71,10 @@ being compared against."
   "Implementation for the `expect' macro for NAME.
 COMPAT is the name of the compatibility function the behaviour is
 being compared against."
-  (lambda (code &rest args)
+  (lambda (error-spec &rest args)
     (let ((real-test (intern (format "compat-%s-%04d-actual" name compat-test-counter)))
-          (comp-test (intern (format "compat-%s-%04d-compat" name compat-test-counter))))
+          (comp-test (intern (format "compat-%s-%04d-compat" name compat-test-counter)))
+          (error-type (if (consp error-spec) (car error-spec) error-spec)))
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
        (list (and (fboundp name)
@@ -85,7 +86,12 @@ being compared against."
                       :name ',real-test
                       :tags '(,name)
                       :body (lambda ()
-                              (should-error (,name ,@args) :type ,code))))))
+                              (should
+                               (let ((res (should-error (,name ,@args) :type ',error-type)))
+                                 (should
+                                  ,(if (consp error-spec)
+                                       `(equal res ',error-spec)
+                                     `(eq (car res) ',error-spec))))))))))
              (and (fboundp compat)
                   `(ert-set-test
                     ',comp-test
@@ -93,7 +99,12 @@ being compared against."
                      :name ',comp-test
                      :tags '(,name)
                      :body (lambda ()
-                             (should-error (,compat ,@args) :type ,code))))))))))
+                             (should
+                              (let ((res (should-error (,name ,@args) :type ',error-type)))
+                                (should
+                                 ,(if (consp error-spec)
+                                      `(equal res ',error-spec)
+                                    `(eq (car res) ',error-spec))))))))))))))
 
 (defmacro compat-deftest (name &rest body)
   "Test NAME in BODY."
