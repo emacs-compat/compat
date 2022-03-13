@@ -54,6 +54,9 @@ ignored:
 - :cond :: Only install the compatibility code, iff the value
   evaluates to non-nil.
 
+  For prefixed functions, this can be interpreted as a test to
+  `defalias' an existing definition or not.
+
 - :no-highlight :: Do not highlight this definition as
   compatibility function.
 
@@ -109,7 +112,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
            (string-match "\\`compat-\\(.+\\)\\'" (symbol-name name))
            (let* ((actual-name (intern (match-string 1 (symbol-name name))))
                   (body (funcall install-fn actual-name  version)))
-             (when (fboundp actual-name)
+             (when (and (or (null cond) (eval cond t))
+                        (fboundp actual-name))
                `(,@check
                  ,(if feature
                       ;; See https://nullprogram.com/blog/2018/02/22/:
