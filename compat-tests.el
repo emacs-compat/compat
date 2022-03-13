@@ -48,8 +48,8 @@
 COMPAT is the name of the compatibility function the behaviour is
 being compared against."
   (lambda (result &rest args)
-    (let ((real-test (intern (format "compat-%s-%04d-actual" name compat-test-counter)))
-          (comp-test (intern (format "compat-%s-%04d-compat" name compat-test-counter))))
+    (let ((real-test (intern (format "%s-%04d-actual" compat compat-test-counter)))
+          (comp-test (intern (format "%s-%04d-compat" compat compat-test-counter))))
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
        (list (and (fboundp name)
@@ -72,8 +72,8 @@ being compared against."
 COMPAT is the name of the compatibility function the behaviour is
 being compared against."
   (lambda (error-spec &rest args)
-    (let ((real-test (intern (format "compat-%s-%04d-actual" name compat-test-counter)))
-          (comp-test (intern (format "compat-%s-%04d-compat" name compat-test-counter)))
+    (let ((real-test (intern (format "%s-%04d-actual" compat compat-test-counter)))
+          (comp-test (intern (format "%s-%04d-compat" compat compat-test-counter)))
           (error-type (if (consp error-spec) (car error-spec) error-spec)))
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
@@ -412,21 +412,20 @@ being compared against."
   (ought '(1 2 3) '(1 2 3))                ;multiple element list
   (ought '(1) 1))                          ;atom
 
-(unless (version< emacs-version "26")
-  (compat-deftest (proper-list-p compat--proper-list-p-length-signal)
-    (ought 0 ())				;empty list
-    (ought 1 '(1))				;single element
-    (ought 3 '(1 2 3))			;multiple elements
-    (ought nil '(1 . 2))			;cons
-    (ought nil '(1 2 . 3))			;dotted
-    (ought nil (let ((l (list 1 2 3)))		;circular
-                 (setf (nthcdr 3 l) l)
-                 l))
-    (ought nil 1)                       ;non-lists
-    (ought nil "")
-    (ought nil "abc")
-    (ought nil [])
-    (ought nil [1 2 3])))
+(compat-deftest (proper-list-p compat--proper-list-p-length-signal)
+  (ought 0 ())				;empty list
+  (ought 1 '(1))				;single element
+  (ought 3 '(1 2 3))			;multiple elements
+  (ought nil '(1 . 2))			;cons
+  (ought nil '(1 2 . 3))			;dotted
+  (ought nil (let ((l (list 1 2 3)))		;circular
+               (setf (nthcdr 3 l) l)
+               l))
+  (ought nil 1)                       ;non-lists
+  (ought nil "")
+  (ought nil "abc")
+  (ought nil [])
+  (ought nil [1 2 3]))
 
 (compat-deftest (proper-list-p compat--proper-list-p-tortoise-hare)
   (ought 0 ())				;empty list
@@ -584,24 +583,22 @@ being compared against."
   (ought 'b 2 '(1 (2 . b) 3))
   (ought nil 2 '((1 . a) 2 (3 . c)))
   (ought 'a 1 '((3 . c) (2 . b) (1 . a)))
-  (ought nil "a" '(("a" . 1) ("b" . 2) ("c" . 3))))  ;non-primitive elements
-(when (version<= "26.1" emacs-version)
-  (compat-deftest (alist-get compat--alist-get-full-elisp)
-    ;; With testfn (advised behaviour):
-    (ought 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
-    (ought 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
-    (ought '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
-    (ought 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
-                    (lambda (s1 s2) (not (string= s1 s2))))
-    (ought 'emacs-lisp-mode
-                    "file.el"
-                    '(("\\.c\\'" . c-mode)
-                      ("\\.p\\'" . pascal-mode)
-                      ("\\.el\\'" . emacs-lisp-mode)
-                      ("\\.awk\\'" . awk-mode))
-                    nil nil #'string-match-p)
-    (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
-    (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore)))
+  (ought nil "a" '(("a" . 1) ("b" . 2) ("c" . 3))) ;non-primitive elements
+  ;; With testfn (advised behaviour):
+  (ought 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
+  (ought 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
+  (ought '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
+  (ought 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
+         (lambda (s1 s2) (not (string= s1 s2))))
+  (ought 'emacs-lisp-mode
+         "file.el"
+         '(("\\.c\\'" . c-mode)
+           ("\\.p\\'" . pascal-mode)
+           ("\\.el\\'" . emacs-lisp-mode)
+           ("\\.awk\\'" . awk-mode))
+         nil nil #'string-match-p)
+  (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
+  (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
 
 (compat-deftest string-trim-left'
   (ought "" "")                          ;empty string
