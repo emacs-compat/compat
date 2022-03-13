@@ -1413,7 +1413,7 @@ being compared against."
   (ought  3 (bool-vector t nil t t))
   (expect wrong-type-argument (vector)))
 
-(compat-deftest assoc-delete-all
+(compat-deftest compat-assoc-delete-all
   (ought (list) 0 (list))
   ;; Test `eq'
   (ought '((1 . one)) 0 (list (cons 1 'one)))
