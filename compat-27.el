@@ -358,7 +358,8 @@ Elements of ALIST that are not conses are ignored."
   :prefix t
   :cond (condition-case nil
             (or (assoc-delete-all nil nil #'ignore) t)
-          (wrong-number-of-arguments nil))
+          (wrong-number-of-arguments nil)
+          (void-function nil))
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
 	      (funcall test (caar alist) key))
