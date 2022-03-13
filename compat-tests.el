@@ -80,18 +80,16 @@ being compared against."
        (list (and (fboundp name)
                   `(ert-set-test
                     ',real-test
-                    (ert-set-test
-                     ',real-test
-                     (make-ert-test
-                      :name ',real-test
-                      :tags '(,name)
-                      :body (lambda ()
-                              (should
-                               (let ((res (should-error (,name ,@args) :type ',error-type)))
-                                 (should
-                                  ,(if (consp error-spec)
-                                       `(equal res ',error-spec)
-                                     `(eq (car res) ',error-spec))))))))))
+                    (make-ert-test
+                     :name ',real-test
+                     :tags '(,name)
+                     :body (lambda ()
+                             (should
+                              (let ((res (should-error (,name ,@args) :type ',error-type)))
+                                (should
+                                 ,(if (consp error-spec)
+                                      `(equal res ',error-spec)
+                                    `(eq (car res) ',error-spec)))))))))
              (and (fboundp compat)
                   `(ert-set-test
                     ',comp-test
