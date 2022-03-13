@@ -350,6 +350,27 @@ return nil."
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 
+(compat-defun assoc-delete-all (key alist &optional test)
+  "Delete from ALIST all elements whose car is KEY.
+Compare keys with TEST.  Defaults to `equal'.
+Return the modified alist.
+Elements of ALIST that are not conses are ignored."
+  :prefix t
+  :cond (condition-case nil
+            (or (assoc-delete-all nil nil #'ignore) t)
+          (wrong-number-of-arguments nil))
+  (unless test (setq test #'equal))
+  (while (and (consp (car alist))
+	      (funcall test (caar alist) key))
+    (setq alist (cdr alist)))
+  (let ((tail alist) tail-cdr)
+    (while (setq tail-cdr (cdr tail))
+      (if (and (consp (car tail-cdr))
+	       (funcall test (caar tail-cdr) key))
+	  (setcdr tail (cdr tail-cdr))
+	(setq tail tail-cdr))))
+  alist)
+
 ;;;; Defined in simple.el
 
 ;;* UNTESTED
