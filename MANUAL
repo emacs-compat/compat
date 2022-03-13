@@ -220,7 +220,6 @@ provided by compat by default:
 - Function ~make-nearby-temp-file~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
 - Variable ~mounted-file-systems~ ::  Defined in ~files.el~.
 - Function ~temporary-file-directory~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
-- Function ~assoc-delete-all~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:
@@ -300,6 +299,9 @@ when ~compat-27~ is required:
 - Function ~file-size-human-readable~ :: Defined in ~files.el~.
 
   Handle the optional third (SPACE) and forth (UNIT) arguments.
+- Function ~assoc-delete-all~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+
+  Handle the optional third (TESTFN) argument.
 
 Compat does not provide support for the following Lisp features
 implemented in 27.1:
@@ -316,7 +318,6 @@ implemented in 27.1:
 - Support for ~condition-case~ to handle t.
 - The functions ~major-mode-suspend~ and ~major-mode-restore~.
 - The function ~provided-mode-derived-p~.
-- The function ~assoc-delete-all~'s optional predicate.
 - The function ~file-system-info~.
 - The more consistent treatment of NaN values.
 - The function ~ring-resize~.
