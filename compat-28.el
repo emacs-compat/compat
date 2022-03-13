@@ -49,7 +49,8 @@ Case is always significant and text properties are ignored."
 multibyte regular expressions.  As the compatibility function
 for `string-search' is implemented via `string-match', these
 issues are inherited."
-  (when (and start-pos (< start-pos 0))
+  (when (and start-pos (or (< (length haystack) start-pos)
+                           (< start-pos 0)))
     (signal 'args-out-of-range (list start-pos)))
   (save-match-data
     (let ((case-fold-search nil))
