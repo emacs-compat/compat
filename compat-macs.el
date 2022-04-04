@@ -90,7 +90,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                         ;; Guess the version from the file the macro is
                         ;; being defined in.
                         (and (string-match
-                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                              "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
                               file)
                              (match-string 1 file)))))
          (realname (or (plist-get attr :realname)
@@ -162,7 +162,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                         ;; being defined in.
                         (and file
                              (string-match
-                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                              "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
                               file)
                              (match-string 1 file)))))
          (realname (or (plist-get attr :realname)
