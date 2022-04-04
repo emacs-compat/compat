@@ -47,8 +47,8 @@
 COMPAT is the name of the compatibility function the behaviour is
 being compared against."
   (lambda (result &rest args)
-    (let ((real-test (intern (format "%s-%04d-actual" compat compat-test-counter)))
-          (comp-test (intern (format "%s-%04d-compat" compat compat-test-counter))))
+    (let ((real-test (intern (format "%s-%04d-actual/ought" compat compat-test-counter)))
+          (comp-test (intern (format "%s-%04d-compat/ought" compat compat-test-counter))))
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
        (list (and (fboundp name)
@@ -73,8 +73,8 @@ being compared against."
 COMPAT is the name of the compatibility function the behaviour is
 being compared against."
   (lambda (error-spec &rest args)
-    (let ((real-test (intern (format "%s-%04d-actual" compat compat-test-counter)))
-          (comp-test (intern (format "%s-%04d-compat" compat compat-test-counter)))
+    (let ((real-test (intern (format "%s-%04d-actual/expect" compat compat-test-counter)))
+          (comp-test (intern (format "%s-%04d-compat/expect" compat compat-test-counter)))
           (error-type (if (consp error-spec) (car error-spec) error-spec)))
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
