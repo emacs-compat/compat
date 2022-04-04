@@ -53,6 +53,8 @@ being compared against."
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
        (list (and (fboundp name)
+                  (or (not (get compat 'compat-version))
+                      (version<= emacs-version (get compat 'compat-version)))
                   `(ert-set-test
                     ',real-test
                     (make-ert-test
@@ -78,6 +80,8 @@ being compared against."
       (setq compat-test-counter (1+ compat-test-counter))
       (macroexp-progn
        (list (and (fboundp name)
+                  (or (not (get compat 'compat-version))
+                      (version<= emacs-version (get compat 'compat-version)))
                   `(ert-set-test
                     ',real-test
                     (make-ert-test
@@ -116,8 +120,10 @@ being compared against."
          (env (list
                (cons 'ought (compat--ought real-name compat-name))
                (cons 'expect (compat--expect real-name compat-name)))))
-    (and (or (not (get real-name 'compat-version))
-             (version<= emacs-version (get real-name 'compat-version)))
+    (and (or (not (get compat-name 'compat-min-version))
+             (version< (get compat-name 'compat-min-version) emacs-version))
+         (or (not (get compat-name 'compat-max-version))
+             (version< emacs-version (get compat-name 'compat-max-version)))
          (macroexpand-all
           (macroexp-progn body)
           (append env macroexpand-all-environment)))))

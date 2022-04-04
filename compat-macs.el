@@ -177,6 +177,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
+       (put ',realname 'compat-min-version ,min-version)
+       (put ',realname 'compat-max-version ,max-version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
        ,(funcall def-fn realname version)
        (,@(cond
