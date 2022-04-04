@@ -33,7 +33,6 @@
 ;;; Code:
 
 (require 'ert)
-(require 'nadvice)
 
 (require 'compat-macs)
 (defvar compat-testing)
