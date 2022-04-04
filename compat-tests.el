@@ -116,7 +116,11 @@ being compared against."
          (env (list
                (cons 'ought (compat--ought real-name compat-name))
                (cons 'expect (compat--expect real-name compat-name)))))
-    (macroexpand-all (macroexp-progn body) (append env macroexpand-all-environment))))
+    (and (or (not (get real-name 'compat-version))
+             (version<= emacs-version (get real-name 'compat-version)))
+         (macroexpand-all
+          (macroexp-progn body)
+          (append env macroexpand-all-environment)))))
 
 
 
