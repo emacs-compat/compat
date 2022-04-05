@@ -1,11 +1,11 @@
 #                       -*- mode: org; -*-
-#+title:                "compat" Manual
+#+title:                "Compat" Manual
 #+subtitle:             For version {{{version}}}
 #+author:               Philip Kaludercic
 #+email:                ~pkal/compat-devel@lists.sr.ht
 #+texinfo_filename:     compat.info
 #+texinfo_dir_category: Emacs
-#+texinfo_dir_title:    compat: (compat)
+#+texinfo_dir_title:    Compat: (compat)
 #+texinfo_dir_desc:     Compatibility Library for Emacs Lisp
 
 #+macro: version 28.1.0.0
@@ -19,7 +19,7 @@ version {{{version}}}.
 * Introduction
 ** Overview
 The objective of compat is to provide "forwards compatibility"
-library for Emacs Lisp.  That is to say by using compat, an Elisp
+library for Emacs Lisp.  That is to say by using Compat, an Elisp
 package does not have to make the decision to either use new and
 useful functionality or support old versions of Emacs.
 
@@ -27,12 +27,12 @@ Version 24.3 is chosen as the oldest version, because this is the
 newest version on CentOS 7. It is intended to preserve compatibility
 for at least as the Centos 7 reaches [[https://wiki.centos.org/About/Product][EOL]], 2024.
 
-If you are developing a package with compat in mind, consider loading
+If you are developing a package with Compat in mind, consider loading
 `compat-help` (on your system, not in a package) to get relevant notes
 inserted into the help buffers of functions that are implemented or
-advised in compat.
+advised in Compat.
 
-Note that compat provides a few prefixed function, ie. functions with
+Note that Compat provides a few prefixed function, ie. functions with
 a ~compat-~ prefix.  These are used to provide extended functionality
 for commands that are already defined (~sort~, ~assoc~, ~seq~, ...).
 It might be possible to transform these into advised functions later
@@ -61,7 +61,7 @@ be notified when new versions are released or relevant changes are
 made.
 
 *** Additional libraries
-These libraries are packages with compat, but are disabled by default.
+These libraries are packages with Compat, but are disabled by default.
 To use them you can use ~M-x load-library~:
 
 - compat-help :: Add notes to ~*Help*~ buffer, if a compatibility
@@ -93,7 +93,7 @@ reasons.  These might include:
 - New functionality depends on an entire new, non-trivial library.
   Sometimes these are provided via ELPA (xref, project, ...), but other
   times it would be infeasible to duplicate an entire library within
-  compat while also providing the necessary backwards compatibility.
+  Compat while also providing the necessary backwards compatibility.
 
 - It just wasn't added, and there is no good reason (though good
   excuses might exist).  If you happen to find such a function,
@@ -103,12 +103,12 @@ reasons.  These might include:
   otherwise.
 
 * Support
-This section goes into the features that compat manages and doesn't
+This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 ** Emacs 24.4
 The following functions and macros implemented in 24.4, and are
-provided by compat by default:
+provided by Compat by default:
 
 - Macro ~with-eval-after-load~ :: See [[info:elisp#Hooks for Loading][(elisp) Hooks for Loading]].
 - Function ~special-form-p~ :: See [[info:elisp#Special Forms][(elisp) Special Forms]].
@@ -159,7 +159,7 @@ implemented in 24.4:
 No special support for 24.5 was deemed necessary.
 ** Emacs 25.1
 The following functions and macros implemented in 25.1, and are
-provided by compat by default:
+provided by Compat by default:
 
 - Function ~format-message~ :: See [[info:elisp#Formatting Strings][(elisp) Formatting Strings]].
 - Function ~directory-name-p~ :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
@@ -207,7 +207,7 @@ implemented in 25.1:
 
 ** Emacs 26.1
 The following functions and macros implemented in 26.1, and are
-provided by compat by default:
+provided by Compat by default:
 
 - Function ~func-arity~ :: See [[info:elisp#What Is a Function][(elisp) What Is a Function]].
 - Function ~mapcan~ :: See [[info:elisp#Mapping Functions][(elisp) Mapping Functions]].
@@ -257,7 +257,7 @@ implemented in 26.1:
 
 ** Emacs 27.1
 The following functions and macros implemented in 27.1, and are
-provided by compat by default:
+provided by Compat by default:
 
 - Function ~proper-list-p~ :: See [[info:elisp#List-related Predicates][(elisp) List-related Predicates]].
 - Function ~string-distance~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
@@ -328,7 +328,7 @@ implemented in 27.1:
 
 ** Emacs 28.1
 The following functions and macros implemented in 28.1, and are
-provided by compat by default:
+provided by Compat by default:
 
 - Function ~string-search~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
 - Function ~length=~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
@@ -433,7 +433,7 @@ mailing list]] ([[mailto:~pkal/compat-devel@lists.sr.ht][~pkal/compat-devel@list
 also be used to submit patches.  These may include issues in the
 compatibility code, missing definitions or performance issues.
 
-Please note that as a GNU ELPA package, compat requires contributors
+Please note that as a GNU ELPA package, Compat requires contributors
 to have signed the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html][FSF copyright assignment]], before any non-trivial
 contribution (roughly 15 lines of code) can be applied.
 
