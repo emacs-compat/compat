@@ -5,7 +5,7 @@
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 28.1.0.0
-;; URL: https://git.sr.ht/~pkal/compat/
+;; URL: https://sr.ht/~pkal/compat
 ;; Package-Requires: ((emacs "24.3") (nadvice "0.3"))
 ;; Keywords: lisp
 
