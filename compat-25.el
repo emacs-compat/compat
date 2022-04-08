@@ -154,14 +154,6 @@ This is like `when-let' but doesn't handle a VARLIST of the form
   (declare (indent 1) (debug if-let*))
   `(compat--if-let* ,varlist ,(macroexp-progn body)))
 
-(compat-defmacro and-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-Like `when-let*', except if BODY is empty and all the bindings
-are non-nil, then the result is non-nil."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  `(compat--when-let* ,varlist ,@(or body '(t))))
-
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a

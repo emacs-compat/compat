@@ -366,5 +366,16 @@ the variable `temporary-file-directory' is returned."
           default-directory
         temporary-file-directory))))
 
+;;;; Defined in subr-x.el
+
+(declare-function compat--when-let* "compat-25" (varlist &rest body))
+(compat-defmacro and-let* (varlist &rest body)
+  "Bind variables according to VARLIST and conditionally evaluate BODY.
+Like `when-let*', except if BODY is empty and all the bindings
+are non-nil, then the result is non-nil."
+  :feature 'subr-x
+  (declare (indent 1) (debug if-let*))
+  `(compat--when-let* ,varlist ,@(or body '(t))))
+
 (provide 'compat-26)
 ;;; compat-26.el ends here
