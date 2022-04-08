@@ -132,15 +132,15 @@ provided by Compat by default:
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-24~ is required:
 
-- Function: = ::
-- Function: < ::
-- Function: > ::
-- Function: <= ::
-- Function: >= ::
+- Function: compat-= ::
+- Function: compat-< ::
+- Function: compat-> ::
+- Function: compat-<= ::
+- Function: compat->= ::
   See [[info:elisp#Comparison of Numbers][(elisp) Comparison of Numbers]].
 
   Allows for more than two arguments to be compared.
-- Function: split-string :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: compat-split-string :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
 
   Takes optional argument TRIM.
 
@@ -186,7 +186,7 @@ provided by Compat by default:
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-25~ is required:
 
-- Function: sort :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function: compat-sort :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
 
   Adds support for vectors to be sorted, next to just lists.
 
@@ -232,13 +232,13 @@ provided by Compat by default:
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:
 
-- Function: assoc :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: compat-assoc :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional argument TESTFN.
-- Function: line-number-at-pos :: See [[info:elisp#Text Lines][(elisp) Text Lines]].
+- Function: compat-line-number-at-pos :: See [[info:elisp#Text Lines][(elisp) Text Lines]].
 
   Handle the optional argument ABSOLUTE.
-- Function: alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: compat-alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional argument TESTFN.
 
@@ -292,22 +292,22 @@ provided by Compat by default:
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-27~ is required:
 
-- Function: recenter :: See [[info:elisp#Textual Scrolling][(elisp) Textual Scrolling]].
+- Function: compat-recenter :: See [[info:elisp#Textual Scrolling][(elisp) Textual Scrolling]].
 
   Adds the optional argument REDISPLAY.
-- Function: lookup-key :: See [[info:elisp#Low-Level Key Binding][(elisp) Low-Level Key Binding]].
+- Function: compat-lookup-key :: See [[info:elisp#Low-Level Key Binding][(elisp) Low-Level Key Binding]].
 
   Allows KEYMAP to be a list of keymaps.
-- Macro: setq-local :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
+- Macro: compat-setq-local :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
 
   Allow for more than one variable to be set.
-- Function: regexp-opt :: See [[info:elisp#Regexp Functions][(elisp) Regexp Functions]].
+- Function: compat-regexp-opt :: See [[info:elisp#Regexp Functions][(elisp) Regexp Functions]].
 
   Handle an empty list of strings.
-- Function: file-size-human-readable :: Defined in ~files.el~.
+- Function: compat-file-size-human-readable :: Defined in ~files.el~.
 
   Handle the optional third (SPACE) and forth (UNIT) arguments.
-- Function: assoc-delete-all :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: compat-assoc-delete-all :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional third (TESTFN) argument.
 
@@ -377,27 +377,27 @@ provided by Compat by default:
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:
 
-- Function: unlock-buffer :: See [[info:elisp#File Locks][(elisp) File Locks]].
+- Function: compat-unlock-buffer :: See [[info:elisp#File Locks][(elisp) File Locks]].
 
   Handle ~file-error~ conditions.
 
-- Function: string-width :: See [[info:elisp#Size of Displayed Text][(elisp) Size of Displayed Text]].
+- Function: compat-string-width :: See [[info:elisp#Size of Displayed Text][(elisp) Size of Displayed Text]].
 
   Handle optional arguments FROM and TO.
 
-- Function: json-serialize :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: compat-json-serialize :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function: json-insert :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: compat-json-insert :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function: json-parse-string :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: compat-json-parse-string :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function: json-parse-buffer :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: compat-json-parse-buffer :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function: count-windows :: Defined in ~window.el~.
+- Function: compat-count-windows :: Defined in ~window.el~.
 
   Handle optional argument ALL-FRAMES.
 

@@ -297,21 +297,21 @@ See @ref{Defining Faces,(elisp) Defining Faces,,elisp,}.
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-24} is required:
 
-@defun =
+@defun compat-=
 @end defun
-@defun <
+@defun compat-<
 @end defun
-@defun >
+@defun compat->
 @end defun
-@defun <=
+@defun compat-<=
 @end defun
-@defun >=
+@defun compat->=
 See @ref{Comparison of Numbers,(elisp) Comparison of Numbers,,elisp,}.
 
 Allows for more than two arguments to be compared.
 @end defun
 
-@defun split-string
+@defun compat-split-string
 See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
 
 Takes optional argument TRIM@.
@@ -419,7 +419,7 @@ See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-25} is required:
 
-@defun sort
+@defun compat-sort
 See @ref{Sequence Functions,(elisp) Sequence Functions,,elisp,}.
 
 Adds support for vectors to be sorted, next to just lists.
@@ -519,19 +519,19 @@ See @ref{Unique File Names,(elisp) Unique File Names,,elisp,}.
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-26} is required:
 
-@defun assoc
+@defun compat-assoc
 See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 
 Handle the optional argument TESTFN@.
 @end defun
 
-@defun line-number-at-pos
+@defun compat-line-number-at-pos
 See @ref{Text Lines,(elisp) Text Lines,,elisp,}.
 
 Handle the optional argument ABSOLUTE@.
 @end defun
 
-@defun alist-get
+@defun compat-alist-get
 See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 
 Handle the optional argument TESTFN@.
@@ -670,37 +670,37 @@ Defined in @code{package.el}.
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-27} is required:
 
-@defun recenter
+@defun compat-recenter
 See @ref{Textual Scrolling,(elisp) Textual Scrolling,,elisp,}.
 
 Adds the optional argument REDISPLAY@.
 @end defun
 
-@defun lookup-key
+@defun compat-lookup-key
 See @ref{Low-Level Key Binding,(elisp) Low-Level Key Binding,,elisp,}.
 
 Allows KEYMAP to be a list of keymaps.
 @end defun
 
-@defmac setq-local
+@defmac compat-setq-local
 See @ref{Creating Buffer-Local,(elisp) Creating Buffer-Local,,elisp,}.
 
 Allow for more than one variable to be set.
 @end defmac
 
-@defun regexp-opt
+@defun compat-regexp-opt
 See @ref{Regexp Functions,(elisp) Regexp Functions,,elisp,}.
 
 Handle an empty list of strings.
 @end defun
 
-@defun file-size-human-readable
+@defun compat-file-size-human-readable
 Defined in @code{files.el}.
 
 Handle the optional third (SPACE) and forth (UNIT) arguments.
 @end defun
 
-@defun assoc-delete-all
+@defun compat-assoc-delete-all
 See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 
 Handle the optional third (TESTFN) argument.
@@ -889,43 +889,43 @@ See @ref{Backup Names,(elisp) Backup Names,,elisp,}.
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-28} is required:
 
-@defun unlock-buffer
+@defun compat-unlock-buffer
 See @ref{File Locks,(elisp) File Locks,,elisp,}.
 
 Handle @code{file-error} conditions.
 @end defun
 
-@defun string-width
+@defun compat-string-width
 See @ref{Size of Displayed Text,(elisp) Size of Displayed Text,,elisp,}.
 
 Handle optional arguments FROM and TO@.
 @end defun
 
-@defun json-serialize
+@defun compat-json-serialize
 See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
-@defun json-insert
+@defun compat-json-insert
 See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
-@defun json-parse-string
+@defun compat-json-parse-string
 See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
-@defun json-parse-buffer
+@defun compat-json-parse-buffer
 See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
-@defun count-windows
+@defun compat-count-windows
 Defined in @code{window.el}.
 
 Handle optional argument ALL-FRAMES@.
