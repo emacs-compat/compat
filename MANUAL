@@ -3,7 +3,7 @@
 #+subtitle:             For version {{{version}}}
 #+author:               Philip Kaludercic
 #+email:                ~pkal/compat-devel@lists.sr.ht
-#+texinfo_filename:     compat.info
+#+export_file_name:     compat.texi
 #+texinfo_dir_category: Emacs
 #+texinfo_dir_title:    Compat: (compat)
 #+texinfo_dir_desc:     Compatibility Library for Emacs Lisp

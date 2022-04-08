@@ -28,7 +28,6 @@ clean:
 
 compat.texi: MANUAL
 	$(EMACS) -Q --batch $< -f org-texinfo-export-to-texinfo --kill
-	mv $<.texi $@
 
 compat.info: compat.texi
 	$(MAKEINFO) $<
