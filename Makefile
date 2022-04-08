@@ -13,7 +13,7 @@ BYTEC = compat-help.elc \
 	compat-28.elc \
 	compat.elc
 
-all: compile compat.info
+all: compile
 
 compile: $(BYTEC)
 
