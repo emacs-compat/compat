@@ -7,6 +7,7 @@
 #+texinfo_dir_category: Emacs
 #+texinfo_dir_title:    Compat: (compat)
 #+texinfo_dir_desc:     Compatibility Library for Emacs Lisp
+#+options:              compact-itemx:t
 
 #+macro: version 28.1.0.0
 
@@ -110,31 +111,36 @@ manage to provide for each Emacs version.
 The following functions and macros implemented in 24.4, and are
 provided by Compat by default:
 
-- Macro ~with-eval-after-load~ :: See [[info:elisp#Hooks for Loading][(elisp) Hooks for Loading]].
-- Function ~special-form-p~ :: See [[info:elisp#Special Forms][(elisp) Special Forms]].
-- Function ~macrop~ :: See [[info:elisp#Simple Macro][(elisp) Simple Macro]].
-- Function ~string-suffix-p~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
-- Function ~delete-consecutive-dups~ :: Defined in ~subr.el~.
-- Function ~define-error~ :: See [[info:elisp#Error Symbols][(elisp) Error Symbols]].
-- Function ~bool-vector-exclusive-or~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-union~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-intersection~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-not~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-subsetp~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-count-consecutive~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~bool-vector-count-population~ :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
-- Function ~completion-table-merge~ :: See [[info:elisp#Basic Completion][(elisp) Basic Completion]].
-- Function ~completion-table-with-cache~ :: See [[info:elisp#Programmed Completion][(elisp) Programmed
+- Macro: with-eval-after-load :: See [[info:elisp#Hooks for Loading][(elisp) Hooks for Loading]].
+- Function: special-form-p :: See [[info:elisp#Special Forms][(elisp) Special Forms]].
+- Function: macrop :: See [[info:elisp#Simple Macro][(elisp) Simple Macro]].
+- Function: string-suffix-p :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function: delete-consecutive-dups :: Defined in ~subr.el~.
+- Function: define-error :: See [[info:elisp#Error Symbols][(elisp) Error Symbols]].
+- Function: bool-vector-exclusive-or :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-union :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-intersection :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-not :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-subsetp :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-count-consecutive :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector-count-population :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: completion-table-merge :: See [[info:elisp#Basic Completion][(elisp) Basic Completion]].
+- Function: completion-table-with-cache :: See [[info:elisp#Programmed Completion][(elisp) Programmed
   Completion]].
-- Function ~face-spec-set~ :: See [[info:elisp#Defining Faces][(elisp) Defining Faces]].
+- Function: face-spec-set :: See [[info:elisp#Defining Faces][(elisp) Defining Faces]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-24~ is required:
 
-- ~=~, ~<~, ~>~, ~<=~, ~>=~ :: See [[info:elisp#Comparison of Numbers][(elisp) Comparison of Numbers]].
+- Function: = ::
+- Function: < ::
+- Function: > ::
+- Function: <= ::
+- Function: >= ::
+  See [[info:elisp#Comparison of Numbers][(elisp) Comparison of Numbers]].
 
   Allows for more than two arguments to be compared.
-- ~split-string~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: split-string :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
 
   Takes optional argument TRIM.
 
@@ -161,26 +167,26 @@ No special support for 24.5 was deemed necessary.
 The following functions and macros implemented in 25.1, and are
 provided by Compat by default:
 
-- Function ~format-message~ :: See [[info:elisp#Formatting Strings][(elisp) Formatting Strings]].
-- Function ~directory-name-p~ :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
-- Function ~string-greaterp~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
-- Macro ~with-file-modes~ :: See [[info:elisp#Changing Files][(elisp) Changing Files]].
-- Function ~alist-get~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
-- Macro ~if-let*~ :: Defined in ~subr-x.el~.
-- Macro ~when-let*~ :: Defined in ~subr-x.el~.
-- Macro ~if-let~ :: Defined in ~subr-x.el~.
-- Macro ~when-let~ :: Defined in ~subr-x.el~.
-- Macro ~thread-first~ :: Defined in ~subr-x.el~.
-- Macro ~thread-last~ :: Defined in ~subr-x.el~.
-- Function ~macroexpand-1~ :: See [[info:elisp#Expansion][(elisp) Expansion]].
-- Function ~directory-files-recursively~ :: See [[info:elisp#Contents of Directories][(elisp) Contents of
+- Function: format-message :: See [[info:elisp#Formatting Strings][(elisp) Formatting Strings]].
+- Function: directory-name-p :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
+- Function: string-greaterp :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Macro: with-file-modes :: See [[info:elisp#Changing Files][(elisp) Changing Files]].
+- Function: alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Macro: if-let* :: Defined in ~subr-x.el~.
+- Macro: when-let* :: Defined in ~subr-x.el~.
+- Macro: if-let :: Defined in ~subr-x.el~.
+- Macro: when-let :: Defined in ~subr-x.el~.
+- Macro: thread-first :: Defined in ~subr-x.el~.
+- Macro: thread-last :: Defined in ~subr-x.el~.
+- Function: macroexpand-1 :: See [[info:elisp#Expansion][(elisp) Expansion]].
+- Function: directory-files-recursively :: See [[info:elisp#Contents of Directories][(elisp) Contents of
   Directories]].
-- Function ~bool-vector :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
+- Function: bool-vector :: See [[info:elisp#Bool-Vectors][(elisp) Bool-Vectors]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-25~ is required:
 
-- ~sort~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function: sort :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
 
   Adds support for vectors to be sorted, next to just lists.
 
@@ -209,28 +215,30 @@ implemented in 25.1:
 The following functions and macros implemented in 26.1, and are
 provided by Compat by default:
 
-- Function ~func-arity~ :: See [[info:elisp#What Is a Function][(elisp) What Is a Function]].
-- Function ~mapcan~ :: See [[info:elisp#Mapping Functions][(elisp) Mapping Functions]].
-- Function ~string-trim-left~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-trim-right~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-trim~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~c[ad]{3,4}r~ :: See [[info:elisp#List Elements][(elisp) List Elements]].
-- Variable ~gensym-counter~ :: See ~gensym~.
-- Function ~gensym~ :: See [[info:elisp#Creating Symbols][(elisp) Creating Symbols]].
-- Function ~make-nearby-temp-file~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
-- Variable ~mounted-file-systems~ ::  Defined in ~files.el~.
-- Function ~temporary-file-directory~ :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+- Function: func-arity :: See [[info:elisp#What Is a Function][(elisp) What Is a Function]].
+- Function: mapcan :: See [[info:elisp#Mapping Functions][(elisp) Mapping Functions]].
+- Function: string-trim-left :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-trim-right :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-trim :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: cXXXr ::
+- Function: cXXXXr ::
+  See [[info:elisp#List Elements][(elisp) List Elements]].
+- Variable: gensym-counter :: See ~gensym~.
+- Function: gensym :: See [[info:elisp#Creating Symbols][(elisp) Creating Symbols]].
+- Function: make-nearby-temp-file :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+- Variable: mounted-file-systems ::  Defined in ~files.el~.
+- Function: temporary-file-directory :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:
 
-- ~assoc~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: assoc :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional argument TESTFN.
-- ~line-number-at-pos~ :: See [[info:elisp#Text Lines][(elisp) Text Lines]].
+- Function: line-number-at-pos :: See [[info:elisp#Text Lines][(elisp) Text Lines]].
 
   Handle the optional argument ABSOLUTE.
-- ~alist-get~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional argument TESTFN.
 
@@ -259,47 +267,47 @@ implemented in 26.1:
 The following functions and macros implemented in 27.1, and are
 provided by Compat by default:
 
-- Function ~proper-list-p~ :: See [[info:elisp#List-related Predicates][(elisp) List-related Predicates]].
-- Function ~string-distance~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
-- Function ~json-serialize~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
-- Function ~json-insert~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
-- Function ~json-parse-string~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
-- Function ~json-parse-buffer~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
-- Macro ~ignore-error~ :: See [[info:elisp#Handling Errors][(elisp) Handling Errors]].
-- Macro ~dolist-with-progress-reporter~ :: See [[info:elisp#Progress][(elisp) Progress]].
-- Function ~flatten-tree~ :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
-- Function ~xor~ :: See [[info:elisp#Combining Conditions][(elisp) Combining Conditions]].
-- Variable ~regexp-unmatchable~ :: Defined in ~subr.el~.
-- Function ~decoded-time-second~ :: Defined in ~simple.el~.
-- Function ~decoded-time-minute~ :: Defined in ~simple.el~.
-- Function ~decoded-time-hour~ :: Defined in ~simple.el~.
-- Function ~decoded-time-day~ :: Defined in ~simple.el~.
-- Function ~decoded-time-month~ :: Defined in ~simple.el~.
-- Function ~decoded-time-year~ :: Defined in ~simple.el~.
-- Function ~decoded-time-weekday~ :: Defined in ~simple.el~.
-- Function ~decoded-time-dst~ :: Defined in ~simple.el~.
-- Function ~decoded-time-zone~ :: Defined in ~simple.el~.
-- Function ~package-get-version~ :: Defined in ~package.el~.
+- Function: proper-list-p :: See [[info:elisp#List-related Predicates][(elisp) List-related Predicates]].
+- Function: string-distance :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function: json-serialize :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-insert :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-parse-string :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-parse-buffer :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Macro: ignore-error :: See [[info:elisp#Handling Errors][(elisp) Handling Errors]].
+- Macro: dolist-with-progress-reporter :: See [[info:elisp#Progress][(elisp) Progress]].
+- Function: flatten-tree :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
+- Function: xor :: See [[info:elisp#Combining Conditions][(elisp) Combining Conditions]].
+- Variable: regexp-unmatchable :: Defined in ~subr.el~.
+- Function: decoded-time-second :: Defined in ~simple.el~.
+- Function: decoded-time-minute :: Defined in ~simple.el~.
+- Function: decoded-time-hour :: Defined in ~simple.el~.
+- Function: decoded-time-day :: Defined in ~simple.el~.
+- Function: decoded-time-month :: Defined in ~simple.el~.
+- Function: decoded-time-year :: Defined in ~simple.el~.
+- Function: decoded-time-weekday :: Defined in ~simple.el~.
+- Function: decoded-time-dst :: Defined in ~simple.el~.
+- Function: decoded-time-zone :: Defined in ~simple.el~.
+- Function: package-get-version :: Defined in ~package.el~.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-27~ is required:
 
-- Function ~recenter~ :: See [[info:elisp#Textual Scrolling][(elisp) Textual Scrolling]].
+- Function: recenter :: See [[info:elisp#Textual Scrolling][(elisp) Textual Scrolling]].
 
   Adds the optional argument REDISPLAY.
-- Function ~lookup-key~ :: See [[info:elisp#Low-Level Key Binding][(elisp) Low-Level Key Binding]].
+- Function: lookup-key :: See [[info:elisp#Low-Level Key Binding][(elisp) Low-Level Key Binding]].
 
   Allows KEYMAP to be a list of keymaps.
-- Macro ~setq-local~ :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
+- Macro: setq-local :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
 
   Allow for more than one variable to be set.
-- Function ~regexp-opt~ :: See [[info:elisp#Regexp Functions][(elisp) Regexp Functions]].
+- Function: regexp-opt :: See [[info:elisp#Regexp Functions][(elisp) Regexp Functions]].
 
   Handle an empty list of strings.
-- Function ~file-size-human-readable~ :: Defined in ~files.el~.
+- Function: file-size-human-readable :: Defined in ~files.el~.
 
   Handle the optional third (SPACE) and forth (UNIT) arguments.
-- Function ~assoc-delete-all~ :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
+- Function: assoc-delete-all :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional third (TESTFN) argument.
 
@@ -330,66 +338,66 @@ implemented in 27.1:
 The following functions and macros implemented in 28.1, and are
 provided by Compat by default:
 
-- Function ~string-search~ :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
-- Function ~length=~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
-- Function ~length<~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
-- Function ~length>~ :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
-- Function ~file-name-concat~ :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
-- Function ~garbage-collect-maybe~ :: Defined in ~alloc.c~.
-- Function ~string-replace~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
-- Function ~always~ :: [[info:elisp#Calling Functions][(elisp) Calling Functions]].
-- Function ~insert-into-buffer~ :: See [[info:elisp#Insertion][(elisp) Insertion]].
-- Function ~replace-regexp-in-region~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
-- Function ~replace-string-in-region~ :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
-- Function ~buffer-local-boundp~ :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
-- Function ~with-existing-directory~ :: See [[info:elisp#Testing Accessibility][(elisp) Testing Accessibility]].
-- Macro ~dlet~ :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
-- Function ~ensure-list~ :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
-- Function ~string-clean-whitespace~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-fill~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-lines~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-pad~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function ~string-chop-newline~ :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Macro ~named-let~ :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
-- Function ~file-name-with-extension~ :: See [[info:elisp#File Name Components][(elisp) File Name
+- Function: string-search :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
+- Function: length= :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function: length< :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function: length> :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
+- Function: file-name-concat :: See [[info:elisp#Directory Names][(elisp) Directory Names]].
+- Function: garbage-collect-maybe :: Defined in ~alloc.c~.
+- Function: string-replace :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function: always :: [[info:elisp#Calling Functions][(elisp) Calling Functions]].
+- Function: insert-into-buffer :: See [[info:elisp#Insertion][(elisp) Insertion]].
+- Function: replace-regexp-in-region :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function: replace-string-in-region :: See [[info:elisp#Search and Replace][(elisp) Search and Replace]].
+- Function: buffer-local-boundp :: See [[info:elisp#Creating Buffer-Local][(elisp) Creating Buffer-Local]].
+- Function: with-existing-directory :: See [[info:elisp#Testing Accessibility][(elisp) Testing Accessibility]].
+- Macro: dlet :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
+- Function: ensure-list :: See [[info:elisp#Building Lists][(elisp) Building Lists]].
+- Function: string-clean-whitespace :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-fill :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-lines :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-pad :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Function: string-chop-newline :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+- Macro: named-let :: See [[info:elisp#Local Variables][(elisp) Local Variables]].
+- Function: file-name-with-extension :: See [[info:elisp#File Name Components][(elisp) File Name
   Components]].
-- Function ~directory-empty-p~ :: See [[info:elisp#Contents of Directories][(elisp) Contents of Directories]].
-- Function ~format-prompt~ :: See [[info:elisp#Text from Minibuffer][(elisp) Text from Minibuffer]].
-- Function ~thing-at-mouse~ :: Defined in ~thingatpt.el~.
-- Function ~macroexp-file-name~ :: Defined in ~macroexp~.
-- Macro ~with-environment-variables~ :: See [[info:elisp#System Environment][(elisp) System
+- Function: directory-empty-p :: See [[info:elisp#Contents of Directories][(elisp) Contents of Directories]].
+- Function: format-prompt :: See [[info:elisp#Text from Minibuffer][(elisp) Text from Minibuffer]].
+- Function: thing-at-mouse :: Defined in ~thingatpt.el~.
+- Function: macroexp-file-name :: Defined in ~macroexp~.
+- Macro: with-environment-variables :: See [[info:elisp#System Environment][(elisp) System
   Environment]].
-- Function ~button-buttonize~ :: Defined in ~button.el~.
-- Function ~make-directory-autoloads~ :: See [[info:elisp#Autoload][(elisp) Autoload]].
-- Function ~color-values-from-color-spec~ :: Defined in ~xfaces.c~.
-- Function ~file-modes-number-to-symbolic~ :: See [[info:elisp#Changing Files][(elisp) Changing
+- Function: button-buttonize :: Defined in ~button.el~.
+- Function: make-directory-autoloads :: See [[info:elisp#Autoload][(elisp) Autoload]].
+- Function: color-values-from-color-spec :: Defined in ~xfaces.c~.
+- Function: file-modes-number-to-symbolic :: See [[info:elisp#Changing Files][(elisp) Changing
   Files]].
-- Function ~file-backup-file-names~ :: See [[info:elisp#Backup Names][(elisp) Backup Names]].
+- Function: file-backup-file-names :: See [[info:elisp#Backup Names][(elisp) Backup Names]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:
 
-- Function ~unlock-buffer~ :: See [[info:elisp#File Locks][(elisp) File Locks]].
+- Function: unlock-buffer :: See [[info:elisp#File Locks][(elisp) File Locks]].
 
   Handle ~file-error~ conditions.
 
-- Function ~string-width~ :: See [[info:elisp#Size of Displayed Text][(elisp) Size of Displayed Text]].
+- Function: string-width :: See [[info:elisp#Size of Displayed Text][(elisp) Size of Displayed Text]].
 
   Handle optional arguments FROM and TO.
 
-- Function ~json-serialize~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-serialize :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function ~json-insert~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-insert :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function ~json-parse-string~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-parse-string :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function ~json-parse-buffer~ :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
+- Function: json-parse-buffer :: See [[info:elisp#Parsing JSON][(elisp) Parsing JSON]].
 
   Handle primitive, top-level JSON values.
-- Function ~count-windows~ :: Defined in ~window.el~.
+- Function: count-windows :: Defined in ~window.el~.
 
   Handle optional argument ALL-FRAMES.
 
@@ -436,6 +444,18 @@ compatibility code, missing definitions or performance issues.
 Please note that as a GNU ELPA package, Compat requires contributors
 to have signed the [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html][FSF copyright assignment]], before any non-trivial
 contribution (roughly 15 lines of code) can be applied.
+
+* Function Index
+:PROPERTIES:
+:APPENDIX:   t
+:INDEX:      fn
+:END:
+
+* Variable Index
+:PROPERTIES:
+:APPENDIX:   t
+:INDEX:      vr
+:END:
 
 * Distribution
 :PROPERTIES:
