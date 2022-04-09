@@ -375,7 +375,7 @@ Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature 'subr-x
   (declare (indent 1) (debug if-let*))
-  `(compat--when-let* ,varlist ,@(or body '(t))))
+  `(when-let* ,varlist ,@(or body '(t))))
 
 (provide 'compat-26)
 ;;; compat-26.el ends here
