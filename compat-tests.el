@@ -1157,7 +1157,7 @@ being compared against."
    (compat--if-let (((= 5 6))) t nil)))
 
 (ert-deftest compat-and-let* ()
-  "Check if `compat--if-let*' was implemented properly."
+  "Check if `compat--and-let*' was implemented properly."
   (should                               ;trivial body
    (compat--and-let*
     ((x 3)
