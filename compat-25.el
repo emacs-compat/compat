@@ -189,7 +189,7 @@ If all are non-nil, return the value of the last form in BODY.
 The variable list SPEC is the same as in `if-let'."
   :feature 'subr-x
   (declare (indent 1) (debug if-let))
-  `(compat-if-let ,spec ,(macroexp-progn body)))
+  `(if-let ,spec ,(macroexp-progn body)))
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.
