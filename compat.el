@@ -52,9 +52,6 @@
      ((or (not (eq compat--generate-function 'compat--generate-minimal))
           (bound-and-true-p compat-testing))
       `(load ,(format "compat-%s.el" version)))
-     ;; ((version<= version emacs-version)
-     ;;  ;; We don't need to do anything.
-     ;;  nil)
      ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
              (file (expand-file-name
                     (format "compat-%s.el" version)
