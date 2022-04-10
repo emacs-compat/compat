@@ -59,8 +59,10 @@
              (file (expand-file-name
                     (format "compat-%s.el" version)
                     (file-name-directory
-                     (or (and (boundp 'byte-compile-current-file) byte-compile-current-file)
-                         load-file-name
+                     (or (and (boundp 'load-file-name)
+                              load-file-name)
+                         (and (boundp 'byte-compile-current-file)
+                              byte-compile-current-file)
                          buffer-file-name))))
              (byte-compile-current-file file)
              defs)
