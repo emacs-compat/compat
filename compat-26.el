@@ -112,9 +112,6 @@ Equality is defined by the function TESTFN, defaulting to
 ‘equal’.  TESTFN is called with 2 arguments: a car of an alist
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
-  :cond (condition-case nil
-            (or (assoc nil nil #'ignore) t)
-          (wrong-number-of-arguments nil))
   :prefix t
   (if testfn
       (catch 'found

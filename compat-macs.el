@@ -202,6 +202,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
   "Common code for generating compatibility definitions.
 See `compat-generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (when (and (plist-get attr :cond) (plist-get attr :prefix))
+    (error "A prefixed function %s cannot have a condition" name))
   (funcall compat--generate-function
            name def-fn install-fn check-fn attr type))
 
