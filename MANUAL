@@ -244,7 +244,8 @@ when ~compat-26~ is required:
   Handle the optional argument ABSOLUTE.
 - Function: compat-alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
-  Handle the optional argument TESTFN.
+  Handle the optional argument TESTFN.  Can also be used as a
+  generalised variable.
 
 Compat does not provide support for the following Lisp features
 implemented in 26.1:

@@ -153,6 +153,37 @@ from the absolute start of the buffer, disregarding the narrowing."
       (compat--alist-get-full-elisp key alist default remove testfn)
     (alist-get key alist default remove)))
 
+(gv-define-expander compat-alist-get
+  (lambda (do key alist &optional default remove testfn)
+    (macroexp-let2 macroexp-copyable-p k key
+      (gv-letplace (getter setter) alist
+        (macroexp-let2 nil p `(if (and ,testfn (not (eq ,testfn 'eq)))
+                                  (assoc ,k ,getter ,testfn)
+                                (assq ,k ,getter))
+          (funcall do (if (null default) `(cdr ,p)
+                        `(if ,p (cdr ,p) ,default))
+                   (lambda (v)
+                     (macroexp-let2 nil v v
+                       (let ((set-exp
+                              `(if ,p (setcdr ,p ,v)
+                                 ,(funcall setter
+                                           `(cons (setq ,p (cons ,k ,v))
+                                                  ,getter)))))
+                         `(progn
+                            ,(cond
+                              ((null remove) set-exp)
+                              ((or (eql v default)
+                                   (and (eq (car-safe v) 'quote)
+                                        (eq (car-safe default) 'quote)
+                                        (eql (cadr v) (cadr default))))
+                               `(if ,p ,(funcall setter `(delq ,p ,getter))))
+                              (t
+                               `(cond
+                                 ((not (eql ,default ,v)) ,set-exp)
+                                 (,p ,(funcall setter
+                                               `(delq ,p ,getter))))))
+                            ,v))))))))))
+
 (compat-defun string-trim-left (string &optional regexp)
   "Trim STRING of leading string matching REGEXP.
 
