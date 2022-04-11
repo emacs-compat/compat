@@ -1588,5 +1588,16 @@ being compared against."
   (ought t "/ssh::/:a")
   (ought nil "/ssh:/:a"))
 
+(compat-deftest file-name-quote
+  (ought "/:" "")
+  (ought "/::" ":")
+  (ought "/:/" "/")
+  (ought "/:" "/:")
+  (ought "/:a" "a")
+  (ought "/::a" ":a")
+  (ought "/:/a" "/a")
+  (ought "/:a" "/:a")
+  (ought (concat "/ssh:" (system-name) ":/:a") "/ssh::a"))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

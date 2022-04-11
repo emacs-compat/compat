@@ -362,6 +362,16 @@ If NAME is a remote file name and TOP is nil, check the local part of NAME."
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (compat--file-local-name name))))
 
+(compat-defun file-name-quote (name &optional top)
+  "Add the quotation prefix \"/:\" to file NAME.
+If NAME is a remote file name and TOP is nil, the local part of
+NAME is quoted.  If NAME is already a quoted file name, NAME is
+returned unchanged."
+  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
+    (if (compat--file-name-quoted-p name top)
+        name
+      (concat (file-remote-p name) "/:" (compat--file-local-name name)))))
+
 ;;* UNTESTED
 (compat-defun temporary-file-directory ()
   "The directory for writing temporary files.

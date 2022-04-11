@@ -231,6 +231,7 @@ provided by Compat by default:
 - Macro: and-let* :: Defined in ~subr-x.el~.
 - Function: file-local-name :: See [[info:elisp#Magic File Names][(elisp) Magic File Names]].
 - Function: file-name-quoted-p :: See [[info:elisp#File Name Expansion][(elisp) File Name Expansion]].
+- Function: file-name-quote :: See [[info:elisp#File Name Expansion][(elisp) File Name Expansion]].
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:
