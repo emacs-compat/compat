@@ -352,7 +352,15 @@ and the method of accessing the host, leaving only the part that
 identifies FILE locally on the remote system.
 The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
+  :realname compat--file-local-name
   (or (file-remote-p file 'localname) file))
+
+(compat-defun file-name-quoted-p (name &optional top)
+  "Whether NAME is quoted with prefix \"/:\".
+If NAME is a remote file name and TOP is nil, check the local part of NAME."
+  :realname compat--file-name-quoted-p
+  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
+    (string-prefix-p "/:" (compat--file-local-name name))))
 
 ;;* UNTESTED
 (compat-defun temporary-file-directory ()
