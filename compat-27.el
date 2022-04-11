@@ -548,5 +548,23 @@ The return value is a string (or nil in case we can’t find it)."
             (or (lm-header "package-version")
                 (lm-header "version")))))))))
 
+
+;;;; Defined in dired.el
+
+(declare-function
+ dired-get-marked-files "dired.el"
+ (&optional localp arg filter distinguish-one-marked error))
+
+;;* UNTESTED
+(compat-defun dired-get-marked-files
+    (&optional localp arg filter distinguish-one-marked error)
+  "Return the marked files’ names as list of strings."
+  :feature 'dired
+  :prefix t
+  (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))
+    (if (and (null result) error)
+        (user-error (if (stringp error) error "No files specified"))
+      result)))
+
 (provide 'compat-27)
 ;;; compat-27.el ends here

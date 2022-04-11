@@ -322,6 +322,9 @@ when ~compat-27~ is required:
 - Function: compat-executable-find :: [[info:elisp#Locating Files][(elisp) Locating Files]].
 
   Handle the optional second (REMOTE) argument.
+- Function: compat-dired-get-marked-files :: Defined in ~dired.el~
+
+  Handles the optional fifth (ERROR) argument.
 
 Compat does not provide support for the following Lisp features
 implemented in 27.1:
