@@ -1567,5 +1567,16 @@ being compared against."
   (ought "prwx------" #o10700)
   (ought "-rwx------" #o30700))
 
+(compat-deftest file-local-name
+  (ought "" "")
+  (ought "foo" "foo")
+  (ought "/bar/foo" "/bar/foo")
+  (ought "/ssh:foo" "/ssh:foo")
+  (ought "/ssh:/bar/foo" "/ssh:/bar/foo")
+  (ought "foo" "/ssh::foo")
+  (ought "/bar/foo" "/ssh::/bar/foo")
+  (ought ":foo" "/ssh:::foo")
+  (ought ":/bar/foo" "/ssh:::/bar/foo"))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

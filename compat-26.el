@@ -345,6 +345,15 @@ same meaning as in `make-temp-file'."
          "^" (regexp-opt '("/afs/" "/media/" "/mnt" "/net/" "/tmp_mnt/")))))
   "File systems that ought to be mounted.")
 
+(compat-defun file-local-name (file)
+  "Return the local name component of FILE.
+This function removes from FILE the specification of the remote host
+and the method of accessing the host, leaving only the part that
+identifies FILE locally on the remote system.
+The returned file name can be used directly as argument of
+`process-file', `start-file-process', or `shell-command'."
+  (or (file-remote-p file 'localname) file))
+
 ;;* UNTESTED
 (compat-defun temporary-file-directory ()
   "The directory for writing temporary files.
