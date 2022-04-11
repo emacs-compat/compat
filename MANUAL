@@ -315,6 +315,9 @@ when ~compat-27~ is required:
 - Function: compat-assoc-delete-all :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
 
   Handle the optional third (TESTFN) argument.
+- Function: compat-executable-find :: [[info:elisp#Locating Files][(elisp) Locating Files]].
+
+  Handle the optional second (REMOTE) argument.
 
 Compat does not provide support for the following Lisp features
 implemented in 27.1:

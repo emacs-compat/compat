@@ -464,6 +464,27 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
+(declare-function compat--file-name-quote "compat-26"
+                  (name &optional top))
+
+;;;*UNTESTED
+(compat-defun executable-find (command &optional remote)
+  "Search for COMMAND in `exec-path' and return the absolute file name.
+Return nil if COMMAND is not found anywhere in `exec-path'.  If
+REMOTE is non-nil, search on the remote host indicated by
+`default-directory' instead."
+  :prefix t
+  (if (and remote (file-remote-p default-directory))
+      (let ((res (locate-file
+                  command
+                  (mapcar
+                   (apply-partially
+                    #'concat (file-remote-p default-directory))
+                   (exec-path))
+                  exec-suffixes 'file-executable-p)))
+        (when (stringp res) (file-local-name res)))
+    (executable-find command)))
+
 ;; TODO provide advice for directory-files-recursively
 
 ;;;; Defined in format-spec.el
