@@ -432,5 +432,32 @@ are non-nil, then the result is non-nil."
   (declare (indent 1) (debug if-let*))
   `(when-let* ,varlist ,@(or body '(t))))
 
+;;;; Defined in image.el
+
+;;* UNTESTED
+(compat-defun image-property (image property)
+  "Return the value of PROPERTY in IMAGE.
+Properties can be set with
+
+  (setf (image-property IMAGE PROPERTY) VALUE)
+
+If VALUE is nil, PROPERTY is removed from IMAGE."
+  (plist-get (cdr image) property))
+
+;;* UNTESTED
+(gv-define-simple-setter
+ image-property
+ (lambda (image property value)
+   (if (null value)
+       (while (cdr image)
+         ;; IMAGE starts with the symbol `image', and the rest is a
+         ;; plist.  Decouple plist entries where the key matches
+         ;; the property.
+         (if (eq (cadr image) property)
+             (setcdr image (cdddr image))
+           (setq image (cddr image))))
+     ;; Just enter the new value.
+     (setcdr image (plist-put (cdr image) property value)))))
+
 (provide 'compat-26)
 ;;; compat-26.el ends here
