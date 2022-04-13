@@ -339,5 +339,12 @@ recursion."
             (push (concat dir "/" file) files)))))
     (nconc result (nreverse files))))
 
+;;;; Defined in minibuffer.el
+;;* UNTESTED
+(compat-defun completion-pcm--all-completions (prefix pattern table pred)
+  "Reverse the resulting list as fixed by bug#24676.
+All arguments are passed on to the original function."
+  :prefix t
+  (nreverse (completion-pcm--all-completions prefix pattern table pred)))
 (provide 'compat-25)
 ;;; compat-25.el ends here
