@@ -353,6 +353,8 @@ implemented in 27.1:
 - Additional ~format-spec~ modifiers.
 - Support for additional body forms for
   ~define-globalized-minor-mode~.
+- The macro ~with-connection-local-variables~ and related
+  functionality.
 
 ** Emacs 28.1
 The following functions and macros implemented in 28.1, and are
