@@ -303,6 +303,9 @@ provided by Compat by default:
 - Function: decoded-time-zone :: Defined in ~simple.el~.
 - Function: package-get-version :: Defined in ~package.el~.
 - Function: time-equal-p :: See [[info:elisp#Time Calculations][(elisp) Time Calculations]].
+- Function: date-days-in-month :: See [[info:elisp#Time Calculations][(elisp) Time Calculations]].
+
+  This function requires the ~time-date~ feature to be loaded.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-27~ is required:
@@ -338,7 +341,6 @@ implemented in 27.1:
 - Bigint support.
 - The function ~time-convert~.
 - All ~iso8601-*~ functions.
-- The function ~date-days-in-month~.
 - The macro ~benchmark-progn~.
 - The function ~read-char-from-minibuffer~.
 - The minor mode ~reveal-mode~.

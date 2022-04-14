@@ -1653,5 +1653,11 @@ being compared against."
   (ought nil '(1 2 3 4) '(2 2 3 4))
   (ought nil '(2 2 3 4) '(1 2 3 4)))
 
+(compat-deftest date-days-in-month
+  (ought 31 2020 1)
+  (ought 30 2020 4)
+  (ought 29 2020 2)
+  (ought 28 2021 2))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
