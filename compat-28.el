@@ -675,6 +675,16 @@ recent files are first."
           (push candidate files))))
     (sort files #'file-newer-than-file-p)))
 
+(compat-defun make-lock-file-name (filename)
+  "Make a lock file name for FILENAME.
+This prepends \".#\" to the non-directory part of FILENAME, and
+doesn't respect `lock-file-name-transforms', as Emacs 28.1 and
+onwards does."
+  (expand-file-name
+   (concat
+    ".#" (file-name-nondirectory filename))
+   (file-name-directory filename)))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defun format-prompt (prompt default &rest format-args)

@@ -1615,5 +1615,22 @@ being compared against."
   (ought "/:a" "/:a")
   (ought (concat "/ssh:" (system-name) ":/:a") "/ssh::a"))
 
+(compat-deftest make-lock-file-name
+  (ought (expand-file-name ".#") "")
+  (ought (expand-file-name ".#a") "a")
+  (ought (expand-file-name ".#foo") "foo")
+  (ought (expand-file-name ".#.") ".")
+  (ought (expand-file-name ".#.#") ".#")
+  (ought (expand-file-name ".#.a") ".a")
+  (ought (expand-file-name ".#.#") ".#")
+  (ought (expand-file-name "a/.#") "a/")
+  (ought (expand-file-name "a/.#b") "a/b")
+  (ought (expand-file-name "a/.#.#") "a/.#")
+  (ought (expand-file-name "a/.#.") "a/.")
+  (ought (expand-file-name "a/.#.b") "a/.b")
+  (ought (expand-file-name "a/.#foo") "a/foo")
+  (ought (expand-file-name "bar/.#b") "bar/b")
+  (ought (expand-file-name "bar/.#foo") "bar/foo"))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
