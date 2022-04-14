@@ -396,6 +396,7 @@ provided by Compat by default:
   Files]].
 - Function: file-backup-file-names :: See [[info:elisp#Backup Names][(elisp) Backup Names]].
 - Function: make-lock-file-name :: Defined in ~files.el~.
+- Function: null-device :: Defined in ~files.el~.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:

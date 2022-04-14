@@ -685,6 +685,18 @@ onwards does."
     ".#" (file-name-nondirectory filename))
    (file-name-directory filename)))
 
+;;;; Defined in files-x.el
+
+(declare-function tramp-tramp-file-p "tramp" (name))
+
+;;* UNTESTED
+(compat-defun null-device ()
+  "Return the best guess for the null device."
+  (require 'tramp)
+  (if (tramp-tramp-file-p default-directory)
+      "/dev/null"
+    null-device))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defun format-prompt (prompt default &rest format-args)
