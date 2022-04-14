@@ -625,7 +625,7 @@ being compared against."
     (should (equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins"))))
 
-(compat-deftest string-trim-left'
+(compat-deftest string-trim-left
   (ought "" "")                          ;empty string
   (ought "a" "a")                        ;"full" string
   (ought "aaa" "aaa")
