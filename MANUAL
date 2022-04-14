@@ -12,7 +12,7 @@
 #+macro: version 28.1.0.0
 #+link:	 debbugs https://debbugs.gnu.org/cgi/bugreport.cgi?bug=
 
-This manual documents the usage of the "compat" Emacs lisp library,
+This manual documents the usage of the "Compat" Emacs lisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
 version {{{version}}}.
 
@@ -20,7 +20,7 @@ version {{{version}}}.
 
 * Introduction
 ** Overview
-The objective of compat is to provide "forwards compatibility"
+The objective of Compat is to provide "forwards compatibility"
 library for Emacs Lisp.  That is to say by using Compat, an Elisp
 package does not have to make the decision to either use new and
 useful functionality or support old versions of Emacs.
