@@ -445,19 +445,18 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
   (plist-get (cdr image) property))
 
 ;;* UNTESTED
-(gv-define-simple-setter
- image-property
- (lambda (image property value)
-   (if (null value)
-       (while (cdr image)
-         ;; IMAGE starts with the symbol `image', and the rest is a
-         ;; plist.  Decouple plist entries where the key matches
-         ;; the property.
-         (if (eq (cadr image) property)
-             (setcdr image (cdddr image))
-           (setq image (cddr image))))
-     ;; Just enter the new value.
-     (setcdr image (plist-put (cdr image) property value)))))
+(gv-define-expander image-property
+  (lambda (image property value)
+    (if (null value)
+        (while (cdr image)
+          ;; IMAGE starts with the symbol `image', and the rest is a
+          ;; plist.  Decouple plist entries where the key matches
+          ;; the property.
+          (if (eq (cadr image) property)
+              (setcdr image (cdddr image))
+            (setq image (cddr image))))
+      ;; Just enter the new value.
+      (setcdr image (plist-put (cdr image) property value)))))
 
 (provide 'compat-26)
 ;;; compat-26.el ends here
