@@ -190,10 +190,6 @@ when ~compat-25~ is required:
 - Function: compat-sort :: See [[info:elisp#Sequence Functions][(elisp) Sequence Functions]].
 
   Adds support for vectors to be sorted, next to just lists.
-- Function: completion-pcm--all-completions :: Defined in
-  ~minibuffer.el~.
-
-  Reverse the resulting completion list, as fixed by [[debbugs:24676]].
 
 Compat does not provide support for the following Lisp features
 implemented in 25.1:
