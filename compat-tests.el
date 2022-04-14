@@ -1632,5 +1632,26 @@ being compared against."
   (ought (expand-file-name "bar/.#b") "bar/b")
   (ought (expand-file-name "bar/.#foo") "bar/foo"))
 
+(compat-deftest time-equal-p
+  (ought t nil nil)
+  (ought t (current-time) nil)
+  (ought t nil (current-time))
+  ;; While `sleep-for' returns nil, indicating the current time, this
+  ;; behaviour seems to be undefined.  Relying on it is therefore not
+  ;; advised.
+  (ought nil (current-time) (ignore (sleep-for 0.01)))
+  (ought nil (current-time) (progn
+                              (sleep-for 0.01)
+                              (current-time)))
+  (ought t '(1 2 3 4) '(1 2 3 4))
+  (ought nil '(1 2 3 4) '(1 2 3 5))
+  (ought nil '(1 2 3 5) '(1 2 3 4))
+  (ought nil '(1 2 3 4) '(1 2 4 4))
+  (ought nil '(1 2 4 4) '(1 2 3 4))
+  (ought nil '(1 2 3 4) '(1 3 3 4))
+  (ought nil '(1 3 3 4) '(1 2 3 4))
+  (ought nil '(1 2 3 4) '(2 2 3 4))
+  (ought nil '(2 2 3 4) '(1 2 3 4)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
