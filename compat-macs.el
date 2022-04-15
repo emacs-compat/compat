@@ -111,8 +111,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
      ((and (plist-get attr :prefix) (memq type '(func macro))
            (string-match "\\`compat-\\(.+\\)\\'" (symbol-name name))
            (let* ((actual-name (intern (match-string 1 (symbol-name name))))
-                  (body (funcall install-fn actual-name  version)))
-             (when (and (or (null cond) (eval cond t))
+                  (body (funcall install-fn actual-name version)))
+             (when (and (version<= version emacs-version)
                         (fboundp actual-name))
                `(,@check
                  ,(if feature
