@@ -458,9 +458,10 @@ implemented in 28.1:
 Compat is developed on [[https://sr.ht/~pkal/compat][SourceHut]]. A restricted [[https://github.com/phikal/compat.el][GitHub mirror]] is also
 maintained.
 
-Patches, bug reports and comments can be sent to the [[https://lists.sr.ht/~pkal/compat-devel][development
-mailing list]] ([[mailto:~pkal/compat-devel@lists.sr.ht][~pkal/compat-devel@lists.sr.ht]]).  The GitHub mirror can
-also be used to submit patches.  These may include issues in the
+Patches and comments can be sent to the [[https://lists.sr.ht/~pkal/compat-devel][development mailing list]]
+([[mailto:~pkal/compat-devel@lists.sr.ht][~pkal/compat-devel@lists.sr.ht]]).  Bug reports are best sent to the
+[[https://todo.sr.ht/~pkal/compat][issue tracker]] ([[mailto:~pkal/compat@todo.sr.ht][~pkal/compat@todo.sr.ht]]).  The GitHub mirror can also
+be used to submit patches.  These may include issues in the
 compatibility code, missing definitions or performance issues.
 
 Please note that as a GNU ELPA package, Compat requires contributors

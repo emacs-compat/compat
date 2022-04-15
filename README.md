@@ -71,8 +71,10 @@ also provided.
 Bug and patches
 ---------------
 
-Patches, bug reports and comments can be sent to the [development
-mailing list][compat-devel].  [GitHub] can also be used to submit
+Patches and comments can be sent to the [development mailing
+list][compat-devel].  Bug reports and issues should be directed to the
+[issue tracker][compat-tracker] (also accessible via
+[Email][compat-tracker-mailto]).  [GitHub] can also be used to submit
 patches ("Pull Request").  These may include issues in the
 compatibility code, missing definitions or performance issues.
 
@@ -95,3 +97,5 @@ the GPL, Version 3 (like Emacs itself).
 [GitHub]: https://github.com/phikal/compat.el
 [compat-announce]: https://lists.sr.ht/~pkal/compat-announce
 [compat-devel]: https://lists.sr.ht/~pkal/compat-devel
+[compat-tracker]: https://todo.sr.ht/~pkal/compat
+[compat-tracker-mailto]: mailto:~pkal/compat@todo.sr.ht
