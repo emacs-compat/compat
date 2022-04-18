@@ -322,6 +322,7 @@ provided by Compat by default:
 - Function: package-get-version :: Defined in ~package.el~.
 - Function: time-equal-p :: See [[info:elisp#Time Calculations][(elisp) Time Calculations]].
 - Function: date-days-in-month :: See [[info:elisp#Time Calculations][(elisp) Time Calculations]].
+- Function: exec-path :: See [[info:elisp#Subprocess Creation][(elisp) Subprocess Creation]].
 
   This function requires the ~time-date~ feature to be loaded.
 

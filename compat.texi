@@ -703,6 +703,10 @@ See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
 
 @defun date-days-in-month
 See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
+@end defun
+
+@defun exec-path
+See @ref{Subprocess Creation,(elisp) Subprocess Creation,,elisp,}.
 
 This function requires the @code{time-date} feature to be loaded.
 @end defun

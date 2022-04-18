@@ -1587,8 +1587,11 @@ being compared against."
   (ought "" "")
   (ought "foo" "foo")
   (ought "/bar/foo" "/bar/foo")
-  (ought "/ssh:foo" "/ssh:foo")
-  (ought "/ssh:/bar/foo" "/ssh:/bar/foo")
+  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; TRAMP path back then.
+  ;;
+  ;; (ought "/ssh:foo" "/ssh:foo")
+  ;; (ought "/ssh:/bar/foo" "/ssh:/bar/foo")
   (ought "foo" "/ssh::foo")
   (ought "/bar/foo" "/ssh::/bar/foo")
   (ought ":foo" "/ssh:::foo")
@@ -1602,7 +1605,11 @@ being compared against."
   (ought nil "/ssh::")
   (ought nil "/ssh::a")
   (ought t "/ssh::/:a")
-  (ought nil "/ssh:/:a"))
+  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; TRAMP path back then.
+  ;;
+  ;; (ought nil "/ssh:/:a")
+  )
 
 (compat-deftest file-name-quote
   (ought "/:" "")
