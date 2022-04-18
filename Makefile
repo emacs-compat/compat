@@ -26,8 +26,8 @@ clean:
 .el.elc:
 	$(EMACS) -Q --batch -L . -f batch-byte-compile $^
 
-compat.texi: MANUAL
-	$(EMACS) -Q --batch $< -f org-texinfo-export-to-texinfo --kill
+# compat.texi: MANUAL
+# 	$(EMACS) -Q --batch $< -f org-texinfo-export-to-texinfo --kill
 
 compat.info: compat.texi
 	$(MAKEINFO) $<
