@@ -44,7 +44,9 @@
 ;;;; Core functionality
 
 ;; To accelerate the loading process, we insert the contents of
-;; compat-N.M.el directly into the compat.elc.
+;; compat-N.M.el directly into the compat.elc.  Note that by default
+;; this will not include prefix functions.  These have to be required
+;; separately, by explicitly requiring the feature that defines them.
 (eval-when-compile
   (defvar compat--generate-function)
   (defmacro compat-insert (version)
