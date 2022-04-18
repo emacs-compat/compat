@@ -500,7 +500,7 @@ REMOTE is non-nil, search on the remote host indicated by
                     #'concat (file-remote-p default-directory))
                    (exec-path))
                   exec-suffixes 'file-executable-p)))
-        (when (stringp res) (file-local-name res)))
+        (when (stringp res) (compat--file-local-name res)))
     (executable-find command)))
 
 ;; TODO provide advice for directory-files-recursively
