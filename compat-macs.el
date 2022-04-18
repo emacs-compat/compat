@@ -83,16 +83,18 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
-                      (let ((file (or (and (boundp 'byte-compile-current-file)
-                                           byte-compile-current-file)
+                      (let ((file (or (bound-and-true-p byte-compile-current-file)
                                       load-file-name
                                       (buffer-file-name))))
                         ;; Guess the version from the file the macro is
                         ;; being defined in.
-                        (and (string-match
-                              "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                              file)
-                             (match-string 1 file)))))
+                        (cond
+                         ((not file) emacs-version)
+                         ((string-match
+                           "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                           file)
+                          (match-string 1 file))
+                         ((error "No version number could be extracted"))))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (check (cond
@@ -154,17 +156,18 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
-                      (let ((file (or (and (boundp 'byte-compile-current-file)
-                                           byte-compile-current-file)
+                      (let ((file (or (bound-and-true-p byte-compile-current-file)
                                       load-file-name
                                       (buffer-file-name))))
                         ;; Guess the version from the file the macro is
                         ;; being defined in.
-                        (and file
-                             (string-match
-                              "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                              file)
-                             (match-string 1 file)))))
+                        (cond
+                         ((not file) emacs-version)
+                         ((string-match
+                           "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
+                           file)
+                          (match-string 1 file))
+                         ((error "No version number could be extracted"))))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn

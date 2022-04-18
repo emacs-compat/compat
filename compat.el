@@ -53,20 +53,10 @@
     (cond
      ((or (not (eq compat--generate-function 'compat--generate-minimal))
           (bound-and-true-p compat-testing))
-      `(load ,(format "compat-%s.el" version)))
+      `(load ,(format "compat-%d.el" version)))
      ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
-             (file (expand-file-name
-                    (format "compat-%s.el" version)
-                    (file-name-directory
-                     (or (and (boundp 'load-file-name)
-                              load-file-name)
-                         (and (boundp 'byte-compile-current-file)
-                              byte-compile-current-file)
-                         buffer-file-name))))
-             (byte-compile-current-file file)
+             (file (format "compat-%d.el" version))
              defs)
-        (unless (file-exists-p file)
-          (error "Cannot load %S" file))
         (let ((load-file-name file))
           (with-temp-buffer
             (insert-file-contents file)
@@ -83,13 +73,17 @@
                               compat-defvar
                               defvar))
                   (push form defs))))))
-        (cons 'progn (nreverse defs)))))))
+        
+        (let ((byte-compile-current-file file))
+          (macroexpand-all
+           (macroexp-progn
+            (nreverse defs)))))))))
 
-(compat-entwine "24")
-(compat-entwine "25")
-(compat-entwine "26")
-(compat-entwine "27")
-(compat-entwine "28")
+(compat-entwine 24)
+(compat-entwine 25)
+(compat-entwine 26)
+(compat-entwine 27)
+(compat-entwine 28)
 
 (provide 'compat)
 ;;; compat.el ends here
