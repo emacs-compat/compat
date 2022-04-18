@@ -49,7 +49,7 @@
 ;; separately, by explicitly requiring the feature that defines them.
 (eval-when-compile
   (defvar compat--generate-function)
-  (defmacro compat-insert (version)
+  (defmacro compat-entwine (version)
     (cond
      ((or (not (eq compat--generate-function 'compat--generate-minimal))
           (bound-and-true-p compat-testing))
@@ -85,11 +85,11 @@
                   (push form defs))))))
         (cons 'progn (nreverse defs)))))))
 
-(compat-insert "24")
-(compat-insert "25")
-(compat-insert "26")
-(compat-insert "27")
-(compat-insert "28")
+(compat-entwine "24")
+(compat-entwine "25")
+(compat-entwine "26")
+(compat-entwine "27")
+(compat-entwine "28")
 
 (provide 'compat)
 ;;; compat.el ends here
