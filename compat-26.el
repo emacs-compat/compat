@@ -454,7 +454,7 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
           ;; plist.  Decouple plist entries where the key matches
           ;; the property.
           (if (eq (cadr image) property)
-              (setcdr image (cdddr image))
+              (setcdr image (nthcdr 3 image))
             (setq image (cddr image))))
       ;; Just enter the new value.
       (setcdr image (plist-put (cdr image) property value)))))
