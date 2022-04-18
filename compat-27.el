@@ -589,7 +589,9 @@ The return value is a string (or nil in case we can’t find it)."
 (compat-defun date-days-in-month (year month)
   "The number of days in MONTH in YEAR."
   :feature 'time-date
-  (unless (and (numberp month) (<= 1 month 12))
+  (unless (and (numberp month)
+               (<= 1 month)
+               (<= month 12))
     (error "Month %s is invalid" month))
   (if (= month 2)
       (if (date-leap-year-p year)
