@@ -131,6 +131,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
+  :realname compat--if-let*
   :feature 'subr-x
   (declare (indent 2)
            (debug ((&rest [&or symbolp (symbolp form) (form)])
@@ -152,7 +153,7 @@ This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
   :feature 'subr-x
   (declare (indent 1) (debug if-let*))
-  `(if-let* ,varlist ,(macroexp-progn body)))
+  `(compat--if-let* ,varlist ,(macroexp-progn body)))
 
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
@@ -170,6 +171,7 @@ SYMBOL is checked for nil.
 As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
+  :realname compat--if-let
   :feature 'subr-x
   (declare (indent 2)
            (debug ([&or (symbolp form)
@@ -179,7 +181,7 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(if-let* ,spec ,then ,(macroexp-progn else)))
+  `(compat--if-let* ,spec ,then ,(macroexp-progn else)))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
@@ -189,7 +191,7 @@ If all are non-nil, return the value of the last form in BODY.
 The variable list SPEC is the same as in `if-let'."
   :feature 'subr-x
   (declare (indent 1) (debug if-let))
-  `(if-let ,spec ,(macroexp-progn body)))
+  `(compat--if-let ,spec ,(macroexp-progn body)))
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.

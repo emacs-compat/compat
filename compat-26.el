@@ -430,7 +430,7 @@ Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature 'subr-x
   (declare (indent 1) (debug if-let*))
-  `(when-let* ,varlist ,@(or body '(t))))
+  `(compat--when-let* ,varlist ,@(or body '(t))))
 
 ;;;; Defined in image.el
 

@@ -39,7 +39,6 @@
 (setq compat--generate-function #'compat--generate-verbose)
 (let ((compat-testing t))
   (load "compat.el"))
-(require 'subr-x)                       ;HACK
 
 (defvar compat-test-counter)
 
