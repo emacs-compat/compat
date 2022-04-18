@@ -44,7 +44,7 @@ modify this GNU manual.”
 @node Top
 @top "Compat" Manual
 
-This manual documents the usage of the "compat" Emacs lisp library,
+This manual documents the usage of the "Compat" Emacs lisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
 version 28.1.0.0.
 
@@ -73,12 +73,12 @@ Usage
 
 Support
 
-* Emacs 24.4: Emacs 24.4.
-* Emacs 24.5: Emacs 24.5.
-* Emacs 25.1: Emacs 25.1.
-* Emacs 26.1: Emacs 26.1.
-* Emacs 27.1: Emacs 27.1.
-* Emacs 28.1: Emacs 28.1.
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
 
 @end detailmenu
 @end menu
@@ -95,7 +95,7 @@ Support
 @node Overview
 @section Overview
 
-The objective of compat is to provide "forwards compatibility"
+The objective of Compat is to provide "forwards compatibility"
 library for Emacs Lisp.  That is to say by using Compat, an Elisp
 package does not have to make the decision to either use new and
 useful functionality or support old versions of Emacs.
@@ -215,12 +215,12 @@ This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 @menu
-* Emacs 24.4: Emacs 24.4.
-* Emacs 24.5: Emacs 24.5.
-* Emacs 25.1: Emacs 25.1.
-* Emacs 26.1: Emacs 26.1.
-* Emacs 27.1: Emacs 27.1.
-* Emacs 28.1: Emacs 28.1.
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
 @end menu
 
 @node Emacs 24.4
@@ -464,6 +464,9 @@ The function @code{set-binary-mode}.
 The functions @code{bufferpos-to-filepos} and @code{filepos-to-bufferpos}.
 @end itemize
 
+Note that the changes in Emacs 25.2 and 25.3 are also included here,
+for the sake of simplicity.
+
 @node Emacs 26.1
 @section Emacs 26.1
 
@@ -516,6 +519,29 @@ Defined in @code{files.el}.
 See @ref{Unique File Names,(elisp) Unique File Names,,elisp,}.
 @end defun
 
+@defmac and-let*
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defun file-local-name
+See @ref{Magic File Names,(elisp) Magic File Names,,elisp,}.
+@end defun
+
+@defun file-name-quoted-p
+See @ref{File Name Expansion,(elisp) File Name Expansion,,elisp,}.
+@end defun
+
+@defun file-name-quote
+See @ref{File Name Expansion,(elisp) File Name Expansion,,elisp,}.
+@end defun
+
+@defun image-property
+Defined in @code{image.el}.
+
+This function can also be used as a generalised variable.  To use
+this you need to explicitly require @code{compat-26}.
+@end defun
+
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-26} is required:
 
@@ -534,7 +560,8 @@ Handle the optional argument ABSOLUTE@.
 @defun compat-alist-get
 See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 
-Handle the optional argument TESTFN@.
+Handle the optional argument TESTFN@.  Can also be used as a
+generalised variable.
 @end defun
 
 Compat does not provide support for the following Lisp features
@@ -576,6 +603,9 @@ All changes related to @code{display-buffer}.
 @item
 The function @code{window-swap-states}.
 @end itemize
+
+Note that the changes in Emacs 26.2 and 26.3 are also included here,
+for the sake of simplicity.
 
 @node Emacs 27.1
 @section Emacs 27.1
@@ -667,6 +697,16 @@ Defined in @code{simple.el}.
 Defined in @code{package.el}.
 @end defun
 
+@defun time-equal-p
+See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
+@end defun
+
+@defun date-days-in-month
+See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
+
+This function requires the @code{time-date} feature to be loaded.
+@end defun
+
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-27} is required:
 
@@ -706,6 +746,18 @@ See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 Handle the optional third (TESTFN) argument.
 @end defun
 
+@defun compat-executable-find
+@ref{Locating Files,(elisp) Locating Files,,elisp,}.
+
+Handle the optional second (REMOTE) argument.
+@end defun
+
+@defun compat-dired-get-marked-files
+Defined in @code{dired.el}
+
+Handles the optional fifth (ERROR) argument.
+@end defun
+
 Compat does not provide support for the following Lisp features
 implemented in 27.1:
 
@@ -716,10 +768,6 @@ Bigint support.
 The function @code{time-convert}.
 @item
 All @code{iso8601-*} functions.
-@item
-The function @code{time-equal-p}.
-@item
-The function @code{date-days-in-month}.
 @item
 The macro @code{benchmark-progn}.
 @item
@@ -747,7 +795,13 @@ Additional @code{format-spec} modifiers.
 @item
 Support for additional body forms for
 @code{define-globalized-minor-mode}.
+@item
+The macro @code{with-connection-local-variables} and related
+functionality.
 @end itemize
+
+Note that the changes in Emacs 27.2 are also included here, for the
+sake of simplicity.
 
 @node Emacs 28.1
 @section Emacs 28.1
@@ -886,6 +940,14 @@ See @ref{Changing Files,(elisp) Changing
 See @ref{Backup Names,(elisp) Backup Names,,elisp,}.
 @end defun
 
+@defun make-lock-file-name
+Defined in @code{files.el}.
+@end defun
+
+@defun null-device
+Defined in @code{files.el}.
+@end defun
+
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-28} is required:
 
@@ -996,9 +1058,10 @@ The function @code{null-device} and @code{path-separator}.
 Compat is developed on @uref{https://sr.ht/~pkal/compat, SourceHut}. A restricted @uref{https://github.com/phikal/compat.el, GitHub mirror} is also
 maintained.
 
-Patches, bug reports and comments can be sent to the @uref{https://lists.sr.ht/~pkal/compat-devel, development
-mailing list} (@email{~pkal/compat-devel@@lists.sr.ht, ~pkal/compat-devel@@lists.sr.ht}).  The GitHub mirror can
-also be used to submit patches.  These may include issues in the
+Patches and comments can be sent to the @uref{https://lists.sr.ht/~pkal/compat-devel, development mailing list}
+(@email{~pkal/compat-devel@@lists.sr.ht, ~pkal/compat-devel@@lists.sr.ht}).  Bug reports are best sent to the
+@uref{https://todo.sr.ht/~pkal/compat, issue tracker} (@email{~pkal/compat@@todo.sr.ht, ~pkal/compat@@todo.sr.ht}).  The GitHub mirror can also
+be used to submit patches.  These may include issues in the
 compatibility code, missing definitions or performance issues.
 
 Please note that as a GNU ELPA package, Compat requires contributors
