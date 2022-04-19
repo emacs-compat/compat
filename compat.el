@@ -72,6 +72,9 @@
                             compat-defvar
                             defvar))
                 (push form defs)))))
+        ;; We bind `byte-compile-current-file' before macro-expanding,
+        ;; so that `compat--generate-function' can correctly infer the
+        ;; compatibility version currently being processed.
         (let ((byte-compile-current-file file))
           (macroexpand-all
            (macroexp-progn
