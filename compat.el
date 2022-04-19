@@ -58,9 +58,11 @@
              (file (expand-file-name
                     (format "compat-%d.el" version)
                     (file-name-directory
-                     (or (bound-and-true-p byte-compile-current-file)
-                         load-file-name
-                         (buffer-file-name)))))
+                     (if (fboundp 'macroexp-file-name)
+                         (macroexp-file-name)
+                       (or (bound-and-true-p byte-compile-current-file)
+                           load-file-name
+                           (buffer-file-name))))))
              defs)
         (with-temp-buffer
           (insert-file-contents file)
