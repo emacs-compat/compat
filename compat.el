@@ -55,7 +55,12 @@
           (bound-and-true-p compat-testing))
       `(load ,(format "compat-%d.el" version)))
      ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
-             (file (format "compat-%d.el" version))
+             (file (expand-file-name
+                    (format "compat-%d.el" version)
+                    (file-name-directory
+                     (or (bound-and-true-p byte-compile-current-file)
+                         load-file-name
+                         (buffer-file-name)))))
              defs)
         (with-temp-buffer
           (insert-file-contents file)
