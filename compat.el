@@ -57,23 +57,21 @@
      ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
              (file (format "compat-%d.el" version))
              defs)
-        (let ((load-file-name file))
-          (with-temp-buffer
-            (insert-file-contents file)
-            (emacs-lisp-mode)
-            (while (progn
-                     (forward-comment 1)
-                     (not (eobp)))
-              (let ((form (read (current-buffer))))
-                (when (memq (car-safe form)
-                            '(declare-function
-                              compat-defun
-                              compat-defmacro
-                              compat-advise
-                              compat-defvar
-                              defvar))
-                  (push form defs))))))
-        
+        (with-temp-buffer
+          (insert-file-contents file)
+          (emacs-lisp-mode)
+          (while (progn
+                   (forward-comment 1)
+                   (not (eobp)))
+            (let ((form (read (current-buffer))))
+              (when (memq (car-safe form)
+                          '(declare-function
+                            compat-defun
+                            compat-defmacro
+                            compat-advise
+                            compat-defvar
+                            defvar))
+                (push form defs)))))
         (let ((byte-compile-current-file file))
           (macroexpand-all
            (macroexp-progn
