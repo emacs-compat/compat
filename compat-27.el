@@ -498,6 +498,9 @@ the value of the variable `exec-path'."
         (funcall handler 'exec-path)
       exec-path)))
 
+(declare-function compat--file-local-name "compat-26"
+                  (file))
+
 ;;*UNTESTED
 (compat-defun executable-find (command &optional remote)
   "Search for COMMAND in `exec-path' and return the absolute file name.
