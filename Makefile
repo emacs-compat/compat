@@ -5,6 +5,7 @@
 EMACS = emacs
 MAKEINFO = makeinfo
 BYTEC = compat-help.elc \
+	compat-font-lock.elc \
 	compat-macs.elc \
 	compat-24.elc \
 	compat-25.elc \
