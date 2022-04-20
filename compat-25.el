@@ -127,34 +127,6 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
 
 ;;;; Defined in subr-x.el
 
-(compat-defmacro if-let* (varlist then &rest else)
-  "Bind variables according to VARLIST and evaluate THEN or ELSE.
-This is like `if-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  :realname compat--if-let*
-  :feature 'subr-x
-  (declare (indent 2)
-           (debug ((&rest [&or symbolp (symbolp form) (form)])
-                   body)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,then ,@else))))
-
-(compat-defmacro when-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-This is like `when-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  `(compat--if-let* ,varlist ,(macroexp-progn body)))
-
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a

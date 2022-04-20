@@ -183,8 +183,6 @@ provided by Compat by default:
 - Function: string-greaterp :: See [[info:elisp#Text Comparison][(elisp) Text Comparison]].
 - Macro: with-file-modes :: See [[info:elisp#Changing Files][(elisp) Changing Files]].
 - Function: alist-get :: See [[info:elisp#Association Lists][(elisp) Association Lists]].
-- Macro: if-let* :: Defined in ~subr-x.el~.
-- Macro: when-let* :: Defined in ~subr-x.el~.
 - Macro: if-let :: Defined in ~subr-x.el~.
 - Macro: when-let :: Defined in ~subr-x.el~.
 - Macro: thread-first :: Defined in ~subr-x.el~.
@@ -245,6 +243,8 @@ provided by Compat by default:
 - Function: make-nearby-temp-file :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
 - Variable: mounted-file-systems ::  Defined in ~files.el~.
 - Function: temporary-file-directory :: See [[info:elisp#Unique File Names][(elisp) Unique File Names]].
+- Macro: if-let* :: Defined in ~subr-x.el~.
+- Macro: when-let* :: Defined in ~subr-x.el~.
 - Macro: and-let* :: Defined in ~subr-x.el~.
 - Function: file-local-name :: See [[info:elisp#Magic File Names][(elisp) Magic File Names]].
 - Function: file-name-quoted-p :: See [[info:elisp#File Name Expansion][(elisp) File Name Expansion]].

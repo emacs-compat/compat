@@ -379,14 +379,6 @@ See @ref{Changing Files,(elisp) Changing Files,,elisp,}.
 See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
 @end defun
 
-@defmac if-let*
-Defined in @code{subr-x.el}.
-@end defmac
-
-@defmac when-let*
-Defined in @code{subr-x.el}.
-@end defmac
-
 @defmac if-let
 Defined in @code{subr-x.el}.
 @end defmac
@@ -518,6 +510,14 @@ Defined in @code{files.el}.
 @defun temporary-file-directory
 See @ref{Unique File Names,(elisp) Unique File Names,,elisp,}.
 @end defun
+
+@defmac if-let*
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac when-let*
+Defined in @code{subr-x.el}.
+@end defmac
 
 @defmac and-let*
 Defined in @code{subr-x.el}.

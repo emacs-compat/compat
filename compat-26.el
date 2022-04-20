@@ -424,14 +424,59 @@ the variable `temporary-file-directory' is returned."
 
 ;;;; Defined in subr-x.el
 
-(declare-function compat--when-let* "compat-25" (varlist &rest body))
+(compat-defmacro if-let* (varlist then &rest else)
+  "Bind variables according to VARLIST and evaluate THEN or ELSE.
+This is like `if-let' but doesn't handle a VARLIST of the form
+\(SYMBOL SOMETHING) specially."
+  :realname compat--if-let*
+  :feature 'subr-x
+  (declare (indent 2)
+           (debug ((&rest [&or symbolp (symbolp form) (form)])
+                   body)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,then ,@else))))
+
+(compat-defmacro when-let* (varlist &rest body)
+  "Bind variables according to VARLIST and conditionally evaluate BODY.
+This is like `when-let' but doesn't handle a VARLIST of the form
+\(SYMBOL SOMETHING) specially."
+  ;; :feature 'subr-x
+  (declare (indent 1) (debug if-let*))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (when ,(caar list) ,@body))))
+
 (compat-defmacro and-let* (varlist &rest body)
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature 'subr-x
   (declare (indent 1) (debug if-let*))
-  `(compat--when-let* ,varlist ,@(or body '(t))))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,(macroexp-progn body)))))
 
 ;;;; Defined in image.el
 
