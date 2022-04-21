@@ -534,7 +534,54 @@ This function can also be used as a generalised variable.  To use
 this you need to explicitly require @code{compat-26}.
 @end defun
 
-These functions are prefixed with @code{compat} prefix, and are only loaded
+@defun file-attribute-type
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-link-number
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-user-id
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-group-id
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-access-time
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-modification-time
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-status-change-time
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-size
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-modes
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-inode-number
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-device-number
+See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-collect
+Defined in @code{files.el}.
+@end defun
+
 when @code{compat-26} is required:
 
 @defun compat-assoc

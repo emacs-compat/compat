@@ -253,6 +253,18 @@ provided by Compat by default:
 
   This function can also be used as a generalised variable.  To use
   this you need to explicitly require ~compat-26~.
+- Function: file-attribute-type :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-link-number :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-user-id :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-group-id :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-access-time :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-modification-time :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-status-change-time :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-size :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-modes :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-inode-number :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-device-number :: See [[info:elisp#File Attributes][(elisp) File Attributes]].
+- Function: file-attribute-collect :: Defined in ~files.el~.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-26~ is required:
