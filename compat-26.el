@@ -492,7 +492,7 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
 
 ;;* UNTESTED
 (unless (get 'image-property 'gv-expander)
-  (gv-define-setter site/image-property (image property value)
+  (gv-define-setter image-property (image property value)
     (let ((image* (make-symbol "image"))
           (property* (make-symbol "property"))
           (value* (make-symbol "value")))
