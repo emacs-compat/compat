@@ -73,12 +73,12 @@ Usage
 
 Support
 
-* Emacs 24.4::                   Compatibility support for Emacs 24.4
-* Emacs 24.5::                   Compatibility support for Emacs 24.5
-* Emacs 25.1::                   Compatibility support for Emacs 25.1
-* Emacs 26.1::                   Compatibility support for Emacs 26.1
-* Emacs 27.1::                   Compatibility support for Emacs 27.1
-* Emacs 28.1::                   Compatibility support for Emacs 28.1
+* Emacs 24.4: Emacs 244.         Compatibility support for Emacs 24.4
+* Emacs 24.5: Emacs 245.         Compatibility support for Emacs 24.5
+* Emacs 25.1: Emacs 251.         Compatibility support for Emacs 25.1
+* Emacs 26.1: Emacs 261.         Compatibility support for Emacs 26.1
+* Emacs 27.1: Emacs 271.         Compatibility support for Emacs 27.1
+* Emacs 28.1: Emacs 281.         Compatibility support for Emacs 28.1
 
 @end detailmenu
 @end menu
@@ -215,15 +215,15 @@ This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 @menu
-* Emacs 24.4::                   Compatibility support for Emacs 24.4
-* Emacs 24.5::                   Compatibility support for Emacs 24.5
-* Emacs 25.1::                   Compatibility support for Emacs 25.1
-* Emacs 26.1::                   Compatibility support for Emacs 26.1
-* Emacs 27.1::                   Compatibility support for Emacs 27.1
-* Emacs 28.1::                   Compatibility support for Emacs 28.1
+* Emacs 24.4: Emacs 244.         Compatibility support for Emacs 24.4
+* Emacs 24.5: Emacs 245.         Compatibility support for Emacs 24.5
+* Emacs 25.1: Emacs 251.         Compatibility support for Emacs 25.1
+* Emacs 26.1: Emacs 261.         Compatibility support for Emacs 26.1
+* Emacs 27.1: Emacs 271.         Compatibility support for Emacs 27.1
+* Emacs 28.1: Emacs 281.         Compatibility support for Emacs 28.1
 @end menu
 
-@node Emacs 24.4
+@node Emacs 244
 @section Emacs 24.4
 
 The following functions and macros implemented in 24.4, and are
@@ -346,14 +346,18 @@ The @code{get-pos-property} function.
 The @code{define-advice} macro.
 @item
 Support for generators.
+@item
+The @code{string-trim}, @code{string-trim-left} and @code{string-trim-right}
+functions.  These are instead provided as prefixed function as part
+of @ref{Emacs 261, , Emacs 26.1} support.
 @end itemize
 
-@node Emacs 24.5
+@node Emacs 245
 @section Emacs 24.5
 
 No special support for 24.5 was deemed necessary.
 
-@node Emacs 25.1
+@node Emacs 251
 @section Emacs 25.1
 
 The following functions and macros implemented in 25.1, and are
@@ -459,7 +463,7 @@ The functions @code{bufferpos-to-filepos} and @code{filepos-to-bufferpos}.
 Note that the changes in Emacs 25.2 and 25.3 are also included here,
 for the sake of simplicity.
 
-@node Emacs 26.1
+@node Emacs 261
 @section Emacs 26.1
 
 The following functions and macros implemented in 26.1, and are
@@ -471,18 +475,6 @@ See @ref{What Is a Function,(elisp) What Is a Function,,elisp,}.
 
 @defun mapcan
 See @ref{Mapping Functions,(elisp) Mapping Functions,,elisp,}.
-@end defun
-
-@defun string-trim-left
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
-@end defun
-
-@defun string-trim-right
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
-@end defun
-
-@defun string-trim
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
 @end defun
 
 @defun cXXXr
@@ -564,6 +556,24 @@ Handle the optional argument TESTFN@.  Can also be used as a
 generalised variable.
 @end defun
 
+@defun compat-string-trim-left
+See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+
+Handles the optional argument REGEXP@.
+@end defun
+
+@defun compat-string-trim-right
+See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+
+Handles the optional argument REGEXP@.
+@end defun
+
+@defun compat-string-trim
+See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+
+Handles the optional arguments TRIM-LEFT and TRIM-RIGHT@.
+@end defun
+
 Compat does not provide support for the following Lisp features
 implemented in 26.1:
 
@@ -607,7 +617,7 @@ The function @code{window-swap-states}.
 Note that the changes in Emacs 26.2 and 26.3 are also included here,
 for the sake of simplicity.
 
-@node Emacs 27.1
+@node Emacs 271
 @section Emacs 27.1
 
 The following functions and macros implemented in 27.1, and are
@@ -807,7 +817,7 @@ functionality.
 Note that the changes in Emacs 27.2 are also included here, for the
 sake of simplicity.
 
-@node Emacs 28.1
+@node Emacs 281
 @section Emacs 28.1
 
 The following functions and macros implemented in 28.1, and are

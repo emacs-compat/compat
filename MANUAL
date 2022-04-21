@@ -164,6 +164,9 @@ implemented in 24.4:
 - The ~get-pos-property~ function.
 - The ~define-advice~ macro.
 - Support for generators.
+- The ~string-trim~, ~string-trim-left~ and ~string-trim-right~
+  functions.  These are instead provided as prefixed function as part
+  of [[*Emacs 26.1][Emacs 26.1]] support.
 
 ** Emacs 24.5
 :PROPERTIES:
@@ -232,9 +235,6 @@ provided by Compat by default:
 
 - Function: func-arity :: See [[info:elisp#What Is a Function][(elisp) What Is a Function]].
 - Function: mapcan :: See [[info:elisp#Mapping Functions][(elisp) Mapping Functions]].
-- Function: string-trim-left :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function: string-trim-right :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
-- Function: string-trim :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
 - Function: cXXXr ::
 - Function: cXXXXr ::
   See [[info:elisp#List Elements][(elisp) List Elements]].
@@ -267,6 +267,15 @@ when ~compat-26~ is required:
 
   Handle the optional argument TESTFN.  Can also be used as a
   generalised variable.
+- Function: compat-string-trim-left :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+
+  Handles the optional argument REGEXP.
+- Function: compat-string-trim-right :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+
+  Handles the optional argument REGEXP.
+- Function: compat-string-trim :: See [[info:elisp#Creating Strings][(elisp) Creating Strings]].
+
+  Handles the optional arguments TRIM-LEFT and TRIM-RIGHT.
 
 Compat does not provide support for the following Lisp features
 implemented in 26.1:

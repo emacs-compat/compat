@@ -190,6 +190,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
   :realname compat--string-trim-left
+  :prefix t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
@@ -199,6 +200,7 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
   :realname compat--string-trim-right
+  :prefix t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
             string)))
@@ -208,6 +210,7 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
   "Trim STRING of leading with and trailing matching TRIM-LEFT and TRIM-RIGHT.
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
+  :prefix t
   ;; `string-trim-left' and `string-trim-right' were moved from subr-x
   ;; to subr in Emacs 27, so to avoid loading subr-x we use the
   ;; compatibility function here:
