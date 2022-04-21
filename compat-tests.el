@@ -1121,15 +1121,11 @@ being compared against."
                 (cond ((= x 0) 'ok)
                       ((and t (lop (1- x))))))
               'ok))
-  (should (eq (eval
-               (let ((branch '((lop (and (setq b (not b)) (1+ i))))))
-                 `(let ((b t))
-                    (compat--named-let lop ((i 0))
-                      (cond ((null i) nil)
-                            ((= i 10000) 'ok)
-                            ,branch
-                            ,branch))))
-               t)
+  (should (eq (let ((b t))
+                (compat--named-let lop ((i 0))
+                  (cond ((null i) nil) ((= i 10000) 'ok)
+                        ((lop (and (setq b (not b)) (1+ i))))
+                        ((lop (and (setq b (not b)) (1+ i)))))))
               'ok)))
 
 (compat-deftest directory-name-p
