@@ -1,0 +1,40 @@
+* Release of "Compat" Version 28.1.1.0
+
+This release mostly fixes a number of smaller bugs that were not
+identified as of 28.1.0.0.  Nevertheless these warrent a version bump,
+as some of these changes a functional.  These include:
+
+- The addition of the =file-attribute-*= accessor functions.
+- The addition of =file-attribute-collect=.
+- Improvements to the Texinfo manual (via Jonas Bernoulli's recent
+  work on =ox-texinfo=).  For the time being, the Texinfo file is
+  maintained in the repository itself, next to the =MANUAL= file.
+  This might change in the future.
+- Adding a prefix to =string-trim=, =string-trim-left= and
+  =string-trim-right= (i.e. now =compat-string-trim=,
+  =compat-string-trim-left= and =compat-string-trim-right=)
+- Improving the version inference used in the =compat-*= macros.
+  This improves the compile-time optimisation that strips away
+  functions that are known to be defined for a specific version.
+- The addition of generalised variable (=setf=) support for
+  =compat-alist-get=.
+- The addition of =image-property= and generalised variable support
+  for =image-property=.
+- The addition of the function =compat-executable-find=.
+- The addition of the function =compat-dired-get-marked-files=.
+- The addition of the function =exec-path=.
+- The addition of the function =make-lock-file-name=.
+- The addition of the function =null-device=.
+- The addition of the function =time-equal-p=.
+- The addition of the function =date-days-in-month=.
+- Handling out-of-directory byte compilation better.
+- Fixing the usage and edge-cases of =and-let*=.
+
+Furthermore a bug tracker was added: https://todo.sr.ht/~pkal/compat,
+which is the preferred way to report issues or feature requests.
+General problems, questions, etc. are still better discussed on the
+development mailing list: https://lists.sr.ht/~pkal/compat-devel.
+
+(Released <2022-04-22 Fri>)
+
+
