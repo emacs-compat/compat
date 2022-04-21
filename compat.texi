@@ -31,7 +31,7 @@ modify this GNU manual.”
 @finalout
 @titlepage
 @title "Compat" Manual
-@subtitle For version 28.1.0.5
+@subtitle For version 28.1.1.0
 @author Philip Kaludercic
 @page
 @vskip 0pt plus 1filll
@@ -46,7 +46,7 @@ modify this GNU manual.”
 
 This manual documents the usage of the "Compat" Emacs lisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
-version 28.1.0.5.
+version 28.1.1.0.
 
 @insertcopying
 @end ifnottex
@@ -73,12 +73,12 @@ Usage
 
 Support
 
-* Emacs 24.4: Emacs 244.         Compatibility support for Emacs 24.4
-* Emacs 24.5: Emacs 245.         Compatibility support for Emacs 24.5
-* Emacs 25.1: Emacs 251.         Compatibility support for Emacs 25.1
-* Emacs 26.1: Emacs 261.         Compatibility support for Emacs 26.1
-* Emacs 27.1: Emacs 271.         Compatibility support for Emacs 27.1
-* Emacs 28.1: Emacs 281.         Compatibility support for Emacs 28.1
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
 
 @end detailmenu
 @end menu
@@ -123,7 +123,7 @@ The intended use-case for this library is for package developers to
 add as a dependency in the header:
 
 @example
-;; Package-Requires: ((emacs "24.3") (compat "28.1.0.5"))
+;; Package-Requires: ((emacs "24.3") (compat "28.1.1.0"))
 @end example
 
 
@@ -215,15 +215,15 @@ This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 @menu
-* Emacs 24.4: Emacs 244.         Compatibility support for Emacs 24.4
-* Emacs 24.5: Emacs 245.         Compatibility support for Emacs 24.5
-* Emacs 25.1: Emacs 251.         Compatibility support for Emacs 25.1
-* Emacs 26.1: Emacs 261.         Compatibility support for Emacs 26.1
-* Emacs 27.1: Emacs 271.         Compatibility support for Emacs 27.1
-* Emacs 28.1: Emacs 281.         Compatibility support for Emacs 28.1
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
 @end menu
 
-@node Emacs 244
+@node Emacs 24.4
 @section Emacs 24.4
 
 The following functions and macros implemented in 24.4, and are
@@ -349,15 +349,15 @@ Support for generators.
 @item
 The @code{string-trim}, @code{string-trim-left} and @code{string-trim-right}
 functions.  These are instead provided as prefixed function as part
-of @ref{Emacs 261, , Emacs 26.1} support.
+of @ref{Emacs 26.1} support.
 @end itemize
 
-@node Emacs 245
+@node Emacs 24.5
 @section Emacs 24.5
 
 No special support for 24.5 was deemed necessary.
 
-@node Emacs 251
+@node Emacs 25.1
 @section Emacs 25.1
 
 The following functions and macros implemented in 25.1, and are
@@ -463,7 +463,7 @@ The functions @code{bufferpos-to-filepos} and @code{filepos-to-bufferpos}.
 Note that the changes in Emacs 25.2 and 25.3 are also included here,
 for the sake of simplicity.
 
-@node Emacs 261
+@node Emacs 26.1
 @section Emacs 26.1
 
 The following functions and macros implemented in 26.1, and are
@@ -582,6 +582,7 @@ See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
 Defined in @code{files.el}.
 @end defun
 
+These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-26} is required:
 
 @defun compat-assoc
@@ -664,7 +665,7 @@ The function @code{window-swap-states}.
 Note that the changes in Emacs 26.2 and 26.3 are also included here,
 for the sake of simplicity.
 
-@node Emacs 271
+@node Emacs 27.1
 @section Emacs 27.1
 
 The following functions and macros implemented in 27.1, and are
@@ -864,7 +865,7 @@ functionality.
 Note that the changes in Emacs 27.2 are also included here, for the
 sake of simplicity.
 
-@node Emacs 281
+@node Emacs 28.1
 @section Emacs 28.1
 
 The following functions and macros implemented in 28.1, and are
