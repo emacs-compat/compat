@@ -498,7 +498,7 @@ the value of the variable `exec-path'."
       ;; FIXME: The handler was added in 27.1, and this compatibility
       ;; function only applies to versions of Emacs before that.
       (when handler
-        (condition-case err
+        (condition-case nil
             (funcall handler 'exec-path)
           (error nil)))))
    ((file-remote-p default-directory)
