@@ -479,7 +479,7 @@ are non-nil, then the result is non-nil."
       (when (or (cdr var) (consp (car var)))
         (setq last (caar list))))
     `(let* ,(nreverse list)
-       (if ,(caar list) ,(macroexp-progn body)))))
+       (if ,(caar list) ,(macroexp-progn (or body '(t)))))))
 
 ;;;; Defined in image.el
 
