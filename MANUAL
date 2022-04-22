@@ -246,6 +246,9 @@ provided by Compat by default:
 - Macro: if-let* :: Defined in ~subr-x.el~.
 - Macro: when-let* :: Defined in ~subr-x.el~.
 - Macro: and-let* :: Defined in ~subr-x.el~.
+
+  **Please Note:** The implementation provided by Compat does not
+  include a bug that was observed with Emacs 26 (see [[debbugs:31840]]).
 - Function: file-local-name :: See [[info:elisp#Magic File Names][(elisp) Magic File Names]].
 - Function: file-name-quoted-p :: See [[info:elisp#File Name Expansion][(elisp) File Name Expansion]].
 - Function: file-name-quote :: See [[info:elisp#File Name Expansion][(elisp) File Name Expansion]].

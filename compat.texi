@@ -513,6 +513,9 @@ Defined in @code{subr-x.el}.
 
 @defmac and-let*
 Defined in @code{subr-x.el}.
+
+@strong{@strong{Please Note:}} The implementation provided by Compat does not
+include a bug that was observed with Emacs 26 (see @uref{https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31840}).
 @end defmac
 
 @defun file-local-name
