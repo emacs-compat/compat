@@ -145,7 +145,12 @@ continuing as if the error did not occur."
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
   :prefix t
-  (string-width (substring string (or from 0) to)))
+  (let* ((len (length string))
+         (from (or from 0))
+         (to (or to len)))
+    (if (and (= from 0) (= to len))
+        (string-width string)
+      (string-width (substring string from to)))))
 
 ;;;; Defined in dired.c
 
