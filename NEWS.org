@@ -1,4 +1,13 @@
 #+options: toc:nil num:nil
+#+link:    compat https://todo.sr.ht/~pkal/compat/
+
+* Release of "Compat" Version 28.1.1.1
+
+This is a minor release fixing a bug in =json-serialize=, that could
+cause unintended side-effects, not related to packages using Compat
+directly (see [[compat:2]]).
+
+(Released <2022-05-05 Thu>)
 
 * Release of "Compat" Version 28.1.1.0
 
