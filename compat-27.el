@@ -125,9 +125,10 @@ Letter-case is significant, but text properties are ignored."
 ;;;; Defined in json.c
 
 (declare-function json-parse-string nil (string &rest args))
-(declare-function json-encode-string "json" (object))
+(declare-function json-encode "json" (object))
 (declare-function json-read-from-string "json" (string))
 (declare-function json-read "json" ())
+(defvar json-encoding-pretty-print)
 (defvar json-object-type)
 (defvar json-array-type)
 (defvar json-false)
@@ -165,9 +166,54 @@ any JSON false values."
           (void-function t))
   :realname compat--json-serialize
   (require 'json)
-  (let ((json-false (or (plist-get args :false-object) :false))
-        (json-null (or (plist-get args :null-object) :null)))
-    (json-encode-string object)))
+  (letrec ((fix (lambda (obj)
+                  (cond
+                   ((hash-table-p obj)
+                    (let ((ht (copy-hash-table obj)))
+                      (maphash
+                       (lambda (key val)
+                         (unless (stringp key)
+                           (signal
+                            'wrong-type-argument
+                            (list 'stringp key)))
+                         (puthash key (funcall fix val) ht))
+                       obj)
+                      ht))
+                   ((and (listp obj) (consp (car obj))) ;alist
+                    (mapcar
+                     (lambda (ent)
+                       (cons (symbol-name (car ent))
+                             (funcall fix (cdr ent))))
+                     obj))
+                   ((listp obj) ;plist
+                    (let (alist)
+                      (while obj
+                        (push (cons (cond
+                                     ((keywordp (car obj))
+                                      (substring
+                                       (symbol-name (car obj))
+                                       1))
+                                     ((symbolp (car obj))
+                                      (symbol-name (car obj)))
+                                     ((signal
+                                       'wrong-type-argument
+                                       (list 'symbolp (car obj)))))
+                                    (funcall fix (cadr obj)))
+                              alist)
+                        (unless (consp (cdr obj))
+                          (signal 'wrong-type-argument '(consp nil)))
+                        (setq obj (cddr obj)))
+                      (nreverse alist)))
+                   ((vectorp obj)
+                    (let ((vec (make-vector (length obj) nil)))
+                      (dotimes (i (length obj))
+                        (aset vec i (funcall fix (aref obj i))))
+                      vec))
+                   (obj))))
+           (json-encoding-pretty-print nil)
+           (json-false (or (plist-get args :false-object) :false))
+           (json-null (or (plist-get args :null-object) :null)))
+    (json-encode (funcall fix object))))
 
 (compat-defun json-insert (object &rest args)
   "Insert the JSON representation of OBJECT before point.
