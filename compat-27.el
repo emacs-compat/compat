@@ -159,11 +159,10 @@ represent a JSON false value.  It defaults to `:false'.
 In you specify the same value for `:null-object' and `:false-object',
 a potentially ambiguous situation, the JSON output will not contain
 any JSON false values."
-  :cond (condition-case nil
-            (let ((inhibit-message t))
-              (equal (json-parse-string "[]") nil))
-          (json-unavailable t)
-          (void-function t))
+  :cond (not (condition-case nil
+                 (json-serialize t)
+               (:success t)
+               (json-unavailable nil)))
   :realname compat--json-serialize
   (require 'json)
   (letrec ((fix (lambda (obj)
@@ -220,11 +219,10 @@ any JSON false values."
 This is the same as (insert (json-serialize OBJECT)), but potentially
 faster.  See the function `json-serialize' for allowed values of
 OBJECT."
-  :cond (condition-case nil
-            (let ((inhibit-message t))
-              (equal (json-parse-string "[]") nil))
-          (json-unavailable t)
-          (void-function t))
+  :cond (not (condition-case nil
+                 (json-serialize t)
+               (:success t)
+               (json-unavailable nil)))
   (insert (apply #'compat--json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
@@ -251,11 +249,10 @@ to represent a JSON null value.  It defaults to `:null'.
 
 The keyword argument `:false-object' specifies which object to use to
 represent a JSON false value.  It defaults to `:false'."
-  :cond (condition-case nil
-            (let ((inhibit-message t))
-              (equal (json-parse-string "[]") nil))
-          (json-unavailable t)
-          (void-function t))
+  :cond (not (condition-case nil
+                 (json-serialize t)
+               (:success t)
+               (json-unavailable nil)))
   (require 'json)
   (condition-case err
       (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
@@ -295,11 +292,10 @@ to represent a JSON null value.  It defaults to `:null'.
 
 The keyword argument `:false-object' specifies which object to use to
 represent a JSON false value.  It defaults to `:false'."
-  :cond (condition-case nil
-            (let ((inhibit-message t))
-              (equal (json-parse-string "[]") nil))
-          (json-unavailable t)
-          (void-function t))
+  :cond (not (condition-case nil
+                 (json-serialize t)
+               (:success t)
+               (json-unavailable nil)))
   (require 'json)
   (condition-case err
       (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
