@@ -1,4 +1,4 @@
-;;; compat.el --- Compatibility Library              -*- lexical-binding: t; -*-
+;;; compat.el --- Emacs Lisp Compatibility Library -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
