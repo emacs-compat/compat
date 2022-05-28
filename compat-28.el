@@ -25,7 +25,17 @@
 ;; Find here the functionality added in Emacs 28.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions:
+;;
+;; - `unlock-buffer'
+;; - `string-width'
+;; - `directory-files'
+;; - `json-serialize'
+;; - `json-insert'
+;; - `json-parse-string'
+;; - `json-parse-buffer'
+;; - `count-windows'
 
 ;;; Code:
 

@@ -25,7 +25,15 @@
 ;; Find here the functionality added in Emacs 26.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions:
+;;
+;; - `compat-sort'
+;; - `line-number-at-pos'
+;; - `compat-alist-get'
+;; - `string-trim-left'
+;; - `string-trim-right'
+;; - `string-trim'
 
 ;;; Code:
 

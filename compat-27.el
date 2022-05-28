@@ -25,7 +25,17 @@
 ;; Find here the functionality added in Emacs 27.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions or macros:
+;;
+;; - `compat-recenter'
+;; - `compat-lookup-key'
+;; - `compat-setq-local'
+;; - `compat-assoc-delete-all'
+;; - `compat-file-size-human-readable'
+;; - `compat-executable-find'
+;; - `compat-regexp-opt'
+;; - `compat-dired-get-marked-files'
 
 ;;; Code:
 
