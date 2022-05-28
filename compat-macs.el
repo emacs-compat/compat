@@ -93,7 +93,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                          ((string-match
                            "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
                            file)
-                          (match-string 1 file))
+                          (concat (match-string 1 file) ".1"))
                          ((error "No version number could be extracted"))))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
