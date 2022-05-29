@@ -172,6 +172,7 @@ any JSON false values."
   :cond (not (condition-case nil
                  (equal (json-serialize '()) "{}")
                (:success t)
+               (void-function nil)
                (json-unavailable nil)))
   :realname compat--json-serialize
   (require 'json)
@@ -232,6 +233,7 @@ OBJECT."
   :cond (not (condition-case nil
                  (equal (json-serialize '()) "{}")
                (:success t)
+               (void-function nil)
                (json-unavailable nil)))
   (insert (apply #'compat--json-serialize object args)))
 
@@ -262,6 +264,7 @@ represent a JSON false value.  It defaults to `:false'."
   :cond (not (condition-case nil
                  (equal (json-serialize '()) "{}")
                (:success t)
+               (void-function nil)
                (json-unavailable nil)))
   (require 'json)
   (condition-case err
@@ -305,6 +308,7 @@ represent a JSON false value.  It defaults to `:false'."
   :cond (not (condition-case nil
                  (equal (json-serialize '()) "{}")
                (:success t)
+               (void-function nil)
                (json-unavailable nil)))
   (require 'json)
   (condition-case err
