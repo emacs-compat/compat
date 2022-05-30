@@ -82,19 +82,22 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      (let ((file (or (bound-and-true-p byte-compile-current-file)
-                                      load-file-name
-                                      (buffer-file-name))))
-                        ;; Guess the version from the file the macro is
-                        ;; being defined in.
-                        (cond
-                         ((not file) emacs-version)
-                         ((string-match
-                           "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                           file)
-                          (concat (match-string 1 file) ".1"))
-                         ((error "No version number could be extracted"))))))
+         (version ; If you edit this, also edit `compat--generate-verbose'.
+          (or (plist-get attr :version)
+              (bound-and-true-p compat--entwine-version)
+              (let* ((file (car (last current-load-list)))
+                     (file (if (stringp file)
+                               ;; Some library, which requires compat-XY.el,
+                               ;; is being compiled and compat-XY.el has not
+                               ;; been compiled yet.
+                               file
+                             ;; compat-XY.el is being compiled.
+                             (bound-and-true-p byte-compile-current-file))))
+                (if (and file
+                         (string-match
+                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
+                    (concat (match-string 1 file) ".1")
+                  (error "BUG: No version number could be extracted")))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (check (cond
@@ -155,19 +158,18 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      (let ((file (or (bound-and-true-p byte-compile-current-file)
-                                      load-file-name
-                                      (buffer-file-name))))
-                        ;; Guess the version from the file the macro is
-                        ;; being defined in.
-                        (cond
-                         ((not file) emacs-version)
-                         ((string-match
-                           "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                           file)
-                          (concat (match-string 1 file) ".1"))
-                         ((error "No version number could be extracted"))))))
+         (version ; If you edit this, also edit `compat--generate-minimal'.
+          (or (plist-get attr :version)
+              (bound-and-true-p compat--entwine-version)
+              (let* ((file (car (last current-load-list)))
+                     (file (if (stringp file)
+                               file
+                             (bound-and-true-p byte-compile-current-file))))
+                (if (and file
+                         (string-match
+                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
+                    (concat (match-string 1 file) ".1")
+                  (error "BUG: No version number could be extracted")))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn
