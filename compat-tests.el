@@ -1687,8 +1687,15 @@ being compared against."
 
 (compat-deftest time-equal-p
   (ought t nil nil)
-  (ought t (current-time) nil)
-  (ought t nil (current-time))
+
+  ;; FIXME: Testing these values can be tricky, because the timestamp
+  ;; might change between evaluating (current-time) and evaluating
+  ;; `time-equal-p', especially in the interpreted compatibility
+  ;; version.
+
+  ;; (ought t (current-time) nil)
+  ;; (ought t nil (current-time))
+
   ;; While `sleep-for' returns nil, indicating the current time, this
   ;; behaviour seems to be undefined.  Relying on it is therefore not
   ;; advised.
