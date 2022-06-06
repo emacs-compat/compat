@@ -84,7 +84,7 @@
           (while (progn
                    (forward-comment 1)
                    (not (eobp)))
-            (let ((compat--entwine-version (number-to-string version))
+            (let ((compat--entwine-version (format "%d.1" version))
                   (form (read (current-buffer))))
               (cond
                ((memq (car-safe form)
