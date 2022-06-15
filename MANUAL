@@ -9,7 +9,7 @@
 #+texinfo_dir_desc:     Compatibility Library for Emacs Lisp
 #+options:              compact-itemx:t
 
-#+macro: version 28.1.1.1
+#+macro: version 28.1.1.2
 #+link:	 debbugs https://debbugs.gnu.org/cgi/bugreport.cgi?bug=
 
 This manual documents the usage of the "Compat" Emacs lisp library,
@@ -45,7 +45,7 @@ Feedback on this point is appreciated.
 The intended use-case for this library is for package developers to
 add as a dependency in the header:
 
-: ;; Package-Requires: ((emacs "24.3") (compat "28.1.1.1"))
+: ;; Package-Requires: ((emacs "24.3") (compat "28.1.1.2"))
 
 and later on a
 

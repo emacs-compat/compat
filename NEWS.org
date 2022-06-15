@@ -1,6 +1,16 @@
 #+options: toc:nil num:nil
 #+link:    compat https://todo.sr.ht/~pkal/compat/
 
+* Release of "Compat" Version 28.1.1.2
+
+Two main changes have necessitated a new patch release:
+
+1. Fix issues related to the loading of compat when uncompiled.  See
+   [[https://lists.sr.ht/~pkal/compat-devel/%3C20220530191000.2183047-1-jonas%40bernoul.li%3E][this thread]] for more details on the problem.
+2. Fix issues related to the loading of compat on old pre-releases
+   (think of 28.0.50). See [[https://lists.sr.ht/~pkal/compat-devel/%3Cf8635d7d-e233-448f-b325-9e850363241c%40www.fastmail.com%3E][this thread]] for more details on the
+   problem.
+
 * Release of "Compat" Version 28.1.1.1
 
 This is a minor release fixing a bug in =json-serialize=, that could
