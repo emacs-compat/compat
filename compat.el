@@ -77,6 +77,7 @@
                       ;; compat.el is being compiled.
                       ;;   cd compat && make clean all
                       (bound-and-true-p byte-compile-current-file)))))
+             (compat--entwine-version (number-to-string version))
              defs)
         (with-temp-buffer
           (insert-file-contents file)
@@ -84,8 +85,7 @@
           (while (progn
                    (forward-comment 1)
                    (not (eobp)))
-            (let ((compat--entwine-version (format "%d.1" version))
-                  (form (read (current-buffer))))
+            (let ((form (read (current-buffer))))
               (cond
                ((memq (car-safe form)
                       '(compat-defun
@@ -97,7 +97,7 @@
                       '(declare-function
                         defvar))
                 (push form defs))))))
-        (macroexp-progn (nreverse defs)))))))
+        (macroexpand-all (macroexp-progn (nreverse defs))))))))
 
 (compat-entwine 24)
 (compat-entwine 25)
