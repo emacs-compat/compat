@@ -38,7 +38,7 @@ Usage
 The intended use-case for this library is for package developers to
 add as a dependency in the header:
 
-    ;; Package-Requires: ((emacs "24.3") (compat "28.1.1.2"))
+    ;; Package-Requires: ((emacs "24.3") (compat "28.1.1.3"))
 
 and later on a
 

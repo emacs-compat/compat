@@ -1,6 +1,14 @@
 #+options: toc:nil num:nil
 #+link:    compat https://todo.sr.ht/~pkal/compat/
 
+* Release of "Compat" Version 28.1.1.3
+
+This release just contains a hot-fix for an issue introduced in the
+last version, where compat.el raises an error during byte compilation.
+See [[compat:4]].
+
+(Release <2022-06-19 Sun>)
+
 * Release of "Compat" Version 28.1.1.2
 
 Two main changes have necessitated a new patch release:
@@ -10,6 +18,8 @@ Two main changes have necessitated a new patch release:
 2. Fix issues related to the loading of compat on old pre-releases
    (think of 28.0.50). See [[https://lists.sr.ht/~pkal/compat-devel/%3Cf8635d7d-e233-448f-b325-9e850363241c%40www.fastmail.com%3E][this thread]] for more details on the
    problem.
+
+(Released <2022-06-22 Wed>)
 
 * Release of "Compat" Version 28.1.1.1
 
