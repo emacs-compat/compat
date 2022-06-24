@@ -97,7 +97,7 @@
                       '(declare-function
                         defvar))
                 (push form defs))))))
-        (macroexpand-all (macroexp-progn (nreverse defs))))))))
+        (macroexp-progn (nreverse defs)))))))
 
 (compat-entwine 24)
 (compat-entwine 25)
