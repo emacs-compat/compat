@@ -1067,6 +1067,8 @@ being compared against."
 
 (compat-deftest format-prompt
   (ought "Prompt: " "Prompt" nil)
+  (ought "Prompt: " "Prompt" "")
+  (ought "Prompt (default  ): " "Prompt" " ")
   (ought "Prompt (default 3): " "Prompt" 3)
   (ought "Prompt (default abc): " "Prompt" "abc")
   (ought "Prompt (default abc def): " "Prompt" "abc def")

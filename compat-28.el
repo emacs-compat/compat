@@ -732,7 +732,7 @@ is included in the return value."
      (apply #'format prompt format-args))
    (and default
         (or (not (stringp default))
-            (not (null default)))
+            (> (length default) 0))
         (format " (default %s)"
                 (if (consp default)
                     (car default)
