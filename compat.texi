@@ -1011,6 +1011,7 @@ Defined in @code{files.el}.
 
 @defun null-device
 Defined in @code{files.el}.
+@end defun
 
 @defun decoded-time-period
 Defined in @code{time-data.el}.
