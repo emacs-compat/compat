@@ -1011,6 +1011,9 @@ Defined in @code{files.el}.
 
 @defun null-device
 Defined in @code{files.el}.
+
+@defun decoded-time-period
+Defined in @code{time-data.el}.
 @end defun
 
 These functions are prefixed with @code{compat} prefix, and are only loaded

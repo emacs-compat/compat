@@ -846,5 +846,25 @@ directory or directories specified."
     (apply 'update-directory-autoloads
            (if (listp dir) dir (list dir)))))
 
+;;;; Defined in time-data.el
+
+(compat-defun decoded-time-period (time)
+  "Interpret DECODED as a period and return its length in seconds.
+For computational purposes, years are 365 days long and months
+are 30 days long."
+  :feature 'time-date
+  :version "28"
+  ;; Inlining the definitions from compat-27
+  (+ (if (consp (nth 0 time))
+         ;; Fractional second.
+         (/ (float (car (nth 0 time)))
+            (cdr (nth 0 time)))
+       (or (nth 0 time) 0))
+     (* (or (nth 1 time) 0) 60)
+     (* (or (nth 2 time) 0) 60 60)
+     (* (or (nth 3 time) 0) 60 60 24)
+     (* (or (nth 4 time) 0) 60 60 24 30)
+     (* (or (nth 5 time) 0) 60 60 24 365)))
+
 (provide 'compat-28)
 ;;; compat-28.el ends here

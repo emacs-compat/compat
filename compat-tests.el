@@ -1721,49 +1721,55 @@ being compared against."
   (ought 29 2020 2)
   (ought 28 2021 2))
 
-(compat-deftest file-attribute-collect
-  (ought '(0) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'type)
-  (ought '(8) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'modes)
-  (ought '(10) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'inode-number)
-  (expect error '(0 1 2 3 4 5 6 7 8 9 10 11)
-          'something-else-that-shouldnt-exist)
-  (ought '(0 8) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'type 'modes)
-  (ought '(8 0) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'modes 'type)
-  (ought '(0 8 8) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'type 'modes 'modes)
-  (ought '(8 0 8) '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'modes 'type 'modes)
-  (ought '(0 1 2 3 4 5 6 7 8 10 11)
-         '(0 1 2 3 4 5 6 7 8 9 10 11)
-         'type
-         'link-number
-         'user-id
-         'group-id
-         'access-time
-         'modification-time
-         'status-change-time
-         'size
-         'modes
-         'inode-number
-         'device-number)
-  (ought '(0 1 2 3 4 5 6 7 9 10 11)
-         '(1 0 3 2 5 4 7 6 9 8 11 10)
-         'link-number
-         'type
-         'group-id
-         'user-id
-         'modification-time
-         'access-time
-         'size
-         'status-change-time
-         'modes
-         'device-number
-         'inode-number))
+(compat-deftest decoded-time-period
+  (ought 0 '())
+  (ought 0 '(0))
+  (ought 1 '(1))
+  (ought 0.125 '((1 . 8)))
+
+  (ought 60 '(0 1))
+  (ought 61 '(1 1))
+  (ought -59 '(1 -1))
+
+  (ought (* 60 60) '(0 0 1))
+  (ought (+ (* 60 60) 60) '(0 1 1))
+  (ought (+ (* 60 60) 120 1) '(1 2 1))
+
+  (ought (* 60 60 24) '(0 0 0 1))
+  (ought (+ (* 60 60 24) 1) '(1 0 0 1))
+  (ought (+ (* 60 60 24) (* 60 60) 60 1) '(1 1 1 1))
+  (ought (+ (* 60 60 24) (* 60 60) 120 1) '(1 2 1 1))
+
+  (ought (* 60 60 24 30) '(0 0 0 0 1))
+  (ought (+ (* 60 60 24 30) 1) '(1 0 0 0 1))
+  (ought (+ (* 60 60 24 30) 60 1) '(1 1 0 0 1))
+  (ought (+ (* 60 60 24 30) (* 60 60) 60 1)
+         '(1 1 1 0 1))
+  (ought (+ (* 60 60 24 30) (* 60 60 24) (* 60 60) 120 1)
+         '(1 2 1 1 1))
+
+  (ought (* 60 60 24 365) '(0 0 0 0 0 1))
+  (ought (+ (* 60 60 24 365) 1)
+         '(1 0 0 0 0 1))
+  (ought (+ (* 60 60 24 365) 60 1)
+         '(1 1 0 0 0 1))
+  (ought (+ (* 60 60 24 365) (* 60 60) 60 1)
+         '(1 1 1 0 0 1))
+  (ought (+ (* 60 60 24 365) (* 60 60 24) (* 60 60) 60 1)
+         '(1 1 1 1 0 1))
+  (ought (+ (* 60 60 24 365)
+            (* 60 60 24 30)
+            (* 60 60 24)
+            (* 60 60)
+            120 1)
+         '(1 2 1 1 1 1))
+
+  (expect wrong-type-argument 'a)
+  (expect wrong-type-argument '(0 a))
+  (expect wrong-type-argument '(0 0 a))
+  (expect wrong-type-argument '(0 0 0 a))
+  (expect wrong-type-argument '(0 0 0 0 a))
+  (expect wrong-type-argument '(0 0 0 0 0 a)))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
