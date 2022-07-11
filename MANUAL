@@ -30,7 +30,7 @@ newest version on CentOS 7. It is intended to preserve compatibility
 for at least as the Centos 7 reaches [[https://wiki.centos.org/About/Product][EOL]], 2024.
 
 If you are developing a package with Compat in mind, consider loading
-`compat-help` (on your system, not in a package) to get relevant notes
+=compat-help= (on your system, not in a package) to get relevant notes
 inserted into the help buffers of functions that are implemented or
 advised in Compat.
 
@@ -52,7 +52,7 @@ and later on a
 : (require 'compat)
 
 This will load all non-prefixed definitions (functions and macros with
-a leading `compat-`).  To load these, an additional
+a leading =compat-=).  To load these, an additional
 
 : (require 'compat-XY) ; e.g. 26
 
