@@ -197,7 +197,12 @@ If COUNT is non-nil and a natural number, the function will
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-insert object args)
-    (insert (apply #'compat-json-serialize object args))))
+    ;; `compat-json-serialize' is not sharp-quoted as the byte
+    ;; compiled doesn't always know that the function has been
+    ;; defined, but it will only be used in this function if the
+    ;; prefixed definition of `json-serialize' (see above) has also
+    ;; been defined.
+    (insert (apply 'compat-json-serialize object args))))
 
 (compat-defun json-parse-string (string &rest args)
   "Handle top-level JSON values."
