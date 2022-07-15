@@ -449,6 +449,7 @@ provided by Compat by default:
 - Function: make-lock-file-name :: Defined in ~files.el~.
 - Function: null-device :: Defined in ~files.el~.
 - Function: decoded-time-period :: Defined in ~time-data.el~.
+- Function: subr-primitive-p :: Defined in ~subr.el~.
 
 These functions are prefixed with ~compat~ prefix, and are only loaded
 when ~compat-28~ is required:

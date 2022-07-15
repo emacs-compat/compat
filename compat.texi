@@ -1017,6 +1017,10 @@ Defined in @code{files.el}.
 Defined in @code{time-data.el}.
 @end defun
 
+@defun subr-primitive-p
+Defined in @code{subr.el}.
+@end defun
+
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-28} is required:
 
