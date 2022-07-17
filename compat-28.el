@@ -447,13 +447,9 @@ not a list, return a one-element list containing OBJECT."
       object
     (list object)))
 
-
-(declare-function subr-native-elisp-p nil (object))
 (compat-defun subr-primitive-p (object)
   "Return t if OBJECT is a built-in primitive function."
-  (and (subrp object)
-       (not (and (fboundp 'subr-native-elisp-p)
-		 (subr-native-elisp-p object)))))
+  (subrp object))
 
 ;;;; Defined in subr-x.el
 
