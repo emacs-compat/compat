@@ -41,69 +41,25 @@
 
 (eval-when-compile (require 'compat-macs))
 
-;;;; Core functionality
+;; We load all the components of Compat with a copied value of
+;; `features' list, that will prevent the list being modified, and all
+;; the files can be loaded again.  This is done so that
+;; `compat--inhibit-prefixed' can take effect when loading `compat',
+;; and do nothing when loading each sub-feature manually.
 
-;; To accelerate the loading process, we insert the contents of
-;; compat-N.M.el directly into the compat.elc.  Note that by default
-;; this will not include prefix functions.  These have to be required
-;; separately, by explicitly requiring the feature that defines them.
-(eval-when-compile
-  (defvar compat--generate-function)
-  (defvar compat--entwine-version)
-  (defmacro compat-entwine (version)
-    (cond
-     ((or (not (eq compat--generate-function 'compat--generate-minimal))
-          (bound-and-true-p compat-testing))
-      `(load ,(format "compat-%d.el" version)))
-     ((let* ((compat--generate-function 'compat--generate-minimal-no-prefix)
-             (file (expand-file-name
-                    (format "compat-%d.el" version)
-                    (file-name-directory
-                     (or
-                      ;; Some third-party library, which requires
-                      ;; compat.el, is being compiled, loaded or
-                      ;; evaluated, and compat.el hasn't been compiled
-                      ;; yet.
-                      ;;   cd compat && make clean && cd ../other && \
-                      ;;   make clean all
-                      ;;
-                      ;; Or compat.el is being evaluated.
-                      ;;   cd compat && make clean && emacs -Q -L . compat.el
-                      ;;   M-x eval-buffer
-                      ;;
-                      ;; (Like `macroexp-file-name' from Emacs 28.1.)
-                      (let ((file (car (last current-load-list))))
-                        (and (stringp file) file))
-                      ;; compat.el is being compiled.
-                      ;;   cd compat && make clean all
-                      (bound-and-true-p byte-compile-current-file)))))
-             (compat--entwine-version (number-to-string version))
-             defs)
-        (with-temp-buffer
-          (insert-file-contents file)
-          (emacs-lisp-mode)
-          (while (progn
-                   (forward-comment 1)
-                   (not (eobp)))
-            (let ((form (read (current-buffer))))
-              (cond
-               ((memq (car-safe form)
-                      '(compat-defun
-                           compat-defmacro
-                           compat-advise
-                         compat-defvar))
-                (push (macroexpand-all form) defs))
-               ((memq (car-safe form)
-                      '(declare-function
-                        defvar))
-                (push form defs))))))
-        (macroexp-progn (nreverse defs)))))))
-
-(compat-entwine 24)
-(compat-entwine 25)
-(compat-entwine 26)
-(compat-entwine 27)
-(compat-entwine 28)
+(defvar compat--inhibit-prefixed)
+(let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing))))
+  ;; Instead of using `require', we manually check `features' and call
+  ;; `load' to avoid the issue of not using `provide' at the end of
+  ;; the file (which is disabled by `compat--inhibit-prefixed', so
+  ;; that the file can be loaded again at some later point when the
+  ;; prefixed definitions are needed).
+  (dolist (vers '(24 25 26 27 28))
+    (unless (memq (intern (format "compat-%d" vers)) features)
+      (load (format "compat-%d%s" vers
+                    (if (bound-and-true-p compat-testing)
+                        ".el" ""))
+            nil t))))
 
 (provide 'compat)
 ;;; compat.el ends here

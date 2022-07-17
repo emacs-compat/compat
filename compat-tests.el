@@ -107,7 +107,7 @@ being compared against."
                                       `(equal res ',error-spec)
                                     `(eq (car res) ',error-spec))))))))))))))
 
-(defmacro compat-deftest (name &rest body)
+(defmacro compat-deftests (name &rest body)
   "Test NAME in BODY."
   (declare (debug (sexp &rest body))
            (indent 1))
@@ -129,7 +129,7 @@ being compared against."
 
 
 
-(compat-deftest string-search
+(compat-deftests string-search
   ;; Find needle at the beginning of a haystack:
   (ought 0 "a" "abb")
   ;; Find needle at the begining of a haystack, with more potential
@@ -244,7 +244,7 @@ being compared against."
                     (string-to-multibyte "o\303\270")
                     "foo\303\270")))
 
-(compat-deftest string-replace
+(compat-deftests string-replace
   (ought "bba" "aa" "bb" "aaa")
   (ought "AAA" "aa" "bb" "AAA")
   ;; Additional test copied from subr-tests.el:
@@ -281,7 +281,7 @@ being compared against."
     ;; thrown.
     (expect wrong-length-argument "" "x" "abc")))
 
-(compat-deftest length=
+(compat-deftests length=
   (ought t '() 0)                  ;empty list
   (ought t '(1) 1)			;single element
   (ought t '(1 2 3) 3)             ;multiple elements
@@ -297,7 +297,7 @@ being compared against."
   (ought nil [1 2 3] 4)            ;more than
   (expect wrong-type-argument 3 nil))
 
-(compat-deftest length<
+(compat-deftests length<
   (ought nil '(1) 0)               ;single element
   (ought nil '(1 2 3) 2)           ;multiple elements
   (ought nil '(1 2 3) 3)           ;equal length
@@ -311,7 +311,7 @@ being compared against."
   (ought t [1 2 3] 4)              ;more than
   (expect wrong-type-argument 3 nil))
 
-(compat-deftest length>
+(compat-deftests length>
   (ought t '(1) 0)			;single element
   (ought t '(1 2 3) 2)             ;multiple elements
   (ought nil '(1 2 3) 3)           ;equal length
@@ -325,7 +325,7 @@ being compared against."
   (ought nil [1 2 3] 4)            ;more than
   (expect wrong-type-argument 3 nil))
 
-(compat-deftest always
+(compat-deftests always
   (ought t)                        ;no arguments
   (ought t 1)                      ;single argument
   (ought t 1 2 3 4))              ;multiple arguments
@@ -381,7 +381,7 @@ being compared against."
 	  (insert-into-buffer other 2 3))
 	(should (string= (buffer-string) "abce"))))))
 
-(compat-deftest file-name-with-extension
+(compat-deftests file-name-with-extension
   (ought "file.ext" "file" "ext")
   (ought "file.ext" "file" ".ext")
   (ought "file.ext" "file." ".ext")
@@ -400,7 +400,7 @@ being compared against."
   (expect error "rel/" "ext")
   (expect error "/abs/" "ext"))
 
-(compat-deftest compat-string-width
+(compat-deftests compat-string-width
   (ought 0 "")
   (ought 3 "abc")			;no argument
   (ought 5 "abcあ")
@@ -415,13 +415,13 @@ being compared against."
   (ought 2 "abcあ" 3 4)
   (ought 0 "a	" 1 1))
 
-(compat-deftest ensure-list
+(compat-deftests ensure-list
   (ought nil nil)                        ;empty list
   (ought '(1) '(1))                        ;single element list
   (ought '(1 2 3) '(1 2 3))                ;multiple element list
   (ought '(1) 1))                          ;atom
 
-(compat-deftest (proper-list-p compat--proper-list-p-length-signal)
+(compat-deftests (proper-list-p compat--proper-list-p-length-signal)
   (ought 0 ())				;empty list
   (ought 1 '(1))				;single element
   (ought 3 '(1 2 3))			;multiple elements
@@ -436,7 +436,7 @@ being compared against."
   (ought nil [])
   (ought nil [1 2 3]))
 
-(compat-deftest (proper-list-p compat--proper-list-p-tortoise-hare)
+(compat-deftests (proper-list-p compat--proper-list-p-tortoise-hare)
   (ought 0 ())				;empty list
   (ought 1 '(1))                        ;single element
   (ought 3 '(1 2 3))			;multiple elements
@@ -451,7 +451,7 @@ being compared against."
   (ought nil [])
   (ought nil [1 2 3]))
 
-(compat-deftest flatten-tree
+(compat-deftests flatten-tree
   ;; Example from docstring:
   (ought '(1 2 3 4 5 6 7) '(1 (2 . 3) nil (4 5 (6)) 7))
   ;; Trivial example
@@ -469,13 +469,13 @@ being compared against."
   (ought '(1 2 3 4) '((1) nil 2 ((3 4))))
   (ought '(1 2 3 4) '(((1 nil)) 2 (((3 nil nil) 4)))))
 
-(compat-deftest xor
+(compat-deftests xor
   (ought t t nil)
   (ought t nil t)
   (ought nil nil nil)
   (ought nil t t))
 
-(compat-deftest string-distance
+(compat-deftests string-distance
   (ought 3 "kitten" "sitting")     ;from wikipedia
   (if (version<= "28" emacs-version) ;trivial examples
       (ought 0 "" "")
@@ -506,7 +506,7 @@ being compared against."
     (when (boundp 'regexp-unmatchable)
       (should-not (string-match-p regexp-unmatchable str)))))
 
-(compat-deftest compat-regexp-opt
+(compat-deftests compat-regexp-opt
   ;; Ensure `compat--regexp-opt' doesn't change the existing
   ;; behaviour:
   (ought (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
@@ -525,7 +525,7 @@ being compared against."
                    ))
       (should-not (string-match-p unmatchable str)))))
 
-(compat-deftest compat-assoc
+(compat-deftests compat-assoc
   ;; Fallback behaviour:
   (ought nil 1 nil)               ;empty list
   (ought '(1) 1 '((1)))            ;single element list
@@ -554,7 +554,7 @@ being compared against."
 ;; (when (fboundp 'alist-get)
 ;;   (ert-deftest compat-alist-get-1 ()
 ;;     "Check if `compat--alist-get' was advised correctly."
-;;     (compat-deftest compat-alist-get
+;;     (compat-deftests compat-alist-get
 ;;       ;; Fallback behaviour:
 ;;       (ought nil 1 nil)                      ;empty list
 ;;       (ought 'a 1 '((1 . a)))                  ;single element list
@@ -582,7 +582,7 @@ being compared against."
 ;;       (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;;       (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
-(compat-deftest (alist-get compat--alist-get-full-elisp)
+(compat-deftests (alist-get compat--alist-get-full-elisp)
   ;; Fallback behaviour:
   (ought nil 1 nil)                      ;empty list
   (ought 'a 1 '((1 . a)))                  ;single element list
@@ -625,7 +625,7 @@ being compared against."
     (should (equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins"))))
 
-(compat-deftest string-trim-left
+(compat-deftests string-trim-left
   (ought "" "")                          ;empty string
   (ought "a" "a")                        ;"full" string
   (ought "aaa" "aaa")
@@ -646,7 +646,7 @@ being compared against."
   (ought "a\t\n" "\t\ta\t\n")
   (ought "a  \n" "\n  \ta  \n"))
 
-(compat-deftest string-trim-right
+(compat-deftests string-trim-right
   (ought "" "")                          ;empty string
   (ought "a" "a")                        ;"full" string
   (ought "aaa" "aaa")
@@ -667,7 +667,7 @@ being compared against."
   (ought "\t\ta" "\t\ta\t\n")
   (ought "\n  \ta" "\n  \ta  \n"))
 
-(compat-deftest string-trim
+(compat-deftests string-trim
   (ought "" "")                          ;empty string
   (ought "a" "a")                        ;"full" string
   (ought "aaa" "aaa")
@@ -688,7 +688,7 @@ being compared against."
   (ought "t\ta" "t\ta\t\n")
   (ought "a" "\n  \ta  \n"))
 
-(compat-deftest mapcan
+(compat-deftests mapcan
   (ought nil #'identity nil)
   (ought (list 1)
          #'identity
@@ -721,112 +721,112 @@ being compared against."
     (((i . j) . (k . l)) . ((m . j) . (o . p))))
   "Testcase for cXXXXr functions.")
 
-(compat-deftest caaar
+(compat-deftests caaar
   (ought nil ())
   (ought 'a compat-cXXXr-test))
 
-(compat-deftest caadr
+(compat-deftests caadr
   (ought nil ())
   (ought 'e compat-cXXXr-test))
 
-(compat-deftest cadar
+(compat-deftests cadar
   (ought nil ())
   (ought 'c compat-cXXXr-test))
 
-(compat-deftest caddr
+(compat-deftests caddr
   (ought nil ())
   (ought 'g compat-cXXXr-test))
 
-(compat-deftest cdaar
+(compat-deftests cdaar
   (ought nil ())
   (ought 'b compat-cXXXr-test))
 
-(compat-deftest cdadr
+(compat-deftests cdadr
   (ought nil ())
   (ought 'f compat-cXXXr-test))
 
-(compat-deftest cddar
+(compat-deftests cddar
   (ought nil ())
   (ought 'd compat-cXXXr-test))
 
-(compat-deftest cdddr
+(compat-deftests cdddr
   (ought nil ())
   (ought 'h compat-cXXXr-test)
   #'cdddr)
 
-(compat-deftest caaaar
+(compat-deftests caaaar
   (ought nil ())
   (ought 'a compat-cXXXXr-test))
 
-(compat-deftest caaadr
+(compat-deftests caaadr
   (ought nil ())
   (ought 'i compat-cXXXXr-test))
 
-(compat-deftest caadar
+(compat-deftests caadar
   (ought nil ())
   (ought 'e compat-cXXXXr-test))
 
-(compat-deftest caaddr
+(compat-deftests caaddr
   (ought nil ())
   (ought 'm compat-cXXXXr-test))
 
-(compat-deftest cadaar
+(compat-deftests cadaar
   (ought nil ())
   (ought 'c compat-cXXXXr-test))
 
-(compat-deftest cadadr
+(compat-deftests cadadr
   (ought nil ())
   (ought 'k compat-cXXXXr-test))
 
-(compat-deftest caddar
+(compat-deftests caddar
   (ought nil ())
   (ought 'g compat-cXXXXr-test))
 
-(compat-deftest cadddr
+(compat-deftests cadddr
   (ought nil ())
   (ought 'o compat-cXXXXr-test))
 
-(compat-deftest cdaaar
+(compat-deftests cdaaar
   (ought nil ())
   (ought 'b compat-cXXXXr-test))
 
-(compat-deftest cdaadr
+(compat-deftests cdaadr
   (ought nil ())
   (ought 'j compat-cXXXXr-test))
 
-(compat-deftest cdadar
+(compat-deftests cdadar
   (ought nil ())
   (ought 'f compat-cXXXXr-test))
 
-(compat-deftest cdaddr
+(compat-deftests cdaddr
   (ought nil ())
   (ought 'j compat-cXXXXr-test))
 
-(compat-deftest cddaar
+(compat-deftests cddaar
   (ought nil ())
   (ought 'd compat-cXXXXr-test))
 
-(compat-deftest cddadr
+(compat-deftests cddadr
   (ought nil ())
   (ought 'l compat-cXXXXr-test))
 
-(compat-deftest cdddar
+(compat-deftests cdddar
   (ought nil ())
   (ought 'h compat-cXXXXr-test))
 
-(compat-deftest string-greaterp
+(compat-deftests string-greaterp
   (ought t "b" "a")
   (ought nil "a" "b")
   (ought t "aaab" "aaaa")
   (ought nil "aaaa" "aaab"))
 
-(compat-deftest compat-sort
+(compat-deftests compat-sort
   (ought (list 1 2 3) (list 1 2 3) #'<)
   (ought (list 1 2 3) (list 3 2 1) #'<)
   (ought '[1 2 3] '[1 2 3] #'<)
   (ought '[1 2 3] '[3 2 1] #'<))
 
-(compat-deftest compat-=
+(compat-deftests compat-=
   (ought t 0 0)
   (ought t 0 0 0)
   (ought t 0 0 0 0)
@@ -842,7 +842,7 @@ being compared against."
   (ought nil 0 1 'a)
   (ought nil 0.0 0.0 0.0 0.1))
 
-(compat-deftest compat-<
+(compat-deftests compat-<
   (ought nil 0 0)
   (ought nil 0 0 0)
   (ought nil 0 0 0 0)
@@ -864,7 +864,7 @@ being compared against."
   (ought t -0.1 0.0 0.2 0.4)
   (ought t -0.1 0 0.2 0.4))
 
-(compat-deftest compat->
+(compat-deftests compat->
   (ought nil 0 0)
   (ought nil 0 0 0)
   (ought nil 0 0 0 0)
@@ -886,7 +886,7 @@ being compared against."
   (ought t 0.4 0.2 0.0 -0.1)
   (ought t 0.4 0.2 0 -0.1))
 
-(compat-deftest compat-<=
+(compat-deftests compat-<=
   (ought t 0 0)
   (ought t 0 0 0)
   (ought t 0 0 0 0)
@@ -918,7 +918,7 @@ being compared against."
   (ought nil 0.4 0.2 0 0.0 0.0 -0.1)
   (ought nil 0.4 0.2 0 -0.1))
 
-(compat-deftest compat->=
+(compat-deftests compat->=
   (ought t 0 0)
   (ought t 0 0 0)
   (ought t 0 0 0 0)
@@ -948,7 +948,7 @@ being compared against."
   (ought t 0.4 0.2 0 0.0 0.0 -0.1)
   (ought t 0.4 0.2 0 -0.1))
 
-(compat-deftest special-form-p
+(compat-deftests special-form-p
   (ought t 'if)
   (ought t 'cond)
   (ought nil 'when)
@@ -958,7 +958,7 @@ being compared against."
   (ought nil "macro")
   (ought nil '(macro . +)))
 
-(compat-deftest macrop
+(compat-deftests macrop
   (ought t 'lambda)
   (ought t 'defun)
   (ought t 'defmacro)
@@ -971,7 +971,7 @@ being compared against."
   (ought nil "macro")
   (ought t '(macro . +)))
 
-(compat-deftest string-suffix-p
+(compat-deftests string-suffix-p
   (ought t "a" "abba")
   (ought t "ba" "abba")
   (ought t "abba" "abba")
@@ -983,17 +983,17 @@ being compared against."
   (ought nil "cddc" "abba")
   (ought nil "aabba" "abba"))
 
-(compat-deftest compat-split-string
+(compat-deftests compat-split-string
   (ought '("a" "b" "c") "a b c")
   (ought '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
   (ought '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+"))
 
-(compat-deftest delete-consecutive-dups
+(compat-deftests delete-consecutive-dups
   (ought '(1 2 3 4) '(1 2 3 4))
   (ought '(1 2 3 4) '(1 2 2 3 4 4))
   (ought '(1 2 3 2 4) '(1 2 2 3 2 4 4)))
 
-(compat-deftest string-clean-whitespace
+(compat-deftests string-clean-whitespace
   (ought "a b c" "a b c")
   (ought "a b c" "   a b c")
   (ought "a b c" "a b c   ")
@@ -1013,7 +1013,7 @@ being compared against."
   (ought "aa bb cc" "aa    bb    cc    ")
   (ought "aa bb cc" "   aa    bb    cc    "))
 
-(compat-deftest string-fill
+(compat-deftests string-fill
   (ought "a a a a a" "a a a a a" 9)
   (ought "a a a a a" "a a a a a" 10)
   (ought "a a a a\na" "a a a a a" 8)
@@ -1022,14 +1022,14 @@ being compared against."
   (ought "a\na\na\na\na" "a a a a a" 2)
   (ought "a\na\na\na\na" "a a a a a" 1))
 
-(compat-deftest string-lines
+(compat-deftests string-lines
   (ought '("a" "b" "c") "a\nb\nc")
   (ought '("a" "b" "c" "") "a\nb\nc\n")
   (ought '("a" "b" "c") "a\nb\nc\n" t)
   (ought '("abc" "bcd" "cde") "abc\nbcd\ncde")
   (ought '(" abc" " bcd " "cde ") " abc\n bcd \ncde "))
 
-(compat-deftest string-pad
+(compat-deftests string-pad
   (ought "a   " "a" 4)
   (ought "aaaa" "aaaa" 4)
   (ought "aaaaaa" "aaaaaa" 4)
@@ -1037,19 +1037,19 @@ being compared against."
   (ought "   a" "a" 4 nil t)
   (ought "...a" "a" 4 ?. t))
 
-(compat-deftest string-chop-newline
+(compat-deftests string-chop-newline
   (ought "" "")
   (ought "" "\n")
   (ought "aaa" "aaa")
   (ought "aaa" "aaa\n")
   (ought "aaa\n" "aaa\n\n"))
 
-(compat-deftest macroexpand-1
+(compat-deftests macroexpand-1
   (ought '(if a b c) '(if a b c))
   (ought '(if a (progn b)) '(when a b))
   (ought '(if a (progn (unless b c))) '(when a (unless b c))))
 
-(compat-deftest compat-file-size-human-readable
+(compat-deftests compat-file-size-human-readable
     (ought "1000" 1000)
     (ought "1k" 1024)
     (ought "1M" (* 1024 1024))
@@ -1065,7 +1065,7 @@ being compared against."
     (ought "1 k" 1000 'si " ")
     (ought "1 kA" 1000 'si " " "A"))
 
-(compat-deftest format-prompt
+(compat-deftests format-prompt
   (ought "Prompt: " "Prompt" nil)
   (ought "Prompt: " "Prompt" "")
   (ought "Prompt (default  ): " "Prompt" " ")
@@ -1130,7 +1130,7 @@ being compared against."
                         ((lop (and (setq b (not b)) (1+ i)))))))
               'ok)))
 
-(compat-deftest directory-name-p
+(compat-deftests directory-name-p
   (ought t "/")
   (ought nil "/file")
   (ought nil "/dir/file")
@@ -1190,7 +1190,7 @@ being compared against."
   (should-not
    (compat--and-let* (((= 5 6))) t)))
 
-(compat-deftest compat-json-parse-string
+(compat-deftests compat-json-parse-string
   (ought 0 "0")
   (ought 1 "1")
   (ought 0.5 "0.5")
@@ -1274,7 +1274,7 @@ being compared against."
                        ht))
                     :type '(wrong-type-argument stringp a)))))
 
-(compat-deftest compat-lookup-key
+(compat-deftests compat-lookup-key
   (let ((a-map (make-sparse-keymap))
         (b-map (make-sparse-keymap)))
     (define-key a-map "x" 'foo)
@@ -1312,13 +1312,13 @@ being compared against."
     (remhash 1 ht)
     (should (equal '(two) (compat--hash-table-values ht)))))
 
-(compat-deftest string-empty-p
+(compat-deftests string-empty-p
   (ought t "")
   (ought nil " ")
   (ought t (make-string 0 ?x))
   (ought nil (make-string 1 ?x)))
 
-(compat-deftest string-join
+(compat-deftests string-join
   (ought "" '(""))
   (ought "" '("") " ")
   (ought "a" '("a"))
@@ -1326,13 +1326,13 @@ being compared against."
   (ought "abc" '("a" "b" "c"))
   (ought "a b c" '("a" "b" "c") " "))
 
-(compat-deftest string-blank-p
+(compat-deftests string-blank-p
   (ought 0 "")
   (ought 0 " ")
   (ought 0 (make-string 0 ?x))
   (ought nil (make-string 1 ?x)))
 
-(compat-deftest string-remove-prefix
+(compat-deftests string-remove-prefix
   (ought "" "" "")
   (ought "a" "" "a")
   (ought "" "a" "")
@@ -1343,7 +1343,7 @@ being compared against."
   (ought "aabbcc" "cc" "aabbcc")
   (ought "aabbcc" "dd" "aabbcc"))
 
-(compat-deftest string-remove-suffix
+(compat-deftests string-remove-suffix
   (ought "" "" "")
   (ought "a" "" "a")
   (ought "" "a" "")
@@ -1356,7 +1356,7 @@ being compared against."
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
-  (compat-deftest bool-vector-exclusive-or
+  (compat-deftests bool-vector-exclusive-or
     (ought (bool-vector nil t t nil) a b)
     (ought (bool-vector nil t t nil) b a)
     (ert-deftest compat-bool-vector-exclusive-or-sideeffect ()
@@ -1377,7 +1377,7 @@ being compared against."
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
-  (compat-deftest bool-vector-union
+  (compat-deftests bool-vector-union
     (ought (bool-vector t t t nil) a b)
     (ought (bool-vector t t t nil) b a)
     (ert-deftest compat-bool-vector-union-sideeffect ()
@@ -1397,7 +1397,7 @@ being compared against."
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
-  (compat-deftest bool-vector-intersection
+  (compat-deftests bool-vector-intersection
     (ought (bool-vector t nil nil nil) a b)
     (ought (bool-vector t nil nil nil) b a)
     (ert-deftest compat-bool-vector-intersection-sideeffect ()
@@ -1417,7 +1417,7 @@ being compared against."
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
-  (compat-deftest bool-vector-set-difference
+  (compat-deftests bool-vector-set-difference
     (ought (bool-vector nil t nil nil) a b)
     (ought (bool-vector nil nil t nil) b a)
     (ert-deftest compat-bool-vector-set-difference-sideeffect ()
@@ -1438,7 +1438,7 @@ being compared against."
     (expect wrong-type-argument (vector) (bool-vector) (vector))
     (expect wrong-type-argument (vector) (vector) (vector))))
 
-(compat-deftest bool-vector-not
+(compat-deftests bool-vector-not
   (ought (bool-vector) (bool-vector))
   (ought (bool-vector t) (bool-vector nil))
   (ought (bool-vector nil) (bool-vector t))
@@ -1449,7 +1449,7 @@ being compared against."
   (expect wrong-type-argument (vector))
   (expect wrong-type-argument (vector) (vector)))
 
-(compat-deftest bool-vector-subsetp
+(compat-deftests bool-vector-subsetp
   (ought t (bool-vector) (bool-vector))
   (ought t (bool-vector t) (bool-vector t))
   (ought t (bool-vector nil) (bool-vector t))
@@ -1467,7 +1467,7 @@ being compared against."
   (expect wrong-type-argument (vector) (bool-vector))
   (expect wrong-type-argument (vector) (vector)))
 
-(compat-deftest bool-vector-count-consecutive
+(compat-deftests bool-vector-count-consecutive
   (ought 0 (bool-vector nil) (bool-vector nil) 0)
   (ought 0 (make-bool-vector 10 nil) t 0)
   (ought 10 (make-bool-vector 10 nil) nil 0)
@@ -1484,7 +1484,7 @@ being compared against."
   (ought 5 (bool-vector t t t t nil t t t t t) t 5)
   (expect wrong-type-argument (vector) nil 0))
 
-(compat-deftest bool-vector-count-population
+(compat-deftests bool-vector-count-population
   (ought  0 (bool-vector))
   (ought  0 (make-bool-vector 10 nil))
   (ought 10 (make-bool-vector 10 t))
@@ -1496,7 +1496,7 @@ being compared against."
   (ought  3 (bool-vector t nil t t))
   (expect wrong-type-argument (vector)))
 
-(compat-deftest compat-assoc-delete-all
+(compat-deftests compat-assoc-delete-all
   (ought (list) 0 (list))
   ;; Test `eq'
   (ought '((1 . one)) 0 (list (cons 1 'one)))
@@ -1523,7 +1523,7 @@ being compared against."
   (ought '((0 . zero) a (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=)
   (ought '(a (0 . zero) (0 . zero)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=))
 
-(compat-deftest color-values-from-color-spec
+(compat-deftests color-values-from-color-spec
   ;; #RGB notation
   (ought '(0 0 0) "#000")
   (ought '(0 0 0) "#000000")
@@ -1619,7 +1619,7 @@ being compared against."
   (ought nil "rgbi : 0/0/0")
   (ought nil "rgbi:0/0.5/10"))
 
-(compat-deftest file-modes-number-to-symbolic
+(compat-deftests file-modes-number-to-symbolic
   (ought "-rwx------" #o700)
   (ought "-rwxrwx---" #o770)
   (ought "-rwx---rwx" #o707)
@@ -1631,7 +1631,7 @@ being compared against."
   (ought "prwx------" #o10700)
   (ought "-rwx------" #o30700))
 
-(compat-deftest file-local-name
+(compat-deftests file-local-name
   (ought "" "")
   (ought "foo" "foo")
   (ought "/bar/foo" "/bar/foo")
@@ -1645,7 +1645,7 @@ being compared against."
   (ought ":foo" "/ssh:::foo")
   (ought ":/bar/foo" "/ssh:::/bar/foo"))
 
-(compat-deftest file-name-quoted-p
+(compat-deftests file-name-quoted-p
   (ought nil "")
   (ought t "/:")
   (ought nil "//:")
@@ -1659,7 +1659,7 @@ being compared against."
   ;; (ought nil "/ssh:/:a")
   )
 
-(compat-deftest file-name-quote
+(compat-deftests file-name-quote
   (ought "/:" "")
   (ought "/::" ":")
   (ought "/:/" "/")
@@ -1670,7 +1670,7 @@ being compared against."
   (ought "/:a" "/:a")
   (ought (concat "/ssh:" (system-name) ":/:a") "/ssh::a"))
 
-(compat-deftest make-lock-file-name
+(compat-deftests make-lock-file-name
   (ought (expand-file-name ".#") "")
   (ought (expand-file-name ".#a") "a")
   (ought (expand-file-name ".#foo") "foo")
@@ -1687,7 +1687,7 @@ being compared against."
   (ought (expand-file-name "bar/.#b") "bar/b")
   (ought (expand-file-name "bar/.#foo") "bar/foo"))
 
-(compat-deftest time-equal-p
+(compat-deftests time-equal-p
   (ought t nil nil)
 
   ;; FIXME: Testing these values can be tricky, because the timestamp
@@ -1715,13 +1715,13 @@ being compared against."
   (ought nil '(1 2 3 4) '(2 2 3 4))
   (ought nil '(2 2 3 4) '(1 2 3 4)))
 
-(compat-deftest date-days-in-month
+(compat-deftests date-days-in-month
   (ought 31 2020 1)
   (ought 30 2020 4)
   (ought 29 2020 2)
   (ought 28 2021 2))
 
-(compat-deftest decoded-time-period
+(compat-deftests decoded-time-period
   (ought 0 '())
   (ought 0 '(0))
   (ought 1 '(1))

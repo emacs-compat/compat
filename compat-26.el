@@ -627,5 +627,5 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
                     (cdr ,image*)
                     ,property* ,value*)))))))
 
-(provide 'compat-26)
+(compat--inhibit-prefixed (provide 'compat-26))
 ;;; compat-26.el ends here
