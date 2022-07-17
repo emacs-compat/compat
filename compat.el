@@ -55,11 +55,11 @@
           load-suffixes))
        (features (copy-sequence features)))
   (ignore features)                     ;for the byte compiler
-  (load "compat-24")
-  (load "compat-25")
-  (load "compat-26")
-  (load "compat-27")
-  (load "compat-28"))
+  (require 'compat-24)
+  (require 'compat-25)
+  (require 'compat-26)
+  (require 'compat-27)
+  (require 'compat-28))
 
 (provide 'compat)
 ;;; compat.el ends here
