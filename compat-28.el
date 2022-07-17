@@ -871,5 +871,5 @@ are 30 days long."
      (* (or (nth 4 time) 0) 60 60 24 30)
      (* (or (nth 5 time) 0) 60 60 24 365)))
 
-(provide 'compat-28)
+(compat--inhibit-prefixed (provide 'compat-28))
 ;;; compat-28.el ends here

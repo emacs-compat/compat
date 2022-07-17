@@ -48,18 +48,21 @@
 ;; and do nothing when loading each sub-feature manually.
 
 (defvar compat--inhibit-prefixed)
-(let* ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing)))
-       (load-suffixes
-        (if (bound-and-true-p compat-testing)
-            (cons ".el" (remove ".el" load-suffixes))
-          load-suffixes))
-       (features (copy-sequence features)))
-  (ignore features)                     ;for the byte compiler
-  (require 'compat-24)
-  (require 'compat-25)
-  (require 'compat-26)
-  (require 'compat-27)
-  (require 'compat-28))
+(let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing)))
+      (load-suffixes
+       (if (bound-and-true-p compat-testing)
+           (cons ".el" (remove ".el" load-suffixes))
+         load-suffixes)))
+  ;; Instead of using `require', we manually check `features' and call
+  ;; `load' to avoid the issue of not using `provide' at the end of
+  ;; the file (which is disabled by `compat--inhibit-prefixed', so
+  ;; that the file can be loaded again at some later point when the
+  ;; prefixed definitions are needed).
+  (unless (memq 'compat-24 features) (load "compat-24"))
+  (unless (memq 'compat-25 features) (load "compat-25"))
+  (unless (memq 'compat-26 features) (load "compat-26"))
+  (unless (memq 'compat-27 features) (load "compat-27"))
+  (unless (memq 'compat-28 features) (load "compat-28")))
 
 (provide 'compat)
 ;;; compat.el ends here

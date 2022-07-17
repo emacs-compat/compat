@@ -520,5 +520,5 @@ function for defining FACE and recalculating its attributes."
   (dolist (frame (frame-list))
     (face-spec-recalc face frame)))
 
-(provide 'compat-24)
+(compat--inhibit-prefixed (provide 'compat-24))
 ;;; compat-24.el ends here

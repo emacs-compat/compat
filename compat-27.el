@@ -694,5 +694,5 @@ The return value is a string (or nil in case we can’t find it)."
         31
       30)))
 
-(provide 'compat-27)
+(compat--inhibit-prefixed (provide 'compat-27))
 ;;; compat-27.el ends here
