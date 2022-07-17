@@ -51,7 +51,7 @@
 (let* ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing)))
        (load-suffixes
         (if (bound-and-true-p compat-testing)
-            '(".el" ".elc")
+            (cons ".el" (remove ".el" load-suffixes))
           load-suffixes))
        (features (copy-sequence features)))
   (ignore features)                     ;for the byte compiler
