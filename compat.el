@@ -48,8 +48,12 @@
 ;; and do nothing when loading each sub-feature manually.
 
 (defvar compat--inhibit-prefixed)
-(let* ((features (copy-sequence features))
-       (compat--inhibit-prefixed t))
+(let* ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing)))
+       (load-suffixes
+        (if (bound-and-true-p compat-testing)
+            '(".el" ".elc")
+          load-suffixes))
+       (features (copy-sequence features)))
   (ignore features)                     ;for the byte compiler
   (load "compat-24")
   (load "compat-25")
