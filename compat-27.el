@@ -144,6 +144,9 @@ Letter-case is significant, but text properties are ignored."
 (defvar json-false)
 (defvar json-null)
 
+;; The function is declared to satisfy the byte compiler while testing
+;; if native JSON parsing is available.;
+(declare-function json-serialize nil (object &rest args))
 (compat-defun json-serialize (object &rest args)
   "Return the JSON representation of OBJECT as a string.
 
