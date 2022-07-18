@@ -3,26 +3,39 @@
 .SUFFIXES: .el .elc
 
 EMACS = emacs
-BYTEC = compat-help.elc \
-	compat-macs.elc \
-	compat-24.4.elc \
-	compat-25.1.elc \
-	compat-26.1.elc \
-	compat-27.1.elc \
-	compat-28.1.elc \
-	compat-29.1.elc \
+MAKEINFO = makeinfo
+BYTEC = compat-macs.elc \
+	compat-help.elc \
+	compat-font-lock.elc \
+	compat-24.elc \
+	compat-25.elc \
+	compat-26.elc \
+	compat-27.elc \
+	compat-28.elc \
+	compat-29.elc \
 	compat.elc
 
-all: compile test
+all: compile
 
 compile: $(BYTEC)
 
-test:
+test: compile
+	$(EMACS) --version
 	$(EMACS) -Q --batch -L . -l compat-tests.el -f ert-run-tests-batch-and-exit
 
 clean:
-	$(RM) $(BYTEC)
+	$(RM) $(BYTEC) compat.info
+
+compat-24.el:	compat-macs.el
+compat-25.el:	compat-macs.el
+compat-26.el:	compat-macs.el
+compat-27.el:	compat-macs.el
+compat-28.el:	compat-macs.el
+compat-29.el:	compat-macs.el
+compat-font-lock.el: compat-macs.el
 
 .el.elc:
-	$(EMACS) -Q --batch -L . -f batch-byte-compile $^
+	$(EMACS) -Q --batch -L . -f batch-byte-compile $<
 
+compat.info: compat.texi
+	$(MAKEINFO) $<

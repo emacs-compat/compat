@@ -1,6 +1,6 @@
-;;; compat-29.1.el --- Compatibility Layer for Emacs 29.1  -*- lexical-binding: t; -*-
+;;; compat-29.el --- Compatibility Layer for Emacs 29.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Keywords: lisp
@@ -28,7 +28,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
-(declare-function compat-maxargs-/= "compat" (func n))
 
 ;;;; Defined in xdisp.c
 
@@ -130,5 +129,5 @@ than this function."
      (end (substring string (- (length string) length)))
      (t (substring string 0 length)))))
 
-(provide 'compat-29.1)
-;;; compat-29.1.el ends here
+(provide 'compat-29)
+;;; compat-29.el ends here

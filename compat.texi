@@ -1,0 +1,1163 @@
+\input texinfo    @c -*- texinfo -*-
+@c %**start of header
+@setfilename compat.info
+@settitle "Compat" Manual
+@documentencoding UTF-8
+@documentlanguage en
+@c %**end of header
+
+@copying
+Copyright @copyright{} 2022  Free Software Foundation, Inc.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with the Front-Cover Texts being “A GNU Manual,” and
+with the Back-Cover Texts as in (a) below.  A copy of the license is
+included in the section entitled “GNU Free Documentation License.”
+
+(a) The FSF’s Back-Cover Text is: “You have the freedom to copy and
+modify this GNU manual.”
+
+@end quotation
+@end copying
+
+@dircategory Emacs
+@direntry
+* Compat: (compat).     Compatibility Library for Emacs Lisp.
+@end direntry
+
+@finalout
+@titlepage
+@title "Compat" Manual
+@subtitle For version 28.1.2.0
+@author Philip Kaludercic
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+@ifnottex
+@node Top
+@top "Compat" Manual
+
+This manual documents the usage of the "Compat" Emacs lisp library,
+the forward-compatibility library for Emacs Lisp, corresponding to
+version 28.1.2.0.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Introduction::
+* Support::
+* Development::
+* Function Index::
+* Variable Index::
+
+@detailmenu
+--- The Detailed Node Listing ---
+
+Introduction
+
+* Overview::
+* Usage::
+* Intentions::
+
+Usage
+
+* Additional libraries::
+
+Support
+
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
+
+@end detailmenu
+@end menu
+
+@node Introduction
+@chapter Introduction
+
+@menu
+* Overview::
+* Usage::
+* Intentions::
+@end menu
+
+@node Overview
+@section Overview
+
+The objective of Compat is to provide "forwards compatibility"
+library for Emacs Lisp.  That is to say by using Compat, an Elisp
+package does not have to make the decision to either use new and
+useful functionality or support old versions of Emacs.
+
+Version 24.3 is chosen as the oldest version, because this is the
+newest version on CentOS 7. It is intended to preserve compatibility
+for at least as the Centos 7 reaches @uref{https://wiki.centos.org/About/Product, EOL}, 2024.
+
+If you are developing a package with Compat in mind, consider loading
+`compat-help` (on your system, not in a package) to get relevant notes
+inserted into the help buffers of functions that are implemented or
+advised in Compat.
+
+Note that Compat provides a few prefixed function, ie. functions with
+a @code{compat-} prefix.  These are used to provide extended functionality
+for commands that are already defined (@code{sort}, @code{assoc}, @code{seq}, @dots{}).
+It might be possible to transform these into advised functions later
+on, so that the modified functionality is accessible without a prefix.
+Feedback on this point is appreciated.
+
+@node Usage
+@section Usage
+
+The intended use-case for this library is for package developers to
+add as a dependency in the header:
+
+@example
+;; Package-Requires: ((emacs "24.3") (compat "28.1.2.0"))
+@end example
+
+
+and later on a
+
+@example
+(require 'compat)
+@end example
+
+
+This will load all non-prefixed definitions (functions and macros with
+a leading `compat-`).  To load these, an additional
+
+@example
+(require 'compat-XY) ; e.g. 26
+@end example
+
+
+will be necessary, to load compatibility code for Emacs version XY@.
+
+It is recommended to subscribe to the @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce} mailing list to
+be notified when new versions are released or relevant changes are
+made.
+
+@menu
+* Additional libraries::
+@end menu
+
+@node Additional libraries
+@subsection Additional libraries
+
+These libraries are packages with Compat, but are disabled by default.
+To use them you can use @code{M-x load-library}:
+
+@table @asis
+@item compat-help
+Add notes to @code{*Help*} buffer, if a compatibility
+definition has something to warn you about.
+@item compat-font-lock
+Highlight functions that are implemented as
+compatibility definitions.
+@end table
+
+@node Intentions
+@section Intentions
+
+The library intends to provide support back until Emacs 24.3.  The
+intended audience are package developers that are interested in using
+newer developments, without having to break compatibility.
+
+Sadly, total backwards compatibility cannot be provided for technical
+reasons.  These might include:
+
+@itemize
+@item
+An existing function or macro was extended by some new functionality.  To
+support these cases, the function or macro would have to be advised.
+As this is usually regarded as invasive and is shown to be a
+significant overhead, even when the new feature is not used, this
+approach is not used.
+
+As a compromise, prefixed functions and macros (starting with a
+@code{compat-} prefix) can be provided.
+
+@item
+New functionality was implemented in the core, and depends on
+external libraries that cannot be reasonably duplicated in the scope
+of a compatibility library.
+
+@item
+New functionality depends on an entire new, non-trivial library.
+Sometimes these are provided via ELPA (xref, project, @dots{}), but other
+times it would be infeasible to duplicate an entire library within
+Compat while also providing the necessary backwards compatibility.
+
+@item
+It just wasn't added, and there is no good reason (though good
+excuses might exist).  If you happen to find such a function,
+@ref{Development, , reporting} it would be much appreciated.
+
+Always begin by assuming that this might be the case, unless proven
+otherwise.
+@end itemize
+
+@node Support
+@chapter Support
+
+This section goes into the features that Compat manages and doesn't
+manage to provide for each Emacs version.
+
+@menu
+* Emacs 24.4::                   Compatibility support for Emacs 24.4
+* Emacs 24.5::                   Compatibility support for Emacs 24.5
+* Emacs 25.1::                   Compatibility support for Emacs 25.1
+* Emacs 26.1::                   Compatibility support for Emacs 26.1
+* Emacs 27.1::                   Compatibility support for Emacs 27.1
+* Emacs 28.1::                   Compatibility support for Emacs 28.1
+@end menu
+
+@node Emacs 24.4
+@section Emacs 24.4
+
+The following functions and macros implemented in 24.4, and are
+provided by Compat by default:
+
+@defmac with-eval-after-load
+See @ref{Hooks for Loading,Hooks for Loading,,elisp,}.
+@end defmac
+
+@defun special-form-p
+See @ref{Special Forms,Special Forms,,elisp,}.
+@end defun
+
+@defun macrop
+See @ref{Simple Macro,Simple Macro,,elisp,}.
+@end defun
+
+@defun string-suffix-p
+See @ref{Text Comparison,Text Comparison,,elisp,}.
+@end defun
+
+@defun delete-consecutive-dups
+Defined in @code{subr.el}.
+@end defun
+
+@defun define-error
+See @ref{Error Symbols,Error Symbols,,elisp,}.
+@end defun
+
+@defun bool-vector-exclusive-or
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-union
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-intersection
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-not
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-subsetp
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-count-consecutive
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun bool-vector-count-population
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+@defun completion-table-merge
+See @ref{Basic Completion,Basic Completion,,elisp,}.
+@end defun
+
+@defun completion-table-with-cache
+See @ref{Programmed Completion,Programmed
+  Completion,,elisp,}.
+@end defun
+
+@defun face-spec-set
+See @ref{Defining Faces,Defining Faces,,elisp,}.
+@end defun
+
+These functions are prefixed with @code{compat} prefix, and are only loaded
+when @code{compat-24} is required:
+
+@defun compat-=
+@end defun
+@defun compat-<
+@end defun
+@defun compat->
+@end defun
+@defun compat-<=
+@end defun
+@defun compat->=
+See @ref{Comparison of Numbers,Comparison of Numbers,,elisp,}.
+
+Allows for more than two arguments to be compared.
+@end defun
+
+@defun compat-split-string
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+
+Takes optional argument TRIM@.
+@end defun
+
+Compat does not provide support for the following Lisp features
+implemented in 24.4:
+
+@itemize
+@item
+Allowing the second optional argument to @code{eval} to specify a lexical
+environment.
+@item
+The @code{define-alternatives} macro.
+@item
+Support for the @code{defalias-fset-function} symbol property.
+@item
+The @code{group-gid} and @code{groupd-read-gid} functions.
+@item
+The @code{pre-redisplay-function} hook.
+@item
+Allowing for @code{with-demoted-errors} to take a additional argument @code{format}.
+@item
+The @code{face-spec-set} function.
+@item
+The @code{add-face-text-property} function.
+@item
+No @code{tty-setup-hook} hook.
+@item
+The @code{get-pos-property} function.
+@item
+The @code{define-advice} macro.
+@item
+Support for generators.
+@item
+The @code{string-trim}, @code{string-trim-left} and @code{string-trim-right}
+functions.  These are instead provided as prefixed function as part
+of @ref{Emacs 26.1} support.
+@end itemize
+
+@node Emacs 24.5
+@section Emacs 24.5
+
+No special support for 24.5 was deemed necessary.
+
+@node Emacs 25.1
+@section Emacs 25.1
+
+The following functions and macros implemented in 25.1, and are
+provided by Compat by default:
+
+@defun format-message
+See @ref{Formatting Strings,Formatting Strings,,elisp,}.
+@end defun
+
+@defun directory-name-p
+See @ref{Directory Names,Directory Names,,elisp,}.
+@end defun
+
+@defun string-greaterp
+See @ref{Text Comparison,Text Comparison,,elisp,}.
+@end defun
+
+@defmac with-file-modes
+See @ref{Changing Files,Changing Files,,elisp,}.
+@end defmac
+
+@defun alist-get
+See @ref{Association Lists,Association Lists,,elisp,}.
+@end defun
+
+@defmac if-let
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac when-let
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac thread-first
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac thread-last
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defun macroexpand-1
+See @ref{Expansion,Expansion,,elisp,}.
+@end defun
+
+@defun directory-files-recursively
+See @ref{Contents of Directories,Contents of
+  Directories,,elisp,}.
+@end defun
+
+@defun bool-vector
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
+@end defun
+
+These functions are prefixed with @code{compat} prefix, and are only loaded
+when @code{compat-25} is required:
+
+@defun compat-sort
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
+
+Adds support for vectors to be sorted, next to just lists.
+@end defun
+
+Compat does not provide support for the following Lisp features
+implemented in 25.1:
+
+@itemize
+@item
+New @code{pcase} patterns.
+@item
+The hook @code{prefix-command-echo-keystrokes-functions} and
+@code{prefix-command-preserve-state-hook}.
+@item
+The hook @code{pre-redisplay-functions}.
+@item
+The function @code{make-process}.
+@item
+Support for the variable @code{inhibit-message}.
+@item
+The @code{define-inline} functionality.
+@item
+The functions @code{string-collate-lessp} and @code{string-collate-equalp}.
+@item
+Support for @code{alist-get} as a generalised variable.
+@item
+The function @code{funcall-interactivly}.
+@item
+The function @code{buffer-substring-with-bidi-context}.
+@item
+The function @code{font-info}.
+@item
+The function @code{default-font-width}.
+@item
+The function @code{window-font-height} and @code{window-font-width}.
+@item
+The function @code{window-max-chars-per-line}.
+@item
+The function @code{set-binary-mode}.
+@item
+The functions @code{bufferpos-to-filepos} and @code{filepos-to-bufferpos}.
+@end itemize
+
+Note that the changes in Emacs 25.2 and 25.3 are also included here,
+for the sake of simplicity.
+
+@node Emacs 26.1
+@section Emacs 26.1
+
+The following functions and macros implemented in 26.1, and are
+provided by Compat by default:
+
+@defun func-arity
+See @ref{What Is a Function,What Is a Function,,elisp,}.
+@end defun
+
+@defun mapcan
+See @ref{Mapping Functions,Mapping Functions,,elisp,}.
+@end defun
+
+@defun cXXXr
+@end defun
+@defun cXXXXr
+See @ref{List Elements,List Elements,,elisp,}.
+@end defun
+
+@defvar gensym-counter
+See @code{gensym}.
+@end defvar
+
+@defun gensym
+See @ref{Creating Symbols,Creating Symbols,,elisp,}.
+@end defun
+
+@defun make-nearby-temp-file
+See @ref{Unique File Names,Unique File Names,,elisp,}.
+@end defun
+
+@defvar mounted-file-systems
+Defined in @code{files.el}.
+@end defvar
+
+@defun temporary-file-directory
+See @ref{Unique File Names,Unique File Names,,elisp,}.
+@end defun
+
+@defmac if-let*
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac when-let*
+Defined in @code{subr-x.el}.
+@end defmac
+
+@defmac and-let*
+Defined in @code{subr-x.el}.
+
+@strong{@strong{Please Note:}} The implementation provided by Compat does not
+include a bug that was observed with Emacs 26 (see @uref{https://debbugs.gnu.org/cgi/bugreport.cgi?bug=31840}).
+@end defmac
+
+@defun file-local-name
+See @ref{Magic File Names,Magic File Names,,elisp,}.
+@end defun
+
+@defun file-name-quoted-p
+See @ref{File Name Expansion,File Name Expansion,,elisp,}.
+@end defun
+
+@defun file-name-quote
+See @ref{File Name Expansion,File Name Expansion,,elisp,}.
+@end defun
+
+@defun image-property
+Defined in @code{image.el}.
+
+This function can also be used as a generalised variable.  To use
+this you need to explicitly require @code{compat-26}.
+@end defun
+
+@defun file-attribute-type
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-link-number
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-user-id
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-group-id
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-access-time
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-modification-time
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-status-change-time
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-size
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-modes
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-inode-number
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-device-number
+See @ref{File Attributes,File Attributes,,elisp,}.
+@end defun
+
+@defun file-attribute-collect
+Defined in @code{files.el}.
+@end defun
+
+These functions are prefixed with @code{compat} prefix, and are only loaded
+when @code{compat-26} is required:
+
+@defun compat-assoc
+See @ref{Association Lists,Association Lists,,elisp,}.
+
+Handle the optional argument TESTFN@.
+@end defun
+
+@defun compat-line-number-at-pos
+See @ref{Text Lines,Text Lines,,elisp,}.
+
+Handle the optional argument ABSOLUTE@.
+@end defun
+
+@defun compat-alist-get
+See @ref{Association Lists,Association Lists,,elisp,}.
+
+Handle the optional argument TESTFN@.  Can also be used as a
+generalised variable.
+@end defun
+
+@defun compat-string-trim-left
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+
+Handles the optional argument REGEXP@.
+@end defun
+
+@defun compat-string-trim-right
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+
+Handles the optional argument REGEXP@.
+@end defun
+
+@defun compat-string-trim
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+
+Handles the optional arguments TRIM-LEFT and TRIM-RIGHT@.
+@end defun
+
+Compat does not provide support for the following Lisp features
+implemented in 26.1:
+
+@itemize
+@item
+The function @code{secure-hash-algorithms}.
+@item
+The function @code{gnutls-avalaible-p}.
+@item
+Support for records and record functions.
+@item
+The function @code{mapbacktrace}.
+@item
+The function @code{file-name-case-insensitive-p}.
+@item
+The file-attributes constructors.
+@item
+The function @code{read-multiple-choice}.
+@item
+The additional elements of @code{parse-partial-sexp}.
+@item
+The function @code{add-variable-watcher}.
+@item
+The function @code{undo-amalgamate-change-group}.
+@item
+The function @code{char-from-name}
+@item
+Signalling errors when @code{length} or @code{member} deal with list cycles.
+@item
+The function @code{frame-list-z-order}.
+@item
+The function @code{frame-restack}.
+@item
+Support for side windows and atomic windows.
+@item
+All changes related to @code{display-buffer}.
+@item
+The function @code{window-swap-states}.
+@end itemize
+
+Note that the changes in Emacs 26.2 and 26.3 are also included here,
+for the sake of simplicity.
+
+@node Emacs 27.1
+@section Emacs 27.1
+
+The following functions and macros implemented in 27.1, and are
+provided by Compat by default:
+
+@defun proper-list-p
+See @ref{List-related Predicates,List-related Predicates,,elisp,}.
+@end defun
+
+@defun string-distance
+See @ref{Text Comparison,Text Comparison,,elisp,}.
+@end defun
+
+@defun json-serialize
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+@end defun
+
+@defun json-insert
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+@end defun
+
+@defun json-parse-string
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+@end defun
+
+@defun json-parse-buffer
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+@end defun
+
+@defmac ignore-error
+See @ref{Handling Errors,Handling Errors,,elisp,}.
+@end defmac
+
+@defmac dolist-with-progress-reporter
+See @ref{Progress,Progress,,elisp,}.
+@end defmac
+
+@defun flatten-tree
+See @ref{Building Lists,Building Lists,,elisp,}.
+@end defun
+
+@defun xor
+See @ref{Combining Conditions,Combining Conditions,,elisp,}.
+@end defun
+
+@defvar regexp-unmatchable
+Defined in @code{subr.el}.
+@end defvar
+
+@defun decoded-time-second
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-minute
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-hour
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-day
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-month
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-year
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-weekday
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-dst
+Defined in @code{simple.el}.
+@end defun
+
+@defun decoded-time-zone
+Defined in @code{simple.el}.
+@end defun
+
+@defun package-get-version
+Defined in @code{package.el}.
+@end defun
+
+@defun time-equal-p
+See @ref{Time Calculations,Time Calculations,,elisp,}.
+@end defun
+
+@defun date-days-in-month
+See @ref{Time Calculations,Time Calculations,,elisp,}.
+@end defun
+
+@defun exec-path
+See @ref{Subprocess Creation,Subprocess Creation,,elisp,}.
+
+This function requires the @code{time-date} feature to be loaded.
+@end defun
+
+These functions are prefixed with @code{compat} prefix, and are only loaded
+when @code{compat-27} is required:
+
+@defun compat-recenter
+See @ref{Textual Scrolling,Textual Scrolling,,elisp,}.
+
+Adds the optional argument REDISPLAY@.
+@end defun
+
+@defun compat-lookup-key
+See @ref{Low-Level Key Binding,Low-Level Key Binding,,elisp,}.
+
+Allows KEYMAP to be a list of keymaps.
+@end defun
+
+@defmac compat-setq-local
+See @ref{Creating Buffer-Local,Creating Buffer-Local,,elisp,}.
+
+Allow for more than one variable to be set.
+@end defmac
+
+@defun compat-regexp-opt
+See @ref{Regexp Functions,Regexp Functions,,elisp,}.
+
+Handle an empty list of strings.
+@end defun
+
+@defun compat-file-size-human-readable
+Defined in @code{files.el}.
+
+Handle the optional third (SPACE) and forth (UNIT) arguments.
+@end defun
+
+@defun compat-assoc-delete-all
+See @ref{Association Lists,Association Lists,,elisp,}.
+
+Handle the optional third (TESTFN) argument.
+@end defun
+
+@defun compat-executable-find
+@ref{Locating Files,Locating Files,,elisp,}.
+
+Handle the optional second (REMOTE) argument.
+@end defun
+
+@defun compat-dired-get-marked-files
+Defined in @code{dired.el}
+
+Handles the optional fifth (ERROR) argument.
+@end defun
+
+Compat does not provide support for the following Lisp features
+implemented in 27.1:
+
+@itemize
+@item
+Bigint support.
+@item
+The function @code{time-convert}.
+@item
+All @code{iso8601-*} functions.
+@item
+The macro @code{benchmark-progn}.
+@item
+The function @code{read-char-from-minibuffer}.
+@item
+The minor mode @code{reveal-mode}.
+@item
+The macro @code{with-suppressed-warnings}.
+@item
+Support for @code{condition-case} to handle t.
+@item
+The functions @code{major-mode-suspend} and @code{major-mode-restore}.
+@item
+The function @code{provided-mode-derived-p}.
+@item
+The function @code{file-system-info}.
+@item
+The more consistent treatment of NaN values.
+@item
+The function @code{ring-resize}.
+@item
+The function @code{group-name}.
+@item
+Additional @code{format-spec} modifiers.
+@item
+Support for additional body forms for
+@code{define-globalized-minor-mode}.
+@item
+The macro @code{with-connection-local-variables} and related
+functionality.
+@end itemize
+
+Note that the changes in Emacs 27.2 are also included here, for the
+sake of simplicity.
+
+@node Emacs 28.1
+@section Emacs 28.1
+
+The following functions and macros implemented in 28.1, and are
+provided by Compat by default:
+
+@defun string-search
+See @ref{Text Comparison,Text Comparison,,elisp,}.
+@end defun
+
+@defun length=
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
+@end defun
+
+@defun length<
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
+@end defun
+
+@defun length>
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
+@end defun
+
+@defun file-name-concat
+See @ref{Directory Names,Directory Names,,elisp,}.
+@end defun
+
+@defun garbage-collect-maybe
+Defined in @code{alloc.c}.
+@end defun
+
+@defun string-replace
+See @ref{Search and Replace,Search and Replace,,elisp,}.
+@end defun
+
+@defun always
+@ref{Calling Functions,Calling Functions,,elisp,}.
+@end defun
+
+@defun insert-into-buffer
+See @ref{Insertion,Insertion,,elisp,}.
+@end defun
+
+@defun replace-regexp-in-region
+See @ref{Search and Replace,Search and Replace,,elisp,}.
+@end defun
+
+@defun replace-string-in-region
+See @ref{Search and Replace,Search and Replace,,elisp,}.
+@end defun
+
+@defun buffer-local-boundp
+See @ref{Creating Buffer-Local,Creating Buffer-Local,,elisp,}.
+@end defun
+
+@defun with-existing-directory
+See @ref{Testing Accessibility,Testing Accessibility,,elisp,}.
+@end defun
+
+@defmac dlet
+See @ref{Local Variables,Local Variables,,elisp,}.
+@end defmac
+
+@defun ensure-list
+See @ref{Building Lists,Building Lists,,elisp,}.
+@end defun
+
+@defun string-clean-whitespace
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+@end defun
+
+@defun string-fill
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+@end defun
+
+@defun string-lines
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+@end defun
+
+@defun string-pad
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+@end defun
+
+@defun string-chop-newline
+See @ref{Creating Strings,Creating Strings,,elisp,}.
+@end defun
+
+@defmac named-let
+See @ref{Local Variables,Local Variables,,elisp,}.
+@end defmac
+
+@defun file-name-with-extension
+See @ref{File Name Components,File Name
+  Components,,elisp,}.
+@end defun
+
+@defun directory-empty-p
+See @ref{Contents of Directories,Contents of Directories,,elisp,}.
+@end defun
+
+@defun format-prompt
+See @ref{Text from Minibuffer,Text from Minibuffer,,elisp,}.
+@end defun
+
+@defun thing-at-mouse
+Defined in @code{thingatpt.el}.
+@end defun
+
+@defun macroexp-file-name
+Defined in @code{macroexp}.
+@end defun
+
+@defmac with-environment-variables
+See @ref{System Environment,System
+  Environment,,elisp,}.
+@end defmac
+
+@defun button-buttonize
+Defined in @code{button.el}.
+@end defun
+
+@defun make-directory-autoloads
+See @ref{Autoload,Autoload,,elisp,}.
+@end defun
+
+@defun color-values-from-color-spec
+Defined in @code{xfaces.c}.
+@end defun
+
+@defun file-modes-number-to-symbolic
+See @ref{Changing Files,Changing
+  Files,,elisp,}.
+@end defun
+
+@defun file-backup-file-names
+See @ref{Backup Names,Backup Names,,elisp,}.
+@end defun
+
+@defun make-lock-file-name
+Defined in @code{files.el}.
+@end defun
+
+@defun null-device
+Defined in @code{files.el}.
+@end defun
+
+@defun decoded-time-period
+Defined in @code{time-data.el}.
+@end defun
+
+@defun subr-primitive-p
+Defined in @code{subr.el}.
+@end defun
+
+@defun file-name-absolute-p
+See @ref{Absolute and Relative File Names,Relative File Names,,elisp,}.
+@end defun
+
+These functions are prefixed with @code{compat} prefix, and are only loaded
+when @code{compat-28} is required:
+
+@defun compat-unlock-buffer
+See @ref{File Locks,File Locks,,elisp,}.
+
+Handle @code{file-error} conditions.
+@end defun
+
+@defun compat-string-width
+See @ref{Size of Displayed Text,Size of Displayed Text,,elisp,}.
+
+Handle optional arguments FROM and TO@.
+@end defun
+
+@defun compat-json-serialize
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+
+Handle primitive, top-level JSON values.
+@end defun
+
+@defun compat-json-insert
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+
+Handle primitive, top-level JSON values.
+@end defun
+
+@defun compat-json-parse-string
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+
+Handle primitive, top-level JSON values.
+@end defun
+
+@defun compat-json-parse-buffer
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
+
+Handle primitive, top-level JSON values.
+@end defun
+
+@defun compat-count-windows
+Defined in @code{window.el}.
+
+Handle optional argument ALL-FRAMES@.
+@end defun
+
+Compat does not provide support for the following Lisp features
+implemented in 28.1:
+
+@itemize
+@item
+Support for @code{interactive} or @code{declare} to list applicable modes.
+@item
+Support for @code{:interactive} argument to @code{define-minor-mode} and
+@code{define-derived-mode}.
+@item
+Support for @code{:predicate} argument to @code{define-globalized-minor-mode}.
+@item
+"Success handler" for @code{condition-case}.
+@item
+The function @code{benchmark-call}.
+@item
+Support for the @code{natnum} defcustom type.
+@item
+The function @code{macroexp-compiling-p}.
+@item
+The function @code{macroexp-warn-and-return}.
+@item
+Additional Edebug keywords.
+@item
+Shorthand support.
+@item
+The function @code{custom-add-choice}.
+@item
+The function @code{decoded-time-period}.
+@item
+The function @code{dom-print}.
+@item
+The function @code{dom-remove-attribute}.
+@item
+The function @code{dns-query-asynchronous}.
+@item
+The function @code{get-locale-names}.
+@item
+The function @code{json-avaliable-p}.
+@item
+The function @code{mail-header-parse-addresses-lax}.
+@item
+The function @code{mail-header-parse-address-lax}.
+@item
+The function @code{make-separator-line}.
+@item
+The function @code{num-processors}.
+@item
+The function @code{object-intervals}.
+@item
+The function @code{process-lines-ignore-status}.
+@item
+The function @code{require-theme}.
+@item
+The function @code{syntax-class-to-char}.
+@item
+The function @code{null-device} and @code{path-separator}.
+@end itemize
+
+@node Development
+@chapter Development
+
+Compat is developed on @uref{https://sr.ht/~pkal/compat, SourceHut}. A restricted @uref{https://github.com/phikal/compat.el, GitHub mirror} is also
+maintained.
+
+Patches and comments can be sent to the @uref{https://lists.sr.ht/~pkal/compat-devel, development mailing list}
+(@email{~pkal/compat-devel@@lists.sr.ht, ~pkal/compat-devel@@lists.sr.ht}).  Bug reports are best sent to the
+@uref{https://todo.sr.ht/~pkal/compat, issue tracker} (@email{~pkal/compat@@todo.sr.ht, ~pkal/compat@@todo.sr.ht}).  The GitHub mirror can also
+be used to submit patches.  These may include issues in the
+compatibility code, missing definitions or performance issues.
+
+Please note that as a GNU ELPA package, Compat requires contributors
+to have signed the @uref{https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html, FSF copyright assignment}, before any non-trivial
+contribution (roughly 15 lines of code) can be applied.
+
+@node Function Index
+@appendix Function Index
+
+@printindex fn
+
+@node Variable Index
+@appendix Variable Index
+
+@printindex vr
+
+@bye
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

@@ -1,6 +1,6 @@
 ;;; compat-macs.el --- Compatibility Macros           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Keywords: lisp
@@ -29,16 +29,29 @@
   "Ignore all arguments."
   nil)
 
-(defun compat-generate-common (name def-fn install-fn check-fn attr type)
-  "Common code for generating compatibility definitions for NAME.
-The resulting body is constructed by invoking the functions
-DEF-FN (passed the \"realname\" and the version number, returning
-the compatibility definition), the INSTALL-FN (passed the
-\"realname\" and returning the installation code),
-CHECK-FN (passed the \"realname\" and returning a check to see if
-the compatibility definition should be installed).  ATTR is a
-plist used to modify the generated code.  The following
-attributes are handled, all others are ignored:
+(defvar compat--inhibit-prefixed nil
+  "Non-nil means that prefixed definitions are not loaded.
+A prefixed function is something like `compat-assoc', that is
+only made visible when the respective compatibility version file
+is loaded (in this case `compat-26').")
+
+(defmacro compat--inhibit-prefixed (&rest body)
+  "Ignore BODY unless `compat--inhibit-prefixed' is true."
+  `(unless (bound-and-true-p compat--inhibit-prefixed)
+     ,@body))
+
+(defvar compat--generate-function #'compat--generate-default
+  "Function used to generate compatibility code.
+The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
+CHECK-FN, ATTR and TYPE.  The resulting body is constructed by
+invoking the functions DEF-FN (passed the \"realname\" and the
+version number, returning the compatibility definition), the
+INSTALL-FN (passed the \"realname\" and returning the
+installation code), CHECK-FN (passed the \"realname\" and
+returning a check to see if the compatibility definition should
+be installed).  ATTR is a plist used to modify the generated
+code.  The following attributes are handled, all others are
+ignored:
 
 - :min-version :: Prevent the compatibility definition from begin
   installed in versions older than indicated (string).
@@ -51,6 +64,9 @@ attributes are handled, all others are ignored:
 
 - :cond :: Only install the compatibility code, iff the value
   evaluates to non-nil.
+
+  For prefixed functions, this can be interpreted as a test to
+  `defalias' an existing definition or not.
 
 - :no-highlight :: Do not highlight this definition as
   compatibility function.
@@ -67,55 +83,88 @@ attributes are handled, all others are ignored:
 - :prefix :: Add a `compat-' prefix to the name, and define the
   compatibility code unconditionally.
 
-TYPE is used to set the symbol property `compat-type' for NAME."
+TYPE is used to set the symbol property `compat-type' for NAME.")
+
+(defun compat--generate-default (name def-fn install-fn check-fn attr type)
+  "Generate a leaner compatibility definition.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      (let ((file (or (and (boundp 'byte-compile-current-file)
-                                           byte-compile-current-file)
-                                      load-file-name
-                                      (buffer-file-name))))
-                        ;; Guess the version from the file the macro is
-                        ;; being defined in.
-                        (and (string-match
-                              "compat-\\([[:digit:]]+\\.[[:digit:]]+\\)\\.\\(?:elc?\\)\\'"
-                              file)
-                             (match-string 1 file)))))
+         (version
+          ;; If you edit this, also edit `compat--generate-testable' in
+          ;; `compat-tests.el'.
+          (or (plist-get attr :version)
+              (let* ((file (car (last current-load-list)))
+                     (file (if (stringp file)
+                               ;; Some library, which requires compat-XY.el,
+                               ;; is being compiled and compat-XY.el has not
+                               ;; been compiled yet.
+                               file
+                             ;; compat-XY.el is being compiled.
+                             (or (bound-and-true-p byte-compile-current-file)
+                                 ;; Fallback to the buffer being evaluated.
+                                 (buffer-file-name)))))
+                (if (and file
+                         (string-match
+                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
+                    (concat (match-string 1 file) ".1")
+                  (error "BUG: No version number could be extracted")))))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
-         (body `(progn
-                  ,(unless (plist-get attr :no-highlight)
-                     `(font-lock-add-keywords
-                       'emacs-lisp-mode
-                       ',`((,(concat "\\_<\\("
-                                     (regexp-quote (symbol-name name))
-                                     "\\)\\_>")
-                            1 font-lock-preprocessor-face prepend))))
-                  ,(funcall install-fn realname version))))
-    `(progn
-       (put ',realname 'compat-type ',type)
-       (put ',realname 'compat-version ,version)
-       (put ',realname 'compat-doc ,(plist-get attr :note))
-       (put ',name 'compat-def ',realname)
-       ,(funcall def-fn realname version)
-       (,@(cond
-           ((or (and min-version
-                     (version< emacs-version min-version))
-                (and max-version
-                     (version< max-version emacs-version)))
-            '(compat--ignore))
-           ((plist-get attr :prefix)
-            '(progn))
-           ((and version (version<= version emacs-version))
-            '(compat--ignore))
-           (`(when (and ,(if cond cond t)
-                        ,(funcall check-fn)))))
-        ,(if feature
-             ;; See https://nullprogram.com/blog/2018/02/22/:
-             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-           body)))))
+         (check (cond
+                 ((or (and min-version
+                           (version< emacs-version min-version))
+                      (and max-version
+                           (version< max-version emacs-version)))
+                  '(compat--ignore))
+                 ((plist-get attr :prefix)
+                  '(compat--inhibit-prefixed))
+                 ((and version (version<= version emacs-version) (not cond))
+                  '(compat--ignore))
+                 (`(when (and ,(if cond cond t)
+                              ,(funcall check-fn)))))))
+    (cond
+     ((and (plist-get attr :prefix) (memq type '(func macro))
+           (string-match "\\`compat-\\(.+\\)\\'" (symbol-name name))
+           (let* ((actual-name (intern (match-string 1 (symbol-name name))))
+                  (body (funcall install-fn actual-name version)))
+             (when (and (version<= version emacs-version)
+                        (fboundp actual-name))
+               `(,@check
+                 ,(if feature
+                      ;; See https://nullprogram.com/blog/2018/02/22/:
+                      `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+                    body))))))
+     ((plist-get attr :realname)
+      `(progn
+         ,(funcall def-fn realname version)
+         (,@check
+          ,(let ((body (funcall install-fn realname version)))
+             (if feature
+                 ;; See https://nullprogram.com/blog/2018/02/22/:
+                 `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+               body)))))
+     ((let* ((body (if (eq type 'advice)
+                       `(,@check
+                         ,(funcall def-fn realname version)
+                         ,(funcall install-fn realname version))
+                     `(,@check ,(funcall def-fn name version)))))
+        (if feature
+            ;; See https://nullprogram.com/blog/2018/02/22/:
+            `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+          body))))))
+
+(defun compat-generate-common (name def-fn install-fn check-fn attr type)
+  "Common code for generating compatibility definitions.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (when (and (plist-get attr :cond) (plist-get attr :prefix))
+    (error "A prefixed function %s cannot have a condition" name))
+  (funcall compat--generate-function
+           name def-fn install-fn check-fn attr type))
 
 (defun compat-common-fdefine (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
@@ -130,7 +179,7 @@ attributes (see `compat-generate-common')."
     ;; It might be possible to set these properties otherwise.  That
     ;; should be looked into and implemented if it is the case.
     (when (and (listp (car-safe body)) (eq (caar body) 'declare))
-      (when (version<= "25" emacs-version)
+      (when (version<= emacs-version "25")
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
     ;; Check if we want an explicitly prefixed function

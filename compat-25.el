@@ -1,8 +1,10 @@
-;;; compat-25.1.el --- Compatibility Layer for Emacs 25.1  -*- lexical-binding: t; -*-
+;;; compat-25.el --- Compatibility Layer for Emacs 25.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
+;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
+;; URL: https://git.sr.ht/~pkal/compat/
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -23,11 +25,29 @@
 ;; Find here the functionality added in Emacs 25.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions:
+;;
+;; - `compat-sort'
 
 ;;; Code:
 
 (eval-when-compile (require 'compat-macs))
+
+;;;; Defined in alloc.c
+
+(compat-defun bool-vector (&rest objects)
+  "Return a new bool-vector with specified arguments as elements.
+Allows any number of arguments, including zero.
+usage: (bool-vector &rest OBJECTS)"
+  (let ((vec (make-bool-vector (length objects) nil))
+        (i 0))
+    (while objects
+      (when (car objects)
+        (aset vec i t))
+      (setq objects (cdr objects)
+            i (1+ i)))
+    vec))
 
 ;;;; Defined in fns.c
 
@@ -62,6 +82,7 @@ This implementation is equivalent to `format'."
 
 (compat-defun directory-name-p (name)
   "Return non-nil if NAME ends with a directory separator character."
+  :realname compat--directory-name-p
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
             ?\\ ?/))
@@ -75,6 +96,7 @@ Case is significant.
 Symbols are also allowed; their print names are used instead."
   (string-lessp string2 string1))
 
+;;* UNTESTED
 (compat-defmacro with-file-modes (modes &rest body)
   "Execute BODY with default file permissions temporarily set to MODES.
 MODES is as for `set-default-file-modes'."
@@ -108,53 +130,6 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
 
 ;;;; Defined in subr-x.el
 
-(compat-advise require (feature &rest args)
-  "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
-  ;; As the compatibility advise around `require` is more a hack than
-  ;; of of actual value, the highlighting is suppressed.
-  :no-highlight t
-  (if (eq feature 'subr-x)
-      (let ((entry (assq feature after-load-alist)))
-        (let ((load-file-name nil))
-          (dolist (form (cdr entry))
-            (funcall (eval form t)))))
-    (apply oldfun feature args)))
-
-(compat-defmacro if-let* (varlist then &rest else)
-  "Bind variables according to VARLIST and evaluate THEN or ELSE.
-This is like `if-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  :feature 'subr-x
-  (declare (indent 2)
-           (debug ((&rest [&or symbolp (symbolp form) (form)])
-                   body)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,then ,@else))))
-
-(compat-defmacro when-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-This is like `when-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  `(compat--if-let* ,varlist ,(macroexp-progn body)))
-
-(compat-defmacro and-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-Like `when-let*', except if BODY is empty and all the bindings
-are non-nil, then the result is non-nil."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  `(compat--when-let* ,varlist ,@(or body '(t))))
-
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
@@ -171,6 +146,7 @@ SYMBOL is checked for nil.
 As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
+  :realname compat--if-let
   :feature 'subr-x
   (declare (indent 2)
            (debug ([&or (symbolp form)
@@ -180,7 +156,7 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(compat--if-let* ,spec ,then ,@(macroexp-unprogn else)))
+  `(compat--if-let* ,spec ,then ,(macroexp-progn else)))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
@@ -190,7 +166,7 @@ If all are non-nil, return the value of the last form in BODY.
 The variable list SPEC is the same as in `if-let'."
   :feature 'subr-x
   (declare (indent 1) (debug if-let))
-  `(compat-if-let ,spec ,(macroexp-progn body)))
+  `(compat--if-let ,spec ,(macroexp-progn body)))
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.
@@ -267,5 +243,78 @@ threading."
                 form))))))))
    (t form)))
 
-(provide 'compat-25.1)
-;;; compat-25.1.el ends here
+;;;; Defined in byte-run.el
+
+;;* UNTESTED
+(compat-defun function-put (func prop value)
+  "Set FUNCTION's property PROP to VALUE.
+The namespace for PROP is shared with symbols.
+So far, FUNCTION can only be a symbol, not a lambda expression."
+  :version "24.4"
+  (put func prop value))
+
+;;;; Defined in files.el
+
+;;* UNTESTED
+(compat-defun directory-files-recursively
+    (dir regexp &optional include-directories predicate follow-symlinks)
+  "Return list of all files under directory DIR whose names match REGEXP.
+This function works recursively.  Files are returned in \"depth
+first\" order, and files from each directory are sorted in
+alphabetical order.  Each file name appears in the returned list
+in its absolute form.
+
+By default, the returned list excludes directories, but if
+optional argument INCLUDE-DIRECTORIES is non-nil, they are
+included.
+
+PREDICATE can be either nil (which means that all subdirectories
+of DIR are descended into), t (which means that subdirectories that
+can't be read are ignored), or a function (which is called with
+the name of each subdirectory, and should return non-nil if the
+subdirectory is to be descended into).
+
+If FOLLOW-SYMLINKS is non-nil, symbolic links that point to
+directories are followed.  Note that this can lead to infinite
+recursion."
+  :realname compat--directory-files-recursively
+  (let* ((result nil)
+         (files nil)
+         (dir (directory-file-name dir))
+         ;; When DIR is "/", remote file names like "/method:" could
+         ;; also be offered.  We shall suppress them.
+         (tramp-mode (and tramp-mode (file-remote-p (expand-file-name dir)))))
+    (dolist (file (sort (file-name-all-completions "" dir)
+                        'string<))
+      (unless (member file '("./" "../"))
+        (if (directory-name-p file)
+            (let* ((leaf (substring file 0 (1- (length file))))
+                   (full-file (concat dir "/" leaf)))
+              ;; Don't follow symlinks to other directories.
+              (when (and (or (not (file-symlink-p full-file))
+                             (and (file-symlink-p full-file)
+                                  follow-symlinks))
+                         ;; Allow filtering subdirectories.
+                         (or (eq predicate nil)
+                             (eq predicate t)
+                             (funcall predicate full-file)))
+                (let ((sub-files
+                       (if (eq predicate t)
+                           (condition-case nil
+                               (compat--directory-files-recursively
+                                full-file regexp include-directories
+                                predicate follow-symlinks)
+                             (file-error nil))
+                         (compat--directory-files-recursively
+                          full-file regexp include-directories
+                          predicate follow-symlinks))))
+                  (setq result (nconc result sub-files))))
+              (when (and include-directories
+                         (string-match regexp leaf))
+                (setq result (nconc result (list full-file)))))
+          (when (string-match regexp file)
+            (push (concat dir "/" file) files)))))
+    (nconc result (nreverse files))))
+
+(compat--inhibit-prefixed (provide 'compat-25))
+;;; compat-25.el ends here
