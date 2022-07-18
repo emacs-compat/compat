@@ -1771,7 +1771,7 @@ being compared against."
   (expect wrong-type-argument '(0 0 0 0 a))
   (expect wrong-type-argument '(0 0 0 0 0 a)))
 
-(compat-deftest subr-primitive-p
+(compat-deftests subr-primitive-p
   (ought t (symbol-function 'identity))       ;function from fns.c
   (ought nil (symbol-function 'match-string)) ;function from subr.el
   (ought nil (symbol-function 'defun))        ;macro from subr.el
