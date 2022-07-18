@@ -31,7 +31,7 @@ modify this GNU manual.”
 @finalout
 @titlepage
 @title "Compat" Manual
-@subtitle For version 28.1.1.0
+@subtitle For version 28.1.2.0
 @author Philip Kaludercic
 @page
 @vskip 0pt plus 1filll
@@ -46,7 +46,7 @@ modify this GNU manual.”
 
 This manual documents the usage of the "Compat" Emacs lisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
-version 28.1.1.0.
+version 28.1.2.0.
 
 @insertcopying
 @end ifnottex
@@ -123,7 +123,7 @@ The intended use-case for this library is for package developers to
 add as a dependency in the header:
 
 @example
-;; Package-Requires: ((emacs "24.3") (compat "28.1.1.0"))
+;; Package-Requires: ((emacs "24.3") (compat "28.1.2.0"))
 @end example
 
 
