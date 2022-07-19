@@ -41,12 +41,6 @@
 
 (eval-when-compile (require 'compat-macs))
 
-;; We load all the components of Compat with a copied value of
-;; `features' list, that will prevent the list being modified, and all
-;; the files can be loaded again.  This is done so that
-;; `compat--inhibit-prefixed' can take effect when loading `compat',
-;; and do nothing when loading each sub-feature manually.
-
 (defvar compat--inhibit-prefixed)
 (let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing))))
   ;; Instead of using `require', we manually check `features' and call
