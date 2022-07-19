@@ -47,7 +47,8 @@
   ;; that the file can be loaded again at some later point when the
   ;; prefixed definitions are needed).
   (dolist (vers '(24 25 26 27 28))
-    (when (and (< vers emacs-major-version)
+    (when (and (or (bound-and-true-p compat-testing)
+                   (< vers emacs-major-version))
                (not (memq (intern (format "compat-%d" vers)) features)))
       (load (format "compat-%d%s" vers
                     (if (bound-and-true-p compat-testing)
