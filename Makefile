@@ -25,7 +25,6 @@ test: compile
 clean:
 	$(RM) $(BYTEC) compat.info
 
-compat.el:	compat-macs.el
 compat-24.el:	compat-macs.el
 compat-25.el:	compat-macs.el
 compat-26.el:	compat-macs.el

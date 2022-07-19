@@ -39,8 +39,6 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'compat-macs))
-
 (defvar compat--inhibit-prefixed)
 (let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing))))
   ;; Instead of using `require', we manually check `features' and call
