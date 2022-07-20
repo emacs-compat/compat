@@ -230,19 +230,19 @@ The following functions and macros implemented in 24.4, and are
 provided by Compat by default:
 
 @defmac with-eval-after-load
-See @ref{Hooks for Loading,(elisp) Hooks for Loading,,elisp,}.
+See @ref{Hooks for Loading,Hooks for Loading,,elisp,}.
 @end defmac
 
 @defun special-form-p
-See @ref{Special Forms,(elisp) Special Forms,,elisp,}.
+See @ref{Special Forms,Special Forms,,elisp,}.
 @end defun
 
 @defun macrop
-See @ref{Simple Macro,(elisp) Simple Macro,,elisp,}.
+See @ref{Simple Macro,Simple Macro,,elisp,}.
 @end defun
 
 @defun string-suffix-p
-See @ref{Text Comparison,(elisp) Text Comparison,,elisp,}.
+See @ref{Text Comparison,Text Comparison,,elisp,}.
 @end defun
 
 @defun delete-consecutive-dups
@@ -250,48 +250,48 @@ Defined in @code{subr.el}.
 @end defun
 
 @defun define-error
-See @ref{Error Symbols,(elisp) Error Symbols,,elisp,}.
+See @ref{Error Symbols,Error Symbols,,elisp,}.
 @end defun
 
 @defun bool-vector-exclusive-or
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-union
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-intersection
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-not
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-subsetp
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-count-consecutive
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun bool-vector-count-population
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 @defun completion-table-merge
-See @ref{Basic Completion,(elisp) Basic Completion,,elisp,}.
+See @ref{Basic Completion,Basic Completion,,elisp,}.
 @end defun
 
 @defun completion-table-with-cache
-See @ref{Programmed Completion,(elisp) Programmed
+See @ref{Programmed Completion,Programmed
   Completion,,elisp,}.
 @end defun
 
 @defun face-spec-set
-See @ref{Defining Faces,(elisp) Defining Faces,,elisp,}.
+See @ref{Defining Faces,Defining Faces,,elisp,}.
 @end defun
 
 These functions are prefixed with @code{compat} prefix, and are only loaded
@@ -306,13 +306,13 @@ when @code{compat-24} is required:
 @defun compat-<=
 @end defun
 @defun compat->=
-See @ref{Comparison of Numbers,(elisp) Comparison of Numbers,,elisp,}.
+See @ref{Comparison of Numbers,Comparison of Numbers,,elisp,}.
 
 Allows for more than two arguments to be compared.
 @end defun
 
 @defun compat-split-string
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 
 Takes optional argument TRIM@.
 @end defun
@@ -364,23 +364,23 @@ The following functions and macros implemented in 25.1, and are
 provided by Compat by default:
 
 @defun format-message
-See @ref{Formatting Strings,(elisp) Formatting Strings,,elisp,}.
+See @ref{Formatting Strings,Formatting Strings,,elisp,}.
 @end defun
 
 @defun directory-name-p
-See @ref{Directory Names,(elisp) Directory Names,,elisp,}.
+See @ref{Directory Names,Directory Names,,elisp,}.
 @end defun
 
 @defun string-greaterp
-See @ref{Text Comparison,(elisp) Text Comparison,,elisp,}.
+See @ref{Text Comparison,Text Comparison,,elisp,}.
 @end defun
 
 @defmac with-file-modes
-See @ref{Changing Files,(elisp) Changing Files,,elisp,}.
+See @ref{Changing Files,Changing Files,,elisp,}.
 @end defmac
 
 @defun alist-get
-See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
+See @ref{Association Lists,Association Lists,,elisp,}.
 @end defun
 
 @defmac if-let
@@ -400,23 +400,23 @@ Defined in @code{subr-x.el}.
 @end defmac
 
 @defun macroexpand-1
-See @ref{Expansion,(elisp) Expansion,,elisp,}.
+See @ref{Expansion,Expansion,,elisp,}.
 @end defun
 
 @defun directory-files-recursively
-See @ref{Contents of Directories,(elisp) Contents of
+See @ref{Contents of Directories,Contents of
   Directories,,elisp,}.
 @end defun
 
 @defun bool-vector
-See @ref{Bool-Vectors,(elisp) Bool-Vectors,,elisp,}.
+See @ref{Bool-Vectors,Bool-Vectors,,elisp,}.
 @end defun
 
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-25} is required:
 
 @defun compat-sort
-See @ref{Sequence Functions,(elisp) Sequence Functions,,elisp,}.
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
 
 Adds support for vectors to be sorted, next to just lists.
 @end defun
@@ -470,17 +470,17 @@ The following functions and macros implemented in 26.1, and are
 provided by Compat by default:
 
 @defun func-arity
-See @ref{What Is a Function,(elisp) What Is a Function,,elisp,}.
+See @ref{What Is a Function,What Is a Function,,elisp,}.
 @end defun
 
 @defun mapcan
-See @ref{Mapping Functions,(elisp) Mapping Functions,,elisp,}.
+See @ref{Mapping Functions,Mapping Functions,,elisp,}.
 @end defun
 
 @defun cXXXr
 @end defun
 @defun cXXXXr
-See @ref{List Elements,(elisp) List Elements,,elisp,}.
+See @ref{List Elements,List Elements,,elisp,}.
 @end defun
 
 @defvar gensym-counter
@@ -488,11 +488,11 @@ See @code{gensym}.
 @end defvar
 
 @defun gensym
-See @ref{Creating Symbols,(elisp) Creating Symbols,,elisp,}.
+See @ref{Creating Symbols,Creating Symbols,,elisp,}.
 @end defun
 
 @defun make-nearby-temp-file
-See @ref{Unique File Names,(elisp) Unique File Names,,elisp,}.
+See @ref{Unique File Names,Unique File Names,,elisp,}.
 @end defun
 
 @defvar mounted-file-systems
@@ -500,7 +500,7 @@ Defined in @code{files.el}.
 @end defvar
 
 @defun temporary-file-directory
-See @ref{Unique File Names,(elisp) Unique File Names,,elisp,}.
+See @ref{Unique File Names,Unique File Names,,elisp,}.
 @end defun
 
 @defmac if-let*
@@ -519,15 +519,15 @@ include a bug that was observed with Emacs 26 (see @uref{https://debbugs.gnu.org
 @end defmac
 
 @defun file-local-name
-See @ref{Magic File Names,(elisp) Magic File Names,,elisp,}.
+See @ref{Magic File Names,Magic File Names,,elisp,}.
 @end defun
 
 @defun file-name-quoted-p
-See @ref{File Name Expansion,(elisp) File Name Expansion,,elisp,}.
+See @ref{File Name Expansion,File Name Expansion,,elisp,}.
 @end defun
 
 @defun file-name-quote
-See @ref{File Name Expansion,(elisp) File Name Expansion,,elisp,}.
+See @ref{File Name Expansion,File Name Expansion,,elisp,}.
 @end defun
 
 @defun image-property
@@ -538,47 +538,47 @@ this you need to explicitly require @code{compat-26}.
 @end defun
 
 @defun file-attribute-type
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-link-number
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-user-id
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-group-id
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-access-time
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-modification-time
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-status-change-time
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-size
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-modes
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-inode-number
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-device-number
-See @ref{File Attributes,(elisp) File Attributes,,elisp,}.
+See @ref{File Attributes,File Attributes,,elisp,}.
 @end defun
 
 @defun file-attribute-collect
@@ -589,38 +589,38 @@ These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-26} is required:
 
 @defun compat-assoc
-See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
+See @ref{Association Lists,Association Lists,,elisp,}.
 
 Handle the optional argument TESTFN@.
 @end defun
 
 @defun compat-line-number-at-pos
-See @ref{Text Lines,(elisp) Text Lines,,elisp,}.
+See @ref{Text Lines,Text Lines,,elisp,}.
 
 Handle the optional argument ABSOLUTE@.
 @end defun
 
 @defun compat-alist-get
-See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
+See @ref{Association Lists,Association Lists,,elisp,}.
 
 Handle the optional argument TESTFN@.  Can also be used as a
 generalised variable.
 @end defun
 
 @defun compat-string-trim-left
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 
 Handles the optional argument REGEXP@.
 @end defun
 
 @defun compat-string-trim-right
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 
 Handles the optional argument REGEXP@.
 @end defun
 
 @defun compat-string-trim
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 
 Handles the optional arguments TRIM-LEFT and TRIM-RIGHT@.
 @end defun
@@ -675,43 +675,43 @@ The following functions and macros implemented in 27.1, and are
 provided by Compat by default:
 
 @defun proper-list-p
-See @ref{List-related Predicates,(elisp) List-related Predicates,,elisp,}.
+See @ref{List-related Predicates,List-related Predicates,,elisp,}.
 @end defun
 
 @defun string-distance
-See @ref{Text Comparison,(elisp) Text Comparison,,elisp,}.
+See @ref{Text Comparison,Text Comparison,,elisp,}.
 @end defun
 
 @defun json-serialize
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 @end defun
 
 @defun json-insert
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 @end defun
 
 @defun json-parse-string
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 @end defun
 
 @defun json-parse-buffer
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 @end defun
 
 @defmac ignore-error
-See @ref{Handling Errors,(elisp) Handling Errors,,elisp,}.
+See @ref{Handling Errors,Handling Errors,,elisp,}.
 @end defmac
 
 @defmac dolist-with-progress-reporter
-See @ref{Progress,(elisp) Progress,,elisp,}.
+See @ref{Progress,Progress,,elisp,}.
 @end defmac
 
 @defun flatten-tree
-See @ref{Building Lists,(elisp) Building Lists,,elisp,}.
+See @ref{Building Lists,Building Lists,,elisp,}.
 @end defun
 
 @defun xor
-See @ref{Combining Conditions,(elisp) Combining Conditions,,elisp,}.
+See @ref{Combining Conditions,Combining Conditions,,elisp,}.
 @end defun
 
 @defvar regexp-unmatchable
@@ -759,15 +759,15 @@ Defined in @code{package.el}.
 @end defun
 
 @defun time-equal-p
-See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
+See @ref{Time Calculations,Time Calculations,,elisp,}.
 @end defun
 
 @defun date-days-in-month
-See @ref{Time Calculations,(elisp) Time Calculations,,elisp,}.
+See @ref{Time Calculations,Time Calculations,,elisp,}.
 @end defun
 
 @defun exec-path
-See @ref{Subprocess Creation,(elisp) Subprocess Creation,,elisp,}.
+See @ref{Subprocess Creation,Subprocess Creation,,elisp,}.
 
 This function requires the @code{time-date} feature to be loaded.
 @end defun
@@ -776,25 +776,25 @@ These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-27} is required:
 
 @defun compat-recenter
-See @ref{Textual Scrolling,(elisp) Textual Scrolling,,elisp,}.
+See @ref{Textual Scrolling,Textual Scrolling,,elisp,}.
 
 Adds the optional argument REDISPLAY@.
 @end defun
 
 @defun compat-lookup-key
-See @ref{Low-Level Key Binding,(elisp) Low-Level Key Binding,,elisp,}.
+See @ref{Low-Level Key Binding,Low-Level Key Binding,,elisp,}.
 
 Allows KEYMAP to be a list of keymaps.
 @end defun
 
 @defmac compat-setq-local
-See @ref{Creating Buffer-Local,(elisp) Creating Buffer-Local,,elisp,}.
+See @ref{Creating Buffer-Local,Creating Buffer-Local,,elisp,}.
 
 Allow for more than one variable to be set.
 @end defmac
 
 @defun compat-regexp-opt
-See @ref{Regexp Functions,(elisp) Regexp Functions,,elisp,}.
+See @ref{Regexp Functions,Regexp Functions,,elisp,}.
 
 Handle an empty list of strings.
 @end defun
@@ -806,13 +806,13 @@ Handle the optional third (SPACE) and forth (UNIT) arguments.
 @end defun
 
 @defun compat-assoc-delete-all
-See @ref{Association Lists,(elisp) Association Lists,,elisp,}.
+See @ref{Association Lists,Association Lists,,elisp,}.
 
 Handle the optional third (TESTFN) argument.
 @end defun
 
 @defun compat-executable-find
-@ref{Locating Files,(elisp) Locating Files,,elisp,}.
+@ref{Locating Files,Locating Files,,elisp,}.
 
 Handle the optional second (REMOTE) argument.
 @end defun
@@ -875,23 +875,23 @@ The following functions and macros implemented in 28.1, and are
 provided by Compat by default:
 
 @defun string-search
-See @ref{Text Comparison,(elisp) Text Comparison,,elisp,}.
+See @ref{Text Comparison,Text Comparison,,elisp,}.
 @end defun
 
 @defun length=
-See @ref{Sequence Functions,(elisp) Sequence Functions,,elisp,}.
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
 @end defun
 
 @defun length<
-See @ref{Sequence Functions,(elisp) Sequence Functions,,elisp,}.
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
 @end defun
 
 @defun length>
-See @ref{Sequence Functions,(elisp) Sequence Functions,,elisp,}.
+See @ref{Sequence Functions,Sequence Functions,,elisp,}.
 @end defun
 
 @defun file-name-concat
-See @ref{Directory Names,(elisp) Directory Names,,elisp,}.
+See @ref{Directory Names,Directory Names,,elisp,}.
 @end defun
 
 @defun garbage-collect-maybe
@@ -899,76 +899,76 @@ Defined in @code{alloc.c}.
 @end defun
 
 @defun string-replace
-See @ref{Search and Replace,(elisp) Search and Replace,,elisp,}.
+See @ref{Search and Replace,Search and Replace,,elisp,}.
 @end defun
 
 @defun always
-@ref{Calling Functions,(elisp) Calling Functions,,elisp,}.
+@ref{Calling Functions,Calling Functions,,elisp,}.
 @end defun
 
 @defun insert-into-buffer
-See @ref{Insertion,(elisp) Insertion,,elisp,}.
+See @ref{Insertion,Insertion,,elisp,}.
 @end defun
 
 @defun replace-regexp-in-region
-See @ref{Search and Replace,(elisp) Search and Replace,,elisp,}.
+See @ref{Search and Replace,Search and Replace,,elisp,}.
 @end defun
 
 @defun replace-string-in-region
-See @ref{Search and Replace,(elisp) Search and Replace,,elisp,}.
+See @ref{Search and Replace,Search and Replace,,elisp,}.
 @end defun
 
 @defun buffer-local-boundp
-See @ref{Creating Buffer-Local,(elisp) Creating Buffer-Local,,elisp,}.
+See @ref{Creating Buffer-Local,Creating Buffer-Local,,elisp,}.
 @end defun
 
 @defun with-existing-directory
-See @ref{Testing Accessibility,(elisp) Testing Accessibility,,elisp,}.
+See @ref{Testing Accessibility,Testing Accessibility,,elisp,}.
 @end defun
 
 @defmac dlet
-See @ref{Local Variables,(elisp) Local Variables,,elisp,}.
+See @ref{Local Variables,Local Variables,,elisp,}.
 @end defmac
 
 @defun ensure-list
-See @ref{Building Lists,(elisp) Building Lists,,elisp,}.
+See @ref{Building Lists,Building Lists,,elisp,}.
 @end defun
 
 @defun string-clean-whitespace
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 @end defun
 
 @defun string-fill
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 @end defun
 
 @defun string-lines
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 @end defun
 
 @defun string-pad
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 @end defun
 
 @defun string-chop-newline
-See @ref{Creating Strings,(elisp) Creating Strings,,elisp,}.
+See @ref{Creating Strings,Creating Strings,,elisp,}.
 @end defun
 
 @defmac named-let
-See @ref{Local Variables,(elisp) Local Variables,,elisp,}.
+See @ref{Local Variables,Local Variables,,elisp,}.
 @end defmac
 
 @defun file-name-with-extension
-See @ref{File Name Components,(elisp) File Name
+See @ref{File Name Components,File Name
   Components,,elisp,}.
 @end defun
 
 @defun directory-empty-p
-See @ref{Contents of Directories,(elisp) Contents of Directories,,elisp,}.
+See @ref{Contents of Directories,Contents of Directories,,elisp,}.
 @end defun
 
 @defun format-prompt
-See @ref{Text from Minibuffer,(elisp) Text from Minibuffer,,elisp,}.
+See @ref{Text from Minibuffer,Text from Minibuffer,,elisp,}.
 @end defun
 
 @defun thing-at-mouse
@@ -980,7 +980,7 @@ Defined in @code{macroexp}.
 @end defun
 
 @defmac with-environment-variables
-See @ref{System Environment,(elisp) System
+See @ref{System Environment,System
   Environment,,elisp,}.
 @end defmac
 
@@ -989,7 +989,7 @@ Defined in @code{button.el}.
 @end defun
 
 @defun make-directory-autoloads
-See @ref{Autoload,(elisp) Autoload,,elisp,}.
+See @ref{Autoload,Autoload,,elisp,}.
 @end defun
 
 @defun color-values-from-color-spec
@@ -997,12 +997,12 @@ Defined in @code{xfaces.c}.
 @end defun
 
 @defun file-modes-number-to-symbolic
-See @ref{Changing Files,(elisp) Changing
+See @ref{Changing Files,Changing
   Files,,elisp,}.
 @end defun
 
 @defun file-backup-file-names
-See @ref{Backup Names,(elisp) Backup Names,,elisp,}.
+See @ref{Backup Names,Backup Names,,elisp,}.
 @end defun
 
 @defun make-lock-file-name
@@ -1022,44 +1022,44 @@ Defined in @code{subr.el}.
 @end defun
 
 @defun file-name-absolute-p
-See @ref{Absolute and Relative File Names,(elisp) Relative File Names,,elisp,}.
+See @ref{Absolute and Relative File Names,Relative File Names,,elisp,}.
 @end defun
 
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-28} is required:
 
 @defun compat-unlock-buffer
-See @ref{File Locks,(elisp) File Locks,,elisp,}.
+See @ref{File Locks,File Locks,,elisp,}.
 
 Handle @code{file-error} conditions.
 @end defun
 
 @defun compat-string-width
-See @ref{Size of Displayed Text,(elisp) Size of Displayed Text,,elisp,}.
+See @ref{Size of Displayed Text,Size of Displayed Text,,elisp,}.
 
 Handle optional arguments FROM and TO@.
 @end defun
 
 @defun compat-json-serialize
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
 @defun compat-json-insert
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
 @defun compat-json-parse-string
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
 
 @defun compat-json-parse-buffer
-See @ref{Parsing JSON,(elisp) Parsing JSON,,elisp,}.
+See @ref{Parsing JSON,Parsing JSON,,elisp,}.
 
 Handle primitive, top-level JSON values.
 @end defun
