@@ -1021,6 +1021,10 @@ Defined in @code{time-data.el}.
 Defined in @code{subr.el}.
 @end defun
 
+@defun file-name-absolute-p
+See @ref{Absolute and Relative File Names,(elisp) Relative File Names,,elisp,}.
+@end defun
+
 These functions are prefixed with @code{compat} prefix, and are only loaded
 when @code{compat-28} is required:
 
@@ -1152,3 +1156,8 @@ contribution (roughly 15 lines of code) can be applied.
 @printindex vr
 
 @bye
+
+@c Local Variables:
+@c mode: texinfo
+@c TeX-master: t
+@c End:

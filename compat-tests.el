@@ -1777,5 +1777,19 @@ being compared against."
   (ought nil (symbol-function 'defun))        ;macro from subr.el
   (ought nil nil))
 
+(compat-deftests file-name-absolute-p   ;assuming unix
+  (ought t "/")
+  (ought t "/a")
+  (ought nil "a")
+  (ought nil "a/b")
+  (ought nil "a/b/")
+  (ought t "~")
+  (ought t "~/foo")
+  (ought nil "~foo")
+  (ought nil "~foo/")
+  (ought t "~root")
+  (ought t "~root/")
+  (ought t "~root/file"))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

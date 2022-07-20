@@ -342,6 +342,44 @@ A nil value for either argument stands for the current time."
                  (float-time (or t2 now))))
          1e-5)))))
 
+;;;; Defined in fileio.c
+
+(compat-defun file-name-absolute-p (filename)
+  "Return t if FILENAME is an absolute file name.
+On Unix, absolute file names start with `/'.  In Emacs, an absolute
+file name can also start with an initial `~' or `~USER' component,
+where USER is a valid login name."
+  ;; See definitions in filename.h
+  (let ((seperator
+         (eval-when-compile
+           (if (memq system-type '(cygwin windows-nt ms-dos))
+               "[\\/]" "/")))
+        (drive
+         (eval-when-compile
+           (cond
+            ((memq system-type '(windows-nt ms-dos))
+             "\\`[A-Za-z]:[\\/]")
+            ((eq system-type 'cygwin)
+             "\\`\\([\\/]\\|[A-Za-z]:\\)")
+            ("\\`/"))))
+        (home
+         (eval-when-compile
+           (if (memq system-type '(cygwin windows-nt ms-dos))
+               "\\`~[\\/]" "\\`~/")))
+        (user-home
+         (eval-when-compile
+           (format "\\`\\(~.*?\\)\\(%s.*\\)?$"
+                   (if (memq system-type '(cygwin windows-nt ms-dos))
+                       "[\\/]" "/")))))
+    (or (and (string-match-p drive filename) t)
+        (and (string-match-p home filename) t)
+        (save-excursion
+          (when (string-match user-home filename)
+            (let ((init (match-string 1 filename)))
+              (not (string=
+                    (file-name-base (expand-file-name init))
+                    init))))))))
+
 ;;;; Defined in subr.el
 
 (compat-defmacro setq-local (&rest pairs)
