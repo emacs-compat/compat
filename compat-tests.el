@@ -35,8 +35,65 @@
 (require 'ert)
 
 (require 'compat-macs)
+
+(defun compat--generate-testable (name def-fn install-fn check-fn attr type)
+  "Generate a more verbose compatibility definition, fit for testing.
+See `compat-generate-function' for details on the arguments NAME,
+DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+  (let* ((min-version (plist-get attr :min-version))
+         (max-version (plist-get attr :max-version))
+         (feature (plist-get attr :feature))
+         (cond (plist-get attr :cond))
+         (version
+          ;; If you edit this, also edit `compat--generate-default' in
+          ;; compat-macs.el.
+          (or (plist-get attr :version)
+              (let* ((file (car (last current-load-list)))
+                     (file (if (stringp file)
+                               file
+                             (or (bound-and-true-p byte-compile-current-file)
+                                 (buffer-file-name)))))
+                (if (and file
+                         (string-match
+                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
+                    (concat (match-string 1 file) ".1")
+                  (error "BUG: No version number could be extracted")))))
+         (realname (or (plist-get attr :realname)
+                       (intern (format "compat--%S" name))))
+         (body `(progn
+                  (unless (or (null (get ',name 'compat-def))
+                              (eq (get ',name 'compat-def) ',realname))
+                    (error "Duplicate compatibility definition: %s (was %s, now %s)"
+                           ',name (get ',name 'compat-def) ',realname))
+                  (put ',name 'compat-def ',realname)
+                  ,(funcall install-fn realname version))))
+    `(progn
+       (put ',realname 'compat-type ',type)
+       (put ',realname 'compat-version ,version)
+       (put ',realname 'compat-min-version ,min-version)
+       (put ',realname 'compat-max-version ,max-version)
+       (put ',realname 'compat-doc ,(plist-get attr :note))
+       ,(funcall def-fn realname version)
+       (,@(cond
+           ((or (and min-version
+                     (version< emacs-version min-version))
+                (and max-version
+                     (version< max-version emacs-version)))
+            '(compat--ignore))
+           ((plist-get attr :prefix)
+            '(compat--inhibit-prefixed))
+           ((and version (version<= version emacs-version) (not cond))
+            '(compat--ignore))
+           (`(when (and ,(if cond cond t)
+                        ,(funcall check-fn)))))
+        ,(if feature
+             ;; See https://nullprogram.com/blog/2018/02/22/:
+             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+           body)))))
+
+(setq compat--generate-function #'compat--generate-testable)
+
 (defvar compat-testing)
-(setq compat--generate-function #'compat--generate-verbose)
 (let ((compat-testing t))
   (load "compat.el"))
 
