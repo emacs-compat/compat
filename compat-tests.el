@@ -1834,6 +1834,25 @@ being compared against."
   (ought nil (symbol-function 'defun))        ;macro from subr.el
   (ought nil nil))
 
+(compat-deftests take
+  (ought nil 0 nil)
+  (ought nil 0 (list 1 2 3 4 5))
+  (ought (list 1) 1 (list 1 2 3 4 5))
+  (ought (list 1 2 3 4 5) 5 (list 1 2 3 4 5))
+  (ought (list 1 2 3 4 5) 6 (list 1 2 3 4 5))
+  (ought nil -1 nil)
+  (ought nil -1 (list 1 2 3 4 5)))
+
+(compat-deftests ntake
+  ;; TODO: test destructive property
+  (ought nil 0 nil)
+  (ought nil 0 (list 1 2 3 4 5))
+  (ought (list 1) 1 (list 1 2 3 4 5))
+  (ought (list 1 2 3 4 5) 5 (list 1 2 3 4 5))
+  (ought (list 1 2 3 4 5) 6 (list 1 2 3 4 5))
+  (ought nil -1 nil)
+  (ought nil -1 (list 1 2 3 4 5)))
+
 (ert-deftest compat-string-limit ()
   "Check if `compat-string-limit' was implemented properly."
   (compat-test string-limit

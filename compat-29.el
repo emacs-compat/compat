@@ -58,6 +58,26 @@ the properties at POSITION."
          (eq (car properties) prop))
     (cadr properties))))
 
+;;;; Defined in fns.c
+
+(compat-defun ntake (n list)
+  "Modify LIST to keep only the first N elements.
+If N is zero or negative, return nil.
+If N is greater or equal to the length of LIST, return LIST unmodified.
+Otherwise, return LIST after truncating it."
+  (and (> n 0) (let ((cons (nthcdr (1- n) list)))
+                 (when cons (setcdr cons nil))
+                 list)))
+
+(compat-defun take (n list)
+  "Return the first N elements of LIST.
+If N is zero or negative, return nil.
+If N is greater or equal to the length of LIST, return LIST (or a copy)."
+  (setq list (copy-sequence list))      ;FIXME: only copy as much as necessary
+  (and (> n 0) (let ((cons (nthcdr (1- n) list)))
+                 (when cons (setcdr cons nil))
+                 list)))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)
