@@ -5,5 +5,4 @@ Makefile
 .elpaignore
 COPYING
 README.md
-MANUAL
 compat.texi
