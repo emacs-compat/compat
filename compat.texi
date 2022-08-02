@@ -79,6 +79,7 @@ Support
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
+* Emacs 29.1::                   Compatibility support for Emacs 29.1
 
 @end detailmenu
 @end menu
@@ -2245,6 +2246,129 @@ The function @code{syntax-class-to-char}.
 @item
 The function @code{path-separator}.
 @end itemize
+
+@node Emacs 29.1
+@section Emacs 29.1
+
+The following functions and macros implemented in 28.1, and are
+@b{not} provided by Compat by default.  You will need to require
+@code{compat-29} for these to be loaded.  Note that due to upstream
+changes, it might happen that there will be the need for changes, so use
+these functions with care.
+
+With the eventual release of Compat 29.1.0.0, these functions will be
+loaded by default:
+
+@c copied from lispref/display.texi
+@defun get-display-property position prop &optional object properties
+This convenience function can be used to get a specific display
+property, no matter whether the @code{display} property is a vector, a
+list or a simple property.  This is like @code{get-text-property}
+(@pxref{Examining Properties,Examining Properties,,elisp,}), but works
+on the @code{display} property only.
+
+@var{position} is the position in the buffer or string to examine, and
+@var{prop} is the @code{display} property to return.  The optional
+@var{object} argument should be either a string or a buffer, and
+defaults to the current buffer.  If the optional @var{properties}
+argument is non-@code{nil}, it should be a @code{display} property,
+and in that case, @var{position} and @var{object} are ignored.  (This
+can be useful if you've already gotten the @code{display} property
+with @code{get-char-property}, for instance (@pxref{Examining
+Properties,Examining
+Properties,,elisp,}).
+@end defun
+
+@c copied from lispref/lists.texi
+@defun take n list
+This function returns the @var{n} first elements of @var{list}.  Essentially,
+it returns the part of @var{list} that @code{nthcdr} skips.
+
+@code{take} returns @var{list} if shorter than @var{n} elements;
+it returns @code{nil} if @var{n} is zero or negative.
+
+@example
+@group
+(take 3 '(a b c d))
+     @result{} (a b c)
+@end group
+@group
+(take 10 '(a b c d))
+     @result{} (a b c d)
+@end group
+@group
+(take 0 '(a b c d))
+     @result{} nil
+@end group
+@end example
+@end defun
+
+@c copied from lispref/lists.texi
+@defun ntake n list
+This is a version of @code{take} that works by destructively modifying
+the list structure of the argument.  That makes it faster, but the
+original value of @var{list} may be lost.
+
+@code{ntake} returns @var{list} unmodified if shorter than @var{n}
+elements; it returns @code{nil} if @var{n} is zero or negative.
+Otherwise, it returns @var{list} truncated to its first @var{n}
+elements.
+
+This means that it is usually a good idea to use the return value and
+not just rely on the truncation effect unless @var{n} is known to be
+positive.
+@end defun
+
+@c copied from lispref/functions.texi
+@defun function-alias-p object &optional noerror
+Checks whether @var{object} is a function alias.  If it is, it returns
+a list of symbols representing the function alias chain, else
+@code{nil}.  For instance, if @code{a} is an alias for @code{b}, and
+@code{b} is an alias for @code{c}:
+
+@example
+(function-alias-p 'a)
+    @result{} (b c)
+@end example
+
+If there's a loop in the definitions, an error will be signalled.  If
+@var{noerror} is non-@code{nil}, the non-looping parts of the chain is
+returned instead.
+@end defun
+
+@c copied from lispref/strings.texi
+@defun string-limit string length &optional end coding-system
+If @var{string} is shorter than @var{length} characters, @var{string}
+is returned as is.  Otherwise, return a substring of @var{string}
+consisting of the first @var{length} characters.  If the optional
+@var{end} parameter is given, return a string of the @var{length} last
+characters instead.
+
+If @var{coding-system} is non-@code{nil}, @var{string} will be encoded
+before limiting, and the result will be a unibyte string that's
+shorter than @code{length} bytes.  If @var{string} contains characters
+that are encoded into several bytes (for instance, when using
+@code{utf-8}), the resulting unibyte string is never truncated in the
+middle of a character representation.
+
+This function measures the string length in characters or bytes, and
+thus is generally inappropriate if you need to shorten strings for
+display purposes; use @code{truncate-string-to-width} or
+@code{window-text-pixel-size} or @code{string-glyph-split} instead
+(@pxref{Size of Displayed Text,Size of Displayed Text,,elisp,}).
+@end defun
+
+
+@c These functions are prefixed with @code{compat} prefix, and will require
+@c manual loading even after the release of Compat 29.1.0.0:
+
+@c Compat does not provide support for the following Lisp features
+@c implemented in 29.1:
+
+@c @itemize
+@c @item
+@c @c Support for XYZ
+@c @end itemize
 
 @node Development
 @chapter Development
