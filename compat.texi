@@ -553,7 +553,6 @@ disregarded.
 See @ref{Reading One Event,Reading One Event,,elisp,}.
 @end defun
 
-
 @defun image-property
 Defined in @code{image.el}.
 
@@ -665,8 +664,6 @@ The function @code{mapbacktrace}.
 The function @code{file-name-case-insensitive-p}.
 @item
 The file-attributes constructors.
-@item
-The function @code{read-multiple-choice}.
 @item
 The additional elements of @code{parse-partial-sexp}.
 @item
