@@ -749,8 +749,6 @@ The @code{define-inline} functionality.
 The functions @code{string-collate-lessp} and
 @code{string-collate-equalp}.
 @item
-Support for @code{alist-get} as a generalised variable.
-@item
 The function @code{funcall-interactivly}.
 @item
 The function @code{buffer-substring-with-bidi-context}.
