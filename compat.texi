@@ -2498,6 +2498,18 @@ etc. -- will not be noticed, and the buffer will still be marked
 unmodified, effectively ignoring those changes.
 @end defmac
 
+@c copied from lispref/files.texi
+@defun file-parent-directory filename
+This function returns the directory name of the parent directory of
+@var{filename}.  If @var{filename} is at the root directory of the
+filesystem, it returns @code{nil}.  A relative @var{filename} is
+assumed to be relative to @code{default-directory}, and the return
+value will also be relative in that case.  If the return value is
+non-@code{nil}, it ends in a slash.
+
+@xref{Directory Names,,,elisp}.
+@end defun
+
 
 
 @subsection Prefixed Definitions

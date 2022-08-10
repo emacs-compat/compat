@@ -2016,6 +2016,15 @@ being compared against."
   (ought t "~root/")
   (ought t "~root/file"))
 
+(compat-deftests file-parent-directory        ;assuming unix
+  (ought nil "/")
+  (ought "/" "/dir")
+  (ought "./" "dir")
+  (ought "file/to/" "file/to/dir")
+  (ought "file/to/" "file/to/dir/")
+  (ought "/file/to/" "/file/to/dir")
+  (ought "/file/to/" "/file/to/dir/"))
+
 (compat-deftests string-equal-ignore-case
   (ought t "" "")
   (ought t "a" "a")
