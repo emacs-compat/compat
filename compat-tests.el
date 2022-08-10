@@ -715,7 +715,7 @@ being compared against."
   (ought "\t\ta" "\t\ta\t\n")
   (ought "\n  \ta" "\n  \ta  \n"))
 
-(compat-deftests string-trim
+(compat-deftests compat-string-trim
   (ought "" "")                          ;empty string
   (ought "a" "a")                        ;"full" string
   (ought "aaa" "aaa")
