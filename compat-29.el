@@ -193,6 +193,11 @@ signalled.  If NOERROR, the non-loop parts of the chain is returned."
          (push func chain))
        chain))))
 
+(declare-function compat--provided-mode-derived-p
+                  "compat-27" (mode &rest modes))
+(declare-function compat--func-arity
+                  "compat-26" (func))
+
 ;;* UNTESTED
 (compat-defun buffer-match-p (condition buffer-or-name &optional arg)
   "Return non-nil if BUFFER-OR-NAME matches CONDITION.
@@ -226,7 +231,7 @@ CONDITION is either:
                      ((stringp condition)
                       (string-match-p condition (buffer-name buffer)))
                      ((functionp condition)
-                      (if (eq 1 (cdr (func-arity condition)))
+                      (if (eq 1 (cdr (compat--func-arity condition)))
                           (funcall condition buffer)
                         (funcall condition buffer arg)))
                      ((eq (car-safe condition) 'major-mode)
@@ -234,7 +239,7 @@ CONDITION is either:
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'derived-mode)
-                      (provided-mode-derived-p
+                      (compat--provided-mode-derived-p
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'not)
@@ -344,8 +349,8 @@ as changes in text properties, `buffer-file-coding-system', buffer
 multibyteness, etc. -- will not be noticed, and the buffer will still
 be marked unmodified, effectively ignoring those changes."
   (declare (debug t) (indent 0))
-  (let ((hash (gensym))
-        (buffer (gensym)))
+  (let ((hash (make-symbol "hash"))
+        (buffer (make-symbol "buffer")))
     `(let ((,hash (and (not (buffer-modified-p))
                        (buffer-hash)))
            (,buffer (current-buffer)))
@@ -398,8 +403,8 @@ the symbol of the calling function, for example."
          (remote-file-name-inhibit-cache t)
          (fileattr (file-attributes file 'integer))
 	 (attr (and fileattr
-                    (cons (file-attribute-size fileattr)
-		          (file-attribute-modification-time fileattr))))
+                    (cons (nth 7 fileattr)
+		          (nth 5 fileattr))))
 	 (sym (concat (symbol-name tag) "@" file))
 	 (cachedattr (gethash sym compat--file-has-changed-p--hash-table)))
      (when (not (equal attr cachedattr))
