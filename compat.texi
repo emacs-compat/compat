@@ -750,8 +750,6 @@ The @code{define-inline} functionality.
 The functions @code{string-collate-lessp} and
 @code{string-collate-equalp}.
 @item
-Support for @code{alist-get} as a generalised variable.
-@item
 The function @code{funcall-interactivly}.
 @item
 The function @code{buffer-substring-with-bidi-context}.
@@ -1470,6 +1468,19 @@ of @env{PATH} can lead to confusing results.
 
 @xref{Subprocess Creation,,,elisp}.
 @end defopt
+
+@c based on lisp/modes.el
+@defun provided-mode-derived-p mode &rest modes
+This function returns non-@code{nil} if @var{mode} is derived from any
+of the major modes given by the symbols @var{modes}.
+@end defun
+
+@defun derived-mode-p &rest modes
+This function returns non-@code{nil} if the current major mode is
+derived from any of the major modes given by the symbols @var{modes}.
+
+@xref{Derived Modes,,,elisp}.
+@end defun
 
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and are only

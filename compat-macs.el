@@ -40,6 +40,16 @@ is loaded (in this case `compat-26').")
   `(unless (bound-and-true-p compat--inhibit-prefixed)
      ,@body))
 
+(defvar compat-current-version nil
+  "Default version to use when no explicit version was given.")
+
+(defmacro compat-declare-version (version)
+  "Set the Emacs version that is currently being handled to VERSION."
+  ;; FIXME: Avoid setting the version for any definition that might
+  ;; follow, but try to restrict it to the current file/buffer.
+  (setq compat-current-version version)
+  nil)
+
 (defvar compat--generate-function #'compat--generate-default
   "Function used to generate compatibility code.
 The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
@@ -93,25 +103,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version
-          ;; If you edit this, also edit `compat--generate-testable' in
-          ;; `compat-tests.el'.
-          (or (plist-get attr :version)
-              (let* ((file (car (last current-load-list)))
-                     (file (if (stringp file)
-                               ;; Some library, which requires compat-XY.el,
-                               ;; is being compiled and compat-XY.el has not
-                               ;; been compiled yet.
-                               file
-                             ;; compat-XY.el is being compiled.
-                             (or (bound-and-true-p byte-compile-current-file)
-                                 ;; Fallback to the buffer being evaluated.
-                                 (buffer-file-name)))))
-                (if (and file
-                         (string-match
-                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
-                    (concat (match-string 1 file) ".1")
-                  (error "BUG: No version number could be extracted")))))
+         (version (or (plist-get attr :version)
+                      compat-current-version))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (check (cond

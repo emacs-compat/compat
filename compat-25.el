@@ -34,6 +34,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "25.1")
+
 ;;;; Defined in alloc.c
 
 (compat-defun bool-vector (&rest objects)

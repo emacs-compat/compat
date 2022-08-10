@@ -40,6 +40,8 @@
 (eval-when-compile (require 'compat-macs))
 (declare-function compat-func-arity "compat" (func))
 
+(compat-declare-version "26.1")
+
 ;;;; Defined in eval.c
 
 (compat-defun func-arity (func)

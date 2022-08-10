@@ -41,6 +41,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "27.1")
+
 ;;;; Defined in fns.c
 
 (compat-defun proper-list-p (object)
@@ -396,6 +398,29 @@ where USER is a valid login name."
         (push `(set (make-local-variable ,sym) ,val)
               body)))
     (cons 'progn (nreverse body))))
+
+(compat-defun provided-mode-derived-p (mode &rest modes)
+  "Non-nil if MODE is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards.
+If you just want to check `major-mode', use `derived-mode-p'."
+  :realname compat--provided-mode-derived-p
+  ;; If MODE is an alias, then look up the real mode function first.
+  (when-let ((alias (symbol-function mode)))
+    (when (symbolp alias)
+      (setq mode alias)))
+  (while
+      (and
+       (not (memq mode modes))
+       (let* ((parent (get mode 'derived-mode-parent))
+              (parentfn (symbol-function parent)))
+         (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
+  mode)
+
+;;* UNTESTED
+(defun derived-mode-p (&rest modes)
+  "Non-nil if the current major mode is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards."
+  (apply #'compat--provided-mode-derived-p major-mode modes))
 
 ;;* UNTESTED
 (compat-defmacro ignore-error (condition &rest body)

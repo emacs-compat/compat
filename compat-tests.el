@@ -36,6 +36,7 @@
 
 (require 'compat-macs)
 
+(defvar compat-current-version)
 (defun compat--generate-testable (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
@@ -44,20 +45,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version
-          ;; If you edit this, also edit `compat--generate-default' in
-          ;; compat-macs.el.
-          (or (plist-get attr :version)
-              (let* ((file (car (last current-load-list)))
-                     (file (if (stringp file)
-                               file
-                             (or (bound-and-true-p byte-compile-current-file)
-                                 (buffer-file-name)))))
-                (if (and file
-                         (string-match
-                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
-                    (concat (match-string 1 file) ".1")
-                  (error "BUG: No version number could be extracted")))))
+         (version (or (plist-get attr :version)
+                      compat-current-version))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn
@@ -2015,6 +2004,29 @@ being compared against."
   (ought t "~root")
   (ought t "~root/")
   (ought t "~root/file"))
+
+(let ((one (make-symbol "1"))
+      (two (make-symbol "2"))
+      (three (make-symbol "3"))
+      (one.5 (make-symbol "1.5"))
+      (eins (make-symbol "𝟙")))
+  (put two 'derived-mode-parent one)
+  (put one.5 'derived-mode-parent one)
+  (put three 'derived-mode-parent two)
+  (compat-deftests provided-mode-derived-p
+    (ought one one one)
+    (ought one two one)
+    (ought one three one)
+    (ought nil one eins)
+    (ought nil two eins)
+    (ought nil two one.5)
+    (ought one two one.5 one)
+    (ought two two one.5 two)
+    (ought one three one.5 one)
+    (ought two three one.5 one two)
+    (ought two three one.5 two one)
+    (ought three three one.5 two one three)
+    (ought three three one.5 three two one)))
 
 (compat-deftests file-parent-directory        ;assuming unix
   (ought nil "/")

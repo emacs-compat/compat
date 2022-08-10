@@ -39,11 +39,12 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "24.4")
+
 ;;;; Defined in data.c
 
 (compat-defun = (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :version "24.4"
   :prefix t
   (catch 'fail
     (while numbers-or-markers
@@ -54,7 +55,6 @@
 
 (compat-defun < (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :version "24.4"
   :prefix t
   (catch 'fail
     (while numbers-or-markers
@@ -65,7 +65,6 @@
 
 (compat-defun > (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :version "24.4"
   :prefix t
   (catch 'fail
     (while numbers-or-markers
@@ -76,7 +75,6 @@
 
 (compat-defun <= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :version "24.4"
   :prefix t
   (catch 'fail
     (while numbers-or-markers
@@ -87,7 +85,6 @@
 
 (compat-defun >= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :version "24.4"
   :prefix t
   (catch 'fail
     (while numbers-or-markers
@@ -100,7 +97,6 @@
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
 Return the destination vector if it changed or nil otherwise."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (bool-vector-p b)
@@ -124,7 +120,6 @@ Return the destination vector if it changed or nil otherwise."
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
 Return the destination vector if it changed or nil otherwise."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (bool-vector-p b)
@@ -148,7 +143,6 @@ Return the destination vector if it changed or nil otherwise."
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
 Return the destination vector if it changed or nil otherwise."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (bool-vector-p b)
@@ -172,7 +166,6 @@ Return the destination vector if it changed or nil otherwise."
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
 Return the destination vector if it changed or nil otherwise."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (bool-vector-p b)
@@ -196,7 +189,6 @@ Return the destination vector if it changed or nil otherwise."
 If optional second argument B is given, store result into B.
 A and B must be bool vectors of the same length.
 Return the destination vector."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (or (null b) (bool-vector-p b))
@@ -211,7 +203,6 @@ Return the destination vector."
 (compat-defun bool-vector-subsetp (a b)
   "Return t if every t value in A is also t in B, nil otherwise.
 A and B must be bool vectors of the same length."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (unless (bool-vector-p b)
@@ -227,7 +218,6 @@ A and B must be bool vectors of the same length."
 (compat-defun bool-vector-count-consecutive (a b i)
   "Count how many consecutive elements in A equal B starting at I.
 A is a bool vector, B is t or nil, and I is an index into A."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (setq b (and b t))                    ;normalise to nil or t
@@ -242,7 +232,6 @@ A is a bool vector, B is t or nil, and I is an index into A."
   "Count how many elements in A are t.
 A is a bool vector.  To count A's nil elements, subtract the
 return value from A's length."
-  :version "24.4"
   (unless (bool-vector-p a)
     (signal 'wrong-type-argument (list 'bool-vector-p a)))
   (let ((n 0))
@@ -259,7 +248,6 @@ return value from A's length."
 FILE is normally a feature name, but it can also be a file name,
 in case that file does not provide any feature.  See `eval-after-load'
 for more details about the different forms of FILE and their semantics."
-  :version "24.4"
   (declare (indent 1) (debug (form def-body)))
   ;; See https://nullprogram.com/blog/2018/02/22/ on how
   ;; `eval-after-load' is used to preserve compatibility with 24.3.
@@ -267,7 +255,6 @@ for more details about the different forms of FILE and their semantics."
 
 (compat-defun special-form-p (object)
   "Non-nil if and only if OBJECT is a special form."
-  :version "24.4"
   (if (and (symbolp object) (fboundp object))
       (setq object (condition-case nil
                        (indirect-function object)
@@ -276,7 +263,6 @@ for more details about the different forms of FILE and their semantics."
 
 (compat-defun macrop (object)
   "Non-nil if and only if OBJECT is a macro."
-  :version "24.4"
   (let ((def (condition-case nil
                  (indirect-function object)
                (void-function nil))))
@@ -288,7 +274,6 @@ for more details about the different forms of FILE and their semantics."
   "Return non-nil if SUFFIX is a suffix of STRING.
 If IGNORE-CASE is non-nil, the comparison is done without paying
 attention to case differences."
-  :version "24.4"
   (let ((start-pos (- (length string) (length suffix))))
     (and (>= start-pos 0)
          (eq t (compare-strings suffix nil nil
@@ -298,7 +283,6 @@ attention to case differences."
   "Extend `split-string' by a TRIM argument.
 The remaining arguments STRING, SEPARATORS and OMIT-NULLS are
 handled just as with `split-string'."
-  :version "24.4"
   :prefix t
   (let* ((token (split-string string separators omit-nulls))
          (trimmed (if trim
@@ -317,7 +301,6 @@ handled just as with `split-string'."
   "Destructively remove `equal' consecutive duplicates from LIST.
 First and last elements are considered consecutive if CIRCULAR is
 non-nil."
-  :version "24.4"
   (let ((tail list) last)
     (while (cdr tail)
       (if (equal (car tail) (cadr tail))
@@ -337,7 +320,6 @@ MESSAGE is a string that will be output to the echo area if such an error
 is signaled without being caught by a `condition-case'.
 PARENT is either a signal or a list of signals from which it inherits.
 Defaults to `error'."
-  :version "24.4"
   (unless parent (setq parent 'error))
   (let ((conditions
          (if (consp parent)
@@ -364,7 +346,6 @@ only need to call FUN once.  This can be useful when FUN performs a
 relatively slow operation, such as calling an external process.
 
 When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
-  :version "24.4"
   (let* (last-arg last-result
          (new-fun
           (lambda (arg)
@@ -378,7 +359,6 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 ;;* UNTESTED
 (compat-defun completion-table-merge (&rest tables)
   "Create a completion table that collects completions from all TABLES."
-  :version "24.4"
   (lambda (string pred action)
     (cond
      ((null action)
@@ -406,7 +386,6 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 ;;* UNTESTED
 (compat-advise require (feature &rest args)
   "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
-  :version "24.4"
   ;; As the compatibility advise around `require` is more a hack than
   ;; of of actual value, the highlighting is suppressed.
   :no-highlight t
@@ -419,7 +398,6 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 (compat-defun hash-table-keys (hash-table)
   "Return a list of keys in HASH-TABLE."
-  :version "24.4"
   (let (values)
     (maphash
      (lambda (k _v) (push k values))
@@ -428,7 +406,6 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 (compat-defun hash-table-values (hash-table)
   "Return a list of values in HASH-TABLE."
-  :version "24.4"
   (let (values)
     (maphash
      (lambda (_k v) (push v values))
@@ -437,33 +414,28 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 (compat-defun string-empty-p (string)
   "Check whether STRING is empty."
-  :version "24.4"
   (string= string ""))
 
 (compat-defun string-join (strings &optional separator)
   "Join all STRINGS using SEPARATOR.
 Optional argument SEPARATOR must be a string, a vector, or a list of
 characters; nil stands for the empty string."
-  :version "24.4"
   (mapconcat #'identity strings separator))
 
 (compat-defun string-blank-p (string)
   "Check whether STRING is either empty or only whitespace.
 The following characters count as whitespace here: space, tab, newline and
 carriage return."
-  :version "24.4"
   (string-match-p "\\`[ \t\n\r]*\\'" string))
 
 (compat-defun string-remove-prefix (prefix string)
   "Remove PREFIX from STRING if present."
-  :version "24.4"
   (if (string-prefix-p prefix string)
       (substring string (length prefix))
     string))
 
 (compat-defun string-remove-suffix (suffix string)
   "Remove SUFFIX from STRING if present."
-  :version "24.4"
   (if (string-suffix-p suffix string)
       (substring string 0 (- (length string) (length suffix)))
     string))
@@ -496,7 +468,6 @@ The optional argument SPEC-TYPE determines which spec to set:
     and `face-override-spec' specs;
 Any other value means not to set any spec, but to run the
 function for defining FACE and recalculating its attributes."
-  :version "24.4"
   (if (get face 'face-alias)
       (setq face (get face 'face-alias)))
   ;; Save SPEC to the relevant symbol property.
