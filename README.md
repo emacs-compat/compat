@@ -87,8 +87,10 @@ the bundled Makefile:
 Distribution
 ------------
 
-compat.el and all other files in this directory are distributed under
-the GPL, Version 3 (like Emacs itself).
+compat.el and all other source files in this directory are distributed
+under the [GNU Public License], Version 3 (like Emacs itself).  The manual
+(`compat.texi`) is distributed under the [GNU Free Documentation
+License], Version 1.3.
 
 [EOL]: https://wiki.centos.org/About/Product
 [GNU ELPA]: http://elpa.gnu.org/packages/compat.html
@@ -99,3 +101,5 @@ the GPL, Version 3 (like Emacs itself).
 [compat-devel]: https://lists.sr.ht/~pkal/compat-devel
 [compat-tracker]: https://todo.sr.ht/~pkal/compat
 [compat-tracker-mailto]: mailto:~pkal/compat@todo.sr.ht
+[GNU Public License]: https://www.gnu.org/licenses/gpl-3.0.en.html
+[GNU Free Documentation License]: https://www.gnu.org/licenses/fdl-1.3.html
