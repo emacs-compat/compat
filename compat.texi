@@ -2395,6 +2395,20 @@ differences, like @code{char-equal} when @code{case-fold-search} is
 These functions are prefixed with @code{compat} prefix, and will require
 manual loading even after the release of Compat 29.1.0.0:
 
+@c copied from lispref/lists.texi
+@defun compat-plist-get plist prop &optional predicate
+This returns the value of the @var{property} property stored in the
+property list @var{plist}.  Comparisons are done with @var{predicate},
+and defaults to @code{eq}.  It accepts a malformed @var{plist}
+argument.  If @var{property} is not found in the @var{plist}, it
+returns @code{nil}.
+
+@xref{Plist Access,,,elisp}.
+
+This compatibility version handles the optional argument
+@var{predicate}.
+@end defun
+
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 29.1:

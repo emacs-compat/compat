@@ -107,6 +107,25 @@ Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
+(compat-defun plist-get (plist prop &optional predicate)
+  "Extract a value from a property list.
+PLIST is a property list, which is a list of the form
+\(PROP1 VALUE1 PROP2 VALUE2...).
+
+This function returns the value corresponding to the given PROP, or
+nil if PROP is not one of the properties on the list.  The comparison
+with PROP is done using PREDICATE, which defaults to `eq'.
+
+This function doesn't signal an error if PLIST is invalid."
+  :prefix t
+  (if (or (null predicate) (eq predicate 'eq))
+      (plist-get plist prop)
+    (catch 'found
+      (while (consp plist)
+        (when (funcall predicate prop (car plist))
+          (throw 'found (cadr plist)))
+        (setq plist (cddr plist))))))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)

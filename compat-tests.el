@@ -2037,6 +2037,16 @@ being compared against."
   (ought t "AAA bbb" "aaa bbb")
   (ought t "aaa BBB" "aaa bbb"))
 
+(compat-deftests compat-plist-get
+  (ought 1 '(:one 1 :two 2 :three 3) :one)
+  (ought 2 '(:one 1 :two 2 :three 3) :two)
+  (ought 3 '(:one 1 :two 2 :three 3) :three)
+  (ought nil '(:one 1 :two 2 :three 3) :four)
+  ;; With a custom predicate
+  (ought :one '(1 :one 2 :two 3 :three) 3 #'>)
+  (ought :three '(1 :one 2 :two 3 :three) 3 #'<=)
+  (ought nil '(1 :one 2 :two 3 :three) 4 #'<=))
+
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
