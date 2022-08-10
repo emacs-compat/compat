@@ -2030,6 +2030,27 @@ being compared against."
 ;;   (ought t "~root")
 ;;   (ought t "~root/")
 ;;   (ought t "~root/file"))
+(compat-deftests string-equal-ignore-case
+  (ought t "" "")
+  (ought t "a" "a")
+  (ought t "a" "A")
+  (ought t "A" "a")
+  (ought nil "aA" "a")
+  (ought nil "a" "Aa")
+  (ought t "aA" "aA")
+  (ought t "Aa" "Aa")
+  (ought nil "aB" "aA")
+  (ought nil "Ba" "Aa")
+  (ought t "AAA BBB" "AAA BBB")
+  (ought t "aaa BBB" "AAA BBB")
+  (ought t "AAA bbb" "AAA BBB")
+  (ought t "AAA BBB" "aaa BBB")
+  (ought t "AAA BBB" "AAA bbb")
+  (ought t "AAA BBB" "aaa bbb")
+  (ought t "AAA BBB" "aaa bbb")
+  (ought t "AAA bbb" "aaa bbb")
+  (ought t "aaa BBB" "aaa bbb"))
+
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

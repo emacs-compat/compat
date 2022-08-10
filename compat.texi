@@ -2379,6 +2379,15 @@ meaning as with @code{window-text-pixel-size}.
 @xref{Size of Displayed Text,,,elisp}.
 @end defun
 
+@c copied from lispref/strings.texi
+@defun string-equal-ignore-case string1 string2
+@code{string-equal-ignore-case} compares strings ignoring case
+differences, like @code{char-equal} when @code{case-fold-search} is
+@code{t}.
+
+@xref{Text Comparison,,,elisp}.
+@end defun
+
 
 
 

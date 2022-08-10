@@ -100,6 +100,13 @@ If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST (or a copy)."
   (compat--ntake-elisp n (copy-sequence list)))      ;FIXME: only copy as much as necessary
 
+(compat-defun string-equal-ignore-case (string1 string2)
+  "Like `string-equal', but case-insensitive.
+Upper-case and lower-case letters are treated as equal.
+Unibyte strings are converted to multibyte for comparison."
+  (declare (pure t) (side-effect-free t))
+  (eq t (compare-strings string1 0 nil string2 0 nil t)))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)
