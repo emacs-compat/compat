@@ -311,5 +311,17 @@ than this function."
      (end (substring string (- (length string) length)))
      (t (substring string 0 length)))))
 
+;;* UNTESTED
+(compat-defun string-pixel-width (string)
+  "Return the width of STRING in pixels."
+  (if (zerop (length string))
+      0
+    ;; Keeping a work buffer around is more efficient than creating a
+    ;; new temporary buffer.
+    (with-current-buffer (get-buffer-create " *string-pixel-width*")
+      (delete-region (point-min) (point-max))
+      (insert string)
+      (car (compat--buffer-text-pixel-size nil nil t)))))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here
