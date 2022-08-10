@@ -29,6 +29,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "29.1")
+
 ;;;; Defined in xdisp.c
 
 (compat-defun get-display-property (position prop &optional object properties)
