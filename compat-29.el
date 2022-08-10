@@ -323,5 +323,43 @@ than this function."
       (insert string)
       (car (compat--buffer-text-pixel-size nil nil t)))))
 
+;;* UNTESTED
+(compat-defmacro with-buffer-unmodified-if-unchanged (&rest body)
+  "Like `progn', but change buffer-modified status only if buffer text changes.
+If the buffer was unmodified before execution of BODY, and
+buffer text after execution of BODY is identical to what it was
+before, ensure that buffer is still marked unmodified afterwards.
+For example, the following won't change the buffer's modification
+status:
+
+  (with-buffer-unmodified-if-unchanged
+    (insert \"a\")
+    (delete-char -1))
+
+Note that only changes in the raw byte sequence of the buffer text,
+as stored in the internal representation, are monitored for the
+purpose of detecting the lack of changes in buffer text.  Any other
+changes that are normally perceived as \"buffer modifications\", such
+as changes in text properties, `buffer-file-coding-system', buffer
+multibyteness, etc. -- will not be noticed, and the buffer will still
+be marked unmodified, effectively ignoring those changes."
+  (declare (debug t) (indent 0))
+  (let ((hash (gensym))
+        (buffer (gensym)))
+    `(let ((,hash (and (not (buffer-modified-p))
+                       (buffer-hash)))
+           (,buffer (current-buffer)))
+       (prog1
+           (progn
+             ,@body)
+         ;; If we didn't change anything in the buffer (and the buffer
+         ;; was previously unmodified), then flip the modification status
+         ;; back to "unchanged".
+         (when (and ,hash (buffer-live-p ,buffer))
+           (with-current-buffer ,buffer
+             (when (and (buffer-modified-p)
+                        (equal ,hash (buffer-hash)))
+               (restore-buffer-modified-p nil))))))))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here
