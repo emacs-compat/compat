@@ -36,6 +36,7 @@
 
 (require 'compat-macs)
 
+(defvar compat-current-version)
 (defun compat--generate-testable (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
@@ -44,20 +45,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version
-          ;; If you edit this, also edit `compat--generate-default' in
-          ;; compat-macs.el.
-          (or (plist-get attr :version)
-              (let* ((file (car (last current-load-list)))
-                     (file (if (stringp file)
-                               file
-                             (or (bound-and-true-p byte-compile-current-file)
-                                 (buffer-file-name)))))
-                (if (and file
-                         (string-match
-                          "compat-\\([[:digit:]]+\\)\\.\\(?:elc?\\)\\'" file))
-                    (concat (match-string 1 file) ".1")
-                  (error "BUG: No version number could be extracted")))))
+         (version (or (plist-get attr :version)
+                      compat-current-version))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn

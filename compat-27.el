@@ -41,6 +41,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "27.1")
+
 ;;;; Defined in fns.c
 
 (compat-defun proper-list-p (object)

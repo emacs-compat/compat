@@ -41,6 +41,8 @@
 
 (eval-when-compile (require 'compat-macs))
 
+(compat-declare-version "28.1")
+
 ;;;; Defined in fns.c
 
 ;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
