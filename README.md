@@ -8,8 +8,8 @@ For information on how to use Compat, please consult the [manual].
 The latest state of development can be found in the [snapshot
 version].
 
-[manual]: https://elpa.gnu.org/devel/doc/compat.html
-[snapshot version]: https://elpa.gnu.org/packages/doc/compat.html
+[manual]: https://elpa.gnu.org/packages/doc/compat.html
+[snapshot version]: https://elpa.gnu.org/devel/doc/compat.html
 
 Contribute
 ----------
