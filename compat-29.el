@@ -250,6 +250,20 @@ CONDITION is either:
                 (throw 'match t)))))))
     (funcall match (list condition))))
 
+;;* UNTESTED
+(compat-defun match-buffers (condition &optional buffers arg)
+  "Return a list of buffers that match CONDITION.
+See `buffer-match' for details on CONDITION.  By default all
+buffers are checked, this can be restricted by passing an
+optional argument BUFFERS, set to a list of buffers to check.
+ARG is passed to `buffer-match', for predicate conditions in
+CONDITION."
+  (let (bufs)
+    (dolist (buf (or buffers (buffer-list)))
+      (when (compat--buffer-match-p condition (get-buffer buf) arg)
+        (push buf bufs)))
+    bufs))
+
 ;;;; Defined in subr-x.el
 
 (compat-defun string-limit (string length &optional end coding-system)

@@ -2434,6 +2434,18 @@ string), @code{(and)} (empty conjunction) or @code{always}.
 @xref{Buffer List,,,elisp}.
 @end defun
 
+@c copied from lispref/buffers.texi
+@defun match-buffers condition &optional buffers arg
+This function returns a list of all buffers that satisfy a
+@code{condition}, as defined for @code{buffer-match-p}.  By default
+all buffers are considered, but this can be restricted via the second
+optional @code{buffer-list} argument.  Optional third argument
+@var{arg} will be used by @var{condition} in the same way as
+@code{buffer-match-p} does.
+
+@xref{Buffer List,,,elisp}.
+@end defun
+
 
 
 @subsection Prefixed Definitions
