@@ -2016,20 +2016,6 @@ being compared against."
   (ought t "~root/")
   (ought t "~root/file"))
 
-;; (compat-deftests file-parent-directory        ;assuming unix
-;;   (ought '() "/")
-;;   (ought t "/a")
-;;   (ought nil "a")
-;;   (ought nil "a/b")
-;;   (ought nil "a/b/")
-;;   (ought t "~")
-;;   (when (version< "27.1" emacs-version)
-;;     (ought t "~/foo")
-;;     (ought nil "~foo")
-;;     (ought nil "~foo/"))
-;;   (ought t "~root")
-;;   (ought t "~root/")
-;;   (ought t "~root/file"))
 (compat-deftests string-equal-ignore-case
   (ought t "" "")
   (ought t "a" "a")
