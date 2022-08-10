@@ -2047,6 +2047,36 @@ being compared against."
   (ought :three '(1 :one 2 :two 3 :three) 3 #'<=)
   (ought nil '(1 :one 2 :two 3 :three) 4 #'<=))
 
+(compat-deftests compat-plist-put
+  (ought '(:one -1 :two 2 :three 3)
+         (list :one 1 :two 2 :three 3)
+         :one -1)
+  (ought '(:one -1 :one 2 :one 3)
+         (list :one 1 :one 2 :one 3)
+         :one -1)
+  (ought '(:zero 1 :one -1 :one 3)
+         (list :zero 1 :one 2 :one 3)
+         :one -1)
+  (ought '(:one -1 :two 2 :three 3)
+         (list :one 1 :two 2 :three 3)
+         :one -1)
+  (ought '(:one 1 :two 2 :three 3 :four -1)
+         (list :one 1 :two 2 :three 3)
+         :four -1)
+  ;; With a custom predicate
+  (ought '(1 :eins 2 :two 3 :three)
+         '(1 :one 2 :two 3 :three)
+         3 :eins #'>)
+  (ought '(1 :one 2 :zwei 3 :three)
+         '(1 :one 2 :two 3 :three)
+         2 :zwei #'<=)
+  (ought '(1 :one 2 :two 3 :three 4 :vier)
+         '(1 :one 2 :two 3 :three)
+         4 :vier #'<=)
+  (ought '(1 :vier 2 :two 3 :three)
+         '(1 :one 2 :two 3 :three)
+         4 :vier #'>))
+
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

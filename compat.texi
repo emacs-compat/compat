@@ -2409,6 +2409,21 @@ This compatibility version handles the optional argument
 @var{predicate}.
 @end defun
 
+@c copied from lispref/lists.texi
+@defun compat-plist-put plist prop val &optional predicate
+This stores @var{value} as the value of the @var{property} property in
+the property list @var{plist}.  Comparisons are done with @var{predicate},
+and defaults to @code{eq}.  It may modify @var{plist} destructively,
+or it may construct a new list structure without altering the old.  The
+function returns the modified property list, so you can store that back
+in the place where you got @var{plist}.
+
+@xref{Plist Access,,,elisp}.
+
+This compatibility version handles the optional argument
+@var{predicate}.
+@end defun
+
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 29.1:

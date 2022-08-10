@@ -126,6 +126,29 @@ This function doesn't signal an error if PLIST is invalid."
           (throw 'found (cadr plist)))
         (setq plist (cddr plist))))))
 
+(compat-defun plist-put (plist prop val &optional predicate)
+  "Change value in PLIST of PROP to VAL.
+PLIST is a property list, which is a list of the form
+\(PROP1 VALUE1 PROP2 VALUE2 ...).
+
+The comparison with PROP is done using PREDICATE, which defaults to `eq'.
+
+If PROP is already a property on the list, its value is set to VAL,
+otherwise the new PROP VAL pair is added.  The new plist is returned;
+use `(setq x (plist-put x prop val))' to be sure to use the new value.
+The PLIST is modified by side effects."
+  :prefix t
+  (if (or (null predicate) (eq predicate 'eq))
+      (plist-put plist prop val)
+    (catch 'found
+      (let ((tail plist))
+        (while (consp tail)
+          (when (funcall predicate prop (car tail))
+            (setcar (cdr tail) val)
+            (throw 'found plist))
+          (setq tail (cddr tail))))
+      (nconc plist (list prop val)))))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)
