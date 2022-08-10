@@ -405,8 +405,8 @@ Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
   :realname compat--provided-mode-derived-p
   ;; If MODE is an alias, then look up the real mode function first.
-  (when-let ((alias (symbol-function mode)))
-    (when (symbolp alias)
+  (let ((alias (symbol-function mode)))
+    (when (and alias (symbolp alias))
       (setq mode alias)))
   (while
       (and
