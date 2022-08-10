@@ -1474,6 +1474,12 @@ This function returns non-@code{nil} if @var{mode} is derived from any
 of the major modes given by the symbols @var{modes}.
 @end defun
 
+@defun derived-mode-p &rest modes
+This function returns non-@code{nil} if the current major mode is
+derived from any of the major modes given by the symbols @var{modes}.
+
+@xref{Derived Modes,,,elisp}.
+@end defun
 
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and are only
