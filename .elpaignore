@@ -1,6 +1,5 @@
 compat-tests.el
 Makefile
-.dir-locals.el
 .github
 .elpaignore
 COPYING
