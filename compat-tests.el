@@ -74,22 +74,12 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
        (put ',realname 'compat-max-version ,max-version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
        ,(funcall def-fn realname version)
-       (,@(cond
-           ((or (and min-version
-                     (version< emacs-version min-version))
-                (and max-version
-                     (version< max-version emacs-version)))
-            '(compat--ignore))
-           ((plist-get attr :prefix)
-            '(compat--inhibit-prefixed))
-           ((and version (version<= version emacs-version) (not cond))
-            '(compat--ignore))
-           (`(when (and ,(if cond cond t)
-                        ,(funcall check-fn)))))
-        ,(if feature
-             ;; See https://nullprogram.com/blog/2018/02/22/:
-             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-           body)))))
+       ,(and (plist-get attr :prefix)
+             (if feature
+                 `(progn
+                    (require ,feature)
+                    ,body)
+               body)))))
 
 (setq compat--generate-function #'compat--generate-testable)
 
@@ -117,13 +107,14 @@ being compared against."
                      :name ',real-test
                      :tags '(,name)
                      :body (lambda () (should (equal ,result (,name ,@args)))))))
-             (and (fboundp compat)
-                  `(ert-set-test
-                    ',comp-test
-                    (make-ert-test
-                     :name ',comp-test
-                     :tags '(,name)
-                     :body (lambda () (should (equal ,result (,compat ,@args))))))))))))
+             (if (fboundp compat)
+                 `(ert-set-test
+                   ',comp-test
+                   (make-ert-test
+                    :name ',comp-test
+                    :tags '(,name)
+                    :body (lambda () (should (equal ,result (,compat ,@args))))))
+               (warn "Missing compat definition %S" compat)))))))
 
 (defun compat--expect (name compat)
   "Implementation for the `expect' macro for NAME.
@@ -1830,7 +1821,8 @@ being compared against."
 
 (compat-deftests subr-primitive-p
   (ought t (symbol-function 'identity))       ;function from fns.c
-  (ought nil (symbol-function 'match-string)) ;function from subr.el
+  (unless (fboundp 'subr-native-elisp-p)
+    (ought nil (symbol-function 'match-string))) ;function from subr.el
   (ought nil (symbol-function 'defun))        ;macro from subr.el
   (ought nil nil))
 
@@ -1853,115 +1845,161 @@ being compared against."
   (ought nil -1 nil)
   (ought nil -1 (list 1 2 3 4 5)))
 
-(ert-deftest compat-string-limit ()
-  "Check if `compat-string-limit' was implemented properly."
-  (compat-test string-limit
-    (compat--should "" "" 0)
-    (compat--should "" "" 1)
-    (compat--should "" "" 100)
-    (compat--should "" "1234567890" 0)
-    (compat--should "1" "1234567890" 1)
-    (compat--should "12" "1234567890" 2)
-    (compat--should "123456789" "1234567890" 9)
-    (compat--should "1234567890" "1234567890" 10)
-    (compat--should "1234567890" "1234567890" 11)
-    (compat--should "1234567890" "1234567890" 20)
-    (compat--should "a" "a\U00010f98z" 1)
-    (compat--should "a𐾘" "a\U00010f98z" 2)
-    (compat--should "a𐾘z" "a\U00010f98z" 3)
-    (compat--should "a𐾘z" "a\U00010f98z" 4)
-    (compat--should [] [1 2 3] 0)
-    (compat--should [1] [1 2 3] 1)
-    (compat--should [1 2] [1 2 3] 2)
-    (compat--should [1 2 3] [1 2 3] 3)
-    (compat--should [1 2 3] [1 2 3] 4)
-    (compat--error wrong-type-argument "abc" -1)
-    (compat--error wrong-type-argument "abc" 'a)
-    (compat--error wrong-type-argument 'a 2)
-    (compat--error wrong-type-argument 'a 'b)))
+(compat-deftests string-limit
+  (ought "" "" 0)
+  (ought "" "" 1)
+  (ought "" "" 100)
+  (ought "" "1234567890" 0)
+  (ought "1" "1234567890" 1)
+  (ought "12" "1234567890" 2)
+  (ought "123456789" "1234567890" 9)
+  (ought "1234567890" "1234567890" 10)
+  (ought "1234567890" "1234567890" 11)
+  (ought "1234567890" "1234567890" 20)
+  (ought "a" "a\U00010f98z" 1)
+  (ought "a𐾘" "a\U00010f98z" 2)
+  (ought "a𐾘z" "a\U00010f98z" 3)
+  (ought "a𐾘z" "a\U00010f98z" 4)
+  (ought [] [1 2 3] 0)
+  (ought [1] [1 2 3] 1)
+  (ought [1 2] [1 2 3] 2)
+  (ought [1 2 3] [1 2 3] 3)
+  (ought [1 2 3] [1 2 3] 4)
+  (expect wrong-type-argument "abc" -1)
+  (expect wrong-type-argument "abc" 'a)
+  (expect wrong-type-argument 'a 2)
+  (expect wrong-type-argument 'a 'b))
 
-(ert-deftest compat-function-alias-p ()
-  "Check if `compat--function-alias-p' was implemented properly."
-  (let* ((f (gensym))
-         (g (gensym)) (h (gensym))
-         (a (gensym)) (b (gensym)))
-    (defalias f #'ignore)
-    (defalias g f)
-    (defalias h g)
-    (defalias a b)
-    (defalias b a)
+(let* ((f (gensym))
+       (g (gensym)) (h (gensym))
+       (a (gensym)) (b (gensym)))
+  (defalias f #'ignore)
+  (defalias g f)
+  (defalias h g)
+  (defalias a b)
+  (defalias b a)
 
-    (compat-test function-alias-p
-      (compat--should nil nil)
-      (compat--should nil "")
-      (compat--should nil #'ignore)
-      (compat--should nil #'ignore)
-      (compat--should (list #'ignore) f)
-      (compat--should (list f #'ignore) g)
-      (compat--should (list g f #'ignore) h)
-      (compat--error cyclic-function-indirection a)
-      (compat--should (list b) a t))))
+  (compat-deftests function-alias-p
+    (ought nil nil)
+    (ought nil "")
+    (ought nil #'ignore)
+    (ought nil #'ignore)
+    (ought (list #'ignore) f)
+    (ought (list f #'ignore) g)
+    (ought (list g f #'ignore) h)
+    (expect cyclic-function-indirection a)
+    (ought (list b) a t)))
 
-(ert-deftest compat-get-display-property ()
-  "Check if `compat--function-alias-p' was implemented properly."
-  ;; Based on tests from xdisp-test.el
+(ert-deftest compat-get-display-property-1 ()
+  "Check basic `get-display-property' behaviour."
+  ;; based on tests from xdisp-test.el
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '(height 2.0))
             " bar")
-    (compat-test get-display-property
-      (compat--should 2.0 1 'height)
-      (compat--should 2.0 2 'height)
-      (compat--should nil 2 'width)
-      (compat--should nil 5 'height)
-      (compat--should nil 5 'height)
-      (compat--should nil 2 'bold)
-      (compat--should nil 5 'bold)))
+    (when (fboundp 'get-display-property)
+      (should (eql 2.0 (get-display-property 1 'height)))
+      (should (eql 2.0 (get-display-property 2 'height)))
+      (should (eql nil (get-display-property 2 'width)))
+      (should (eql nil (get-display-property 5 'height)))
+      (should (eql nil (get-display-property 5 'height)))
+      (should (eql nil (get-display-property 2 'bold)))
+      (should (eql nil (get-display-property 5 'bold))))
+    (should (eql 2.0 (compat--get-display-property 1 'height)))
+    (should (eql 2.0 (compat--get-display-property 2 'height)))
+    (should (eql nil (compat--get-display-property 2 'width)))
+    (should (eql nil (compat--get-display-property 5 'height)))
+    (should (eql nil (compat--get-display-property 5 'height)))
+    (should (eql nil (compat--get-display-property 2 'bold)))
+    (should (eql nil (compat--get-display-property 5 'bold)))))
+
+(ert-deftest compat-get-display-property-2 ()
+  "Check if `get-display-property' handles the optional third argument."
+  ;; based on tests from xdisp-test.el
   (let ((str (concat
               (propertize "foo" 'face 'bold 'display '(height 2.0))
               " bar")))
-    (compat-test get-display-property
-      (compat--should 2.0 1 'height str)
-      (compat--should 2.0 2 'height str)
-      (compat--should nil 2 'width str)
-      (compat--should nil 5 'height str)
-      (compat--should nil 5 'height str)
-      (compat--should nil 2 'bold str)
-      (compat--should nil 5 'bold str)))
+    (when (fboundp 'get-display-property)
+      (should (eql 2.0 (get-display-property 1 'height str)))
+      (should (eql 2.0 (get-display-property 2 'height str)))
+      (should (eql nil (get-display-property 2 'width str)))
+      (should (eql nil (get-display-property 5 'height str)))
+      (should (eql nil (get-display-property 5 'height str)))
+      (should (eql nil (get-display-property 2 'bold str)))
+      (should (eql nil (get-display-property 5 'bold str))))
+    (should (eql 2.0 (compat--get-display-property 1 'height str)))
+    (should (eql 2.0 (compat--get-display-property 2 'height str)))
+    (should (eql nil (compat--get-display-property 2 'width str)))
+    (should (eql nil (compat--get-display-property 5 'height str)))
+    (should (eql nil (compat--get-display-property 5 'height str)))
+    (should (eql nil (compat--get-display-property 2 'bold str)))
+    (should (eql nil (compat--get-display-property 5 'bold str)))))
+
+(ert-deftest compat-get-display-property-3 ()
+  "Check if `get-display-property' handles multiple display properties."
+  ;; based on tests from xdisp-test.el
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '((height 2.0)
                                                      (space-width 4.0)))
             " bar")
-    (compat-test get-display-property
-      (compat--should 2.0 1 'height)
-      (compat--should 2.0 2 'height)
-      (compat--should nil 5 'height)
-      (compat--should 4.0 1 'space-width)
-      (compat--should 4.0 2 'space-width)
-      (compat--should nil 5 'space-width)
-      (compat--should nil 2 'width)
-      (compat--should nil 5 'width)
-      (compat--should nil 2 'bold)
-      (compat--should nil 5 'bold)))
+    (when (fboundp 'get-display-property)
+      (should (eql 2.0 (get-display-property 1 'height)))
+      (should (eql 2.0 (get-display-property 2 'height)))
+      (should (eql nil (get-display-property 5 'height)))
+      (should (eql 4.0 (get-display-property 1 'space-width)))
+      (should (eql 4.0 (get-display-property 2 'space-width)))
+      (should (eql nil (get-display-property 5 'space-width)))
+      (should (eql nil (get-display-property 2 'width)))
+      (should (eql nil (get-display-property 5 'width)))
+      (should (eql nil (get-display-property 2 'bold)))
+      (should (eql nil (get-display-property 5 'bold))))
+    (should (eql 2.0 (compat--get-display-property 1 'height)))
+    (should (eql 2.0 (compat--get-display-property 2 'height)))
+    (should (eql nil (compat--get-display-property 5 'height)))
+    (should (eql 4.0 (compat--get-display-property 1 'space-width)))
+    (should (eql 4.0 (compat--get-display-property 2 'space-width)))
+    (should (eql nil (compat--get-display-property 5 'space-width)))
+    (should (eql nil (compat--get-display-property 2 'width)))
+    (should (eql nil (compat--get-display-property 5 'width)))
+    (should (eql nil (compat--get-display-property 2 'bold)))
+    (should (eql nil (compat--get-display-property 5 'bold)))))
+
+(ert-deftest compat-get-display-property-4 ()
+  "Check if `get-display-property' handles display property vectors."
+  ;; Based on tests from xdisp-test.el
   (with-temp-buffer
     (insert (propertize "foo bar" 'face 'bold
                         'display '[(height 2.0)
                                    (space-width 20)])
             " baz")
-    (compat-test get-display-property
-      (compat--should 2.0 1 'height)
-      (compat--should 2.0 2 'height)
-      (compat--should 2.0 5 'height)
-      (compat--should nil 8 'height)
-      (compat--should 20 1 'space-width)
-      (compat--should 20 2 'space-width)
-      (compat--should 20 5 'space-width)
-      (compat--should nil 8 'space-width)
-      (compat--should nil 2 'width)
-      (compat--should nil 5 'width)
-      (compat--should nil 8 'width)
-      (compat--should nil 2 'bold)
-      (compat--should nil 5 'bold)
-      (compat--should nil 8 'width))))
+    (when (fboundp 'get-display-property)
+      (should (eql 2.0 (get-display-property 1 'height)))
+      (should (eql 2.0 (get-display-property 2 'height)))
+      (should (eql 2.0 (get-display-property 5 'height)))
+      (should (eql nil (get-display-property 8 'height)))
+      (should (eql 20 (get-display-property 1 'space-width)))
+      (should (eql 20 (get-display-property 2 'space-width)))
+      (should (eql 20 (get-display-property 5 'space-width)))
+      (should (eql nil (get-display-property 8 'space-width)))
+      (should (eql nil (get-display-property 2 'width)))
+      (should (eql nil (get-display-property 5 'width)))
+      (should (eql nil (get-display-property 8 'width)))
+      (should (eql nil (get-display-property 2 'bold)))
+      (should (eql nil (get-display-property 5 'bold)))
+      (should (eql nil (get-display-property 8 'width))))
+    (should (eql 2.0 (compat--get-display-property 1 'height)))
+    (should (eql 2.0 (compat--get-display-property 2 'height)))
+    (should (eql 2.0 (compat--get-display-property 5 'height)))
+    (should (eql nil (compat--get-display-property 8 'height)))
+    (should (eql 20 (compat--get-display-property 1 'space-width)))
+    (should (eql 20 (compat--get-display-property 2 'space-width)))
+    (should (eql 20 (compat--get-display-property 5 'space-width)))
+    (should (eql nil (compat--get-display-property 8 'space-width)))
+    (should (eql nil (compat--get-display-property 2 'width)))
+    (should (eql nil (compat--get-display-property 5 'width)))
+    (should (eql nil (compat--get-display-property 8 'width)))
+    (should (eql nil (compat--get-display-property 2 'bold)))
+    (should (eql nil (compat--get-display-property 5 'bold)))
+    (should (eql nil (compat--get-display-property 8 'width)))))
 
 (compat-deftests file-name-absolute-p   ;assuming unix
   (ought t "/")
@@ -1977,6 +2015,21 @@ being compared against."
   (ought t "~root")
   (ought t "~root/")
   (ought t "~root/file"))
+
+;; (compat-deftests file-parent-directory        ;assuming unix
+;;   (ought '() "/")
+;;   (ought t "/a")
+;;   (ought nil "a")
+;;   (ought nil "a/b")
+;;   (ought nil "a/b/")
+;;   (ought t "~")
+;;   (when (version< "27.1" emacs-version)
+;;     (ought t "~/foo")
+;;     (ought nil "~foo")
+;;     (ought nil "~foo/"))
+;;   (ought t "~root")
+;;   (ought t "~root/")
+;;   (ought t "~root/file"))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
