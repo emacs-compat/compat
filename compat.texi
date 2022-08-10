@@ -2388,6 +2388,51 @@ differences, like @code{char-equal} when @code{case-fold-search} is
 @xref{Text Comparison,,,elisp}.
 @end defun
 
+@c copied from lispref/buffers.texi
+@defun buffer-match-p condition buffer-or-name &optional arg
+This function checks if a buffer designated by @code{buffer-or-name}
+satisfies a @code{condition}.  Optional third argument @var{arg} is
+passed to the predicate function in @var{condition}.  A condition can
+be one of the following:
+@itemize @bullet{}
+@item
+A string, interpreted as a regular expression.  The buffer
+satisfies the condition if the regular expression matches the buffer
+name.
+@item
+A predicate function, which should return non-@code{nil} if the buffer
+matches.  If the function expects one argument, it is called with
+@var{buffer-or-name} as the argument; if it expects 2 arguments, the
+first argument is @var{buffer-or-name} and the second is @var{arg}
+(or @code{nil} if @var{arg} is omitted).
+@item
+A cons-cell @code{(@var{oper} . @var{expr})} where @var{oper} is one
+of
+@table @code
+@item not
+Satisfied if @var{expr} doesn't satisfy @code{buffer-match-p} with
+the same buffer and @code{arg}.
+@item or
+Satisfied if @var{expr} is a list and @emph{any} condition in
+@var{expr} satisfies @code{buffer-match-p}, with the same buffer and
+@code{arg}.
+@item and
+Satisfied if @var{expr} is a list and @emph{all} conditions in
+@var{expr} satisfy @code{buffer-match-p}, with the same buffer and
+@code{arg}.
+@item derived-mode
+Satisfied if the buffer's major mode derives from @var{expr}.
+@item major-mode
+Satisfied if the buffer's major mode is equal to @var{expr}.  Prefer
+using @code{derived-mode} instead when both can work.
+@end table
+@item t
+Satisfied by any buffer.  A convenient alternative to @code{""} (empty
+string), @code{(and)} (empty conjunction) or @code{always}.
+@end itemize
+
+@xref{Buffer List,,,elisp}.
+@end defun
 
 
 

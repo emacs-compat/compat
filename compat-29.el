@@ -193,6 +193,63 @@ signalled.  If NOERROR, the non-loop parts of the chain is returned."
          (push func chain))
        chain))))
 
+;;* UNTESTED
+(compat-defun buffer-match-p (condition buffer-or-name &optional arg)
+  "Return non-nil if BUFFER-OR-NAME matches CONDITION.
+CONDITION is either:
+- the symbol t, to always match,
+- the symbol nil, which never matches,
+- a regular expression, to match a buffer name,
+- a predicate function that takes a buffer object and ARG as
+  arguments, and returns non-nil if the buffer matches,
+- a cons-cell, where the car describes how to interpret the cdr.
+  The car can be one of the following:
+  * `derived-mode': the buffer matches if the buffer's major mode
+    is derived from the major mode in the cons-cell's cdr.
+  * `major-mode': the buffer matches if the buffer's major mode
+    is eq to the cons-cell's cdr.  Prefer using `derived-mode'
+    instead when both can work.
+  * `not': the cdr is interpreted as a negation of a condition.
+  * `and': the cdr is a list of recursive conditions, that all have
+    to be met.
+  * `or': the cdr is a list of recursive condition, of which at
+    least one has to be met."
+  :realname compat--buffer-match-p
+  (letrec
+      ((buffer (get-buffer buffer-or-name))
+       (match
+        (lambda (conditions)
+          (catch 'match
+            (dolist (condition conditions)
+              (when (cond
+                     ((eq condition t))
+                     ((stringp condition)
+                      (string-match-p condition (buffer-name buffer)))
+                     ((functionp condition)
+                      (if (eq 1 (cdr (func-arity condition)))
+                          (funcall condition buffer)
+                        (funcall condition buffer arg)))
+                     ((eq (car-safe condition) 'major-mode)
+                      (eq
+                       (buffer-local-value 'major-mode buffer)
+                       (cdr condition)))
+                     ((eq (car-safe condition) 'derived-mode)
+                      (provided-mode-derived-p
+                       (buffer-local-value 'major-mode buffer)
+                       (cdr condition)))
+                     ((eq (car-safe condition) 'not)
+                      (not (funcall match (cdr condition))))
+                     ((eq (car-safe condition) 'or)
+                      (funcall match (cdr condition)))
+                     ((eq (car-safe condition) 'and)
+                      (catch 'fail
+                        (dolist (c (cdr conditions))
+                          (unless (funcall match c)
+                            (throw 'fail nil)))
+                        t)))
+                (throw 'match t)))))))
+    (funcall match (list condition))))
+
 ;;;; Defined in subr-x.el
 
 (compat-defun string-limit (string length &optional end coding-system)
