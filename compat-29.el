@@ -58,6 +58,30 @@ the properties at POSITION."
          (eq (car properties) prop))
     (cadr properties))))
 
+;;* UNTESTED
+(compat-defun buffer-text-pixel-size
+    (&optional buffer-or-name window x-limit y-limit)
+  "Return size of whole text of BUFFER-OR-NAME in WINDOW.
+BUFFER-OR-NAME must specify a live buffer or the name of a live buffer
+and defaults to the current buffer.  WINDOW must be a live window and
+defaults to the selected one.  The return value is a cons of the maximum
+pixel-width of any text line and the pixel-height of all the text lines
+of the buffer specified by BUFFER-OR-NAME.
+
+The optional arguments X-LIMIT and Y-LIMIT have the same meaning as with
+`window-text-pixel-size'.
+
+Do not use this function if the buffer specified by BUFFER-OR-NAME is
+already displayed in WINDOW.  `window-text-pixel-size' is cheaper in
+that case because it does not have to temporarily show that buffer in
+WINDOW."
+  :realname compat--buffer-text-pixel-size
+  (setq buffer-or-name (or buffer-or-name (current-buffer)))
+  (setq window (or window (selected-window)))
+  (save-window-excursion
+    (set-window-buffer window buffer-or-name)
+    (window-text-pixel-size window nil nil x-limit y-limit)))
+
 ;;;; Defined in fns.c
 
 (compat-defun ntake (n list)
