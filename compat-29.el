@@ -149,6 +149,26 @@ The PLIST is modified by side effects."
           (setq tail (cddr tail))))
       (nconc plist (list prop val)))))
 
+(compat-defun plist-member (plist prop &optional predicate)
+  "Return non-nil if PLIST has the property PROP.
+PLIST is a property list, which is a list of the form
+\(PROP1 VALUE1 PROP2 VALUE2 ...).
+
+The comparison with PROP is done using PREDICATE, which defaults to
+`eq'.
+
+Unlike `plist-get', this allows you to distinguish between a missing
+property and a property with the value nil.
+The value is actually the tail of PLIST whose car is PROP."
+  :prefix t
+  (if (or (null predicate) (eq predicate 'eq))
+      (plist-member plist prop)
+    (catch 'found
+      (while (consp plist)
+        (when (funcall predicate prop (car plist))
+          (throw 'found plist))
+        (setq plist (cddr plist))))))
+
 ;;;; Defined in subr.el
 
 (compat-defun function-alias-p (func &optional noerror)

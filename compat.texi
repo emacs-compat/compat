@@ -2424,6 +2424,21 @@ This compatibility version handles the optional argument
 @var{predicate}.
 @end defun
 
+@c copied from lispref/lists.texi
+@defun compat-plist-member plist prop &optional predicate
+This returns non-@code{nil} if @var{plist} contains the given
+@var{property}.  Comparisons are done with @var{predicate}, and
+defaults to @code{eq}.  Unlike @code{plist-get}, this allows you to
+distinguish between a missing property and a property with the value
+@code{nil}.  The value is actually the tail of @var{plist} whose
+@code{car} is @var{property}.
+
+@xref{Plist Access,,,elisp}.
+
+This compatibility version handles the optional argument
+@var{predicate}.
+@end defun
+
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 29.1:
