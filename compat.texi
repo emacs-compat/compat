@@ -1468,6 +1468,13 @@ of @env{PATH} can lead to confusing results.
 @xref{Subprocess Creation,,,elisp}.
 @end defopt
 
+@c based on lisp/modes.el
+@defun provided-mode-derived-p mode &rest modes
+This function returns non-@code{nil} if @var{mode} is derived from any
+of the major modes given by the symbols @var{modes}.
+@end defun
+
+
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and are only
 loaded when @code{compat-27} is required:

@@ -399,6 +399,23 @@ where USER is a valid login name."
               body)))
     (cons 'progn (nreverse body))))
 
+(compat-defun provided-mode-derived-p (mode &rest modes)
+  "Non-nil if MODE is derived from one of MODES.
+Uses the `derived-mode-parent' property of the symbol to trace backwards.
+If you just want to check `major-mode', use `derived-mode-p'."
+  :realname compat--provided-mode-derived-p
+  ;; If MODE is an alias, then look up the real mode function first.
+  (when-let ((alias (symbol-function mode)))
+    (when (symbolp alias)
+      (setq mode alias)))
+  (while
+      (and
+       (not (memq mode modes))
+       (let* ((parent (get mode 'derived-mode-parent))
+              (parentfn (symbol-function parent)))
+         (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
+  mode)
+
 ;;* UNTESTED
 (compat-defmacro ignore-error (condition &rest body)
   "Execute BODY; if the error CONDITION occurs, return nil.
