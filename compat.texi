@@ -2250,7 +2250,8 @@ The function @code{path-separator}.
 @node Emacs 29.1
 @section Emacs 29.1
 
-The following functions and macros implemented in 28.1, and are
+@subsection Unprefixed Definitions
+The following functions and macros implemented in 29.1, and are
 @b{not} provided by Compat by default.  You will need to require
 @code{compat-29} for these to be loaded.  Note that due to upstream
 changes, it might happen that there will be the need for changes, so use
@@ -2359,17 +2360,15 @@ display purposes; use @code{truncate-string-to-width} or
 @end defun
 
 
-@c These functions are prefixed with @code{compat} prefix, and will require
-@c manual loading even after the release of Compat 29.1.0.0:
 
-@c Compat does not provide support for the following Lisp features
-@c implemented in 29.1:
 
-@c @itemize
-@c @item
-@c @c Support for XYZ
-@c @end itemize
+@subsection Prefixed Definitions
+These functions are prefixed with @code{compat} prefix, and will require
+manual loading even after the release of Compat 29.1.0.0:
 
+@subsection Missing Definitions
+Compat does not provide support for the following Lisp features
+implemented in 29.1:
 @node Development
 @chapter Development
 
