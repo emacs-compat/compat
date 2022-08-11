@@ -287,7 +287,7 @@ recursion."
     (dolist (file (sort (file-name-all-completions "" dir)
                         'string<))
       (unless (member file '("./" "../"))
-        (if (directory-name-p file)
+        (if (compat--directory-name-p file)
             (let* ((leaf (substring file 0 (1- (length file))))
                    (full-file (concat dir "/" leaf)))
               ;; Don't follow symlinks to other directories.
