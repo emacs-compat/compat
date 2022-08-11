@@ -362,6 +362,58 @@ PREFIX is a string, and defaults to \"g\"."
                      (1+ gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
+(compat-defmacro if-let* (varlist then &rest else)
+  "Bind variables according to VARLIST and evaluate THEN or ELSE.
+This is like `if-let' but doesn't handle a VARLIST of the form
+\(SYMBOL SOMETHING) specially."
+  :realname compat--if-let*
+  (declare (indent 2)
+           (debug ((&rest [&or symbolp (symbolp form) (form)])
+                   body)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,then ,@else))))
+
+(compat-defmacro when-let* (varlist &rest body)
+  "Bind variables according to VARLIST and conditionally evaluate BODY.
+This is like `when-let' but doesn't handle a VARLIST of the form
+\(SYMBOL SOMETHING) specially."
+  (declare (indent 1) (debug if-let*))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (when ,(caar list) ,@body))))
+
+(compat-defmacro and-let* (varlist &rest body)
+  "Bind variables according to VARLIST and conditionally evaluate BODY.
+Like `when-let*', except if BODY is empty and all the bindings
+are non-nil, then the result is non-nil."
+  :feature 'subr-x
+  (declare (indent 1) (debug if-let*))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var varlist)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,(macroexp-progn (or body '(t)))))))
+
 ;;;; Defined in files.el
 
 (declare-function temporary-file-directory nil)
@@ -534,62 +586,6 @@ inode-number and device-number."
                   result)
           (error "Wrong attribute name '%S'" attr))))
     (nreverse result)))
-
-;;;; Defined in subr-x.el
-
-(compat-defmacro if-let* (varlist then &rest else)
-  "Bind variables according to VARLIST and evaluate THEN or ELSE.
-This is like `if-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  :realname compat--if-let*
-  :feature 'subr-x
-  (declare (indent 2)
-           (debug ((&rest [&or symbolp (symbolp form) (form)])
-                   body)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,then ,@else))))
-
-(compat-defmacro when-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-This is like `when-let' but doesn't handle a VARLIST of the form
-\(SYMBOL SOMETHING) specially."
-  ;; :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (when ,(caar list) ,@body))))
-
-(compat-defmacro and-let* (varlist &rest body)
-  "Bind variables according to VARLIST and conditionally evaluate BODY.
-Like `when-let*', except if BODY is empty and all the bindings
-are non-nil, then the result is non-nil."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(or (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,(macroexp-progn (or body '(t)))))))
 
 ;;;; Defined in image.el
 

@@ -130,8 +130,6 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
         default)))
     (if entry (cdr entry) default)))
 
-;;;; Defined in subr-x.el
-
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
@@ -149,7 +147,6 @@ As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
   :realname compat--if-let
-  :feature 'subr-x
   (declare (indent 2)
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
@@ -166,9 +163,10 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  :feature 'subr-x
   (declare (indent 1) (debug if-let))
   `(compat--if-let ,spec ,(macroexp-progn body)))
+
+;;;; Defined in subr-x.el
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.
