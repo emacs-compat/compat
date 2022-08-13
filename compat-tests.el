@@ -37,7 +37,7 @@
 (require 'compat-macs)
 
 (defvar compat-current-version)
-(defun compat--generate-testable (name def-fn _install-fn _check-fn attr _type)
+(defun compat--generate-testable (name def-fn install-fn _check-fn attr _type)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
@@ -53,7 +53,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
        (put ',realname 'compat-max-version
             ,(plist-get attr :max-version))
        ,(and feature `(require ,feature))
-       ,(funcall def-fn realname version))))
+       ,(funcall def-fn realname version)
+       ,(funcall install-fn realname version))))
 
 ;; For testing: (setq compat--generate-function #'compat--generate-testable)
 
