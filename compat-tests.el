@@ -37,43 +37,29 @@
 (require 'compat-macs)
 
 (defvar compat-current-version)
-(defun compat--generate-testable (name def-fn install-fn check-fn attr type)
+(defun compat--generate-testable (name def-fn _install-fn _check-fn attr _type)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
-  (let* ((min-version (plist-get attr :min-version))
-         (max-version (plist-get attr :max-version))
-         (feature (plist-get attr :feature))
-         (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      compat-current-version))
-         (realname (or (plist-get attr :realname)
+  (let* ((realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
-         (body `(progn
-                  (unless (or (null (get ',name 'compat-def))
-                              (eq (get ',name 'compat-def) ',realname))
-                    (error "Duplicate compatibility definition: %s (was %s, now %s)"
-                           ',name (get ',name 'compat-def) ',realname))
-                  (put ',name 'compat-def ',realname)
-                  ,(funcall install-fn realname version))))
+         (feature (plist-get attr :feature))
+         (version (or (plist-get attr :version)
+                      compat-current-version)))
     `(progn
-       (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
-       (put ',realname 'compat-min-version ,min-version)
-       (put ',realname 'compat-max-version ,max-version)
-       (put ',realname 'compat-doc ,(plist-get attr :note))
-       ,(funcall def-fn realname version)
-       ,(and (plist-get attr :prefix)
-             (if feature
-                 `(progn
-                    (require ,feature)
-                    ,body)
-               body)))))
+       (put ',realname 'compat-min-version
+            ,(plist-get attr :min-version))
+       (put ',realname 'compat-max-version
+            ,(plist-get attr :max-version))
+       ,(and feature `(require ,feature))
+       ,(funcall def-fn realname version))))
 
-(setq compat--generate-function #'compat--generate-testable)
+;; For testing: (setq compat--generate-function #'compat--generate-testable)
 
 (defvar compat-testing)
-(let ((compat-testing t))
+(let ((compat--generate-function #'compat--generate-testable)
+      (compat-testing t))
   (load "compat.el"))
 
 (defvar compat-test-counter)
