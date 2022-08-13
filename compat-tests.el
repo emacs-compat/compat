@@ -355,9 +355,8 @@ being compared against."
   (ought t 1)                      ;single argument
   (ought t 1 2 3 4))              ;multiple arguments
 
-(ert-deftest compat-insert-into-buffer ()
-  "Check if `insert-into-buffer' was implemented correctly."
-  ;; Without optional compat--arguments
+(ert-deftest compat-insert-into-buffer-1 ()
+  "Check if `insert-into-buffer' can handle no optional argument."
   (with-temp-buffer
     (let ((other (current-buffer)))
       (insert "abc")
@@ -372,8 +371,10 @@ being compared against."
 	(with-temp-buffer
 	  (insert "def")
 	  (insert-into-buffer other))
-	(should (string= (buffer-string) "abcdef")))))
-  ;; With one optional argument
+	(should (string= (buffer-string) "abcdef"))))))
+
+(ert-deftest compat-insert-into-buffer-2 ()
+  "Check if `insert-into-buffer' handles one optional argument."
   (with-temp-buffer
     (let ((other (current-buffer)))
       (insert "abc")
@@ -388,8 +389,10 @@ being compared against."
 	(with-temp-buffer
 	  (insert "def")
 	  (insert-into-buffer other 2))
-	(should (string= (buffer-string) "abcef")))))
-  ;; With two optional arguments
+	(should (string= (buffer-string) "abcef"))))))
+
+(ert-deftest compat-insert-into-buffer-3 ()
+  "Check if `insert-into-buffer' handles two optional arguments."
   (with-temp-buffer
     (let ((other (current-buffer)))
       (insert "abc")
