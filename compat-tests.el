@@ -116,7 +116,7 @@ being compared against."
                                  ,(if (consp error-spec)
                                       `(equal res ',error-spec)
                                     `(eq (car res) ',error-spec)))))))))
-             (and (fboundp compat)
+             (if (fboundp compat)
                   `(ert-set-test
                     ',comp-test
                     (make-ert-test
@@ -124,11 +124,12 @@ being compared against."
                      :tags '(,name)
                      :body (lambda ()
                              (should
-                              (let ((res (should-error (,name ,@args) :type ',error-type)))
+                              (let ((res (should-error (,compat ,@args) :type ',error-type)))
                                 (should
                                  ,(if (consp error-spec)
                                       `(equal res ',error-spec)
-                                    `(eq (car res) ',error-spec))))))))))))))
+                                    `(eq (car res) ',error-spec))))))))
+                  (warn "Missing compat definition %S" compat)))))))
 
 (defmacro compat-deftests (name &rest body)
   "Test NAME in BODY."
@@ -138,7 +139,7 @@ being compared against."
          (real-name (if (consp name) (car name) name))
          (compat-name (if (consp name)
                           (cadr name)
-                        (intern (format "compat--%s" real-name))))
+                        (intern (format "compat--%S" real-name))))
          (env (list
                (cons 'ought (compat--ought real-name compat-name))
                (cons 'expect (compat--expect real-name compat-name)))))
