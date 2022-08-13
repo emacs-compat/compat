@@ -74,7 +74,6 @@ Usage
 Support
 
 * Emacs 24.4::                   Compatibility support for Emacs 24.4
-* Emacs 24.5::                   Compatibility support for Emacs 24.5
 * Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
@@ -217,7 +216,6 @@ manage to provide for each Emacs version.
 
 @menu
 * Emacs 24.4::                   Compatibility support for Emacs 24.4
-* Emacs 24.5::                   Compatibility support for Emacs 24.5
 * Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
