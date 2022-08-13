@@ -23,7 +23,12 @@
 ;; Find here the functionality added in Emacs 29.1, needed by older
 ;; versions.
 ;;
-;; Do NOT load this library manually.  Instead require `compat'.
+;; Only load this library if you need to use one of the following
+;; functions:
+;;
+;; - `plist-get'
+;; - `plist-put'
+;; - `plist-member'
 
 ;;; Code:
 
