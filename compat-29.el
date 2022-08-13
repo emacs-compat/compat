@@ -29,6 +29,7 @@
 ;; - `plist-get'
 ;; - `plist-put'
 ;; - `plist-member'
+;; - `define-key'
 
 ;;; Code:
 
@@ -175,6 +176,69 @@ The value is actually the tail of PLIST whose car is PROP."
         (when (funcall predicate prop (car plist))
           (throw 'found plist))
         (setq plist (cddr plist))))))
+
+;;;; Defined in keymap.c
+
+(compat-defun define-key (keymap key def &optional remove)
+  "In KEYMAP, define key sequence KEY as DEF.
+This is a legacy function; see `keymap-set' for the recommended
+function to use instead.
+
+KEYMAP is a keymap.
+
+KEY is a string or a vector of symbols and characters, representing a
+sequence of keystrokes and events.  Non-ASCII characters with codes
+above 127 (such as ISO Latin-1) can be represented by vectors.
+Two types of vector have special meanings:
+ [remap COMMAND] remaps any key binding for COMMAND.
+ [t] creates a default definition, which applies to any event with no
+    other definition in KEYMAP.
+
+DEF is anything that can be a key's definition:
+ nil (means key is undefined in this keymap),
+ a command (a Lisp function suitable for interactive calling),
+ a string (treated as a keyboard macro),
+ a keymap (to define a prefix key),
+ a symbol (when the key is looked up, the symbol will stand for its
+    function definition, which should at that time be one of the above,
+    or another symbol whose function definition is used, etc.),
+ a cons (STRING . DEFN), meaning that DEFN is the definition
+    (DEFN should be a valid definition in its own right) and
+    STRING is the menu item name (which is used only if the containing
+    keymap has been created with a menu name, see `make-keymap'),
+ or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
+ or an extended menu item definition.
+ (See info node `(elisp)Extended Menu Items'.)
+
+If REMOVE is non-nil, the definition will be removed.  This is almost
+the same as setting the definition to nil, but makes a difference if
+the KEYMAP has a parent, and KEY is shadowing the same binding in the
+parent.  With REMOVE, subsequent lookups will return the binding in
+the parent, and with a nil DEF, the lookups will return nil.
+
+If KEYMAP is a sparse keymap with a binding for KEY, the existing
+binding is altered.  If there is no binding for KEY, the new pair
+binding KEY to DEF is added at the front of KEYMAP."
+  :realname compat--define-key-with-remove
+  :prefix t
+  (if remove
+      (let ((prev (lookup-key keymap key))
+            (parent (memq 'key (cdr keymap)))
+            fresh entry)
+        (when prev
+          ;; IMPROVEME: Kind of a hack to avoid relying on the specific
+          ;; behaviour of how `define-key' changes KEY before inserting
+          ;; it into the map.
+          (define-key keymap key (setq fresh (make-symbol "fresh")))
+          (setq entry (rassq fresh (cdr keymap)))
+          (if (> (length (memq entry (cdr keymap)))
+                 (length parent))
+              ;; Ensure that we only remove an element in the current
+              ;; keymap and not a parent, by ensuring that `entry' is
+              ;; located before `parent'.
+              (ignore (setcdr keymap (delq entry (cdr keymap))))
+            (define-key keymap key prev))))
+    (define-key keymap key def)))
 
 ;;;; Defined in subr.el
 

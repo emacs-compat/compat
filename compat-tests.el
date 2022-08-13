@@ -2111,6 +2111,29 @@ being compared against."
          3 #'<=)
   (ought nil '(1 :one 2 :two 3 :three) 4 #'<=))
 
+(ert-deftest compat-define-key ()
+  "Check if `define-key' handles the REMOVE argument."
+  (let ((map (make-sparse-keymap))
+        (super (make-sparse-keymap)))
+    (set-keymap-parent map super)
+    (define-key super "a" 'always)
+    ;; We should be able to command a key that was just bound.
+    (define-key map "a" 'ignore)
+    (should (eq (lookup-key map "a") 'ignore))
+    (should (eq (lookup-key super "a") 'always))
+    ;; After removing it we should find the key in the parent map.
+    (compat-define-key map "a" nil t)
+    (should (eq (lookup-key map "a") 'always))
+    (should (eq (lookup-key super "a") 'always))
+    ;; Repeating this shouldn't change the result
+    (compat-define-key map "a" 'anything t)
+    (should (eq (lookup-key map "a") 'always))
+    (should (eq (lookup-key super "a") 'always))
+    ;; Removing it from the parent map should remove it from the child
+    ;; map as well.
+    (compat-define-key super "a" 'anything t)
+    (should (eq (lookup-key map "a") nil))
+    (should (eq (lookup-key super "a") nil))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
