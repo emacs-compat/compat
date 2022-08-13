@@ -2882,6 +2882,19 @@ This compatibility version handles the optional argument
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 29.1:
+
+@itemize
+@item
+The command @code{string-edit} and @code{read-string-from-buffer}.
+@item
+The function @code{readablep}.
+@item
+The macro @code{with-delayed-message} and the function
+@code{funcall-with-delayed-message}.
+@item
+The function @code{string-glyph-split}.
+@end itemize
+
 @node Development
 @chapter Development
 
