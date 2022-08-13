@@ -123,6 +123,7 @@ Equality is defined by the function TESTFN, defaulting to
 `equal'.  TESTFN is called with 2 arguments: a car of an alist
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
+  :realname compat--assoc-handle-testfn
   :prefix t
   (if testfn
       (catch 'found
@@ -169,7 +170,7 @@ from the absolute start of the buffer, disregarding the narrowing."
     (macroexp-let2 macroexp-copyable-p k key
       (gv-letplace (getter setter) alist
         (macroexp-let2 nil p `(if (and ,testfn (not (eq ,testfn 'eq)))
-                                  (compat-assoc ,k ,getter ,testfn)
+                                  (compat--assoc-handle-testfn ,k ,getter ,testfn)
                                 (assq ,k ,getter))
           (funcall do (if (null default) `(cdr ,p)
                         `(if ,p (cdr ,p) ,default))
