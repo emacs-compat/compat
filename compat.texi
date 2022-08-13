@@ -2536,7 +2536,281 @@ time comparisons are limited to calls with the same tag.
 @xref{File Attributes,,,elisp}.
 @end defun
 
+@c based on lisp/keymap.el
+@defun key-valid-p keys
+Say whether @var{keys} is a valid key.  A key is a string consisting of
+one or more key strokes.  The key strokes are separated by single space
+characters.
 
+Each key stroke is either a single character, or the name of an
+event, surrounded by angle brackets.  In addition, any key stroke
+may be preceded by one or more modifier keys.  Finally, a limited
+number of characters have a special shorthand syntax.
+
+Here's some example key sequences.
+
+@table @kbd
+@item f
+The key @kbd{f}.
+@item S o m
+A three key sequence of the keys @kbd{S}, @kbd{o} and @kbd{m}.
+@item C-c o
+A two key sequence of the keys @kbd{c} with the control modifier and
+then the key @kbd{o}.
+@item H-<left>
+The key named "left" with the hyper modifier.
+@item M-RET
+The "return" key with a meta modifier.
+@item C-M-<space>
+The "space" key with both the control and meta modifiers.
+@end table
+
+These are the characters that have shorthand syntax:
+@kbd{NUL}, @kbd{RET}, @kbd{TAB}, @kbd{LFD}, @kbd{ESC}, @kbd{SPC}, @kbd{DEL}.
+
+Modifiers have to be specified in this order
+@verbatim
+Alt (A)-Control (C)-Hyper (H)-Meta (M)-Shift (s)-Super (s)
+@end verbatim
+@end defun
+
+@c based on lisp/keymap.el and lisp/subr.el
+@defun key-parse keys
+Convert @var{keys} to the internal Emacs key representation.  See
+@code{key-valid-p} for a description of valid key sequences.  Examples
+include @kbd{f}, @kbd{C-c C-c}, @kbd{H-<left>}, @kbd{M-RET} or
+@kbd{C-M-<return>}.
+
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-set keymap key definition
+This function sets the binding for @var{key} in @var{keymap}.  (If
+@var{key} is more than one event long, the change is actually made in
+another keymap reached from @var{keymap}.)  The argument @var{binding}
+can be any Lisp object, but only certain types are meaningful.  (For a
+list of meaningful types, see @ref{Key Lookup,,,elisp}.)  The value
+returned by @code{keymap-set} is @var{binding}.
+
+If @var{key} is @kbd{<t>}, this sets the default binding in
+@var{keymap}.  When an event has no binding of its own, the Emacs
+command loop uses the keymap's default binding, if there is one.
+
+Every prefix of @var{key} must be a prefix key (i.e., bound to a keymap)
+or undefined; otherwise an error is signaled.  If some prefix of
+@var{key} is undefined, then @code{keymap-set} defines it as a prefix
+key so that the rest of @var{key} can be defined as specified.
+
+If there was previously no binding for @var{key} in @var{keymap}, the
+new binding is added at the beginning of @var{keymap}.  The order of
+bindings in a keymap makes no difference for keyboard input, but it
+does matter for menu keymaps (@pxref{Menu Keymaps,,,elisp}).
+
+@xref{Changing Key Bindings,,,elisp}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-global-set key command
+This function sets the binding of @var{key} in the current global map
+to @var{binding}.
+
+@smallexample
+@group
+(keymap-global-set @var{key} @var{binding})
+@equiv{}
+(keymap-set (current-global-map) @var{key} @var{binding})
+@end group
+@end smallexample
+
+@xref{Key Binding Commands,,,elisp}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-local-set key command
+This function sets the binding of @var{key} in the current local
+keymap to @var{binding}.
+
+@smallexample
+@group
+(keymap-local-set @var{key} @var{binding})
+@equiv{}
+(keymap-set (current-local-map) @var{key} @var{binding})
+@end group
+@end smallexample
+
+@xref{Key Binding Commands,,,elisp}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-global-unset key &optional remove
+This function removes the binding of @var{key} from the current
+global map.
+
+One use of this function is in preparation for defining a longer key
+that uses @var{key} as a prefix---which would not be allowed if
+@var{key} has a non-prefix binding.  For example:
+
+@smallexample
+@group
+(keymap-global-unset "C-l")
+    @result{} nil
+@end group
+@group
+(keymap-global-set "C-l C-l" 'redraw-display)
+    @result{} nil
+@end group
+@end smallexample
+
+@xref{Key Binding Commands,,,elisp}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-local-unset key &optional remove
+This function removes the binding of @var{key} from the current
+local map.
+
+@xref{Key Binding Commands,,,elisp}.
+@end defun
+
+@c based on from lisp/keymap.el
+@defun keymap-substitute keymap olddef newdef &optional oldmap prefix
+Replace @var{olddef} with @var{newdef} for any keys in @var{keymap} now
+defined as @var{olddef}.  In other words, @var{olddef} is replaced with
+@var{newdef} wherever it appears.  Alternatively, if optional fourth
+argument @var{oldmap} is specified, we redefine in @var{keymap} as
+@var{newdef} those keys that are defined as @var{olddef} in
+@var{oldmap}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-lookup keymap key &optional accept-default no-remap position
+This function returns the definition of @var{key} in @var{keymap}.  All
+the other functions described in this chapter that look up keys use
+@code{keymap-lookup}.  Here are examples:
+
+@example
+@group
+(keymap-lookup (current-global-map) "C-x C-f")
+    @result{} find-file
+@end group
+@group
+(keymap-lookup (current-global-map) "C-x C-f 1 2 3 4 5")
+    @result{} 2
+@end group
+@end example
+
+@xref{Functions for Key Lookup,,,elisp}.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-local-lookup keys &optional accept-default
+Like @code{keymap-lookup}, but restricting the search for commands bound
+to @var{keys} to the current local keymap.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun keymap-global-lookup keys &optional accept-default
+Like @code{keymap-lookup}, but restricting the search for commands bound
+to @var{keys} to the current global keymap.
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun define-keymap &rest definitions
+You can create a keymap with the functions described above, and then use
+@code{keymap-set} (@pxref{Changing Key Bindings,,,elisp}) to specify key
+bindings in that map.  When writing modes, however, you frequently have
+to bind a large number of keys at once, and using @code{keymap-set} on
+them all can be tedious and error-prone.  Instead you can use
+@code{define-keymap}, which creates a keymap and binds a number of keys.
+Here's a very basic example:
+
+@lisp
+(define-keymap
+  "n" #'forward-line
+  "f" #'previous-line
+  "C-c C-c" #'quit-window)
+@end lisp
+
+This function creates a new sparse keymap, defines the keystrokes in
+@var{pairs}, and returns the new keymap.
+
+@var{pairs} is a list of alternating key bindings and key definitions,
+as accepted by @code{keymap-set}.  In addition, the key can be the
+special symbol @code{:menu}, in which case the definition should be a
+menu definition as accepted by @code{easy-menu-define} (@pxref{Easy
+Menu,,,elisp}).  Here's a brief example of this usage:
+
+@lisp
+(define-keymap :full t
+  "g" #'eww-reload
+  :menu '("Eww"
+          ["Exit" quit-window t]
+          ["Reload" eww-reload t]))
+@end lisp
+
+A number of keywords can be used before the key/definition pairs to
+change features of the new keymap.  If any of the feature keywords is
+missing from the @code{define-keymap} call, the default value for that
+feature is @code{nil}.  Here's a list of the available feature
+keywords:
+
+@table @code
+@item :full
+If non-@code{nil}, create a char-table keymap (as from
+@code{make-keymap}) instead of a sparse keymap (as from
+@code{make-sparse-keymap} (@pxref{Creating Keymaps,,,elisp}).  A sparse
+keymap is the default.
+
+@item :parent
+If non-@code{nil}, the value should be a keymap to use as the parent
+(@pxref{Inheritance and Keymaps,,,elisp}).
+
+@item :keymap
+If non-@code{nil}, the value should be a keymap.  Instead of creating
+a new keymap, the specified keymap is modified instead.
+
+@item :suppress
+If non-@code{nil}, the keymap will be suppressed with
+@code{suppress-keymap} (@pxref{Changing Key Bindings,,,elisp}).  By
+default, digits and the minus sign are exempt from suppressing, but if
+the value is @code{nodigits}, this suppresses digits and minus-sign like
+it does with other characters.
+
+@item :name
+If non-@code{nil}, the value should be a string to use as the menu for
+the keymap if you use it as a menu with @code{x-popup-menu}
+(@pxref{Pop-Up Menus,,,elisp}).
+
+@item :prefix
+If non-@code{nil}, the value should be a symbol to be used as a prefix
+command (@pxref{Prefix Keys,,,elisp}).  If this is the case, this symbol
+is returned by @code{define-keymap} instead of the map itself.
+@end table
+@end defun
+
+@c copied from lispref/keymaps.texi
+@defun defvar-keymap (variable-name &rest defs)
+By far, the most common thing to do with a keymap is to bind it to a
+variable.  This is what virtually all modes do---a mode called
+@code{foo} almost always has a variable called @code{foo-mode-map}.
+
+This macro defines @var{name} as a variable, passes @var{options}
+and @var{pairs} to @code{define-keymap}, and uses the result as the
+default value for the variable.
+
+@var{options} is like the keywords in @code{define-keymap}, but
+there's an additional @code{:doc} keyword that provides the doc
+string for the defined variable.
+
+Here's an example:
+
+@lisp
+(defvar-keymap eww-textarea-map
+  :parent text-mode-map
+  "RET" #'forward-line
+  "TAB" #'shr-next-link)
+@end lisp
+@end defun
 
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and will require
