@@ -2289,6 +2289,16 @@ Properties,Examining
 Properties,,elisp,}).
 @end defun
 
+@c copied from lisp/subr-x.el
+@defun add-display-text-property start end prop value &optional object
+Add display property @var{prop} with @var{value} to the text from
+@var{start} to @var{end}.  If any text in the region has a non-nil
+@code{display} property, those properties are retained.
+
+If @var{object} is non-@code{nil}, it should be a string or a buffer.
+If @code{nil}, this defaults to the current buffer.
+@end defun
+
 @c copied from lispref/lists.texi
 @defun take n list
 This function returns the @var{n} first elements of @var{list}.  Essentially,
