@@ -97,7 +97,6 @@ WINDOW."
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST unmodified.
 Otherwise, return LIST after truncating it."
-  :realname compat--ntake-elisp
   (and (> n 0) (let ((cons (nthcdr (1- n) list)))
                  (when cons (setcdr cons nil))
                  list)))
