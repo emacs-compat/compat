@@ -473,8 +473,8 @@ this defaults to the current buffer."
                  (t
                   disp)))
           ;; Remove any old instances.
-          (when-let ((old (assoc prop disp)))
-            (setq disp (delete old disp)))
+          (let ((old (assoc prop disp)))
+            (when old (setq disp (delete old disp))))
           (setq disp (cons (list prop value) disp))
           (when vector
             (setq disp (seq-into disp 'vector)))
@@ -894,8 +894,9 @@ The binding is probably a symbol with a function definition.
 If optional argument ACCEPT-DEFAULT is non-nil, recognize default
 bindings; see the description of `keymap-lookup' for more details
 about this."
-  (when-let ((map (current-local-map)))
-    (compat--keymap-lookup map keys accept-default)))
+  (let ((map (current-local-map)))
+    (when map
+      (compat--keymap-lookup map keys accept-default))))
 
 ;;* UNTESTED
 (compat-defun keymap-global-lookup (keys &optional accept-default _message)
