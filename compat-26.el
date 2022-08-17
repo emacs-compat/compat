@@ -385,7 +385,9 @@ This is like `if-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
-  (declare (indent 1) (debug if-let*))
+  (declare (indent 1)
+           (debug ((&rest [&or symbolp (symbolp form) (form)])
+                   body)))
   (let ((empty (make-symbol "s"))
         (last t) list)
     (dolist (var varlist)

@@ -163,7 +163,10 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  (declare (indent 1) (debug if-let))
+  (declare (indent 1)
+           (debug ([&or (symbolp form)
+                        (&rest [&or symbolp (symbolp form) (form)])]
+                   body)))
   `(compat--if-let ,spec ,(macroexp-progn body)))
 
 ;;;; Defined in subr-x.el
