@@ -367,7 +367,6 @@ PREFIX is a string, and defaults to \"g\"."
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
-  :realname compat--if-let*
   (declare (indent 2)
            (debug ((&rest [&or symbolp (symbolp form) (form)])
                    body)))
