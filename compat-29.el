@@ -106,7 +106,11 @@ Otherwise, return LIST after truncating it."
   "Return the first N elements of LIST.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST (or a copy)."
-  (compat--ntake-elisp n (copy-sequence list)))      ;FIXME: only copy as much as necessary
+  (let (copy)
+    (while (and (< 0 n) list)
+      (push (pop list) copy)
+      (setq n (1- n)))
+    (nreverse copy)))
 
 (compat-defun string-equal-ignore-case (string1 string2)
   "Like `string-equal', but case-insensitive.
