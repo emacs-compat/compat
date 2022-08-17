@@ -105,6 +105,7 @@ Otherwise, return LIST after truncating it."
   "Return the first N elements of LIST.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST (or a copy)."
+  (declare (pure t) (side-effect-free t))
   (let (copy)
     (while (and (< 0 n) list)
       (push (pop list) copy)
