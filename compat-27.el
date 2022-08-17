@@ -352,11 +352,7 @@ On Unix, absolute file names start with `/'.  In Emacs, an absolute
 file name can also start with an initial `~' or `~USER' component,
 where USER is a valid login name."
   ;; See definitions in filename.h
-  (let ((seperator
-         (eval-when-compile
-           (if (memq system-type '(cygwin windows-nt ms-dos))
-               "[\\/]" "/")))
-        (drive
+  (let ((drive
          (eval-when-compile
            (cond
             ((memq system-type '(windows-nt ms-dos))
