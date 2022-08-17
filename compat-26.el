@@ -404,7 +404,9 @@ This is like `when-let' but doesn't handle a VARLIST of the form
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
   :feature 'subr-x
-  (declare (indent 1) (debug if-let*))
+  (declare (indent 1)
+           (debug ((&rest [&or symbolp (symbolp form) (form)])
+                   body)))
   (let ((empty (make-symbol "s"))
         (last t) list)
     (dolist (var varlist)
