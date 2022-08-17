@@ -146,7 +146,6 @@ SYMBOL is checked for nil.
 As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
-  :realname compat--if-let
   (declare (indent 2)
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
