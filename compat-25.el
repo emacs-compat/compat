@@ -155,7 +155,16 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(compat--if-let* ,spec ,then ,(macroexp-progn else)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var spec)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,then ,@else))))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
@@ -167,7 +176,20 @@ The variable list SPEC is the same as in `if-let'."
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
                    body)))
-  `(compat--if-let ,spec ,(macroexp-progn body)))
+  (when (and (<= (length spec) 2)
+             (not (listp (car spec))))
+    ;; Adjust the single binding case
+    (setq spec (list spec)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var spec)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(or (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,(macroexp-progn body)))))
 
 ;;;; Defined in subr-x.el
 
