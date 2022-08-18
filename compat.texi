@@ -2903,6 +2903,12 @@ The macro @code{with-delayed-message} and the function
 @code{funcall-with-delayed-message}.
 @item
 The function @code{string-glyph-split}.
+@item
+The function @code{textsec-suspicious-p}.
+@item
+The function @code{minibuffer-lazy-highlight-setup}.
+@item
+The function @code{pp-emacs-lisp-code}.
 @end itemize
 
 @node Development
