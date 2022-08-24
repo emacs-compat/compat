@@ -1,6 +1,20 @@
 #+options: toc:nil num:nil
 #+link:    compat https://todo.sr.ht/~pkal/compat/
 
+* Release of "Compat" Version 28.1.2.1
+
+This is a minor release adding the following changes:
+
+- Add =derived-mode-p= defined in Emacs 27
+- Add =provided-mode-derived-p= defined in Emacs 27
+- Add =read-multiple-choice= defined in Emacs 26
+- Add =file-name-absolute-p= defined in Emacs 28
+
+The only other notable change is that the manual has been rewritten to
+include much more documentation that had been the case previously.
+
+(Release <2022-08-24 Wed>)
+
 * Release of "Compat" Version 28.1.2.0
 
 The main change of this release has been the major simplification of
