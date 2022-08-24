@@ -126,13 +126,17 @@ as a dependency in the header:
 ;; Package-Requires: ((emacs "24.3") (compat "28.1.2.0"))
 @end example
 
+There is no need to depend on @code{emacs} 24.3 specifically.  One can
+choose to any newer version, if features not provided by Compat
+necessitate it.
 
-and later on a
+In any file where compatibility forms are used, a
 
 @example
 (require 'compat)
 @end example
 
+should be added early on.
 
 This will load all non-prefixed definitions (functions and macros with a
 leading `compat-`).  To load these, an additional
@@ -140,7 +144,6 @@ leading `compat-`).  To load these, an additional
 @example
 (require 'compat-XY) ; e.g. 26
 @end example
-
 
 will be necessary, to load compatibility code for Emacs version XY@.
 
