@@ -1,4 +1,4 @@
-;;; compat-macs.el --- Compatibility Macros           -*- lexical-binding: t; -*-
+;;; compat-macs.el --- Compatibility Macros           -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
 
