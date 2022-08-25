@@ -37,8 +37,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'compat-macs))
-(declare-function compat-func-arity "compat" (func))
+(require 'compat-macs "compat-macs.el")
 
 (compat-declare-version "26.1")
 
