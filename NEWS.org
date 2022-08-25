@@ -1,6 +1,12 @@
 #+options: toc:nil num:nil
 #+link:    compat https://todo.sr.ht/~pkal/compat/
 
+* Release of "Compat" Version 28.1.2.2
+
+This is a minor release that hopes to address [[compat:7]].
+
+(Release <2022-08-25 Thu>)
+
 * Release of "Compat" Version 28.1.2.1
 
 This is a minor release adding the following changes:
