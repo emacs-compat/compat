@@ -193,13 +193,24 @@ attributes (see `compat-generate-common')."
                        ((eq type 'macro) "macro")
                        ((eq type 'advice) "advice")
                        ((error "Unknown type")))))
-            (if version
-                (format
-                 "[Compatibility %s for `%S', defined in Emacs %s]\n\n%s"
-                 type oldname version docstring)
-              (format
-               "[Compatibility %s for `%S']\n\n%s"
-               type oldname docstring)))
+            (with-temp-buffer
+              (insert docstring)
+              (newline 2)
+              (insert
+               "[Compatibility "
+               (if version
+                   (format
+                    "%s for `%S', defined in Emacs %s.  \
+If this is not documented on your system, you can check \
+`(compat) Emacs %s' for more details."
+                     type oldname version version)
+                 (format
+                  "code %s for `%S'"
+                  type oldname))
+               "]")
+              (let ((fill-column 80))
+                (fill-region (point-min) (point-max)))
+              (buffer-string)))
          ;; Advice may use the implicit variable `oldfun', but
          ;; to avoid triggering the byte compiler, we make
          ;; sure the argument is used at least once.
