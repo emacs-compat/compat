@@ -25,13 +25,7 @@ test: compile
 clean:
 	$(RM) $(BYTEC) compat.info
 
-compat-24.elc:	compat-macs.el
-compat-25.elc:	compat-macs.el
-compat-26.elc:	compat-macs.el
-compat-27.elc:	compat-macs.el
-compat-28.elc:	compat-macs.el
-compat-29.elc:	compat-macs.el
-compat-font-lock.elc: compat-macs.el
+$(BYTEC): compat-macs.el
 
 .el.elc:
 	$(EMACS) -Q --batch -L . -f batch-byte-compile $<
