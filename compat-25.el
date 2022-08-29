@@ -32,7 +32,7 @@
 
 ;;; Code:
 
-(require 'compat-macs "compat-macs.el")
+(eval-when-compile (load "compat-macs.el" nil t t))
 
 (compat-declare-version "25.1")
 
