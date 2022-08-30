@@ -1868,7 +1868,7 @@ being compared against."
         #'compat--make-prop-match-with-vector
       #'compat--make-prop-match-with-record)))
 
-(ert-deftest text-property-search-forward ()
+(ert-deftest compat-text-property-search-forward ()
   (when (fboundp 'text-property-search-forward)
     (with-temp-buffer
       (insert "one "
@@ -1907,7 +1907,7 @@ being compared against."
     (goto-char (point-min))
     (should (null (text-property-search-forward 'non-existant)))))
 
-(ert-deftest text-property-search-backward ()
+(ert-deftest compat-text-property-search-backward ()
   (when (fboundp 'text-property-search-backward)
     (with-temp-buffer
       (insert "one "
