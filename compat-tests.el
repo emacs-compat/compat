@@ -1903,9 +1903,9 @@ being compared against."
       (should (eq (compat--prop-match-beginning match) 15))
       (should (eq (compat--prop-match-end match) 20))
       (should (eq (compat--prop-match-value match) 'wert)))
-    (should (null (text-property-search-forward 'prop)))
+    (should (null (compat--text-property-search-forward 'prop)))
     (goto-char (point-min))
-    (should (null (text-property-search-forward 'non-existant)))))
+    (should (null (compat--text-property-search-forward 'non-existant)))))
 
 (ert-deftest compat-text-property-search-backward ()
   (when (fboundp 'text-property-search-backward)
@@ -1942,9 +1942,9 @@ being compared against."
       (should (eq (compat--prop-match-beginning match) 5))
       (should (eq (compat--prop-match-end match) 9))
       (should (eq (compat--prop-match-value match) 'val)))
-    (should (null (text-property-search-backward 'prop)))
+    (should (null (compat--text-property-search-backward 'prop)))
     (goto-char (point-max))
-    (should (null (text-property-search-backward 'non-existant)))))
+    (should (null (compat--text-property-search-backward 'non-existant)))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
