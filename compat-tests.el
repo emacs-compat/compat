@@ -1862,6 +1862,12 @@ being compared against."
     (ought three three one.5 two one three)
     (ought three three one.5 three two one)))
 
+(unless (fboundp 'make-prop-match)
+  (defalias 'make-prop-match
+    (if (version< emacs-version "26.1")
+        #'compat--make-prop-match-with-vector
+      #'compat--make-prop-match-with-record)))
+
 (ert-deftest text-property-search-forward ()
   (when (fboundp 'text-property-search-forward)
     (with-temp-buffer
