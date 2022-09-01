@@ -417,7 +417,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
   mode)
 
 ;;* UNTESTED
-(defun derived-mode-p (&rest modes)
+(compat-defun derived-mode-p (&rest modes)
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'compat--provided-mode-derived-p major-mode modes))
