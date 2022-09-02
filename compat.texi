@@ -2355,6 +2355,8 @@ The function @code{require-theme}.
 The function @code{syntax-class-to-char}.
 @item
 The function @code{path-separator}.
+@item
+Any @code{multisession} functionality.
 @end itemize
 
 @node Development
