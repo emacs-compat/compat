@@ -385,15 +385,19 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 ;;* UNTESTED
 (compat-advise require (feature &rest args)
-  "Allow for Emacs 24.x to require the inexistent FEATURE subr-x."
+  "Allow for Emacs 24.3 to require the inexistent FEATURE subr-x."
+  :version "24.4"
   ;; As the compatibility advise around `require` is more a hack than
   ;; of of actual value, the highlighting is suppressed.
   :no-highlight t
   (if (eq feature 'subr-x)
-      (let ((entry (assq feature after-load-alist)))
-        (let ((load-file-name nil))
-          (dolist (form (cdr entry))
-            (funcall (eval form t)))))
+      (progn
+        (unless (memq 'subr-x features)
+          (push 'subr-x features)
+          (dolist (a-l-element after-load-alist)
+            (when (eq (car a-l-element) 'subr-x)
+              (mapc #'eval (cdr a-l-element)))))
+        'subr-x)
     (apply oldfun feature args)))
 
 (compat-defun hash-table-keys (hash-table)
