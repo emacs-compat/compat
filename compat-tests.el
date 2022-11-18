@@ -2135,5 +2135,68 @@ being compared against."
     (should (eq (lookup-key map "a") nil))
     (should (eq (lookup-key super "a") nil))))
 
+(ert-deftest compat-ref-while-let ()
+  "Check if the real `while-let' behaves as expected."
+  (skip-unless (fboundp 'while-let))
+  ;; Basic test
+  (let ((list (list 1 2 3 4 5)))
+    (while-let ((one (pop list))
+                (two (pop list)))
+      (should one)
+      (should two)
+      (should (< one two)))
+    (should (null list)))
+  ;; Practical test
+  (with-temp-buffer
+    (insert "1 2 3 4 1 2 3 4 1 2 3 4")
+    (goto-char (point-min))
+    (let ((count 0))
+      (while-let (((search-forward-regexp "2" nil t))
+                  (match (match-string 0))
+                  ((string= match "2")))
+        (setq count (1+ count)))
+      (should (= count 3))))
+  ;; Edge cases
+  (catch 'break
+    (while-let ()
+      (throw 'break (should t))))
+  (while-let ((()))
+    (should nil))
+  (while-let ((test nil))
+    (should nil))
+  (while-let (((ignore)))
+    (should nil)))
+
+(ert-deftest compat-impl-while-let ()
+  "Check if the compat `while-let' behaves as expected."
+  ;; Basic test
+  (let ((list (list 1 2 3 4 5)))
+    (compat--while-let ((one (pop list))
+                (two (pop list)))
+      (should one)
+      (should two)
+      (should (< one two)))
+    (should (null list)))
+  ;; Practical test
+  (with-temp-buffer
+    (insert "1 2 3 4 1 2 3 4 1 2 3 4")
+    (goto-char (point-min))
+    (let ((count 0))
+      (compat--while-let (((search-forward-regexp "2" nil t))
+                  (match (match-string 0))
+                  ((string= match "2")))
+        (setq count (1+ count)))
+      (should (= count 3))))
+  ;; Edge cases
+  (catch 'break
+    (compat--while-let ()
+      (throw 'break (should t))))
+  (compat--while-let ((()))
+    (should nil))
+  (compat--while-let ((test nil))
+    (should nil))
+  (compat--while-let (((ignore)))
+    (should nil)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

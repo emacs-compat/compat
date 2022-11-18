@@ -2825,6 +2825,14 @@ Here's an example:
 @end lisp
 @end defun
 
+@c copied from lispref/control.texi
+@defmac while-let spec then-forms...
+Like @code{when-let}, but repeat until a binding in @var{spec} is
+@code{nil}.  The return value is always @code{nil}.
+
+This is comparable to @code{and-let*}.
+@end defmac
+
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and will require
 manual loading even after the release of Compat 29.1.0.0:

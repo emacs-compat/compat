@@ -486,6 +486,25 @@ this defaults to the current buffer."
           (put-text-property sub-start sub-end 'display disp)))
       (setq sub-start sub-end))))
 
+(compat-defmacro while-let (spec &rest body)
+  "Bind variables according to SPEC and conditionally evaluate BODY.
+Evaluate each binding in turn, stopping if a binding value is nil.
+If all bindings are non-nil, eval BODY and repeat.
+
+The variable list SPEC is the same as in `if-let'."
+  (declare (indent 1) (debug if-let))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var spec)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(if (cdr var) (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(while (let* ,(nreverse list)
+              (and ,(caar list)
+                   (progn ,(macroexp-progn (or body '(t))) t))))))
+
 ;;;; Defined in files.el
 
 (compat-defun file-parent-directory (filename)
