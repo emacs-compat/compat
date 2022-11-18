@@ -355,7 +355,7 @@ being compared against."
   (ought t 1)                      ;single argument
   (ought t 1 2 3 4))              ;multiple arguments
 
-(ert-deftest compat-insert-into-buffer-1 ()
+(ert-deftest compat-impl-insert-into-buffer-1 ()
   "Check if `insert-into-buffer' can handle no optional argument."
   (with-temp-buffer
     (let ((other (current-buffer)))
@@ -363,17 +363,20 @@ being compared against."
       (with-temp-buffer
 	(insert "def")
 	(compat--insert-into-buffer other))
-      (should (string= (buffer-string) "abcdef"))))
-  (when (fboundp 'insert-into-buffer)
-    (with-temp-buffer
-      (let ((other (current-buffer)))
-	(insert "abc")
-	(with-temp-buffer
-	  (insert "def")
-	  (insert-into-buffer other))
-	(should (string= (buffer-string) "abcdef"))))))
+      (should (string= (buffer-string) "abcdef")))))
 
-(ert-deftest compat-insert-into-buffer-2 ()
+(ert-deftest compat-ref-insert-into-buffer-1 ()
+  "Check if `insert-into-buffer' can handle no optional argument."
+  (skip-unless (fboundp 'insert-into-buffer))
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other))
+      (should (string= (buffer-string) "abcdef")))))
+
+(ert-deftest compat-impl-insert-into-buffer-2 ()
   "Check if `insert-into-buffer' handles one optional argument."
   (with-temp-buffer
     (let ((other (current-buffer)))
@@ -381,17 +384,20 @@ being compared against."
       (with-temp-buffer
 	(insert "def")
 	(compat--insert-into-buffer other 2))
-      (should (string= (buffer-string) "abcef"))))
-  (when (fboundp 'insert-into-buffer)
-    (with-temp-buffer
-      (let ((other (current-buffer)))
-	(insert "abc")
-	(with-temp-buffer
-	  (insert "def")
-	  (insert-into-buffer other 2))
-	(should (string= (buffer-string) "abcef"))))))
+      (should (string= (buffer-string) "abcef")))))
 
-(ert-deftest compat-insert-into-buffer-3 ()
+(ert-deftest compat-ref-insert-into-buffer-2 ()
+  "Check if `insert-into-buffer' handles one optional argument."
+  (skip-unless (fboundp 'insert-into-buffer))
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other 2))
+      (should (string= (buffer-string) "abcef")))))
+
+(ert-deftest compat-impl-insert-into-buffer-3 ()
   "Check if `insert-into-buffer' handles two optional arguments."
   (with-temp-buffer
     (let ((other (current-buffer)))
@@ -399,15 +405,18 @@ being compared against."
       (with-temp-buffer
 	(insert "def")
 	(compat--insert-into-buffer other 2 3))
-      (should (string= (buffer-string) "abce"))))
-  (when (fboundp 'insert-into-buffer)
-    (with-temp-buffer
-      (let ((other (current-buffer)))
-	(insert "abc")
-	(with-temp-buffer
-	  (insert "def")
-	  (insert-into-buffer other 2 3))
-	(should (string= (buffer-string) "abce"))))))
+      (should (string= (buffer-string) "abce")))))
+
+(ert-deftest compat-ref-insert-into-buffer-3 ()
+  "Check if `insert-into-buffer' handles two optional arguments."
+  (skip-unless (fboundp 'insert-into-buffer))
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other 2 3))
+      (should (string= (buffer-string) "abce")))))
 
 (compat-deftests file-name-with-extension
   (ought "file.ext" "file" "ext")
@@ -524,15 +533,22 @@ being compared against."
   (ought 3 "a" "あ" t)             ;byte example
   (ought 1 "a" "あ"))
 
-(ert-deftest compat-regexp-unmatchable ()
-  "Check if `compat--string-distance' was implemented correctly."
+(ert-deftest compat-impl-regexp-unmatchable ()
+  "Check if the real `regexp-unmatchable' works as assumed."
   (dolist (str '(""                     ;empty string
                  "a"                    ;simple string
                  "aaa"                  ;longer string
                  ))
-    (should-not (string-match-p (with-no-warnings compat--regexp-unmatchable) str))
-    (when (boundp 'regexp-unmatchable)
-      (should-not (string-match-p regexp-unmatchable str)))))
+    (should-not (string-match-p (with-no-warnings compat--regexp-unmatchable) str))))
+
+(ert-deftest compat-ref-regexp-unmatchable ()
+  "Check if the compat `regexp-unmatchable' works as expected."
+  (skip-unless (boundp 'regexp-unmatchable))
+  (dolist (str '(""                     ;empty string
+                 "a"                    ;simple string
+                 "aaa"                  ;longer string
+                 ))
+    (should-not (string-match-p regexp-unmatchable str))))
 
 (compat-deftests compat-regexp-opt
   ;; Ensure `compat--regexp-opt' doesn't change the existing
@@ -543,15 +559,6 @@ being compared against."
   ;; Test empty list:
   (ought "\\(?:\\`a\\`\\)" '())
   (ought "\\<\\(\\`a\\`\\)\\>" '() 'words))
-
-(ert-deftest compat-regexp-opt ()
-  "Check if `compat--regexp-opt' advice was defined correctly."
-  (let ((unmatchable "\\(?:\\`a\\`\\)"))
-    (dolist (str '(""                   ;empty string
-                   "a"                  ;simple string
-                   "aaa"                ;longer string
-                   ))
-      (should-not (string-match-p unmatchable str)))))
 
 (compat-deftests compat-assoc
   ;; Fallback behaviour:
@@ -637,8 +644,25 @@ being compared against."
   (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
   (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
 
+(ert-deftest compat-ref-alist-get-gv ()
+  "Check if the real `alist-get' works as a generalised variable."
+  (skip-unless (get 'alist-get 'gv-expander))
+  (let ((alist-1 (list (cons 1 "one")
+                       (cons 2 "two")
+                       (cons 3 "three")))
+        (alist-2 (list (cons "one" 1)
+                       (cons "two" 2)
+                       (cons "three" 3))))
+    (setf (alist-get 1 alist-1) "eins")
+    (should (equal (alist-get 1 alist-1) "eins"))
+    (setf (alist-get 2 alist-1 nil 'remove) nil)
+    (should (equal alist-1 '((1 . "eins") (3 . "three"))))
+    (setf (alist-get "one" alist-2 nil nil #'string=) "eins")
+    (should (equal (alist-get "one" alist-2 nil nil #'string=)
+                   "eins"))))
+
 (ert-deftest compat-alist-get-gv ()
-  "Test if the `compat-alist-get' can be used as a generalised variable."
+  "Check if the compat `alist-get' works as a generalised variable."
   (let ((alist-1 (list (cons 1 "one")
                        (cons 2 "two")
                        (cons 3 "three")))
@@ -1103,8 +1127,64 @@ being compared against."
   (ought "Prompt 10: " "Prompt %d" nil 10)
   (ought "Prompt \"abc\" (default 3): " "Prompt %S" 3 "abc"))
 
-(ert-deftest compat-named-let ()
-  "Check if `compat--named-let' was implemented properly."
+(ert-deftest compat-ref-named-let ()
+  "Check if the real `named-let' works as assumed."
+  (skip-unless (fboundp 'named-let))
+  (should (= (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
+             8))
+  (should (= (named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
+             100000))
+  (should (= (named-let l ((i 0))
+               (cond
+                ((= i 100000) i)
+                ((= (mod i 2) 0)
+                 (l (+ i 2)))
+                ((l (+ i 3)))))
+             100000))
+  (should (= (named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
+             (expt 2 8)))
+  (should (eq (named-let lop ((x 1))
+                (if (> x 0)
+                    (condition-case nil
+                        (lop (1- x))
+                      (arith-error 'ok))
+                  (/ 1 x)))
+              'ok))
+  (should (eq (named-let lop ((n 10000))
+                (if (> n 0)
+                    (condition-case nil
+                        (/ n 0)
+                      (arith-error (lop (1- n))))
+                  'ok))
+              'ok))
+  (should (eq (named-let lop ((x nil))
+                (cond (x)
+                      (t 'ok)))
+              'ok))
+  (should (eq (named-let lop ((x 100000))
+                (cond ((= x 0) 'ok)
+                      ((lop (1- x)))))
+              'ok))
+  (should (eq (named-let lop ((x 100000))
+                (cond
+                 ((= x -1) nil)
+                 ((= x 0) 'ok)
+                 ((lop -1))
+                 ((lop (1- x)))))
+              'ok))
+  (should (eq (named-let lop ((x 10000))
+                (cond ((= x 0) 'ok)
+                      ((and t (lop (1- x))))))
+              'ok))
+  (should (eq (let ((b t))
+                (named-let lop ((i 0))
+                  (cond ((null i) nil) ((= i 10000) 'ok)
+                        ((lop (and (setq b (not b)) (1+ i))))
+                        ((lop (and (setq b (not b)) (1+ i)))))))
+              'ok)))
+
+(ert-deftest compat-impl-named-let ()
+  "Check if compat `named-let' works as expected."
   (should (= (compat--named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
   (should (= (compat--named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
@@ -1172,8 +1252,28 @@ being compared against."
   (ought t "dir/subdir/")
   (ought nil "dir/subdir"))
 
-(ert-deftest compat-if-let* ()
-  "Check if `compat--if-let*' was implemented properly."
+(ert-deftest compat-ref-if-let* ()
+  "Check if the real `if-let*' works as assumed."
+  (skip-unless (fboundp 'if-let*))
+  (should                               ;trivial condition
+   (eq (if-let* ((test t)) 'true 'false) 'true))
+  (should                               ;trivial non-condition
+   (eq (if-let* ((test nil)) 'true 'false) 'false))
+  (should                               ;non-binding non-condition
+   (eq (if-let* (((ignore))) 'true 'false) 'false))
+  (should
+   (if-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true nil))
+  (should-not
+   (if-let* (((= 5 6))) t nil)))
+
+(ert-deftest compat-impl-if-let* ()
+  "Check if compat `if-let*' works as expected."
   (should                               ;trivial condition
    (eq (compat--if-let* ((test t)) 'true 'false) 'true))
   (should                               ;trivial non-condition
@@ -1191,8 +1291,9 @@ being compared against."
   (should-not
    (compat--if-let* (((= 5 6))) t nil)))
 
-(ert-deftest compat-if-let ()
-  "Check if `compat--if-let' was implemented properly."
+(ert-deftest compat-ref-if-let ()
+  "Check if the real `if-let' works as assumed."
+  (skip-unless (fboundp 'if-let))
   (should                               ;trivial condition
    (eq (compat--if-let ((test t)) 'true 'false) 'true))
   (should                               ;trivial non-condition
@@ -1212,8 +1313,56 @@ being compared against."
   (should-not
    (compat--if-let (((= 5 6))) t nil)))
 
-(ert-deftest compat-and-let* ()
-  "Check if `compat--and-let*' was implemented properly."
+(ert-deftest compat-impl-if-let ()
+  "Check if compat `if-let' was implemented properly."
+  (should                               ;trivial condition
+   (eq (compat--if-let ((test t)) 'true 'false) 'true))
+  (should                               ;trivial non-condition
+   (eq (compat--if-let ((test nil)) 'true 'false) 'false))
+  (should                               ;trivial non-condition
+   (eq (compat--if-let (test nil) 'true 'false) 'false))
+  (should                               ;non-binding non-condition
+   (eq (compat--if-let (((ignore))) 'true 'false) 'false))
+  (should (compat--if-let ((e (memq 0 '(1 2 3 0 5 6))))
+              e))
+  (should-not (compat--if-let ((e (memq 0 '(1 2 3 5 6)))
+                               (d (memq 0 '(1 2 3 0 5 6))))
+                  t))
+  (should-not (compat--if-let ((d (memq 0 '(1 2 3 0 5 6)))
+                               (e (memq 0 '(1 2 3 5 6))))
+                  t))
+  (should-not
+   (compat--if-let (((= 5 6))) t nil)))
+
+(ert-deftest compat-ref-and-let* ()
+  "Check if the real `and-let*' works as assumed."
+  (skip-unless (fboundp 'and-let*))
+  (should                               ;trivial condition
+   (and-let* ((test t))))
+  (should                               ;trivial non-condition
+   (not (and-let* ((test nil)))))
+  (should                               ;non-binding non-condition
+   (not (and-let* (((ignore))))))
+  (should                               ;trivial body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true))
+  (should                               ;no body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))))
+  (should-not
+   (and-let* (((= 5 6))) t)))
+
+(ert-deftest compat-impl-and-let* ()
+  "Check if compat `compat--and-let*' works as expected."
   (should                               ;trivial condition
    (compat--and-let* ((test t))))
   (should                               ;trivial non-condition
@@ -1249,8 +1398,22 @@ being compared against."
   (ought 'foo "null" :null-object 'foo)
   (ought ["false" t] "[false, true]" :false-object "false"))
 
-(ert-deftest compat-json-parse-string ()
-  "Check if `compat--json-parse-string' was implemented properly."
+(ert-deftest compat-ref-json-parse-string ()
+  "Check if the real `json-parse-string' works as assumed."
+  (skip-unless (fboundp 'json-parse-string))
+  (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
+    (let ((obj (json-parse-string input :object-type 'alist)))
+      (should (equal (cdr (assq 'key obj)) ["abc" 2]))
+      (should (equal (cdr (assq 'yek obj)) :null)))
+    (let ((obj (json-parse-string input :object-type 'plist)))
+      (should (equal (plist-get obj :key) ["abc" 2]))
+      (should (equal (plist-get obj :yek) :null)))
+    (let ((obj (json-parse-string input)))
+      (should (equal (gethash "key" obj) ["abc" 2]))
+      (should (equal (gethash "yek" obj) :null)))))
+
+(ert-deftest compat-impl-json-parse-string ()
+  "Check if compat `json-parse-string' works as expected."
   (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
     (let ((obj (compat--json-parse-string input)))
       (should (equal (gethash "key" obj) ["abc" 2]))
@@ -1260,20 +1423,40 @@ being compared against."
       (should (equal (cdr (assq 'yek obj)) :null)))
     (let ((obj (compat--json-parse-string input :object-type 'plist)))
       (should (equal (plist-get obj :key) ["abc" 2]))
-      (should (equal (plist-get obj :yek) :null)))
-    (when (fboundp 'json-parse-string)
-      (let ((obj (json-parse-string input :object-type 'alist)))
-        (should (equal (cdr (assq 'key obj)) ["abc" 2]))
-        (should (equal (cdr (assq 'yek obj)) :null)))
-      (let ((obj (json-parse-string input :object-type 'plist)))
-        (should (equal (plist-get obj :key) ["abc" 2]))
-        (should (equal (plist-get obj :yek) :null)))
-      (let ((obj (json-parse-string input)))
-        (should (equal (gethash "key" obj) ["abc" 2]))
-        (should (equal (gethash "yek" obj) :null))))))
+      (should (equal (plist-get obj :yek) :null)))))
 
-(ert-deftest compat-json-serialize ()
-  "Check if `compat--json-serialize' was implemented properly."
+(ert-deftest compat-ref-json-serialize ()
+  "Check if the real `json-serialize' works as assumed."
+  (skip-unless (fboundp 'json-serialize))
+  (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
+        (input-2 '(:key ["abc" 2] yek t))
+        (input-3 (let ((ht (make-hash-table)))
+                   (puthash "key" ["abc" 2] ht)
+                   (puthash "yek" t ht)
+                   ht)))
+    (should (equal (json-serialize input-1)
+                   "{\":key\":[\"abc\",2],\"yek\":true}"))
+    (should (equal (json-serialize input-2)
+                   "{\"key\":[\"abc\",2],\"yek\":true}"))
+    (should (member (json-serialize input-2)
+                    '("{\"key\":[\"abc\",2],\"yek\":true}"
+                      "{\"yek\":true,\"key\":[\"abc\",2]}")))
+    (should-error (json-serialize '(("a" . 1)))
+                  :type '(wrong-type-argument symbolp "a"))
+    (should-error (json-serialize '("a" 1))
+                  :type '(wrong-type-argument symbolp "a"))
+    (should-error (json-serialize '("a" 1 2))
+                  :type '(wrong-type-argument symbolp "a"))
+    (should-error (json-serialize '(:a 1 2))
+                  :type '(wrong-type-argument consp nil))
+    (should-error (json-serialize
+                   (let ((ht (make-hash-table)))
+                     (puthash 'a 1 ht)
+                     ht))
+                  :type '(wrong-type-argument stringp a))))
+
+(ert-deftest compat-impl-json-serialize ()
+  "Check if compat `json-serialize' works as assumed."
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
         (input-2 '(:key ["abc" 2] yek t))
         (input-3 (let ((ht (make-hash-table)))
@@ -1299,28 +1482,7 @@ being compared against."
                    (let ((ht (make-hash-table)))
                      (puthash 'a 1 ht)
                      ht))
-                  :type '(wrong-type-argument stringp a))
-    (when (fboundp 'json-serialize)
-      (should (equal (json-serialize input-1)
-                     "{\":key\":[\"abc\",2],\"yek\":true}"))
-      (should (equal (json-serialize input-2)
-                     "{\"key\":[\"abc\",2],\"yek\":true}"))
-      (should (member (json-serialize input-2)
-                      '("{\"key\":[\"abc\",2],\"yek\":true}"
-                        "{\"yek\":true,\"key\":[\"abc\",2]}")))
-      (should-error (json-serialize '(("a" . 1)))
-                    :type '(wrong-type-argument symbolp "a"))
-      (should-error (json-serialize '("a" 1))
-                    :type '(wrong-type-argument symbolp "a"))
-      (should-error (json-serialize '("a" 1 2))
-                    :type '(wrong-type-argument symbolp "a"))
-      (should-error (json-serialize '(:a 1 2))
-                    :type '(wrong-type-argument consp nil))
-      (should-error (json-serialize
-                     (let ((ht (make-hash-table)))
-                       (puthash 'a 1 ht)
-                       ht))
-                    :type '(wrong-type-argument stringp a)))))
+                  :type '(wrong-type-argument stringp a))))
 
 (compat-deftests compat-lookup-key
   (let ((a-map (make-sparse-keymap))
@@ -1332,7 +1494,24 @@ being compared against."
     (ought 'foo (list a-map b-map) "x")
     (ought 'bar (list b-map a-map) "x")))
 
-(ert-deftest compat-hash-table-keys ()
+(ert-deftest compat-ref-hash-table-keys ()
+  "Check if the real `hash-table-keys' work as assumed."
+  (skip-unless (fboundp 'hash-table-keys))
+  (let ((ht (make-hash-table)))
+    (should (null (hash-table-keys ht)))
+    (puthash 1 'one ht)
+    (should (equal '(1) (hash-table-keys ht)))
+    (puthash 1 'one ht)
+    (should (equal '(1) (hash-table-keys ht)))
+    (puthash 2 'two ht)
+    (should (memq 1 (hash-table-keys ht)))
+    (should (memq 2 (hash-table-keys ht)))
+    (should (= 2 (length (hash-table-keys ht))))
+    (remhash 1 ht)
+    (should (equal '(2) (hash-table-keys ht)))))
+
+(ert-deftest compat-impl-hash-table-keys ()
+  "Check if compat `hash-table-keys' work as expected."
   (let ((ht (make-hash-table)))
     (should (null (compat--hash-table-keys ht)))
     (puthash 1 'one ht)
@@ -1346,7 +1525,24 @@ being compared against."
     (remhash 1 ht)
     (should (equal '(2) (compat--hash-table-keys ht)))))
 
-(ert-deftest compat-hash-table-values ()
+(ert-deftest compat-ref-hash-table-values ()
+  "Check if the real `hash-table-values' work as assumed."
+  (skip-unless (fboundp 'hash-table-values))
+  (let ((ht (make-hash-table)))
+    (should (null (hash-table-values ht)))
+    (puthash 1 'one ht)
+    (should (equal '(one) (hash-table-values ht)))
+    (puthash 1 'one ht)
+    (should (equal '(one) (hash-table-values ht)))
+    (puthash 2 'two ht)
+    (should (memq 'one (hash-table-values ht)))
+    (should (memq 'two (hash-table-values ht)))
+    (should (= 2 (length (hash-table-values ht))))
+    (remhash 1 ht)
+    (should (equal '(two) (hash-table-values ht)))))
+
+(ert-deftest compat-impl-hash-table-values ()
+  "Check if compat `hash-table-values' work as expected."
   (let ((ht (make-hash-table)))
     (should (null (compat--hash-table-values ht)))
     (puthash 1 'one ht)
@@ -1407,11 +1603,6 @@ being compared against."
   (compat-deftests bool-vector-exclusive-or
     (ought (bool-vector nil t t nil) a b)
     (ought (bool-vector nil t t nil) b a)
-    (ert-deftest compat-bool-vector-exclusive-or-sideeffect ()
-      (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-exclusive-or a b c)
-        (should (equal (bool-vector nil t t nil) c))
-        (should (equal (bool-vector nil t t nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
       (expect wrong-length-argument a b (bool-vector)))
@@ -1421,17 +1612,29 @@ being compared against."
     (expect wrong-type-argument (bool-vector) (bool-vector) (vector))
     (expect wrong-type-argument (bool-vector) (vector) (vector))
     (expect wrong-type-argument (vector) (bool-vector) (vector))
-    (expect wrong-type-argument (vector) (vector) (vector))))
+    (expect wrong-type-argument (vector) (vector) (vector)))
+
+  (ert-deftest compat-ref-bool-vector-exclusive-or-sideeffect ()
+    "Check if the real `bool-vector-exclusive-or' handles side effects."
+    (skip-unless (fboundp 'bool-vector-exclusive-or))
+    (let ((c (make-bool-vector 4 nil)))
+      (bool-vector-exclusive-or a b c)
+      (should (equal (bool-vector nil t t nil) c))
+      (should (equal (bool-vector nil t t nil) c))))
+
+  (ert-deftest compat-impl-bool-vector-exclusive-or-sideeffect ()
+    "Check if compat `bool-vector-exclusive-or' handles side effects."
+    (let ((c (make-bool-vector 4 nil)))
+      (compat--bool-vector-exclusive-or a b c)
+      (should (equal (bool-vector nil t t nil) c))
+      (should (equal (bool-vector nil t t nil) c)))))
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
   (compat-deftests bool-vector-union
     (ought (bool-vector t t t nil) a b)
     (ought (bool-vector t t t nil) b a)
-    (ert-deftest compat-bool-vector-union-sideeffect ()
-      (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-union a b c)
-        (should (equal (bool-vector t t t nil) c))))
+
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
       (expect wrong-length-argument a b (bool-vector)))
@@ -1441,17 +1644,26 @@ being compared against."
     (expect wrong-type-argument (bool-vector) (bool-vector) (vector))
     (expect wrong-type-argument (bool-vector) (vector) (vector))
     (expect wrong-type-argument (vector) (bool-vector) (vector))
-    (expect wrong-type-argument (vector) (vector) (vector))))
+    (expect wrong-type-argument (vector) (vector) (vector)))
+
+  (ert-deftest compat-ref-bool-vector-union-sideeffect ()
+    "Check if the real `bool-vector-union' handles side effects."
+    (skip-unless (fboundp 'bool-vector-union))
+    (let ((c (make-bool-vector 4 nil)))
+      (bool-vector-union a b c)
+      (should (equal (bool-vector t t t nil) c))))
+
+  (ert-deftest compat-impl-bool-vector-union-sideeffect ()
+    "Check if compat `bool-vector-union' handles side effects."
+    (let ((c (make-bool-vector 4 nil)))
+      (compat--bool-vector-union a b c)
+      (should (equal (bool-vector t t t nil) c)))))
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
   (compat-deftests bool-vector-intersection
     (ought (bool-vector t nil nil nil) a b)
     (ought (bool-vector t nil nil nil) b a)
-    (ert-deftest compat-bool-vector-intersection-sideeffect ()
-      (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-intersection a b c)
-        (should (equal (bool-vector t nil nil nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
       (expect wrong-length-argument a b (bool-vector)))
@@ -1461,20 +1673,26 @@ being compared against."
     (expect wrong-type-argument (bool-vector) (bool-vector) (vector))
     (expect wrong-type-argument (bool-vector) (vector) (vector))
     (expect wrong-type-argument (vector) (bool-vector) (vector))
-    (expect wrong-type-argument (vector) (vector) (vector))))
+    (expect wrong-type-argument (vector) (vector) (vector)))
+
+  (ert-deftest compat-ref-bool-vector-intersection-sideeffect ()
+    "Check if the real `bool-vector-intersection' handles side effects."
+    (skip-unless (fboundp 'bool-vector-intersection))
+    (let ((c (make-bool-vector 4 nil)))
+      (bool-vector-intersection a b c)
+      (should (equal (bool-vector t nil nil nil) c))))
+
+  (ert-deftest compat-impl-bool-vector-intersection-sideeffect ()
+    "Check if compat `bool-vector-intersection' handles side effects."
+    (let ((c (make-bool-vector 4 nil)))
+      (compat--bool-vector-intersection a b c)
+      (should (equal (bool-vector t nil nil nil) c)))))
 
 (let ((a (bool-vector t t nil nil))
       (b (bool-vector t nil t nil)))
   (compat-deftests bool-vector-set-difference
     (ought (bool-vector nil t nil nil) a b)
     (ought (bool-vector nil nil t nil) b a)
-    (ert-deftest compat-bool-vector-set-difference-sideeffect ()
-      (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-set-difference a b c)
-        (should (equal (bool-vector nil t nil nil) c)))
-      (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-set-difference b a c)
-        (should (equal (bool-vector nil nil t nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
       (expect wrong-length-argument a b (bool-vector)))
@@ -1484,7 +1702,26 @@ being compared against."
     (expect wrong-type-argument (bool-vector) (bool-vector) (vector))
     (expect wrong-type-argument (bool-vector) (vector) (vector))
     (expect wrong-type-argument (vector) (bool-vector) (vector))
-    (expect wrong-type-argument (vector) (vector) (vector))))
+    (expect wrong-type-argument (vector) (vector) (vector)))
+
+  (ert-deftest compat-ref-bool-vector-set-difference-sideeffect ()
+    "Check if the real `bool-vector-set-difference' handles side effects."
+    (skip-unless (fboundp 'bool-vector-set-difference))
+    (let ((c (make-bool-vector 4 nil)))
+      (bool-vector-set-difference a b c)
+      (should (equal (bool-vector nil t nil nil) c)))
+    (let ((c (make-bool-vector 4 nil)))
+      (bool-vector-set-difference b a c)
+      (should (equal (bool-vector nil nil t nil) c))))
+
+  (ert-deftest compat-impl-bool-vector-set-difference-sideeffect ()
+    "Check if compat `bool-vector-set-difference' handles side effects."
+    (let ((c (make-bool-vector 4 nil)))
+      (compat--bool-vector-set-difference a b c)
+      (should (equal (bool-vector nil t nil nil) c)))
+    (let ((c (make-bool-vector 4 nil)))
+      (compat--bool-vector-set-difference b a c)
+      (should (equal (bool-vector nil nil t nil) c)))))
 
 (compat-deftests bool-vector-not
   (ought (bool-vector) (bool-vector))
@@ -1892,20 +2129,27 @@ being compared against."
     (expect cyclic-function-indirection a)
     (ought (list b) a t)))
 
-(ert-deftest compat-get-display-property-1 ()
-  "Check basic `get-display-property' behaviour."
+(ert-deftest compat-ref-get-display-property-1 ()
+  "Check basic `get-display-property' (the real thing) behaviour."
+  (skip-unless (fboundp 'get-display-property))
   ;; based on tests from xdisp-test.el
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '(height 2.0))
             " bar")
-    (when (fboundp 'get-display-property)
-      (should (eql 2.0 (get-display-property 1 'height)))
-      (should (eql 2.0 (get-display-property 2 'height)))
-      (should (eql nil (get-display-property 2 'width)))
-      (should (eql nil (get-display-property 5 'height)))
-      (should (eql nil (get-display-property 5 'height)))
-      (should (eql nil (get-display-property 2 'bold)))
-      (should (eql nil (get-display-property 5 'bold))))
+    (should (eql 2.0 (get-display-property 1 'height)))
+    (should (eql 2.0 (get-display-property 2 'height)))
+    (should (eql nil (get-display-property 2 'width)))
+    (should (eql nil (get-display-property 5 'height)))
+    (should (eql nil (get-display-property 5 'height)))
+    (should (eql nil (get-display-property 2 'bold)))
+    (should (eql nil (get-display-property 5 'bold)))))
+
+(ert-deftest compat-impl-get-display-property-1 ()
+  "Check basic `get-display-property' (compat) behaviour."
+  ;; based on tests from xdisp-test.el
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '(height 2.0))
+            " bar")
     (should (eql 2.0 (compat--get-display-property 1 'height)))
     (should (eql 2.0 (compat--get-display-property 2 'height)))
     (should (eql nil (compat--get-display-property 2 'width)))
@@ -1914,20 +2158,27 @@ being compared against."
     (should (eql nil (compat--get-display-property 2 'bold)))
     (should (eql nil (compat--get-display-property 5 'bold)))))
 
-(ert-deftest compat-get-display-property-2 ()
-  "Check if `get-display-property' handles the optional third argument."
+(ert-deftest compat-ref-get-display-property-2 ()
+  "Check if `get-display-property' (the real thing) handles the optional third argument."
+  (skip-unless (fboundp 'get-display-property))
   ;; based on tests from xdisp-test.el
   (let ((str (concat
               (propertize "foo" 'face 'bold 'display '(height 2.0))
               " bar")))
-    (when (fboundp 'get-display-property)
-      (should (eql 2.0 (get-display-property 1 'height str)))
-      (should (eql 2.0 (get-display-property 2 'height str)))
-      (should (eql nil (get-display-property 2 'width str)))
-      (should (eql nil (get-display-property 5 'height str)))
-      (should (eql nil (get-display-property 5 'height str)))
-      (should (eql nil (get-display-property 2 'bold str)))
-      (should (eql nil (get-display-property 5 'bold str))))
+    (should (eql 2.0 (get-display-property 1 'height str)))
+    (should (eql 2.0 (get-display-property 2 'height str)))
+    (should (eql nil (get-display-property 2 'width str)))
+    (should (eql nil (get-display-property 5 'height str)))
+    (should (eql nil (get-display-property 5 'height str)))
+    (should (eql nil (get-display-property 2 'bold str)))
+    (should (eql nil (get-display-property 5 'bold str)))))
+
+(ert-deftest compat-impl-get-display-property-2 ()
+  "Check if `get-display-property' (compat) handles the optional third argument."
+  ;; based on tests from xdisp-test.el
+  (let ((str (concat
+              (propertize "foo" 'face 'bold 'display '(height 2.0))
+              " bar")))
     (should (eql 2.0 (compat--get-display-property 1 'height str)))
     (should (eql 2.0 (compat--get-display-property 2 'height str)))
     (should (eql nil (compat--get-display-property 2 'width str)))
@@ -1936,24 +2187,32 @@ being compared against."
     (should (eql nil (compat--get-display-property 2 'bold str)))
     (should (eql nil (compat--get-display-property 5 'bold str)))))
 
-(ert-deftest compat-get-display-property-3 ()
-  "Check if `get-display-property' handles multiple display properties."
+(ert-deftest compat-ref-get-display-property-3 ()
+  "Check if `get-display-property' (the real thing) handles multiple display properties."
+  (skip-unless (fboundp 'get-display-property))
   ;; based on tests from xdisp-test.el
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '((height 2.0)
                                                      (space-width 4.0)))
             " bar")
-    (when (fboundp 'get-display-property)
-      (should (eql 2.0 (get-display-property 1 'height)))
-      (should (eql 2.0 (get-display-property 2 'height)))
-      (should (eql nil (get-display-property 5 'height)))
-      (should (eql 4.0 (get-display-property 1 'space-width)))
-      (should (eql 4.0 (get-display-property 2 'space-width)))
-      (should (eql nil (get-display-property 5 'space-width)))
-      (should (eql nil (get-display-property 2 'width)))
-      (should (eql nil (get-display-property 5 'width)))
-      (should (eql nil (get-display-property 2 'bold)))
-      (should (eql nil (get-display-property 5 'bold))))
+    (should (eql 2.0 (get-display-property 1 'height)))
+    (should (eql 2.0 (get-display-property 2 'height)))
+    (should (eql nil (get-display-property 5 'height)))
+    (should (eql 4.0 (get-display-property 1 'space-width)))
+    (should (eql 4.0 (get-display-property 2 'space-width)))
+    (should (eql nil (get-display-property 5 'space-width)))
+    (should (eql nil (get-display-property 2 'width)))
+    (should (eql nil (get-display-property 5 'width)))
+    (should (eql nil (get-display-property 2 'bold)))
+    (should (eql nil (get-display-property 5 'bold)))))
+
+(ert-deftest compat-impl-get-display-property-3 ()
+  "Check if `get-display-property' (compat) handles multiple display properties."
+  ;; based on tests from xdisp-test.el
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '((height 2.0)
+                                                     (space-width 4.0)))
+            " bar")
     (should (eql 2.0 (compat--get-display-property 1 'height)))
     (should (eql 2.0 (compat--get-display-property 2 'height)))
     (should (eql nil (compat--get-display-property 5 'height)))
@@ -1965,7 +2224,31 @@ being compared against."
     (should (eql nil (compat--get-display-property 2 'bold)))
     (should (eql nil (compat--get-display-property 5 'bold)))))
 
-(ert-deftest compat-get-display-property-4 ()
+(ert-deftest compat-ref-get-display-property-4 ()
+  "Check if `get-display-property' (the real thing) handles display property vectors."
+  (skip-unless (fboundp 'get-display-property))
+  ;; Based on tests from xdisp-test.el
+  (with-temp-buffer
+    (insert (propertize "foo bar" 'face 'bold
+                        'display '[(height 2.0)
+                                   (space-width 20)])
+            " baz")
+    (should (eql 2.0 (get-display-property 1 'height)))
+    (should (eql 2.0 (get-display-property 2 'height)))
+    (should (eql 2.0 (get-display-property 5 'height)))
+    (should (eql nil (get-display-property 8 'height)))
+    (should (eql 20 (get-display-property 1 'space-width)))
+    (should (eql 20 (get-display-property 2 'space-width)))
+    (should (eql 20 (get-display-property 5 'space-width)))
+    (should (eql nil (get-display-property 8 'space-width)))
+    (should (eql nil (get-display-property 2 'width)))
+    (should (eql nil (get-display-property 5 'width)))
+    (should (eql nil (get-display-property 8 'width)))
+    (should (eql nil (get-display-property 2 'bold)))
+    (should (eql nil (get-display-property 5 'bold)))
+    (should (eql nil (get-display-property 8 'width)))))
+
+(ert-deftest compat-impl-get-display-property-4 ()
   "Check if `get-display-property' handles display property vectors."
   ;; Based on tests from xdisp-test.el
   (with-temp-buffer
@@ -1973,21 +2256,6 @@ being compared against."
                         'display '[(height 2.0)
                                    (space-width 20)])
             " baz")
-    (when (fboundp 'get-display-property)
-      (should (eql 2.0 (get-display-property 1 'height)))
-      (should (eql 2.0 (get-display-property 2 'height)))
-      (should (eql 2.0 (get-display-property 5 'height)))
-      (should (eql nil (get-display-property 8 'height)))
-      (should (eql 20 (get-display-property 1 'space-width)))
-      (should (eql 20 (get-display-property 2 'space-width)))
-      (should (eql 20 (get-display-property 5 'space-width)))
-      (should (eql nil (get-display-property 8 'space-width)))
-      (should (eql nil (get-display-property 2 'width)))
-      (should (eql nil (get-display-property 5 'width)))
-      (should (eql nil (get-display-property 8 'width)))
-      (should (eql nil (get-display-property 2 'bold)))
-      (should (eql nil (get-display-property 5 'bold)))
-      (should (eql nil (get-display-property 8 'width))))
     (should (eql 2.0 (compat--get-display-property 1 'height)))
     (should (eql 2.0 (compat--get-display-property 2 'height)))
     (should (eql 2.0 (compat--get-display-property 5 'height)))
@@ -2131,8 +2399,33 @@ being compared against."
          3 #'<=)
   (ought nil '(1 :one 2 :two 3 :three) 4 #'<=))
 
-(ert-deftest compat-define-key ()
-  "Check if `define-key' handles the REMOVE argument."
+(ert-deftest compat-ref-define-key ()
+  "Check if the real `define-key' handles the REMOVE argument."
+  (skip-unless (version<= "29" emacs-version))
+  (let ((map (make-sparse-keymap))
+        (super (make-sparse-keymap)))
+    (set-keymap-parent map super)
+    (define-key super "a" 'always)
+    ;; We should be able to command a key that was just bound.
+    (define-key map "a" 'ignore)
+    (should (eq (lookup-key map "a") 'ignore))
+    (should (eq (lookup-key super "a") 'always))
+    ;; After removing it we should find the key in the parent map.
+    (define-key map "a" nil t)
+    (should (eq (lookup-key map "a") 'always))
+    (should (eq (lookup-key super "a") 'always))
+    ;; Repeating this shouldn't change the result
+    (define-key map "a" 'anything t)
+    (should (eq (lookup-key map "a") 'always))
+    (should (eq (lookup-key super "a") 'always))
+    ;; Removing it from the parent map should remove it from the child
+    ;; map as well.
+    (define-key super "a" 'anything t)
+    (should (eq (lookup-key map "a") nil))
+    (should (eq (lookup-key super "a") nil))))
+
+(ert-deftest compat-impl-efine-key ()
+  "Check if compat `define-key' handles the REMOVE argument."
   (let ((map (make-sparse-keymap))
         (super (make-sparse-keymap)))
     (set-keymap-parent map super)
@@ -2156,7 +2449,7 @@ being compared against."
     (should (eq (lookup-key super "a") nil))))
 
 (ert-deftest compat-ref-while-let ()
-  "Check if the real `while-let' behaves as expected."
+  "Check if the real `while-let' behaves as assumed."
   (skip-unless (fboundp 'while-let))
   ;; Basic test
   (let ((list (list 1 2 3 4 5)))
