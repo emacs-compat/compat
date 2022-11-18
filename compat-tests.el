@@ -1174,6 +1174,12 @@ being compared against."
 
 (ert-deftest compat-if-let* ()
   "Check if `compat--if-let*' was implemented properly."
+  (should                               ;trivial condition
+   (eq (compat--if-let* ((test t)) 'true 'false) 'true))
+  (should                               ;trivial non-condition
+   (eq (compat--if-let* ((test nil)) 'true 'false) 'false))
+  (should                               ;non-binding non-condition
+   (eq (compat--if-let* (((ignore))) 'true 'false) 'false))
   (should
    (compat--if-let*
     ((x 3)
@@ -1187,6 +1193,14 @@ being compared against."
 
 (ert-deftest compat-if-let ()
   "Check if `compat--if-let' was implemented properly."
+  (should                               ;trivial condition
+   (eq (compat--if-let ((test t)) 'true 'false) 'true))
+  (should                               ;trivial non-condition
+   (eq (compat--if-let ((test nil)) 'true 'false) 'false))
+  (should                               ;trivial non-condition
+   (eq (compat--if-let (test nil) 'true 'false) 'false))
+  (should                               ;non-binding non-condition
+   (eq (compat--if-let (((ignore))) 'true 'false) 'false))
   (should (compat--if-let ((e (memq 0 '(1 2 3 0 5 6))))
               e))
   (should-not (compat--if-let ((e (memq 0 '(1 2 3 5 6)))
@@ -1200,6 +1214,12 @@ being compared against."
 
 (ert-deftest compat-and-let* ()
   "Check if `compat--and-let*' was implemented properly."
+  (should                               ;trivial condition
+   (compat--and-let* ((test t))))
+  (should                               ;trivial non-condition
+   (not (compat--and-let* ((test nil)))))
+  (should                               ;non-binding non-condition
+   (not (compat--and-let* (((ignore))))))
   (should                               ;trivial body
    (compat--and-let*
     ((x 3)
