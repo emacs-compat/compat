@@ -662,6 +662,17 @@ REMOTE is non-nil, search on the remote host indicated by
         (when (stringp res) (compat--file-local-name res)))
     (executable-find command)))
 
+;;*UNTESTED
+(compat-defun make-empty-file (filename &optional parents)
+  "Create an empty file FILENAME.
+Optional arg PARENTS, if non-nil then creates parent dirs as needed."
+  (when (and (file-exists-p filename) (null parents))
+    (signal 'file-already-exists (list "File exists" filename)))
+  (let ((paren-dir (file-name-directory filename)))
+    (when (and paren-dir (not (file-exists-p paren-dir)))
+      (make-directory paren-dir parents)))
+  (write-region "" nil filename nil 0))
+
 ;; TODO provide advice for directory-files-recursively
 
 ;;;; Defined in format-spec.el
