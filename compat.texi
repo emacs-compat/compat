@@ -1488,7 +1488,7 @@ This function creates an empty file named @var{filename}.  As
 @code{make-directory}, this function creates parent directories if
 @var{parents} is non-@code{nil}.  If @var{filename} already exists, this
 function signals an error.
-@end deffn
+@end defun
 
 @subsection Prefixed Definitions
 These functions are prefixed with @code{compat} prefix, and are only
