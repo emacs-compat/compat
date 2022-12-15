@@ -47,12 +47,10 @@
   ;; the file (which is disabled by `compat--inhibit-prefixed', so
   ;; that the file can be loaded again at some later point when the
   ;; prefixed definitions are needed).
-  (dolist (vers '(24 25 26 27 28 29))
-    (unless (memq (intern (format "compat-%d" vers)) features)
-      (load (format "compat-%d%s" vers
-                    (if (bound-and-true-p compat-testing)
-                        ".el" ""))
-            nil t))))
+  (dolist (version '(24 25 26 27 28 29))
+    (let ((feature-name (format "compat-%d" version)))
+      (unless (memq (intern feature-name) features)
+        (load feature-name nil t)))))
 
 (provide 'compat)
 ;;; compat.el ends here

@@ -60,6 +60,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
 
 (defvar compat-testing)
 (let ((compat--generate-function #'compat--generate-testable)
+      (load-suffixes '(".el" ".elc"))
       (compat-testing t))
   (load "compat.el"))
 
