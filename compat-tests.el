@@ -2401,7 +2401,7 @@ being compared against."
 
 (ert-deftest compat-ref-define-key ()
   "Check if the real `define-key' handles the REMOVE argument."
-  (skip-unless (version<= "29" emacs-version))
+  (skip-unless (version< "29" emacs-version))
   (let ((map (make-sparse-keymap))
         (super (make-sparse-keymap)))
     (set-keymap-parent map super)
