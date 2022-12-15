@@ -47,9 +47,7 @@
   ;; the file (which is disabled by `compat--inhibit-prefixed', so
   ;; that the file can be loaded again at some later point when the
   ;; prefixed definitions are needed).
-  (dolist (vers (if (bound-and-true-p compat-testing)
-                    '(24 25 26 27 28 29)
-                  '(24 25 26 27 28)))
+  (dolist (vers '(24 25 26 27 28 29))
     (unless (memq (intern (format "compat-%d" vers)) features)
       (load (format "compat-%d%s" vers
                     (if (bound-and-true-p compat-testing)
