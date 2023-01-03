@@ -2,7 +2,7 @@ COMPATibility Library for Emacs
 ===============================
 
 Find here the source for compat.el, a forwards-compatibility library
-for (GNU) Emacs Lisp, versions 24.3 and newer.
+for (GNU) Emacs Lisp, versions 24.4 and newer.
 
 For information on how to use Compat, please consult the [manual].
 The latest state of development can be found in the [snapshot

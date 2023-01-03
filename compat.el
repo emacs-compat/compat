@@ -6,7 +6,7 @@
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 29.1.0.0-dev
 ;; URL: https://sr.ht/~pkal/compat
-;; Package-Requires: ((emacs "24.3") (nadvice "0.3"))
+;; Package-Requires: ((emacs "24.4") (nadvice "0.3"))
 ;; Keywords: lisp
 
 ;; This program is free software; you can redistribute it and/or modify

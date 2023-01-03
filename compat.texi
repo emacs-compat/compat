@@ -100,10 +100,8 @@ for Emacs Lisp.  That is to say by using Compat, an Elisp package does
 not have to make the decision to either use new and useful functionality
 or support old versions of Emacs.
 
-Version 24.3 is chosen as the oldest version, because this is the newest
-version on CentOS 7. It is intended to preserve compatibility for at
-least as the Centos 7 reaches
-@uref{https://wiki.centos.org/About/Product, EOL}, 2024.
+Version 24.4 is chosen as the oldest version we can reasonably support,
+since subr-x was introduced in this version.
 
 If you are developing a package with Compat in mind, consider loading
 `compat-help` (on your system, not in a package) to get relevant notes
@@ -124,10 +122,10 @@ The intended use-case for this library is for package developers to add
 as a dependency in the header:
 
 @example
-;; Package-Requires: ((emacs "24.3") (compat "28.1.2.2"))
+;; Package-Requires: ((emacs "24.4") (compat "28.1.2.2"))
 @end example
 
-There is no need to depend on @code{emacs} 24.3 specifically.  One can
+There is no need to depend on @code{emacs} 24.4 specifically.  One can
 choose to any newer version, if features not provided by Compat
 necessitate it.
 
@@ -174,7 +172,7 @@ Highlight functions that are implemented as compatibility definitions.
 @node Intentions
 @section Intentions
 
-The library intends to provide support back until Emacs 24.3.  The
+The library intends to provide support back until Emacs 24.4.  The
 intended audience are package developers that are interested in using
 newer developments, without having to break compatibility.
 

@@ -378,23 +378,6 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 ;;;; Defined in subr-x.el
 
-;;* UNTESTED
-(compat-advise require (feature &rest args)
-  "Allow for Emacs 24.3 to require the inexistent FEATURE subr-x."
-  :version "24.4"
-  ;; As the compatibility advise around `require` is more a hack than
-  ;; of of actual value, the highlighting is suppressed.
-  :no-highlight t
-  (if (eq feature 'subr-x)
-      (progn
-        (unless (memq 'subr-x features)
-          (push 'subr-x features)
-          (dolist (a-l-element after-load-alist)
-            (when (eq (car a-l-element) 'subr-x)
-              (mapc #'eval (cdr a-l-element)))))
-        'subr-x)
-    (apply oldfun feature args)))
-
 (compat-defun hash-table-keys (hash-table)
   "Return a list of keys in HASH-TABLE."
   (let (values)
