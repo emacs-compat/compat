@@ -7,7 +7,7 @@
 @c %**end of header
 
 @copying
-Copyright @copyright{} 2021-2023  Free Software Foundation, Inc.
+Copyright @copyright{} 2022-2023 Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -99,10 +99,11 @@ or support old versions of Emacs.
 Version 24.4 is chosen as the oldest version we can reasonably support,
 since subr-x was introduced in this version.
 
-Note that Compat provides a few prefixed function, ie. functions with a
-@code{compat-} prefix.  These are used to provide extended functionality
-for commands that are already defined (@code{sort}, @code{assoc},
-@code{seq}, @dots{}).
+Note that Compat provides functions with extended functionality for
+commands that are already defined (@code{sort}, @code{assoc},
+@code{seq}, @dots{}). These functions must be looked up explicitly
+with @code{compat-function} or called explicitly with
+@code{compat-funcall}.
 
 @node Usage
 @section Usage
@@ -124,16 +125,23 @@ In any file where compatibility forms are used, a
 (require 'compat)
 @end example
 
-should be added early on.
-
-This will load all non-prefixed definitions (functions and macros with a
-leading `compat-`).  To load these, an additional
+should be added early on. In packages which are part of Emacs itself,
+the noerror flag should be specified.
 
 @example
-(require 'compat-XY) ; e.g. 26
+(require 'compat nil 'noerror)
 @end example
 
-will be necessary, to load compatibility code for Emacs version XY@.
+This will load all implicit and explicit Compat definitions. Functions
+and macros where the calling convention has changed can be accessed
+explicitly via @code{compat-function} and @code{compat-funcall}. We
+call these definitions ``Explicit Definitions''. In contrast,
+``Implicit Definitions'' can be called as usual.
+
+@example
+(compat-funcall sort SEQUENCE PREDICATE) ;; Explicit
+(mapcan FUNCTION SEQUENCE)               ;; Implicit
+@end example
 
 It is recommended to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
@@ -154,12 +162,11 @@ reasons.  These might include:
 @item
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
-advised. As this is regarded as invasive and is shown to be a
-significant overhead, even when the new feature is not used, this
-approach is not used.
-
-As a compromise, prefixed functions and macros (starting with a
-@code{compat-} prefix) can be provided.
+advised. As this is regarded as invasive and adds significant
+overhead, even when the new feature is not used, this approach is not
+used. As a compromise, compatibility functions and macros with a
+changed calling convetion can be accessed via the
+@code{compat-function} and @code{compat-funcall} macros.
 
 @item
 New functionality was implemented in the core, and depends on external
@@ -199,9 +206,9 @@ manage to provide for each Emacs version.
 @node Emacs 24.4
 @section Emacs 24.4
 
-@subsection Unprefixed Definitions
+@subsection Implicit Definitions
 The following functions and macros implemented in 24.4, and are provided
-by Compat by default:
+by Compat:
 
 @c copied from lispref/loading.texi
 @defmac with-eval-after-load library body@dots{}
@@ -395,36 +402,36 @@ recalculate its attributes, as described above.
 @xref{Defining Faces,,,elisp}.
 @end defun
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and are only
-loaded when @code{compat-24} is required:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
 @c all copied from lispref/numbers.texi
-@defun compat-= number-or-marker &rest number-or-markers
+@defun compat-funcall@ = number-or-marker &rest number-or-markers
 This function tests whether all its arguments are numerically equal, and
 returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-< number-or-marker &rest number-or-markers
+@defun compat-funcall@ < number-or-marker &rest number-or-markers
 This function tests whether each argument is strictly less than the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-> number-or-marker &rest number-or-markers
+@defun compat-funcall@ > number-or-marker &rest number-or-markers
 This function tests whether each argument is strictly greater than the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-<= number-or-marker &rest number-or-markers
+@defun compat-funcall@ <= number-or-marker &rest number-or-markers
 This function tests whether each argument is less than or equal to the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat->= number-or-marker &rest number-or-markers
+@defun compat-funcall@ >= number-or-marker &rest number-or-markers
 This function tests whether each argument is greater than or equal to
 the following argument.  It returns @code{t} if so, @code{nil}
 otherwise.
@@ -436,7 +443,7 @@ These functions differ from the previous implementation in that they
 allow for more than two argument to be compared.
 
 @c based on lispref/strings.texi
-@defun compat-split-string string &optional separators omit-nulls trim
+@defun compat-funcall@ split-string string &optional separators omit-nulls trim
 This function splits @var{string} into substrings based on the regular
 expression @var{separators} (@pxref{Regular Expressions,,,elisp}).  Each
 match for @var{separators} defines a splitting point; the substrings
@@ -482,15 +489,15 @@ Support for generators.
 @item
 The @code{string-trim}, @code{string-trim-left} and
 @code{string-trim-right} functions.  These are instead provided as
-prefixed function as part of @ref{Emacs 26.1} support.
+explicit functions as part of @ref{Emacs 26.1} support.
 @end itemize
 
 @node Emacs 25.1
 @section Emacs 25.1
 
-@subsection Unprefixed Definitions
+@subsection Implicit Definitions
 The following functions and macros implemented in 25.1, and are provided
-by Compat by default:
+by Compat:
 
 @c copied from lispref/strings.texi
 @defun format-message string &rest objects
@@ -679,11 +686,11 @@ arguments, @var{objects}.
 @xref{Bool-Vectors,,,elisp}.
 @end defun
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and are only
-loaded when @code{compat-25} is required:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
-@defun compat-sort sequence predicate
+@defun compat-funcall@ sort sequence predicate
 This function sorts @var{sequence} stably.  Note that this function
 doesn't work for all sequences; it may be used only for lists and
 vectors.  If @var{sequence} is a list, it is modified destructively.
@@ -742,9 +749,9 @@ The functions @code{bufferpos-to-filepos} and
 @node Emacs 26.1
 @section Emacs 26.1
 
-@subsection Unprefixed Definitions
+@subsection Implicit Definitions
 The following functions and macros implemented in 26.1, and are provided
-by Compat by default:
+by Compat:
 
 @c copied from lispref/functions.texi
 @defun func-arity function
@@ -960,8 +967,7 @@ See @ref{Reading One Event,Reading One Event,,elisp,}.
 @defun image-property
 Defined in @code{image.el}.
 
-This function can also be used as a generalised variable.  To use this
-you need to explicitly require @code{compat-26}.
+This function can also be used as a generalised variable.
 @end defun
 
 @defun file-attribute-type
@@ -1050,11 +1056,11 @@ size, modes, inode-number and device-number.
 @end example
 @end defun
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and are only
-loaded when @code{compat-26} is required:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
-@defun compat-assoc key alist &optional testfn
+@defun compat-funcall@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
 @var{alist}, comparing @var{key} against the alist elements using
 @var{testfn} if it is a function, and @code{equal} otherwise
@@ -1070,7 +1076,7 @@ The compatibility version adds support for handling the optional
 argument @var{testfn}.
 @end defun
 
-@defun compat-line-number-at-pos &optional pos absolute
+@defun compat-funcall@ line-number-at-pos &optional pos absolute
 This function returns the line number in the current buffer
 corresponding to the buffer position @var{pos}.  If @var{pos} is
 @code{nil} or omitted, the current buffer position is used. If
@@ -1085,7 +1091,7 @@ The compatibility version adds support for handling the optional
 argument @var{absolute}.
 @end defun
 
-@defun compat-alist-get key alist &optional default remove testfn
+@defun compat-funcall@ alist-get key alist &optional default remove testfn
 @xref{Association Lists,,,elisp}.  This function is similar to
 @code{assq}.  It finds the first association @w{@code{(@var{key}
 . @var{value})}} by comparing @var{key} with @var{alist} elements, and,
@@ -1101,7 +1107,7 @@ It can also be used as a @ref{generalised variable,Generalized
 Variables,,elisp}.
 @end defun
 
-@defun compat-string-trim-left string &optional regexp
+@defun compat-funcall@ string-trim-left string &optional regexp
 Remove the leading text that matches @var{regexp} from @var{string}.
 @var{regexp} defaults to @samp{[ \t\n\r]+}.
 
@@ -1110,7 +1116,7 @@ Remove the leading text that matches @var{regexp} from @var{string}.
 The compatibility version handles the optional argument @var{regexp}.
 @end defun
 
-@defun compat-string-trim-right string &optional regexp
+@defun compat-funcall@ string-trim-right string &optional regexp
 Remove the trailing text that matches @var{regexp} from @var{string}.
 @var{regexp} defaults to @samp{[ \t\n\r]+}.
 
@@ -1119,7 +1125,7 @@ Remove the trailing text that matches @var{regexp} from @var{string}.
 The compatibility version handles the optional argument @var{regexp}.
 @end defun
 
-@defun compat-string-trim string &optional trim-left trim-right
+@defun compat-funcall@ string-trim string &optional trim-left trim-right
 Remove the leading text that matches @var{trim-left} and trailing text
 that matches @var{trim-right} from @var{string}.  Both regexps default
 to @samp{[ \t\n\r]+}.
@@ -1173,9 +1179,9 @@ The function @code{window-swap-states}.
 @node Emacs 27.1
 @section Emacs 27.1
 
-@subsection Unprefixed Definitions
+@subsection Implicit Definitions
 The following functions and macros implemented in 27.1, and are provided
-by Compat by default:
+by Compat:
 
 @c copied from lispref/lists.texi
 @defun proper-list-p object
@@ -1461,12 +1467,12 @@ This function creates an empty file named @var{filename}.  As
 function signals an error.
 @end defun
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and are only
-loaded when @code{compat-27} is required:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
 @c based on lispref/windows.texi
-@defun compat-recenter &optional count redisplay
+@defun compat-funcall@ recenter &optional count redisplay
 This function scrolls the text in the selected window so that point is
 displayed at a specified vertical position within the window.  It does
 not move point with respect to the text.
@@ -1478,7 +1484,7 @@ This compatibility version adds support for the optional argument
 @end defun
 
 @c based on lispref/keymaps.texi
-@defun compat-lookup-key keymap key &optional accept-defaults
+@defun compat-funcall@ lookup-key keymap key &optional accept-defaults
 This function returns the definition of @var{key} in @var{keymap}.  If
 the string or vector @var{key} is not a valid key sequence according
 to the prefix keys specified in @var{keymap}, it must be too long and
@@ -1512,7 +1518,7 @@ at once, as can be done with @code{setq}.
 @end defmac
 
 @c based on lispref/searching.texi
-@defun compat-regexp-opt strings &optional paren
+@defun compat-funcall@ regexp-opt strings &optional paren
 This function returns an efficient regular expression that will match
 any of the strings in the list @var{strings}.  This is useful when you
 need to make matching or searching as fast as possible---for example,
@@ -1526,7 +1532,7 @@ generated that never matches anything (see @code{regexp-unmatchable}).
 @end defun
 
 @c based on lisp/files.texi
-@defun compat-file-size-human-readable file-size &optional flavor space unit
+@defun compat-funcall@ file-size-human-readable file-size &optional flavor space unit
 Return a string with a human readable representation of @var{file-size}.
 
 The optional second argument @var{flavor} controls the units and the
@@ -1552,7 +1558,7 @@ unless @var{flavor} is @code{iec}, in which case it will be @code{B}.
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-assoc-delete-all
+@defun compat-funcall@ assoc-delete-all
 This function is like @code{assq-delete-all} except that it accepts
 an optional argument @var{test}, a predicate function to compare the
 keys in @var{alist}.  If omitted or @code{nil}, @var{test} defaults to
@@ -1566,7 +1572,7 @@ argument.
 @end defun
 
 @c copied from lispref/files.texi
-@defun compat-executable-find program &optional remote
+@defun compat-funcall@ executable-find program &optional remote
 This function searches for the executable file of the named
 @var{program} and returns the absolute file name of the executable,
 including its file-name extensions, if any.  It returns @code{nil} if
@@ -1583,7 +1589,7 @@ This compatibility version adds support to handle the optional second
 (@var{remote}) argument.
 @end defun
 
-@defun compat-dired-get-marked-files &optional localp arg filter distinguish-one-marked error
+@defun compat-funcall@ dired-get-marked-files &optional localp arg filter distinguish-one-marked error
 Return a list of file names that are @emph{marked} in a Dired buffer.
 
 This compatibility version handles the optional fifth (@var{error})
@@ -1736,9 +1742,9 @@ functionality.
 @node Emacs 28.1
 @section Emacs 28.1
 
-@subsection Unprefixed Definitions
+@subsection Implicit Definitions
 The following functions and macros implemented in 28.1, and are provided
-by Compat by default:
+by Compat:
 
 @c copied from lispref/strings.texi
 @defun string-search needle haystack &optional start-pos
@@ -2195,12 +2201,12 @@ assume that there is a user named @samp{rms} but no user named
 @xref{Absolute and Relative File Names,,,elisp}.
 @end defun
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and are only
-loaded when @code{compat-28} is required:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
 @c copied from lispref/files.texi
-@defun compat-unlock-buffer
+@defun compat-funcall@ unlock-buffer
 This function unlocks the file being visited in the current buffer,
 if the buffer is modified.  If the buffer is not modified, then
 the file should not be locked, so this function does nothing.  It also
@@ -2214,7 +2220,7 @@ This compatibility versions catches the @code{file-error} condition,
 issuing a warning instead of propagating on the error.
 @end defun
 
-@defun compat-string-width string &optional from to
+@defun compat-funcall@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
 if it were displayed in the current buffer and the selected window.
 Optional arguments @var{from} and @var{to} specify the substring of
@@ -2232,28 +2238,28 @@ This compatibility version handles the optional arguments @var{from} and
 @var{to}.
 @end defun
 
-@defun compat-json-serialize
+@defun compat-funcall@ json-serialize
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-json-insert
+@defun compat-funcall@ json-insert
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-json-parse-string
+@defun compat-funcall@ json-parse-string
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-json-parse-buffer
+@defun compat-funcall@ json-parse-buffer
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
@@ -2261,7 +2267,7 @@ This compatibility version handles primitive, top-level JSON values
 @end defun
 
 @c copied from on lisp/window.el
-@defun compat-count-windows
+@defun compat-funcall@ count-windows
 Return the number of live windows on the selected frame.
 
 The optional argument @var{minibuf} specifies whether the minibuffer
@@ -2341,15 +2347,11 @@ Any @code{multisession} functionality.
 @node Emacs 29.1
 @section Emacs 29.1
 
-@subsection Unprefixed Definitions
-The following functions and macros implemented in 29.1, and are
-@b{not} provided by Compat by default.  You will need to require
-@code{compat-29} for these to be loaded.  Note that due to upstream
-changes, it might happen that there will be the need for changes, so use
-these functions with care.
-
-With the eventual release of Compat 29.1.0.0, these functions will be
-loaded by default:
+@subsection Implicit Definitions
+The following functions and macros implemented in 29.1 and are
+provided by Compat. Note that due to upstream changes, it might happen
+that there will be the need for changes, so use these functions with
+care.
 
 @c copied from lispref/display.texi
 @defun get-display-property position prop &optional object properties
@@ -2912,12 +2914,12 @@ Like @code{when-let}, but repeat until a binding in @var{spec} is
 This is comparable to @code{and-let*}.
 @end defmac
 
-@subsection Prefixed Definitions
-These functions are prefixed with @code{compat} prefix, and will require
-manual loading even after the release of Compat 29.1.0.0:
+@subsection Explicit Definitions
+These functions must be called explicitly via @code{compat-funcall},
+since their calling convention changed:
 
 @c copied from lispref/keymaps.texi
-@defun compat-define-key
+@defun compat-funcall@ define-key
 This function is like @code{keymap-set} (@pxref{Changing Key
 Bindings,,,elisp}, but understands only the legacy key syntaxes.
 
@@ -2936,7 +2938,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-plist-get plist prop &optional predicate
+@defun compat-funcall@ plist-get plist prop &optional predicate
 This returns the value of the @var{property} property stored in the
 property list @var{plist}.  Comparisons are done with @var{predicate},
 and defaults to @code{eq}.  It accepts a malformed @var{plist}
@@ -2950,7 +2952,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-plist-put plist prop val &optional predicate
+@defun compat-funcall@ plist-put plist prop val &optional predicate
 This stores @var{value} as the value of the @var{property} property in
 the property list @var{plist}.  Comparisons are done with @var{predicate},
 and defaults to @code{eq}.  It may modify @var{plist} destructively,
@@ -2965,7 +2967,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-plist-member plist prop &optional predicate
+@defun compat-funcall@ plist-member plist prop &optional predicate
 This returns non-@code{nil} if @var{plist} contains the given
 @var{property}.  Comparisons are done with @var{predicate}, and
 defaults to @code{eq}.  Unlike @code{plist-get}, this allows you to
