@@ -32,9 +32,9 @@
 (defvar compat--generate-function #'compat--generate-default
   "Function used to generate compatibility code.
 The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
-CHECK-FN, ATTR and TYPE.  The resulting body is constructed by
-invoking the functions DEF-FN (passed the \"realname\" and the
-version number, returning the compatibility definition), the
+CHECK-FN and ATTR.  The resulting body is constructed by invoking
+the functions DEF-FN (passed the \"realname\" and the version
+number, returning the compatibility definition), the
 INSTALL-FN (passed the \"realname\" and returning the
 installation code), CHECK-FN (passed the \"realname\" and
 returning a check to see if the compatibility definition should
@@ -67,14 +67,12 @@ ignored:
   the compatibility definition (symbol).
 
 - :prefix :: Add a `compat-' prefix to the name, and define the
-  compatibility code unconditionally.
+  compatibility code unconditionally.")
 
-TYPE is used to set the symbol property `compat-type' for NAME.")
-
-(defun compat--generate-default (name def-fn install-fn check-fn attr type)
+(defun compat--generate-default (name def-fn install-fn check-fn attr)
   "Generate a leaner compatibility definition.
 See `compat--generate-function' for details on the arguments NAME,
-DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
@@ -98,7 +96,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
     (when (eq name realname)
       (error "%S: Name is equal to realname" name))
     (cond
-     ((and (plist-get attr :prefix) (memq type '(func macro))
+     ((and (plist-get attr :prefix)
            (string-match "\\`compat-\\(.+\\)\\'" (symbol-name name))
            (let* ((actual-name (intern (match-string 1 (symbol-name name))))
                   (body (funcall install-fn actual-name version)))
@@ -181,7 +179,7 @@ If this is not documented on your system, you can check \
        `(defalias ',name #',realname))
      (lambda ()
        `(not (fboundp ',name)))
-     rest type)))
+     rest)))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility function.
@@ -253,7 +251,7 @@ non-nil value."
              `(defvaralias ',name ',realname))
            (lambda ()
              `(not (boundp ',name)))
-           attr 'variable))
+           attr))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here

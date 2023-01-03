@@ -34,10 +34,10 @@
 
 (setq ert-quiet t)
 
-(defun compat--generate-testable (name def-fn install-fn check-fn attr type)
+(defun compat--generate-testable (name def-fn install-fn check-fn attr)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
-DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
+DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
@@ -66,7 +66,6 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                  (`(when (and ,(if cond cond t)
                               ,(funcall check-fn)))))))
     `(progn
-       (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
        (put ',realname 'compat-min-version ,min-version)
        (put ',realname 'compat-max-version ,max-version)
