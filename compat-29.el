@@ -285,7 +285,6 @@ CONDITION is either:
     to be met.
   * `or': the cdr is a list of recursive condition, of which at
     least one has to be met."
-  :realname compat--internal-buffer-match-p
   (letrec
       ((buffer (get-buffer buffer-or-name))
        (match
@@ -331,7 +330,7 @@ ARG is passed to `buffer-match', for predicate conditions in
 CONDITION."
   (let (bufs)
     (dolist (buf (or buffers (buffer-list)))
-      (when (compat--internal-buffer-match-p condition (get-buffer buf) arg)
+      (when (buffer-match-p condition (get-buffer buf) arg)
         (push buf bufs)))
     bufs))
 
