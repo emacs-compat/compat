@@ -573,7 +573,6 @@ Modifiers have to be specified in this order:
 which is
 
    Alt-Control-Hyper-Meta-Shift-super"
-  :realname compat--internal-key-valid-p
   (declare (pure t) (side-effect-free t))
   (let ((case-fold-search nil))
     (and
@@ -722,12 +721,12 @@ DEFINITION is anything that can be a key's definition:
  or an extended menu item definition.
  (See info node `(elisp)Extended Menu Items'.)"
   :realname compat--internal-keymap-set
-  (unless (compat--internal-key-valid-p key)
+  (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   ;; If we're binding this key to another key, then parse that other
   ;; key, too.
   (when (stringp definition)
-    (unless (compat--internal-key-valid-p key)
+    (unless (key-valid-p key)
       (error "%S is not a valid key definition; see `key-valid-p'" key))
     (setq definition (compat--internal-key-parse definition)))
   (define-key keymap (compat--internal-key-parse key) definition))
@@ -743,7 +742,7 @@ a key in a child map, it will still shadow the same key in the
 parent keymap.  Removing the binding will allow the key in the
 parent keymap to be used."
   :realname compat--internal-keymap-unset
-  (unless (compat--internal-key-valid-p key)
+  (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   (compat--define-key-with-remove keymap (compat--internal-key-parse key) nil remove))
 
@@ -849,10 +848,10 @@ Bindings are always added before any inherited map.
 
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
-  (unless (compat--internal-key-valid-p key)
+  (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   (when after
-    (unless (compat--internal-key-valid-p key)
+    (unless (key-valid-p key)
       (error "%S is not a valid key definition; see `key-valid-p'" key)))
   (define-key-after keymap (compat--internal-key-parse key) definition
     (and after (compat--internal-key-parse after))))
@@ -891,7 +890,7 @@ occurs in the keymaps associated with it instead of KEY.  It can also
 be a number or marker, in which case the keymap properties at the
 specified buffer position instead of point are used."
   :realname compat--internal-keymap-lookup
-  (unless (compat--internal-key-valid-p key)
+  (unless (key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   (when (and keymap position)
     (error "Can't pass in both keymap and position"))
