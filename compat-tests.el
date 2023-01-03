@@ -1272,6 +1272,11 @@ being compared against."
         (should (equal (gethash "key" obj) ["abc" 2]))
         (should (equal (gethash "yek" obj) :null))))))
 
+(ert-deftest compat-json-insert ()
+  (with-temp-buffer
+    (compat--json-insert '((:key . ["abc" 2]) (yek . t)))
+    (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
+
 (ert-deftest compat-json-serialize ()
   "Check if `compat--json-serialize' was implemented properly."
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
