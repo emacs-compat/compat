@@ -147,6 +147,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 (gv-define-expander compat-alist-get
   (lambda (do key alist &optional default remove testfn)
+    (warn "The compat-alist-get gv has been deprecated")
     (macroexp-let2 macroexp-copyable-p k key
       (gv-letplace (getter setter) alist
         (macroexp-let2 nil p `(if (and ,testfn (not (eq ,testfn 'eq)))
