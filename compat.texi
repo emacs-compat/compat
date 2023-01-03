@@ -67,10 +67,6 @@ Introduction
 * Usage::
 * Intentions::
 
-Usage
-
-* Additional libraries::
-
 Support
 
 * Emacs 24.4::                   Compatibility support for Emacs 24.4
@@ -102,11 +98,6 @@ or support old versions of Emacs.
 
 Version 24.4 is chosen as the oldest version we can reasonably support,
 since subr-x was introduced in this version.
-
-If you are developing a package with Compat in mind, consider loading
-`compat-help` (on your system, not in a package) to get relevant notes
-inserted into the help buffers of functions that are implemented or
-advised in Compat.
 
 Note that Compat provides a few prefixed function, ie. functions with a
 @code{compat-} prefix.  These are used to provide extended functionality
@@ -150,24 +141,6 @@ It is recommended to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
 mailing list to be notified when new versions are released or relevant
 changes are made.
-
-@menu
-* Additional libraries::
-@end menu
-
-@node Additional libraries
-@subsection Additional libraries
-
-These libraries are packages with Compat, but are disabled by default.
-To use them you can use @code{M-x load-library}:
-
-@table @asis
-@item compat-help
-Add notes to @code{*Help*} buffer, if a compatibility definition has
-something to warn you about.
-@item compat-font-lock
-Highlight functions that are implemented as compatibility definitions.
-@end table
 
 @node Intentions
 @section Intentions
@@ -222,6 +195,7 @@ manage to provide for each Emacs version.
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
+* Emacs 29.1::                   Compatibility support for Emacs 29.1
 @end menu
 
 @node Emacs 24.4

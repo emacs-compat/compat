@@ -1,9 +1,6 @@
-;;; compat-font-lock.el ---                          -*- lexical-binding: t; -*-
+;;; compat-font-lock.el --- Obsolete package -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022, 2023 Free Software Foundation, Inc.
-
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Keywords:
+;; Copyright (C) 2022-2023 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -19,30 +16,9 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-
-;; Optional font-locking for `compat' definitions.  Every symbol with
-;; an active compatibility definition will be highlighted.
-;;
-;; Load this file to enable the functionality.
-
 ;;; Code:
 
-(eval-and-compile
-  (require 'cl-lib)
-  (require 'compat-macs))
-
-(defvar compat-generate-common-fn)
-(let ((compat-generate-common-fn
-       (lambda (name _def-fn _install-fn check-fn attr _type)
-         (unless (and (plist-get attr :no-highlight)
-                      (funcall check-fn))
-           `(font-lock-add-keywords
-             'emacs-lisp-mode
-             ',`((,(concat "\\_<\\("
-                           (regexp-quote (symbol-name name))
-                           "\\)\\_>")
-                  1 font-lock-preprocessor-face prepend)))))))
-  (load "compat"))
+(warn "compat-font-lock has been deprecated")
 
 (provide 'compat-font-lock)
 ;;; compat-font-lock.el ends here

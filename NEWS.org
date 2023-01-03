@@ -4,6 +4,7 @@
 * Development
 
 - Drop support for Emacs 24.3
+- Deprecate compat-help.el and compat-font-lock.el
 
 * Release of "Compat" Version 28.1.2.2
 
