@@ -1,6 +1,10 @@
 #+options: toc:nil num:nil
 #+link:    compat https://todo.sr.ht/~pkal/compat/
 
+* Development
+
+- Drop support for Emacs 24.3
+
 * Release of "Compat" Version 28.1.2.2
 
 This is a minor release that hopes to address [[compat:7]].
@@ -104,5 +108,3 @@ General problems, questions, etc. are still better discussed on the
 development mailing list: https://lists.sr.ht/~pkal/compat-devel.
 
 (Released <2022-04-22 Fri>)
-
-
