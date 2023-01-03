@@ -161,7 +161,6 @@ any JSON false values."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  :realname compat--internal-json-serialize
   (require 'json)
   (letrec ((fix (lambda (obj)
                   (cond
@@ -222,7 +221,7 @@ OBJECT."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  (insert (apply #'compat--internal-json-serialize object args)))
+  (insert (apply #'json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
   "Parse the JSON STRING into a Lisp object.
