@@ -3,8 +3,18 @@
 
 * Development
 
+- Add the macros ~compat-funcall~ and ~compat-function~ to call compatibility
+  functions. Since Compat avoids overwriting already existing functions, we must
+  define separate compatibility function definitions for functions which changed
+  their calling convention. These compatibility definitions can be looked up
+  using ~compat-function~ and called with ~compat-funcall~. For example ~(assoc KEY
+  ALIST &optional TESTFN)~ can be called with a ~TESTFN~ since Emacs 29. In Emacs
+  28 and older the calling convention was ~(assoc KEY ALIST)~. In order to use the
+  new calling convention you can use ~(compat-funcall assoc KEY ALIST)~.
+- Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
+  ~compat-funcall~ or ~compat-function~ macros.
+- Deprecate ~compat-help.el~ and ~compat-font-lock.el~
 - Drop support for Emacs 24.3
-- Deprecate compat-help.el and compat-font-lock.el
 
 * Release of "Compat" Version 28.1.2.2
 
