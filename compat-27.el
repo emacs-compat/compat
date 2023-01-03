@@ -602,7 +602,6 @@ The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
 If `default-directory' is a local directory, this function returns
 the value of the variable `exec-path'."
-  :realname compat--internal-exec-path
   (cond
    ((let ((handler (find-file-name-handler default-directory 'exec-path)))
       ;; FIXME: The handler was added in 27.1, and this compatibility
@@ -642,7 +641,7 @@ REMOTE is non-nil, search on the remote host indicated by
                   (mapcar
                    (apply-partially
                     #'concat (file-remote-p default-directory))
-                   (compat--internal-exec-path))
+                   (exec-path))
                   exec-suffixes 'file-executable-p)))
         (when (stringp res) (file-local-name res)))
     (executable-find command)))
