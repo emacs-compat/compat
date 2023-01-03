@@ -623,7 +623,7 @@ See also `file-name-sans-extension'."
       (error "Empty filename"))
      ((string= extn "")
       (error "Malformed extension: %s" extension))
-     ((compat--internal-directory-name-p filename)
+     ((directory-name-p filename)
       (error "Filename is a directory: %s" filename))
      (t
       (concat (file-name-sans-extension filename) "." extn)))))

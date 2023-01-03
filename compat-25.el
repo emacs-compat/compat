@@ -79,7 +79,6 @@ This implementation is equivalent to `format'."
 
 (compat-defun directory-name-p (name)
   "Return non-nil if NAME ends with a directory separator character."
-  :realname compat--internal-directory-name-p
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
             ?\\ ?/))
@@ -306,7 +305,7 @@ recursion."
     (dolist (file (sort (file-name-all-completions "" dir)
                         'string<))
       (unless (member file '("./" "../"))
-        (if (compat--internal-directory-name-p file)
+        (if (directory-name-p file)
             (let* ((leaf (substring file 0 (1- (length file))))
                    (full-file (concat dir "/" leaf)))
               ;; Don't follow symlinks to other directories.
