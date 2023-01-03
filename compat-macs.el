@@ -225,37 +225,35 @@ local with a value of `permanent' or just buffer local with any
 non-nil value."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  ;; Check if we want an explicitly prefixed function
-  (let ((oldname name))
-    (when (plist-get attr :prefix)
-      (setq name (intern (format "compat-%s" name))))
-    (funcall compat--generate-function
-     name
-     (lambda (realname version)
-       (let ((localp (plist-get attr :local)))
-         `(progn
-            (,(if (plist-get attr :constant) 'defconst 'defvar)
-             ,realname ,initval
-             ;; Prepend compatibility notice to the actual
-             ;; documentation string.
-             ,(if version
-                  (format
-                   "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                   oldname version docstring)
-                (format
-                 "[Compatibility variable for `%S']\n\n%s"
-                 oldname docstring)))
-            ;; Make variable as local if necessary
-            ,(cond
-              ((eq localp 'permanent)
-               `(put ',realname 'permanent-local t))
-              (localp
-               `(make-variable-buffer-local ',realname))))))
-     (lambda (realname _version)
-       `(defvaralias ',name ',realname))
-     (lambda ()
-       `(not (boundp ',name)))
-     attr 'variable)))
+  (when (or (plist-get attr :prefix) (plist-get attr :realname))
+    (error ":prefix cannot be specified for compatibility variables"))
+  (funcall compat--generate-function
+           name
+           (lambda (realname version)
+             (let ((localp (plist-get attr :local)))
+               `(progn
+                  (,(if (plist-get attr :constant) 'defconst 'defvar)
+                   ,realname ,initval
+                   ;; Prepend compatibility notice to the actual
+                   ;; documentation string.
+                   ,(if version
+                        (format
+                         "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
+                         name version docstring)
+                      (format
+                       "[Compatibility variable for `%S']\n\n%s"
+                       name docstring)))
+                  ;; Make variable as local if necessary
+                  ,(cond
+                    ((eq localp 'permanent)
+                     `(put ',realname 'permanent-local t))
+                    (localp
+                     `(make-variable-buffer-local ',realname))))))
+           (lambda (realname _version)
+             `(defvaralias ',name ',realname))
+           (lambda ()
+             `(not (boundp ',name)))
+           attr 'variable))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
