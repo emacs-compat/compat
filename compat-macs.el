@@ -84,8 +84,6 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
                       compat--current-version))
-         (realname (or (plist-get attr :realname)
-                       (intern (format "compat--%S" name))))
          (check (cond
                  ((or (and min-version
                            (version< emacs-version min-version))
@@ -98,7 +96,8 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
                   nil)
                  (`(when (and ,(if cond cond t)
                               ,(funcall check-fn)))))))
-    (when (eq name realname)
+    (when (and (plist-get attr :realname)
+               (string= name (plist-get attr :realname)))
       (error "%S: Name is equal to realname" name))
     (cond
      ((and (plist-get attr :explicit)
@@ -109,12 +108,13 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
                         check)
                (compat--with-feature feature
                  `(,@check ,(funcall install-fn actual-name version)))))))
-     ((plist-get attr :realname)
-      `(progn
-         ,(funcall def-fn realname version)
-         ,(when check
-             (compat--with-feature feature
-               `(,@check ,(funcall install-fn realname version))))))
+     ((let ((realname (plist-get attr :realname)))
+        (when realname
+          `(progn
+             ,(funcall def-fn realname version)
+             ,(when check
+                (compat--with-feature feature
+                  `(,@check ,(funcall install-fn realname version))))))))
      (check
       (compat--with-feature feature
         `(,@check ,(funcall def-fn name version)))))))
