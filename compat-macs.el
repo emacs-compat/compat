@@ -22,10 +22,6 @@
 
 ;;; Code:
 
-(defmacro compat--ignore (&rest _)
-  "Ignore all arguments."
-  nil)
-
 (defvar compat--current-version nil
   "Default version to use when no explicit version was given.")
 
@@ -98,11 +94,11 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                            (version< emacs-version min-version))
                       (and max-version
                            (version< max-version emacs-version)))
-                  '(compat--ignore))
+                  nil)
                  ((plist-get attr :prefix)
                   '(progn))
                  ((and version (version<= version emacs-version) (not cond))
-                  '(compat--ignore))
+                  nil)
                  (`(when (and ,(if cond cond t)
                               ,(funcall check-fn)))))))
     (when (eq name realname)
@@ -113,7 +109,8 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
            (let* ((actual-name (intern (match-string 1 (symbol-name name))))
                   (body (funcall install-fn actual-name version)))
              (when (and (version<= version emacs-version)
-                        (fboundp actual-name))
+                        (fboundp actual-name)
+                        check)
                `(,@check
                  ,(if feature
                       ;; See https://nullprogram.com/blog/2018/02/22/:
@@ -122,13 +119,15 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
      ((plist-get attr :realname)
       `(progn
          ,(funcall def-fn realname version)
-         (,@check
-          ,(let ((body (funcall install-fn realname version)))
-             (if feature
-                 ;; See https://nullprogram.com/blog/2018/02/22/:
-                 `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-               body)))))
-     ((let* ((body (if (eq type 'advice)
+         ,(and check
+               `(,@check
+                 ,(let ((body (funcall install-fn realname version)))
+                    (if feature
+                        ;; See https://nullprogram.com/blog/2018/02/22/:
+                        `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+                      body))))))
+     (check
+      (let* ((body (if (eq type 'advice)
                        `(,@check
                          ,(funcall def-fn realname version)
                          ,(funcall install-fn realname version))

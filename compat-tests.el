@@ -51,7 +51,19 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                     (error "Duplicate compatibility definition: %s (was %s, now %s)"
                            ',name (get ',name 'compat-def) ',realname))
                   (put ',name 'compat-def ',realname)
-                  ,(funcall install-fn realname version))))
+                  ,(funcall install-fn realname version)))
+         (check (cond
+                 ((or (and min-version
+                           (version< emacs-version min-version))
+                      (and max-version
+                           (version< max-version emacs-version)))
+                  nil)
+                 ((plist-get attr :prefix)
+                  '(progn))
+                 ((and version (version<= version emacs-version) (not cond))
+                  nil)
+                 (`(when (and ,(if cond cond t)
+                              ,(funcall check-fn)))))))
     `(progn
        (put ',realname 'compat-type ',type)
        (put ',realname 'compat-version ,version)
@@ -59,22 +71,12 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
        (put ',realname 'compat-max-version ,max-version)
        (put ',realname 'compat-doc ,(plist-get attr :note))
        ,(funcall def-fn realname version)
-       (,@(cond
-           ((or (and min-version
-                     (version< emacs-version min-version))
-                (and max-version
-                     (version< max-version emacs-version)))
-            '(compat--ignore))
-           ((plist-get attr :prefix)
-            '(progn))
-           ((and version (version<= version emacs-version) (not cond))
-            '(compat--ignore))
-           (`(when (and ,(if cond cond t)
-                        ,(funcall check-fn)))))
-        ,(if feature
-             ;; See https://nullprogram.com/blog/2018/02/22/:
-             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-           body)))))
+       ,(and check
+             `(,@check
+               ,(if feature
+                    ;; See https://nullprogram.com/blog/2018/02/22/:
+                    `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+                  body))))))
 
 (setq compat--generate-function #'compat--generate-testable)
 
