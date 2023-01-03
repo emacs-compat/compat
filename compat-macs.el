@@ -185,16 +185,19 @@ If this is not documented on yourself system, you can check \
                         "29.1"))
                    `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
      (lambda (realname _version)
-       ;; Functions and macros are installed by aliasing the name of the
-       ;; compatible function to the name of the compatibility function.
-       (if (and (plist-get rest :explicit) (string= realname oldname))
-           `(progn
-              (defalias ',name ',realname)
-              (make-obsolete
-               ',name
-               "Use `compat-call' or `compat-function' instead"
-               "29.1"))
-         `(defalias ',name #',realname)))
+       `(progn
+          ;; Functions and macros are installed by aliasing the name of the
+          ;; compatible function to the name of the compatibility function.
+          (defalias ',name #',realname)
+          ,@(when (and (plist-get rest :realname)
+                       (not (string= (plist-get rest :realname) name))
+                       (not (string= (plist-get rest :realname) realname)))
+              `((defalias ',(plist-get rest :realname) #',realname)))
+          ,@(when (and (plist-get rest :explicit) (string= realname oldname))
+              `((make-obsolete
+                 ',name
+                 "Use `compat-call' or `compat-function' instead"
+                 "29.1")))))
      (lambda ()
        `(not (fboundp ',name)))
      rest)))
