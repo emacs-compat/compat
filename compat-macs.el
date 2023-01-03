@@ -17,8 +17,7 @@
 
 ;;; Commentary:
 
-;; These macros are used to define compatibility functions, macros and
-;; advice.
+;; These macros are used to define compatibility functions and macros.
 
 ;;; Code:
 
@@ -27,8 +26,6 @@
 
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
-  ;; FIXME: Avoid setting the version for any definition that might
-  ;; follow, but try to restrict it to the current file/buffer.
   (setq compat--current-version version)
   nil)
 
@@ -153,34 +150,30 @@ attributes (see `compat-generate-common')."
      name
      (lambda (realname version)
        `(,(cond
-           ((memq type '(func advice)) 'defun)
+           ((eq type 'function) 'defun)
            ((eq type 'macro) 'defmacro)
            ((error "Unknown type")))
          ,realname ,arglist
          ;; Prepend compatibility notice to the actual
          ;; documentation string.
-         ,(let ((type (cond
-                       ((eq type 'func) "function")
-                       ((eq type 'macro) "macro")
-                       ((error "Unknown type")))))
-            (with-temp-buffer
-              (insert docstring)
-              (newline 2)
-              (insert
-               "[Compatibility "
-               (if version
-                   (format
-                    "%s for `%S', defined in Emacs %s.  \
+         ,(with-temp-buffer
+            (insert docstring)
+            (newline 2)
+            (insert
+             "[Compatibility "
+             (if version
+                 (format
+                  "%s for `%S', defined in Emacs %s.  \
 If this is not documented on your system, you can check \
 `(compat) Emacs %s' for more details."
-                     type oldname version version)
-                 (format
-                  "code %s for `%S'"
-                  type oldname))
-               "]")
-              (let ((fill-column 80))
-                (fill-region (point-min) (point-max)))
-              (buffer-string)))
+                  type oldname version version)
+               (format
+                "code %s for `%S'"
+                type oldname))
+             "]")
+            (let ((fill-column 80))
+              (fill-region (point-min) (point-max)))
+            (buffer-string))
          ,@body))
      (lambda (realname _version)
          ;; Functions and macros are installed by aliasing the name of the
@@ -205,7 +198,7 @@ attribute, is greater than the current Emacs version."
                            [&rest keywordp sexp]
                            def-body))
            (doc-string 3) (indent 2))
-  (compat--define-function 'func name arglist docstring rest))
+  (compat--define-function 'function name arglist docstring rest))
 
 (defmacro compat-defmacro (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility macro.
