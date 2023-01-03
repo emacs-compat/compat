@@ -107,6 +107,7 @@ Equality is defined by the function TESTFN, defaulting to
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
   :explicit t
+  :realname compat--internal-assoc
   (if testfn
       (catch 'found
         (dolist (ent alist)
@@ -150,9 +151,7 @@ from the absolute start of the buffer, disregarding the narrowing."
     (warn "The compat-alist-get gv has been deprecated")
     (macroexp-let2 macroexp-copyable-p k key
       (gv-letplace (getter setter) alist
-        (macroexp-let2 nil p `(if (and ,testfn (not (eq ,testfn 'eq)))
-                                  (compat-assoc ,k ,getter ,testfn)
-                                (assq ,k ,getter))
+        (macroexp-let2 nil p `(compat--internal-assoc ,k ,getter ,testfn)
           (funcall do (if (null default) `(cdr ,p)
                         `(if ,p (cdr ,p) ,default))
                    (lambda (v)
