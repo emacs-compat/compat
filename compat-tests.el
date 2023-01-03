@@ -1,9 +1,6 @@
 ;;; compat-tests.el --- Tests for compat.el      -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
-
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Package-Requires: ((emacs "28.1"))
+;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

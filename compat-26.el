@@ -1,11 +1,6 @@
 ;;; compat-26.el --- Compatibility Layer for Emacs 26.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
-
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; URL: https://git.sr.ht/~pkal/compat/
-;; Keywords: lisp
+;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

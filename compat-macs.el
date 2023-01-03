@@ -1,9 +1,6 @@
 ;;; compat-macs.el --- Compatibility Macros           -*- lexical-binding: t; no-byte-compile: t; -*-
 
-;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
-
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Keywords: lisp
+;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

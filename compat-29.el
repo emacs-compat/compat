@@ -1,9 +1,6 @@
 ;;; compat-29.el --- Compatibility Layer for Emacs 29.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
-
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Keywords: lisp
+;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -541,11 +538,11 @@ the symbol of the calling function, for example."
   (let* ((file (directory-file-name (expand-file-name file)))
          (remote-file-name-inhibit-cache t)
          (fileattr (file-attributes file 'integer))
-	 (attr (and fileattr
+         (attr (and fileattr
                     (cons (nth 7 fileattr)
-		          (nth 5 fileattr))))
-	 (sym (concat (symbol-name tag) "@" file))
-	 (cachedattr (gethash sym compat--file-has-changed-p--hash-table)))
+                          (nth 5 fileattr))))
+         (sym (concat (symbol-name tag) "@" file))
+         (cachedattr (gethash sym compat--file-has-changed-p--hash-table)))
      (when (not (equal attr cachedattr))
        (puthash sym attr compat--file-has-changed-p--hash-table))))
 
@@ -827,9 +824,9 @@ in a cleaner way with command remapping, like this:
   (unless prefix
     (setq prefix ""))
   (let* ((scan (or oldmap keymap))
-	 (prefix1 (vconcat prefix [nil]))
-	 (key-substitution-in-progress
-	  (cons scan key-substitution-in-progress)))
+         (prefix1 (vconcat prefix [nil]))
+         (key-substitution-in-progress
+          (cons scan key-substitution-in-progress)))
     ;; Scan OLDMAP, finding each char or event-symbol that
     ;; has any definition, and act on it with hack-key.
     (map-keymap
