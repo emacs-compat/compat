@@ -70,12 +70,7 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
        (put ',realname 'compat-min-version ,min-version)
        (put ',realname 'compat-max-version ,max-version)
        ,(funcall def-fn realname version)
-       ,(and check
-             `(,@check
-               ,(if feature
-                    ;; See https://nullprogram.com/blog/2018/02/22/:
-                    `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-                  body))))))
+       ,(and check `(,@check ,(compat--with-feature feature body))))))
 
 (setq compat--generate-function #'compat--generate-testable)
 

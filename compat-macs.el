@@ -29,6 +29,14 @@
   (setq compat--current-version version)
   nil)
 
+(defun compat--with-feature (feature body)
+  "Protect BODY with `eval-after-load' if FEATURE is non-nil."
+  (declare (indent 1))
+  (if feature
+      ;; See https://nullprogram.com/blog/2018/02/22/:
+      `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+    body))
+
 (defvar compat--generate-function #'compat--generate-default
   "Function used to generate compatibility code.
 The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
@@ -100,27 +108,17 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
              (when (and (version<= version emacs-version)
                         (fboundp actual-name)
                         check)
-               `(,@check
-                 ,(if feature
-                      ;; See https://nullprogram.com/blog/2018/02/22/:
-                      `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-                    body))))))
+               `(,@check ,(compat--with-feature feature body))))))
      ((plist-get attr :realname)
       `(progn
          ,(funcall def-fn realname version)
          ,(and check
                `(,@check
-                 ,(let ((body (funcall install-fn realname version)))
-                    (if feature
-                        ;; See https://nullprogram.com/blog/2018/02/22/:
-                        `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-                      body))))))
+                 ,(compat--with-feature feature
+                    (funcall install-fn realname version))))))
      (check
-      (let ((body `(,@check ,(funcall def-fn name version))))
-        (if feature
-            ;; See https://nullprogram.com/blog/2018/02/22/:
-            `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
-          body))))))
+      (compat--with-feature feature
+        `(,@check ,(funcall def-fn name version)))))))
 
 (defun compat--define-function (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
