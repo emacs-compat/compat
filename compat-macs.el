@@ -94,8 +94,8 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
       (error "%S: Name is equal to realname" name))
     (cond
      ((and (plist-get attr :prefix)
-           (string-match "\\`compat-\\(.+\\)\\'" (symbol-name name))
-           (let* ((actual-name (intern (match-string 1 (symbol-name name))))
+           (let* ((actual-name (intern (substring (symbol-name name)
+                                                  (length "compat-"))))
                   (body (funcall install-fn actual-name version)))
              (when (and (version<= version emacs-version)
                         (fboundp actual-name)
