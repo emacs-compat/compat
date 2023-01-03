@@ -296,7 +296,7 @@ CONDITION is either:
                      ((stringp condition)
                       (string-match-p condition (buffer-name buffer)))
                      ((functionp condition)
-                      (if (eq 1 (cdr (compat--internal-func-arity condition)))
+                      (if (eq 1 (cdr (func-arity condition)))
                           (funcall condition buffer)
                         (funcall condition buffer arg)))
                      ((eq (car-safe condition) 'major-mode)

@@ -44,14 +44,13 @@ FUNC must be a function of some kind.
 The returned value is a cons cell (MIN . MAX).  MIN is the minimum number
 of args.  MAX is the maximum number, or the symbol `many', for a
 function with `&rest' args, or `unevalled' for a special form."
-  :realname compat--internal-func-arity
   (cond
    ((or (null func) (and (symbolp func) (not (fboundp func))))
     (signal 'void-function func))
    ((and (symbolp func) (not (null func)))
-    (compat--internal-func-arity (symbol-function func)))
+    (func-arity (symbol-function func)))
    ((eq (car-safe func) 'macro)
-    (compat--internal-func-arity (cdr func)))
+    (func-arity (cdr func)))
    ((subrp func)
     (subr-arity func))
    ((memq (car-safe func) '(closure lambda))
@@ -106,7 +105,7 @@ function with `&rest' args, or `unevalled' for a special form."
       (cons mandatory (if arglist 'many nonrest))))
    ((autoloadp func)
     (autoload-do-load func)
-    (compat--internal-func-arity func))
+    (func-arity func))
    ((signal 'invalid-function func))))
 
 ;;;; Defined in fns.c
