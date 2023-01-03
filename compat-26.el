@@ -440,7 +440,6 @@ The returned file name can be used directly as argument of
   "Whether NAME is quoted with prefix \"/:\".
 If NAME is a remote file name and TOP is nil, check the local part of NAME."
   :explicit t
-  :realname compat--file-name-quoted-p-with-top
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (file-local-name name))))
 
@@ -451,7 +450,7 @@ NAME is quoted.  If NAME is already a quoted file name, NAME is
 returned unchanged."
   :explicit t
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (if (compat--file-name-quoted-p-with-top name top)
+    (if (string-prefix-p "/:" (file-local-name name))
         name
       (concat (file-remote-p name) "/:" (file-local-name name)))))
 
