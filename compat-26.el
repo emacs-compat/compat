@@ -37,9 +37,9 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
-
-(compat-declare-version "26.1")
+(eval-when-compile
+  (load "compat-macs.el" nil t t)
+  (compat-declare-version "26.1"))
 
 ;;;; Defined in eval.c
 
