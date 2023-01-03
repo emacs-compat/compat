@@ -165,6 +165,14 @@ being compared against."
 
 
 
+(ert-deftest compat-funcall ()
+  (let (list)
+    (setq list (compat-funcall plist-put list "first" 1 #'string=))
+    (setq list (compat-funcall plist-put list "second" 2 #'string=))
+    (setq list (compat-funcall plist-put list "first" 10 #'string=))
+    (should (eq (compat-funcall plist-get list "first" #'string=) 10))
+    (should (eq (compat-funcall plist-get list "second" #'string=) 2))))
+
 (compat-deftests string-search
   ;; Find needle at the beginning of a haystack:
   (ought 0 "a" "abb")
