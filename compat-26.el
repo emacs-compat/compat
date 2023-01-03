@@ -150,7 +150,6 @@ from the absolute start of the buffer, disregarding the narrowing."
 (declare-function alist-get nil (key alist &optional default remove))
 (compat-defun alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."
-  :realname compat--alist-get-handle-testfn
   :prefix t
   (if testfn
       (compat--alist-get-full-elisp key alist default remove testfn)
