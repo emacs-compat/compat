@@ -71,7 +71,7 @@ ignored:
 - :realname :: Manual specification of a \"realname\" to use for
   the compatibility definition (symbol).
 
-- :prefix :: Add a `compat-' prefix to the name, and define the
+- :explicit :: Add a `compat-' prefix to the name, and define the
   compatibility code unconditionally.")
 
 (defun compat--generate-default (name def-fn install-fn check-fn attr)
@@ -92,7 +92,7 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
                       (and max-version
                            (version< max-version emacs-version)))
                   nil)
-                 ((plist-get attr :prefix)
+                 ((plist-get attr :explicit)
                   '(progn))
                  ((and version (version<= version emacs-version) (not cond))
                   nil)
@@ -101,7 +101,7 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
     (when (eq name realname)
       (error "%S: Name is equal to realname" name))
     (cond
-     ((and (plist-get attr :prefix)
+     ((and (plist-get attr :explicit)
            (let ((actual-name (intern (substring (symbol-name name)
                                                  (length "compat-")))))
              (when (and (version<= version emacs-version)
@@ -142,7 +142,7 @@ attributes (see `compat--generate-function')."
                (string= (plist-get rest :realname) (format "compat--%s" name)))
       (error "%s: :realname must not be the same as compat--<name>" name))
     ;; Check if we want an explicitly prefixed function
-    (when (plist-get rest :prefix)
+    (when (plist-get rest :explicit)
       (setq name (intern (format "compat-%s" name))))
     (funcall compat--generate-function
      name
@@ -152,7 +152,7 @@ attributes (see `compat--generate-function')."
              ((eq type 'function) 'defun)
              ((eq type 'macro) 'defmacro)
              ((error "Unknown type")))
-           ,(if (plist-get rest :prefix)
+           ,(if (plist-get rest :explicit)
                 (intern (format "compat--explicit-%s" oldname))
               realname)
            ,arglist
@@ -177,8 +177,7 @@ If this is not documented on yourself system, you can check \
                 (fill-region (point-min) (point-max)))
               (buffer-string))
            ,@body)
-          ,@(and (plist-get rest :prefix)
-                 (message "COMPAT realname=%S name=%S oldname=%S" realname name oldname)
+          ,@(and (plist-get rest :explicit)
                  (if (string= realname name)
                      `((defalias ',name ',(intern (format "compat--explicit-%s" oldname)))
                        (make-obsolete
@@ -189,7 +188,7 @@ If this is not documented on yourself system, you can check \
      (lambda (realname _version)
        ;; Functions and macros are installed by aliasing the name of the
        ;; compatible function to the name of the compatibility function.
-       (if (and (plist-get rest :prefix) (string= realname oldname))
+       (if (and (plist-get rest :explicit) (string= realname oldname))
            `(progn
               (defalias ',name ',realname)
               (make-obsolete
@@ -243,8 +242,8 @@ local with a value of `permanent' or just buffer local with any
 non-nil value."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (when (or (plist-get attr :prefix) (plist-get attr :realname))
-    (error ":prefix cannot be specified for compatibility variables"))
+  (when (or (plist-get attr :explicit) (plist-get attr :realname))
+    (error ":explicit cannot be specified for compatibility variables"))
   (funcall compat--generate-function
            name
            (lambda (realname version)

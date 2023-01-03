@@ -59,7 +59,7 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
                       (and max-version
                            (version< max-version emacs-version)))
                   nil)
-                 ((plist-get attr :prefix)
+                 ((plist-get attr :explicit)
                   '(progn))
                  ((and version (version<= version emacs-version) (not cond))
                   nil)

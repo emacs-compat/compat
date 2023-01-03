@@ -50,7 +50,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 (compat-defun sort (seq predicate)
   "Extend `sort' to sort SEQ as a vector."
-  :prefix t
+  :explicit t
   (cond
    ((listp seq)
     (sort seq predicate))

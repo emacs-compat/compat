@@ -54,7 +54,7 @@ See `compat-function' for the compatibility function resolution."
 
 (compat-defun = (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :prefix t
+  :explicit t
   (catch 'fail
     (while numbers-or-markers
       (unless (= number-or-marker (car numbers-or-markers))
@@ -64,7 +64,7 @@ See `compat-function' for the compatibility function resolution."
 
 (compat-defun < (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :prefix t
+  :explicit t
   (catch 'fail
     (while numbers-or-markers
       (unless (< number-or-marker (car numbers-or-markers))
@@ -74,7 +74,7 @@ See `compat-function' for the compatibility function resolution."
 
 (compat-defun > (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :prefix t
+  :explicit t
   (catch 'fail
     (while numbers-or-markers
       (unless (> number-or-marker (car numbers-or-markers))
@@ -84,7 +84,7 @@ See `compat-function' for the compatibility function resolution."
 
 (compat-defun <= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :prefix t
+  :explicit t
   (catch 'fail
     (while numbers-or-markers
       (unless (<= number-or-marker (car numbers-or-markers))
@@ -94,7 +94,7 @@ See `compat-function' for the compatibility function resolution."
 
 (compat-defun >= (number-or-marker &rest numbers-or-markers)
   "Handle multiple arguments."
-  :prefix t
+  :explicit t
   (catch 'fail
     (while numbers-or-markers
       (unless (>= number-or-marker (pop numbers-or-markers))
@@ -292,7 +292,7 @@ attention to case differences."
   "Extend `split-string' by a TRIM argument.
 The remaining arguments STRING, SEPARATORS and OMIT-NULLS are
 handled just as with `split-string'."
-  :prefix t
+  :explicit t
   (let* ((token (split-string string separators omit-nulls))
          (trimmed (if trim
                       (mapcar

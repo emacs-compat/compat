@@ -125,7 +125,7 @@ nil if PROP is not one of the properties on the list.  The comparison
 with PROP is done using PREDICATE, which defaults to `eq'.
 
 This function doesn't signal an error if PLIST is invalid."
-  :prefix t
+  :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-get plist prop)
     (catch 'found
@@ -145,7 +145,7 @@ If PROP is already a property on the list, its value is set to VAL,
 otherwise the new PROP VAL pair is added.  The new plist is returned;
 use `(setq x (plist-put x prop val))' to be sure to use the new value.
 The PLIST is modified by side effects."
-  :prefix t
+  :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-put plist prop val)
     (catch 'found
@@ -168,7 +168,7 @@ The comparison with PROP is done using PREDICATE, which defaults to
 Unlike `plist-get', this allows you to distinguish between a missing
 property and a property with the value nil.
 The value is actually the tail of PLIST whose car is PROP."
-  :prefix t
+  :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-member plist prop)
     (catch 'found
@@ -220,7 +220,7 @@ If KEYMAP is a sparse keymap with a binding for KEY, the existing
 binding is altered.  If there is no binding for KEY, the new pair
 binding KEY to DEF is added at the front of KEYMAP."
   :realname compat--define-key-with-remove
-  :prefix t
+  :explicit t
   (if remove
       (let ((prev (lookup-key keymap key))
             (parent (memq 'key (cdr keymap)))
@@ -950,7 +950,7 @@ pairs.  Available keywords are:
 :name      If non-nil, this should be a string to use as the menu for
              the keymap in case you use it as a menu with `x-popup-menu'.
 
-:prefix    If non-nil, this should be a symbol to be used as a prefix
+:explicit    If non-nil, this should be a symbol to be used as a prefix
              command (see `define-prefix-command').  If this is the case,
              this symbol is returned instead of the map itself.
 

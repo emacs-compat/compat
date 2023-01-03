@@ -108,7 +108,7 @@ Letter-case is significant, but text properties are ignored."
 
 (compat-defun recenter (&optional arg redisplay)
   "Handle optional argument REDISPLAY."
-  :prefix t
+  :explicit t
   (recenter arg)
   (when (and redisplay recenter-redisplay)
     (redisplay)))
@@ -117,7 +117,7 @@ Letter-case is significant, but text properties are ignored."
 
 (compat-defun lookup-key (keymap key &optional accept-default)
   "Allow for KEYMAP to be a list of keymaps."
-  :prefix t
+  :explicit t
   (cond
    ((keymapp keymap)
     (lookup-key keymap key accept-default))
@@ -377,7 +377,7 @@ where USER is a valid login name."
 
 (compat-defmacro setq-local (&rest pairs)
   "Handle multiple assignments."
-  :prefix t
+  :explicit t
   (unless (zerop (mod (length pairs) 2))
     (error "PAIRS must have an even number of variable/value members"))
   (let (body)
@@ -485,7 +485,7 @@ return nil."
 Compare keys with TEST.  Defaults to `equal'.
 Return the modified alist.
 Elements of ALIST that are not conses are ignored."
-  :prefix t
+  :explicit t
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
               (funcall test (caar alist) key))
@@ -571,7 +571,7 @@ position.
 Optional fourth argument UNIT is the unit to use.  It defaults to \"B\"
 when FLAVOR is `iec' and the empty string otherwise.  We recommend \"B\"
 in all cases, since that is the standard symbol for byte."
-  :prefix t
+  :explicit t
   (let ((power (if (or (null flavor) (eq flavor 'iec))
                    1024.0
                  1000.0))
@@ -633,7 +633,7 @@ the value of the variable `exec-path'."
 Return nil if COMMAND is not found anywhere in `exec-path'.  If
 REMOTE is non-nil, search on the remote host indicated by
 `default-directory' instead."
-  :prefix t
+  :explicit t
   (if (and remote (file-remote-p default-directory))
       (let ((res (locate-file
                   command
@@ -666,7 +666,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 (compat-defun regexp-opt (strings &optional paren)
   "Handle an empty list of strings."
-  :prefix t
+  :explicit t
   (if (null strings)
       (let ((re "\\`a\\`"))
         (cond ((null paren)
@@ -731,7 +731,7 @@ The return value is a string (or nil in case we can’t find it)."
     (&optional localp arg filter distinguish-one-marked error)
   "Return the marked files’ names as list of strings."
   :feature 'dired
-  :prefix t
+  :explicit t
   (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))
     (if (and (null result) error)
         (user-error (if (stringp error) error "No files specified"))

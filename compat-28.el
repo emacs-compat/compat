@@ -137,7 +137,7 @@ NOTE: For releases of Emacs before version 28, this function will do nothing."
 
 Handles file system errors by calling ‘display-warning’ and
 continuing as if the error did not occur."
-  :prefix t
+  :explicit t
   (condition-case error
       (unlock-buffer)
     (file-error
@@ -153,7 +153,7 @@ continuing as if the error did not occur."
 
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
-  :prefix t
+  :explicit t
   (let* ((len (length string))
          (from (or from 0))
          (to (or to len)))
@@ -169,7 +169,7 @@ consider, and are interpreted as in `substring'."
 
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
-  :prefix t
+  :explicit t
   (let ((files (directory-files directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
@@ -184,7 +184,7 @@ If COUNT is non-nil and a natural number, the function will
 
 (compat-defun json-serialize (object &rest args)
   "Handle top-level JSON values."
-  :prefix t
+  :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-serialize object args)
@@ -192,7 +192,7 @@ If COUNT is non-nil and a natural number, the function will
 
 (compat-defun json-insert (object &rest args)
   "Handle top-level JSON values."
-  :prefix t
+  :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-insert object args)
@@ -205,7 +205,7 @@ If COUNT is non-nil and a natural number, the function will
 
 (compat-defun json-parse-string (string &rest args)
   "Handle top-level JSON values."
-  :prefix t
+  :explicit t
   :min-version "27"
   (if (string-match-p "\\`[[:space:]]*[[{]" string)
       (apply #'json-parse-string string args)
@@ -216,7 +216,7 @@ If COUNT is non-nil and a natural number, the function will
 
 (compat-defun json-parse-buffer (&rest args)
   "Handle top-level JSON values."
-  :prefix t
+  :explicit t
   :min-version "27"
   (if (looking-at-p "[[:space:]]*[[{]")
       (apply #'json-parse-buffer args)
@@ -754,7 +754,7 @@ is included in the return value."
 
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
-  :prefix t
+  :explicit t
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))

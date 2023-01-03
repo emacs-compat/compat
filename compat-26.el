@@ -116,7 +116,7 @@ Equality is defined by the function TESTFN, defaulting to
 `equal'.  TESTFN is called with 2 arguments: a car of an alist
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
-  :prefix t
+  :explicit t
   (if testfn
       (catch 'found
         (dolist (ent alist)
@@ -138,7 +138,7 @@ If the buffer is narrowed, the return value by default counts the lines
 from the beginning of the accessible portion of the buffer.  But if the
 second optional argument ABSOLUTE is non-nil, the value counts the lines
 from the absolute start of the buffer, disregarding the narrowing."
-  :prefix t
+  :explicit t
   (if absolute
       (save-restriction
         (widen)
@@ -150,7 +150,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 (declare-function alist-get nil (key alist &optional default remove))
 (compat-defun alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."
-  :prefix t
+  :explicit t
   (if testfn
       (compat--alist-get-full-elisp key alist default remove testfn)
     (alist-get key alist default remove)))
@@ -191,7 +191,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
   :realname compat--internal-string-trim-left
-  :prefix t
+  :explicit t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
@@ -201,7 +201,7 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
   :realname compat--internal-string-trim-right
-  :prefix t
+  :explicit t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
             string)))
@@ -211,7 +211,7 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
   "Trim STRING of leading with and trailing matching TRIM-LEFT and TRIM-RIGHT.
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
-  :prefix t
+  :explicit t
   ;; `string-trim-left' and `string-trim-right' were moved from subr-x
   ;; to subr in Emacs 27, so to avoid loading subr-x we use the
   ;; compatibility function here:
@@ -448,7 +448,7 @@ The returned file name can be used directly as argument of
 (compat-defun file-name-quoted-p (name &optional top)
   "Whether NAME is quoted with prefix \"/:\".
 If NAME is a remote file name and TOP is nil, check the local part of NAME."
-  :prefix t
+  :explicit t
   :realname compat--file-name-quoted-p-with-top
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (file-local-name name))))
@@ -458,7 +458,7 @@ If NAME is a remote file name and TOP is nil, check the local part of NAME."
 If NAME is a remote file name and TOP is nil, the local part of
 NAME is quoted.  If NAME is already a quoted file name, NAME is
 returned unchanged."
-  :prefix t
+  :explicit t
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (if (compat--file-name-quoted-p-with-top name top)
         name
