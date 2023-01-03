@@ -40,11 +40,6 @@
 
 ;;; Code:
 
-(require 'compat-24)
-(require 'compat-25)
-(require 'compat-26)
-(require 'compat-27)
-(require 'compat-28)
 (require 'compat-29)
 
 (provide 'compat)

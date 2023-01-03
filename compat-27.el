@@ -34,8 +34,8 @@
 
 ;;; Code:
 
+(require 'compat-26)
 (eval-when-compile (load "compat-macs.el" nil t t))
-
 (compat-declare-version "27.1")
 
 ;;;; Defined in fns.c
@@ -596,9 +596,6 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
-(declare-function compat--file-name-quote "compat-26"
-                  (name &optional top))
-
 ;;*UNTESTED
 (compat-defun exec-path ()
   "Return list of directories to search programs to run in remote subprocesses.
@@ -632,9 +629,6 @@ the value of the variable `exec-path'."
             (push (match-string 1) path))
           (nreverse path)))))
    (exec-path)))
-
-(declare-function compat--file-local-name "compat-26"
-                  (file))
 
 ;;*UNTESTED
 (compat-defun executable-find (command &optional remote)

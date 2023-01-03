@@ -32,8 +32,8 @@
 
 ;;; Code:
 
+(require 'compat-25)
 (eval-when-compile (load "compat-macs.el" nil t t))
-
 (compat-declare-version "26.1")
 
 ;;;; Defined in eval.c
@@ -148,8 +148,6 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 ;;;; Defined in subr.el
 
-(declare-function compat--alist-get-full-elisp "compat-25"
-                  (key alist &optional default remove testfn))
 (declare-function alist-get nil (key alist &optional default remove))
 (compat-defun alist-get (key alist &optional default remove testfn)
   "Handle TESTFN manually."

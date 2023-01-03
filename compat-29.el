@@ -30,8 +30,8 @@
 
 ;;; Code:
 
+(require 'compat-28)
 (eval-when-compile (load "compat-macs.el" nil t t))
-
 (compat-declare-version "29.1")
 
 ;;;; Defined in xdisp.c
@@ -264,11 +264,6 @@ signalled.  If NOERROR, the non-loop parts of the chain is returned."
              (signal 'cyclic-function-indirection (list orig-func))))
          (push func chain))
        chain))))
-
-(declare-function compat--provided-mode-derived-p
-                  "compat-27" (mode &rest modes))
-(declare-function compat--func-arity
-                  "compat-26" (func))
 
 ;;* UNTESTED
 (compat-defun buffer-match-p (condition buffer-or-name &optional arg)

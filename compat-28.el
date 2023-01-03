@@ -34,8 +34,8 @@
 
 ;;; Code:
 
+(require 'compat-27)
 (eval-when-compile (load "compat-macs.el" nil t t))
-
 (compat-declare-version "28.1")
 
 ;;;; Defined in fns.c
@@ -606,8 +606,6 @@ as the new values of the bound variables in the recursive invocation."
 
 ;;;; Defined in files.el
 
-(declare-function compat--string-trim-left "compat-26" (string &optional regexp))
-(declare-function compat--directory-name-p "compat-25" (name))
 (compat-defun file-name-with-extension (filename extension)
   "Set the EXTENSION of a FILENAME.
 The extension (in a file name) is the part that begins with the last \".\".
