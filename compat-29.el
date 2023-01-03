@@ -80,7 +80,6 @@ Do not use this function if the buffer specified by BUFFER-OR-NAME is
 already displayed in WINDOW.  `window-text-pixel-size' is cheaper in
 that case because it does not have to temporarily show that buffer in
 WINDOW."
-  :realname compat--internal-buffer-text-pixel-size
   (setq buffer-or-name (or buffer-or-name (current-buffer)))
   (setq window (or window (selected-window)))
   (save-window-excursion
@@ -394,7 +393,7 @@ than this function."
     (with-current-buffer (get-buffer-create " *string-pixel-width*")
       (delete-region (point-min) (point-max))
       (insert string)
-      (car (compat--internal-buffer-text-pixel-size nil nil t)))))
+      (car (buffer-text-pixel-size nil nil t)))))
 
 ;;* UNTESTED
 (compat-defmacro with-buffer-unmodified-if-unchanged (&rest body)
