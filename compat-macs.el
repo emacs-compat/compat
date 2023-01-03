@@ -73,7 +73,7 @@ TYPE is used to set the symbol property `compat-type' for NAME.")
 
 (defun compat--generate-default (name def-fn install-fn check-fn attr type)
   "Generate a leaner compatibility definition.
-See `compat-generate-function' for details on the arguments NAME,
+See `compat--generate-function' for details on the arguments NAME,
 DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
@@ -133,7 +133,7 @@ TYPE is one of `func', for functions and `macro' for macros, and
 `advice' ARGLIST is passed on directly to the definition, and
 DOCSTRING is prepended with a compatibility note.  REST contains
 the remaining definition, that may begin with a property list of
-attributes (see `compat-generate-common')."
+attributes (see `compat--generate-function')."
   (let ((oldname name) (body rest))
     (while (keywordp (car body))
       (setq body (cddr body)))
@@ -187,7 +187,7 @@ If this is not documented on your system, you can check \
   "Define NAME with arguments ARGLIST as a compatibility function.
 The function must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by the macro but not passed on
-to the actual function.  See `compat-generate-common' for a
+to the actual function.  See `compat--generate-function' for a
 listing of attributes.
 
 The definition will only be installed, if the version this
@@ -204,7 +204,7 @@ attribute, is greater than the current Emacs version."
   "Define NAME with arguments ARGLIST as a compatibility macro.
 The macro must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by this macro but not passed on
-to the actual macro.  See `compat-generate-common' for a
+to the actual macro.  See `compat--generate-function' for a
 listing of attributes.
 
 The definition will only be installed, if the version this
@@ -218,7 +218,7 @@ attribute, is greater than the current Emacs version."
 The obligatory documentation string DOCSTRING must be given.
 
 The remaining arguments ATTR form a plist, modifying the
-behaviour of this macro.  See `compat-generate-common' for a
+behaviour of this macro.  See `compat--generate-function' for a
 listing of attributes.  Furthermore, `compat-defvar' also handles
 the attribute `:local' that either makes the variable permanent
 local with a value of `permanent' or just buffer local with any
