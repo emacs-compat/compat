@@ -340,5 +340,5 @@ recursion."
             (push (concat dir "/" file) files)))))
     (nconc result (nreverse files))))
 
-(compat--inhibit-prefixed (provide 'compat-25))
+(provide 'compat-25)
 ;;; compat-25.el ends here

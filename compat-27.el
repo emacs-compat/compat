@@ -494,14 +494,14 @@ Elements of ALIST that are not conses are ignored."
   :prefix t
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
-	      (funcall test (caar alist) key))
+              (funcall test (caar alist) key))
     (setq alist (cdr alist)))
   (let ((tail alist) tail-cdr)
     (while (setq tail-cdr (cdr tail))
       (if (and (consp (car tail-cdr))
-	       (funcall test (caar tail-cdr) key))
-	  (setcdr tail (cdr tail-cdr))
-	(setq tail tail-cdr))))
+               (funcall test (caar tail-cdr) key))
+          (setcdr tail (cdr tail-cdr))
+        (setq tail tail-cdr))))
   alist)
 
 ;;;; Defined in simple.el
@@ -1001,5 +1001,5 @@ and if a matching region is found, place point at the start of the region."
         (and (not (eq ended t))
              ended))))))
 
-(compat--inhibit-prefixed (provide 'compat-27))
+(provide 'compat-27)
 ;;; compat-27.el ends here

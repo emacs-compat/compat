@@ -40,17 +40,12 @@
 
 ;;; Code:
 
-(defvar compat--inhibit-prefixed)
-(let ((compat--inhibit-prefixed (not (bound-and-true-p compat-testing))))
-  ;; Instead of using `require', we manually check `features' and call
-  ;; `load' to avoid the issue of not using `provide' at the end of
-  ;; the file (which is disabled by `compat--inhibit-prefixed', so
-  ;; that the file can be loaded again at some later point when the
-  ;; prefixed definitions are needed).
-  (dolist (version '(24 25 26 27 28 29))
-    (let ((feature-name (format "compat-%d" version)))
-      (unless (memq (intern feature-name) features)
-        (load feature-name nil t)))))
+(require 'compat-24)
+(require 'compat-25)
+(require 'compat-26)
+(require 'compat-27)
+(require 'compat-28)
+(require 'compat-29)
 
 (provide 'compat)
 ;;; compat.el ends here

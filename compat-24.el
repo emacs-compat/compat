@@ -478,7 +478,7 @@ function for defining FACE and recalculating its attributes."
   (unless spec-type
     (setq spec-type 'face-override-spec))
   (if (memq spec-type '(face-defface-spec face-override-spec
-			customized-face saved-face))
+                        customized-face saved-face))
       (put face spec-type spec))
   (if (memq spec-type '(reset saved-face))
       (put face 'customized-face nil))
@@ -495,5 +495,5 @@ function for defining FACE and recalculating its attributes."
   (dolist (frame (frame-list))
     (face-spec-recalc face frame)))
 
-(compat--inhibit-prefixed (provide 'compat-24))
+(provide 'compat-24)
 ;;; compat-24.el ends here

@@ -671,5 +671,5 @@ optional DESCRIPTION field."
         (sit-for 1))
       choice)))
 
-(compat--inhibit-prefixed (provide 'compat-26))
+(provide 'compat-26)
 ;;; compat-26.el ends here

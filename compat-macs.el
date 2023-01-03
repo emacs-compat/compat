@@ -29,17 +29,6 @@
   "Ignore all arguments."
   nil)
 
-(defvar compat--inhibit-prefixed nil
-  "Non-nil means that prefixed definitions are not loaded.
-A prefixed function is something like `compat-assoc', that is
-only made visible when the respective compatibility version file
-is loaded (in this case `compat-26').")
-
-(defmacro compat--inhibit-prefixed (&rest body)
-  "Ignore BODY unless `compat--inhibit-prefixed' is true."
-  `(unless (bound-and-true-p compat--inhibit-prefixed)
-     ,@body))
-
 (defvar compat-current-version nil
   "Default version to use when no explicit version was given.")
 
@@ -114,7 +103,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                            (version< max-version emacs-version)))
                   '(compat--ignore))
                  ((plist-get attr :prefix)
-                  '(compat--inhibit-prefixed))
+                  '(progn))
                  ((and version (version<= version emacs-version) (not cond))
                   '(compat--ignore))
                  (`(when (and ,(if cond cond t)

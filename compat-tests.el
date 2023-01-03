@@ -70,7 +70,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                      (version< max-version emacs-version)))
             '(compat--ignore))
            ((plist-get attr :prefix)
-            '(compat--inhibit-prefixed))
+            '(progn))
            ((and version (version<= version emacs-version) (not cond))
             '(compat--ignore))
            (`(when (and ,(if cond cond t)
@@ -82,9 +82,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
 
 (setq compat--generate-function #'compat--generate-testable)
 
-(defvar compat-testing)
-(let ((compat-testing t))
-  (load "compat.el"))
+(require 'compat)
 
 (defvar compat-test-counter)
 
