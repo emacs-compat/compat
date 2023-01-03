@@ -138,16 +138,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
           body))))))
 
-(defun compat-generate-common (name def-fn install-fn check-fn attr type)
-  "Common code for generating compatibility definitions.
-See `compat-generate-function' for details on the arguments NAME,
-DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
-  (when (and (plist-get attr :cond) (plist-get attr :prefix))
-    (error "A prefixed function %s cannot have a condition" name))
-  (funcall compat--generate-function
-           name def-fn install-fn check-fn attr type))
-
-(defun compat-common-fdefine (type name arglist docstring rest)
+(defun compat--define-function (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
 TYPE is one of `func', for functions and `macro' for macros, and
 `advice' ARGLIST is passed on directly to the definition, and
@@ -166,7 +157,7 @@ attributes (see `compat-generate-common')."
     ;; Check if we want an explicitly prefixed function
     (when (plist-get rest :prefix)
       (setq name (intern (format "compat-%s" name))))
-    (compat-generate-common
+    (funcall compat--generate-function
      name
      (lambda (realname version)
        `(,(cond
@@ -237,7 +228,7 @@ attribute, is greater than the current Emacs version."
                            [&rest keywordp sexp]
                            def-body))
            (doc-string 3) (indent 2))
-  (compat-common-fdefine 'func name arglist docstring rest))
+  (compat--define-function 'func name arglist docstring rest))
 
 (defmacro compat-defmacro (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility macro.
@@ -250,7 +241,7 @@ The definition will only be installed, if the version this
 function was defined in, as indicated by the `:version'
 attribute, is greater than the current Emacs version."
   (declare (debug compat-defun) (doc-string 3) (indent 2))
-  (compat-common-fdefine 'macro name arglist docstring rest))
+  (compat--define-function 'macro name arglist docstring rest))
 
 (defmacro compat-advise (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility advice.
@@ -265,7 +256,7 @@ The advice will only be installed, if the version this function
 was defined in, as indicated by the `:version' attribute, is
 greater than the current Emacs version."
   (declare (debug compat-defun) (doc-string 3) (indent 2))
-  (compat-common-fdefine 'advice name (cons 'oldfun arglist) docstring rest))
+  (compat--define-function 'advice name (cons 'oldfun arglist) docstring rest))
 
 (defmacro compat-defvar (name initval docstring &rest attr)
   "Declare compatibility variable NAME with initial value INITVAL.
@@ -283,7 +274,7 @@ non-nil value."
   (let ((oldname name))
     (when (plist-get attr :prefix)
       (setq name (intern (format "compat-%s" name))))
-    (compat-generate-common
+    (funcall compat--generate-function
      name
      (lambda (realname version)
        (let ((localp (plist-get attr :local)))
