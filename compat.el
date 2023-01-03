@@ -2,10 +2,10 @@
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
-;; Author: Philip Kaludercic <philipk@posteo.net>
-;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
+;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
+;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>, Compat Development <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 29.1.0.0-dev
-;; URL: https://sr.ht/~pkal/compat
+;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4") (nadvice "0.3"))
 ;; Keywords: lisp
 
