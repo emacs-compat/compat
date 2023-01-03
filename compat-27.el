@@ -644,7 +644,7 @@ REMOTE is non-nil, search on the remote host indicated by
                     #'concat (file-remote-p default-directory))
                    (compat--internal-exec-path))
                   exec-suffixes 'file-executable-p)))
-        (when (stringp res) (compat--file-local-name res)))
+        (when (stringp res) (file-local-name res)))
     (executable-find command)))
 
 ;;*UNTESTED
