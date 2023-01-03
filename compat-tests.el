@@ -45,7 +45,7 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
          (version (or (plist-get attr :version)
                       compat--current-version))
          (realname (or (plist-get attr :realname)
-                       (intern (format "compat--%S" name))))
+                       (intern (format "compat--t-%S" name))))
          (body `(progn
                   (unless (or (null (get ',name 'compat-def))
                               (eq (get ',name 'compat-def) ',realname))
@@ -151,7 +151,7 @@ being compared against."
          (real-name (if (consp name) (car name) name))
          (compat-name (if (consp name)
                           (cadr name)
-                        (intern (format "compat--%s" real-name))))
+                        (intern (format "compat--t-%s" real-name))))
          (env (list
                (cons 'ought (compat--ought real-name compat-name))
                (cons 'expect (compat--expect real-name compat-name)))))
@@ -382,7 +382,7 @@ being compared against."
       (insert "abc")
       (with-temp-buffer
         (insert "def")
-        (compat--insert-into-buffer other))
+        (compat--t-insert-into-buffer other))
       (should (string= (buffer-string) "abcdef"))))
   (when (fboundp 'insert-into-buffer)
     (with-temp-buffer
@@ -398,7 +398,7 @@ being compared against."
       (insert "abc")
       (with-temp-buffer
         (insert "def")
-        (compat--insert-into-buffer other 2))
+        (compat--t-insert-into-buffer other 2))
       (should (string= (buffer-string) "abcef"))))
   (when (fboundp 'insert-into-buffer)
     (with-temp-buffer
@@ -414,7 +414,7 @@ being compared against."
       (insert "abc")
       (with-temp-buffer
         (insert "def")
-        (compat--insert-into-buffer other 2 3))
+        (compat--t-insert-into-buffer other 2 3))
       (should (string= (buffer-string) "abce"))))
   (when (fboundp 'insert-into-buffer)
     (with-temp-buffer
@@ -515,7 +515,7 @@ being compared against."
     ;;
     ;; Therefore, we must make sure, that the test
     ;; doesn't fail because of this bug:
-    (should (= (compat--string-distance "" "") 0)))
+    (should (= (compat--t-string-distance "" "") 0)))
   (ought 0 "a" "a")
   (ought 1 "" "a")
   (ought 1 "b" "a")
@@ -531,7 +531,7 @@ being compared against."
                  "a"                    ;simple string
                  "aaa"                  ;longer string
                  ))
-    (should-not (string-match-p (with-no-warnings compat--regexp-unmatchable) str))
+    (should-not (string-match-p (with-no-warnings compat--t-regexp-unmatchable) str))
     (when (boundp 'regexp-unmatchable)
       (should-not (string-match-p regexp-unmatchable str)))))
 
@@ -1105,55 +1105,55 @@ being compared against."
   (ought "Prompt \"abc\" (default 3): " "Prompt %S" 3 "abc"))
 
 (ert-deftest compat-named-let ()
-  "Check if `compat--named-let' was implemented properly."
-  (should (= (compat--named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
+  "Check if `compat--t-named-let' was implemented properly."
+  (should (= (compat--t-named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
-  (should (= (compat--named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
+  (should (= (compat--t-named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
              100000))
-  (should (= (compat--named-let l ((i 0))
+  (should (= (compat--t-named-let l ((i 0))
                (cond
                 ((= i 100000) i)
                 ((= (mod i 2) 0)
                  (l (+ i 2)))
                 ((l (+ i 3)))))
              100000))
-  (should (= (compat--named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
+  (should (= (compat--t-named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
              (expt 2 8)))
-  (should (eq (compat--named-let lop ((x 1))
+  (should (eq (compat--t-named-let lop ((x 1))
                 (if (> x 0)
                     (condition-case nil
                         (lop (1- x))
                       (arith-error 'ok))
                   (/ 1 x)))
               'ok))
-  (should (eq (compat--named-let lop ((n 10000))
+  (should (eq (compat--t-named-let lop ((n 10000))
                 (if (> n 0)
                     (condition-case nil
                         (/ n 0)
                       (arith-error (lop (1- n))))
                   'ok))
               'ok))
-  (should (eq (compat--named-let lop ((x nil))
+  (should (eq (compat--t-named-let lop ((x nil))
                 (cond (x)
                       (t 'ok)))
               'ok))
-  (should (eq (compat--named-let lop ((x 100000))
+  (should (eq (compat--t-named-let lop ((x 100000))
                 (cond ((= x 0) 'ok)
                       ((lop (1- x)))))
               'ok))
-  (should (eq (compat--named-let lop ((x 100000))
+  (should (eq (compat--t-named-let lop ((x 100000))
                 (cond
                  ((= x -1) nil)
                  ((= x 0) 'ok)
                  ((lop -1))
                  ((lop (1- x)))))
               'ok))
-  (should (eq (compat--named-let lop ((x 10000))
+  (should (eq (compat--t-named-let lop ((x 10000))
                 (cond ((= x 0) 'ok)
                       ((and t (lop (1- x))))))
               'ok))
   (should (eq (let ((b t))
-                (compat--named-let lop ((i 0))
+                (compat--t-named-let lop ((i 0))
                   (cond ((null i) nil) ((= i 10000) 'ok)
                         ((lop (and (setq b (not b)) (1+ i))))
                         ((lop (and (setq b (not b)) (1+ i)))))))
@@ -1180,9 +1180,9 @@ being compared against."
   (ought nil "dir/subdir"))
 
 (ert-deftest compat-if-let* ()
-  "Check if `compat--if-let*' was implemented properly."
+  "Check if `compat--t-if-let*' was implemented properly."
   (should
-   (compat--if-let*
+   (compat--t-if-let*
     ((x 3)
      (y 2)
      (z (+ x y))
@@ -1190,25 +1190,25 @@ being compared against."
      (true t))
     true nil))
   (should-not
-   (compat--if-let* (((= 5 6))) t nil)))
+   (compat--t-if-let* (((= 5 6))) t nil)))
 
 (ert-deftest compat-if-let ()
-  "Check if `compat--if-let' was implemented properly."
-  (should (compat--if-let ((e (memq 0 '(1 2 3 0 5 6))))
+  "Check if `compat--t-if-let' was implemented properly."
+  (should (compat--t-if-let ((e (memq 0 '(1 2 3 0 5 6))))
               e))
-  (should-not (compat--if-let ((e (memq 0 '(1 2 3 5 6)))
+  (should-not (compat--t-if-let ((e (memq 0 '(1 2 3 5 6)))
                                (d (memq 0 '(1 2 3 0 5 6))))
                   t))
-  (should-not (compat--if-let ((d (memq 0 '(1 2 3 0 5 6)))
+  (should-not (compat--t-if-let ((d (memq 0 '(1 2 3 0 5 6)))
                                (e (memq 0 '(1 2 3 5 6))))
                   t))
   (should-not
-   (compat--if-let (((= 5 6))) t nil)))
+   (compat--t-if-let (((= 5 6))) t nil)))
 
 (ert-deftest compat-and-let* ()
-  "Check if `compat--and-let*' was implemented properly."
+  "Check if `compat--t-and-let*' was implemented properly."
   (should                               ;trivial body
-   (compat--and-let*
+   (compat--t-and-let*
     ((x 3)
      (y 2)
      (z (+ x y))
@@ -1216,14 +1216,14 @@ being compared against."
      (true t))
     true))
   (should                               ;no body
-   (compat--and-let*
+   (compat--t-and-let*
     ((x 3)
      (y 2)
      (z (+ x y))
      ((= z 5))
      (true t))))
   (should-not
-   (compat--and-let* (((= 5 6))) t)))
+   (compat--t-and-let* (((= 5 6))) t)))
 
 (compat-deftests compat-json-parse-string
   (ought 0 "0")
@@ -1237,15 +1237,15 @@ being compared against."
   (ought ["false" t] "[false, true]" :false-object "false"))
 
 (ert-deftest compat-json-parse-string ()
-  "Check if `compat--json-parse-string' was implemented properly."
+  "Check if `compat--t-json-parse-string' was implemented properly."
   (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
-    (let ((obj (compat--json-parse-string input)))
+    (let ((obj (compat--t-json-parse-string input)))
       (should (equal (gethash "key" obj) ["abc" 2]))
       (should (equal (gethash "yek" obj) :null)))
-    (let ((obj (compat--json-parse-string input :object-type 'alist)))
+    (let ((obj (compat--t-json-parse-string input :object-type 'alist)))
       (should (equal (cdr (assq 'key obj)) ["abc" 2]))
       (should (equal (cdr (assq 'yek obj)) :null)))
-    (let ((obj (compat--json-parse-string input :object-type 'plist)))
+    (let ((obj (compat--t-json-parse-string input :object-type 'plist)))
       (should (equal (plist-get obj :key) ["abc" 2]))
       (should (equal (plist-get obj :yek) :null)))
     (when (fboundp 'json-parse-string)
@@ -1261,7 +1261,7 @@ being compared against."
 
 (ert-deftest compat-json-insert ()
   (with-temp-buffer
-    (compat--json-insert '((:key . ["abc" 2]) (yek . t)))
+    (compat--t-json-insert '((:key . ["abc" 2]) (yek . t)))
     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
 
 (ert-deftest compat-json-serialize ()
@@ -1326,31 +1326,31 @@ being compared against."
 
 (ert-deftest compat-hash-table-keys ()
   (let ((ht (make-hash-table)))
-    (should (null (compat--hash-table-keys ht)))
+    (should (null (compat--t-hash-table-keys ht)))
     (puthash 1 'one ht)
-    (should (equal '(1) (compat--hash-table-keys ht)))
+    (should (equal '(1) (compat--t-hash-table-keys ht)))
     (puthash 1 'one ht)
-    (should (equal '(1) (compat--hash-table-keys ht)))
+    (should (equal '(1) (compat--t-hash-table-keys ht)))
     (puthash 2 'two ht)
-    (should (memq 1 (compat--hash-table-keys ht)))
-    (should (memq 2 (compat--hash-table-keys ht)))
-    (should (= 2 (length (compat--hash-table-keys ht))))
+    (should (memq 1 (compat--t-hash-table-keys ht)))
+    (should (memq 2 (compat--t-hash-table-keys ht)))
+    (should (= 2 (length (compat--t-hash-table-keys ht))))
     (remhash 1 ht)
-    (should (equal '(2) (compat--hash-table-keys ht)))))
+    (should (equal '(2) (compat--t-hash-table-keys ht)))))
 
 (ert-deftest compat-hash-table-values ()
   (let ((ht (make-hash-table)))
-    (should (null (compat--hash-table-values ht)))
+    (should (null (compat--t-hash-table-values ht)))
     (puthash 1 'one ht)
-    (should (equal '(one) (compat--hash-table-values ht)))
+    (should (equal '(one) (compat--t-hash-table-values ht)))
     (puthash 1 'one ht)
-    (should (equal '(one) (compat--hash-table-values ht)))
+    (should (equal '(one) (compat--t-hash-table-values ht)))
     (puthash 2 'two ht)
-    (should (memq 'one (compat--hash-table-values ht)))
-    (should (memq 'two (compat--hash-table-values ht)))
-    (should (= 2 (length (compat--hash-table-values ht))))
+    (should (memq 'one (compat--t-hash-table-values ht)))
+    (should (memq 'two (compat--t-hash-table-values ht)))
+    (should (= 2 (length (compat--t-hash-table-values ht))))
     (remhash 1 ht)
-    (should (equal '(two) (compat--hash-table-values ht)))))
+    (should (equal '(two) (compat--t-hash-table-values ht)))))
 
 (compat-deftests string-empty-p
   (ought t "")
@@ -1401,7 +1401,7 @@ being compared against."
     (ought (bool-vector nil t t nil) b a)
     (ert-deftest compat-bool-vector-exclusive-or-sideeffect ()
       (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-exclusive-or a b c)
+        (compat--t-bool-vector-exclusive-or a b c)
         (should (equal (bool-vector nil t t nil) c))
         (should (equal (bool-vector nil t t nil) c))))
     (when (version<= "24.4" emacs-version)
@@ -1422,7 +1422,7 @@ being compared against."
     (ought (bool-vector t t t nil) b a)
     (ert-deftest compat-bool-vector-union-sideeffect ()
       (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-union a b c)
+        (compat--t-bool-vector-union a b c)
         (should (equal (bool-vector t t t nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
@@ -1442,7 +1442,7 @@ being compared against."
     (ought (bool-vector t nil nil nil) b a)
     (ert-deftest compat-bool-vector-intersection-sideeffect ()
       (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-intersection a b c)
+        (compat--t-bool-vector-intersection a b c)
         (should (equal (bool-vector t nil nil nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
@@ -1462,10 +1462,10 @@ being compared against."
     (ought (bool-vector nil nil t nil) b a)
     (ert-deftest compat-bool-vector-set-difference-sideeffect ()
       (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-set-difference a b c)
+        (compat--t-bool-vector-set-difference a b c)
         (should (equal (bool-vector nil t nil nil) c)))
       (let ((c (make-bool-vector 4 nil)))
-        (compat--bool-vector-set-difference b a c)
+        (compat--t-bool-vector-set-difference b a c)
         (should (equal (bool-vector nil nil t nil) c))))
     (when (version<= "24.4" emacs-version)
       (expect wrong-length-argument a (bool-vector))
@@ -1901,17 +1901,17 @@ being compared against."
             (propertize "four " 'prop 'wert)
             "five ")
     (goto-char (point-min))
-    (let ((match (compat--text-property-search-forward 'prop)))
-      (should (eq (compat--prop-match-beginning match) 5))
-      (should (eq (compat--prop-match-end match) 9))
-      (should (eq (compat--prop-match-value match) 'val)))
-    (let ((match (compat--text-property-search-forward 'prop)))
-      (should (eq (compat--prop-match-beginning match) 15))
-      (should (eq (compat--prop-match-end match) 20))
-      (should (eq (compat--prop-match-value match) 'wert)))
-    (should (null (compat--text-property-search-forward 'prop)))
+    (let ((match (compat--t-text-property-search-forward 'prop)))
+      (should (eq (compat--t-prop-match-beginning match) 5))
+      (should (eq (compat--t-prop-match-end match) 9))
+      (should (eq (compat--t-prop-match-value match) 'val)))
+    (let ((match (compat--t-text-property-search-forward 'prop)))
+      (should (eq (compat--t-prop-match-beginning match) 15))
+      (should (eq (compat--t-prop-match-end match) 20))
+      (should (eq (compat--t-prop-match-value match) 'wert)))
+    (should (null (compat--t-text-property-search-forward 'prop)))
     (goto-char (point-min))
-    (should (null (compat--text-property-search-forward 'non-existant)))))
+    (should (null (compat--t-text-property-search-forward 'non-existant)))))
 
 (ert-deftest compat-text-property-search-backward ()
   (when (fboundp 'text-property-search-backward)
@@ -1940,17 +1940,17 @@ being compared against."
             (propertize "four " 'prop 'wert)
             "five ")
     (goto-char (point-max))
-    (let ((match (compat--text-property-search-backward 'prop)))
-      (should (eq (compat--prop-match-beginning match) 15))
-      (should (eq (compat--prop-match-end match) 20))
-      (should (eq (compat--prop-match-value match) 'wert)))
-    (let ((match (compat--text-property-search-backward 'prop)))
-      (should (eq (compat--prop-match-beginning match) 5))
-      (should (eq (compat--prop-match-end match) 9))
-      (should (eq (compat--prop-match-value match) 'val)))
-    (should (null (compat--text-property-search-backward 'prop)))
+    (let ((match (compat--t-text-property-search-backward 'prop)))
+      (should (eq (compat--t-prop-match-beginning match) 15))
+      (should (eq (compat--t-prop-match-end match) 20))
+      (should (eq (compat--t-prop-match-value match) 'wert)))
+    (let ((match (compat--t-text-property-search-backward 'prop)))
+      (should (eq (compat--t-prop-match-beginning match) 5))
+      (should (eq (compat--t-prop-match-end match) 9))
+      (should (eq (compat--t-prop-match-value match) 'val)))
+    (should (null (compat--t-text-property-search-backward 'prop)))
     (goto-char (point-max))
-    (should (null (compat--text-property-search-backward 'non-existant)))))
+    (should (null (compat--t-text-property-search-backward 'non-existant)))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
