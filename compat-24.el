@@ -32,6 +32,21 @@
 
 ;;; Code:
 
+(defmacro compat-function (fun)
+  "Return compatibility function symbol for FUN.
+
+If the Emacs version provides a sufficiently recent version of
+FUN, the symbol FUN is returned itself."
+  (let ((compat (intern (format "compat--%s" fun))))
+    `#',(if (fboundp compat) compat fun)))
+
+(defmacro compat-funcall (fun &rest args)
+  "Call compatibility function FUN with ARGS.
+
+See `compat-function' for the compatibility function resolution."
+  (let ((compat (intern (format "compat--%s" fun))))
+    `(,(if (fboundp compat) compat fun) ,@args)))
+
 (eval-when-compile (load "compat-macs.el" nil t t))
 (compat-declare-version "24.4")
 
