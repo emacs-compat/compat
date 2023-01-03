@@ -36,7 +36,6 @@
 
 (require 'compat-macs)
 
-(defvar compat-current-version)
 (defun compat--generate-testable (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
 See `compat-generate-function' for details on the arguments NAME,
@@ -46,7 +45,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
-                      compat-current-version))
+                      compat--current-version))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (body `(progn

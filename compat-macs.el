@@ -29,14 +29,14 @@
   "Ignore all arguments."
   nil)
 
-(defvar compat-current-version nil
+(defvar compat--current-version nil
   "Default version to use when no explicit version was given.")
 
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
   ;; FIXME: Avoid setting the version for any definition that might
   ;; follow, but try to restrict it to the current file/buffer.
-  (setq compat-current-version version)
+  (setq compat--current-version version)
   nil)
 
 (defvar compat--generate-function #'compat--generate-default
@@ -93,7 +93,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
-                      compat-current-version))
+                      compat--current-version))
          (realname (or (plist-get attr :realname)
                        (intern (format "compat--%S" name))))
          (check (cond
