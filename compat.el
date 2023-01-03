@@ -50,7 +50,7 @@ FUN, the symbol FUN is returned itself."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 
-(defmacro compat-funcall (fun &rest args)
+(defmacro compat-call (fun &rest args)
   "Call compatibility function FUN with ARGS.
 
 See `compat-function' for the compatibility function resolution."

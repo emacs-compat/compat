@@ -136,7 +136,7 @@ attributes (see `compat--generate-function')."
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
     ;; Ensure that :realname is not the same as compat--<name>,
-    ;; since this is the compat-funcall/compat-function naming convention.
+    ;; since this is the compat-call/compat-function naming convention.
     (when (and (plist-get rest :realname)
                (string= (plist-get rest :realname) (format "compat--%s" name)))
       (error "%s: :realname must not be the same as compat--<name>" name))
@@ -181,7 +181,7 @@ If this is not documented on yourself system, you can check \
                      `((defalias ',name ',(intern (format "compat--%s" oldname)))
                        (make-obsolete
                         ',name
-                        "Use `compat-funcall' or `compat-function' instead"
+                        "Use `compat-call' or `compat-function' instead"
                         "29.1"))
                    `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
      (lambda (realname _version)
@@ -192,7 +192,7 @@ If this is not documented on yourself system, you can check \
               (defalias ',name ',realname)
               (make-obsolete
                ',name
-               "Use `compat-funcall' or `compat-function' instead"
+               "Use `compat-call' or `compat-function' instead"
                "29.1"))
          `(defalias ',name #',realname)))
      (lambda ()

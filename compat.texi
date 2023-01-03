@@ -103,7 +103,7 @@ Note that Compat provides functions with extended functionality for
 commands that are already defined (@code{sort}, @code{assoc},
 @code{seq}, @dots{}). These functions must be looked up explicitly
 with @code{compat-function} or called explicitly with
-@code{compat-funcall}.
+@code{compat-call}.
 
 @node Usage
 @section Usage
@@ -134,12 +134,12 @@ the noerror flag should be specified.
 
 This will load all implicit and explicit Compat definitions. Functions
 and macros where the calling convention has changed can be accessed
-explicitly via @code{compat-function} and @code{compat-funcall}. We
+explicitly via @code{compat-function} and @code{compat-call}. We
 call these definitions ``Explicit Definitions''. In contrast,
 ``Implicit Definitions'' can be called as usual.
 
 @example
-(compat-funcall sort SEQUENCE PREDICATE) ;; Explicit
+(compat-call sort SEQUENCE PREDICATE) ;; Explicit
 (mapcan FUNCTION SEQUENCE)               ;; Implicit
 @end example
 
@@ -166,7 +166,7 @@ advised. As this is regarded as invasive and adds significant
 overhead, even when the new feature is not used, this approach is not
 used. As a compromise, compatibility functions and macros with a
 changed calling convetion can be accessed via the
-@code{compat-function} and @code{compat-funcall} macros.
+@code{compat-function} and @code{compat-call} macros.
 
 @item
 New functionality was implemented in the core, and depends on external
@@ -403,35 +403,35 @@ recalculate its attributes, as described above.
 @end defun
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
 @c all copied from lispref/numbers.texi
-@defun compat-funcall@ = number-or-marker &rest number-or-markers
+@defun compat-call@ = number-or-marker &rest number-or-markers
 This function tests whether all its arguments are numerically equal, and
 returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-funcall@ < number-or-marker &rest number-or-markers
+@defun compat-call@ < number-or-marker &rest number-or-markers
 This function tests whether each argument is strictly less than the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-funcall@ > number-or-marker &rest number-or-markers
+@defun compat-call@ > number-or-marker &rest number-or-markers
 This function tests whether each argument is strictly greater than the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-funcall@ <= number-or-marker &rest number-or-markers
+@defun compat-call@ <= number-or-marker &rest number-or-markers
 This function tests whether each argument is less than or equal to the
 following argument.  It returns @code{t} if so, @code{nil} otherwise.
 
 @xref{Comparison of Numbers,,,elisp}.
 @end defun
-@defun compat-funcall@ >= number-or-marker &rest number-or-markers
+@defun compat-call@ >= number-or-marker &rest number-or-markers
 This function tests whether each argument is greater than or equal to
 the following argument.  It returns @code{t} if so, @code{nil}
 otherwise.
@@ -443,7 +443,7 @@ These functions differ from the previous implementation in that they
 allow for more than two argument to be compared.
 
 @c based on lispref/strings.texi
-@defun compat-funcall@ split-string string &optional separators omit-nulls trim
+@defun compat-call@ split-string string &optional separators omit-nulls trim
 This function splits @var{string} into substrings based on the regular
 expression @var{separators} (@pxref{Regular Expressions,,,elisp}).  Each
 match for @var{separators} defines a splitting point; the substrings
@@ -687,10 +687,10 @@ arguments, @var{objects}.
 @end defun
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
-@defun compat-funcall@ sort sequence predicate
+@defun compat-call@ sort sequence predicate
 This function sorts @var{sequence} stably.  Note that this function
 doesn't work for all sequences; it may be used only for lists and
 vectors.  If @var{sequence} is a list, it is modified destructively.
@@ -1057,10 +1057,10 @@ size, modes, inode-number and device-number.
 @end defun
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
-@defun compat-funcall@ assoc key alist &optional testfn
+@defun compat-call@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
 @var{alist}, comparing @var{key} against the alist elements using
 @var{testfn} if it is a function, and @code{equal} otherwise
@@ -1076,7 +1076,7 @@ The compatibility version adds support for handling the optional
 argument @var{testfn}.
 @end defun
 
-@defun compat-funcall@ line-number-at-pos &optional pos absolute
+@defun compat-call@ line-number-at-pos &optional pos absolute
 This function returns the line number in the current buffer
 corresponding to the buffer position @var{pos}.  If @var{pos} is
 @code{nil} or omitted, the current buffer position is used. If
@@ -1091,7 +1091,7 @@ The compatibility version adds support for handling the optional
 argument @var{absolute}.
 @end defun
 
-@defun compat-funcall@ alist-get key alist &optional default remove testfn
+@defun compat-call@ alist-get key alist &optional default remove testfn
 @xref{Association Lists,,,elisp}.  This function is similar to
 @code{assq}.  It finds the first association @w{@code{(@var{key}
 . @var{value})}} by comparing @var{key} with @var{alist} elements, and,
@@ -1107,7 +1107,7 @@ It can also be used as a @ref{generalised variable,Generalized
 Variables,,elisp}.
 @end defun
 
-@defun compat-funcall@ string-trim-left string &optional regexp
+@defun compat-call@ string-trim-left string &optional regexp
 Remove the leading text that matches @var{regexp} from @var{string}.
 @var{regexp} defaults to @samp{[ \t\n\r]+}.
 
@@ -1116,7 +1116,7 @@ Remove the leading text that matches @var{regexp} from @var{string}.
 The compatibility version handles the optional argument @var{regexp}.
 @end defun
 
-@defun compat-funcall@ string-trim-right string &optional regexp
+@defun compat-call@ string-trim-right string &optional regexp
 Remove the trailing text that matches @var{regexp} from @var{string}.
 @var{regexp} defaults to @samp{[ \t\n\r]+}.
 
@@ -1125,7 +1125,7 @@ Remove the trailing text that matches @var{regexp} from @var{string}.
 The compatibility version handles the optional argument @var{regexp}.
 @end defun
 
-@defun compat-funcall@ string-trim string &optional trim-left trim-right
+@defun compat-call@ string-trim string &optional trim-left trim-right
 Remove the leading text that matches @var{trim-left} and trailing text
 that matches @var{trim-right} from @var{string}.  Both regexps default
 to @samp{[ \t\n\r]+}.
@@ -1468,11 +1468,11 @@ function signals an error.
 @end defun
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
 @c based on lispref/windows.texi
-@defun compat-funcall@ recenter &optional count redisplay
+@defun compat-call@ recenter &optional count redisplay
 This function scrolls the text in the selected window so that point is
 displayed at a specified vertical position within the window.  It does
 not move point with respect to the text.
@@ -1484,7 +1484,7 @@ This compatibility version adds support for the optional argument
 @end defun
 
 @c based on lispref/keymaps.texi
-@defun compat-funcall@ lookup-key keymap key &optional accept-defaults
+@defun compat-call@ lookup-key keymap key &optional accept-defaults
 This function returns the definition of @var{key} in @var{keymap}.  If
 the string or vector @var{key} is not a valid key sequence according
 to the prefix keys specified in @var{keymap}, it must be too long and
@@ -1518,7 +1518,7 @@ at once, as can be done with @code{setq}.
 @end defmac
 
 @c based on lispref/searching.texi
-@defun compat-funcall@ regexp-opt strings &optional paren
+@defun compat-call@ regexp-opt strings &optional paren
 This function returns an efficient regular expression that will match
 any of the strings in the list @var{strings}.  This is useful when you
 need to make matching or searching as fast as possible---for example,
@@ -1532,7 +1532,7 @@ generated that never matches anything (see @code{regexp-unmatchable}).
 @end defun
 
 @c based on lisp/files.texi
-@defun compat-funcall@ file-size-human-readable file-size &optional flavor space unit
+@defun compat-call@ file-size-human-readable file-size &optional flavor space unit
 Return a string with a human readable representation of @var{file-size}.
 
 The optional second argument @var{flavor} controls the units and the
@@ -1558,7 +1558,7 @@ unless @var{flavor} is @code{iec}, in which case it will be @code{B}.
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-funcall@ assoc-delete-all
+@defun compat-call@ assoc-delete-all
 This function is like @code{assq-delete-all} except that it accepts
 an optional argument @var{test}, a predicate function to compare the
 keys in @var{alist}.  If omitted or @code{nil}, @var{test} defaults to
@@ -1572,7 +1572,7 @@ argument.
 @end defun
 
 @c copied from lispref/files.texi
-@defun compat-funcall@ executable-find program &optional remote
+@defun compat-call@ executable-find program &optional remote
 This function searches for the executable file of the named
 @var{program} and returns the absolute file name of the executable,
 including its file-name extensions, if any.  It returns @code{nil} if
@@ -1589,7 +1589,7 @@ This compatibility version adds support to handle the optional second
 (@var{remote}) argument.
 @end defun
 
-@defun compat-funcall@ dired-get-marked-files &optional localp arg filter distinguish-one-marked error
+@defun compat-call@ dired-get-marked-files &optional localp arg filter distinguish-one-marked error
 Return a list of file names that are @emph{marked} in a Dired buffer.
 
 This compatibility version handles the optional fifth (@var{error})
@@ -2202,11 +2202,11 @@ assume that there is a user named @samp{rms} but no user named
 @end defun
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
 @c copied from lispref/files.texi
-@defun compat-funcall@ unlock-buffer
+@defun compat-call@ unlock-buffer
 This function unlocks the file being visited in the current buffer,
 if the buffer is modified.  If the buffer is not modified, then
 the file should not be locked, so this function does nothing.  It also
@@ -2220,7 +2220,7 @@ This compatibility versions catches the @code{file-error} condition,
 issuing a warning instead of propagating on the error.
 @end defun
 
-@defun compat-funcall@ string-width string &optional from to
+@defun compat-call@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
 if it were displayed in the current buffer and the selected window.
 Optional arguments @var{from} and @var{to} specify the substring of
@@ -2238,28 +2238,28 @@ This compatibility version handles the optional arguments @var{from} and
 @var{to}.
 @end defun
 
-@defun compat-funcall@ json-serialize
+@defun compat-call@ json-serialize
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-funcall@ json-insert
+@defun compat-call@ json-insert
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-funcall@ json-parse-string
+@defun compat-call@ json-parse-string
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
 (numbers, strings, booleans).
 @end defun
 
-@defun compat-funcall@ json-parse-buffer
+@defun compat-call@ json-parse-buffer
 @xref{Emacs 27.1}.
 
 This compatibility version handles primitive, top-level JSON values
@@ -2267,7 +2267,7 @@ This compatibility version handles primitive, top-level JSON values
 @end defun
 
 @c copied from on lisp/window.el
-@defun compat-funcall@ count-windows
+@defun compat-call@ count-windows
 Return the number of live windows on the selected frame.
 
 The optional argument @var{minibuf} specifies whether the minibuffer
@@ -2915,11 +2915,11 @@ This is comparable to @code{and-let*}.
 @end defmac
 
 @subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-funcall},
+These functions must be called explicitly via @code{compat-call},
 since their calling convention changed:
 
 @c copied from lispref/keymaps.texi
-@defun compat-funcall@ define-key
+@defun compat-call@ define-key
 This function is like @code{keymap-set} (@pxref{Changing Key
 Bindings,,,elisp}, but understands only the legacy key syntaxes.
 
@@ -2938,7 +2938,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-funcall@ plist-get plist prop &optional predicate
+@defun compat-call@ plist-get plist prop &optional predicate
 This returns the value of the @var{property} property stored in the
 property list @var{plist}.  Comparisons are done with @var{predicate},
 and defaults to @code{eq}.  It accepts a malformed @var{plist}
@@ -2952,7 +2952,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-funcall@ plist-put plist prop val &optional predicate
+@defun compat-call@ plist-put plist prop val &optional predicate
 This stores @var{value} as the value of the @var{property} property in
 the property list @var{plist}.  Comparisons are done with @var{predicate},
 and defaults to @code{eq}.  It may modify @var{plist} destructively,
@@ -2967,7 +2967,7 @@ This compatibility version handles the optional argument
 @end defun
 
 @c copied from lispref/lists.texi
-@defun compat-funcall@ plist-member plist prop &optional predicate
+@defun compat-call@ plist-member plist prop &optional predicate
 This returns non-@code{nil} if @var{plist} contains the given
 @var{property}.  Comparisons are done with @var{predicate}, and
 defaults to @code{eq}.  Unlike @code{plist-get}, this allows you to
