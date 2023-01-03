@@ -19,16 +19,6 @@
 
 ;; Find here the functionality added in Emacs 24.4, needed by older
 ;; versions.
-;;
-;; Only load this library if you need to use one of the following
-;; functions:
-;;
-;; - `compat-='
-;; - `compat-<'
-;; - `compat->'
-;; - `compat-<='
-;; - `compat->='
-;; - `split-string'.
 
 ;;; Code:
 
