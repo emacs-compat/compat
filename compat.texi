@@ -102,9 +102,7 @@ since subr-x was introduced in this version.
 Note that Compat provides a few prefixed function, ie. functions with a
 @code{compat-} prefix.  These are used to provide extended functionality
 for commands that are already defined (@code{sort}, @code{assoc},
-@code{seq}, @dots{}).  It might be possible to transform these into
-advised functions later on, so that the modified functionality is
-accessible without a prefix.  Feedback on this point is appreciated.
+@code{seq}, @dots{}).
 
 @node Usage
 @section Usage
@@ -155,10 +153,10 @@ reasons.  These might include:
 @itemize
 @item
 An existing function or macro was extended by some new functionality.
-To support these cases, the function or macro would have to be advised.
-As this is usually regarded as invasive and is shown to be a significant
-overhead, even when the new feature is not used, this approach is not
-used.
+To support these cases, the function or macro would have to be
+advised. As this is regarded as invasive and is shown to be a
+significant overhead, even when the new feature is not used, this
+approach is not used.
 
 As a compromise, prefixed functions and macros (starting with a
 @code{compat-} prefix) can be provided.
