@@ -147,36 +147,56 @@ attributes (see `compat--generate-function')."
     (funcall compat--generate-function
      name
      (lambda (realname version)
-       `(,(cond
-           ((eq type 'function) 'defun)
-           ((eq type 'macro) 'defmacro)
-           ((error "Unknown type")))
-         ,realname ,arglist
-         ;; Prepend compatibility notice to the actual
-         ;; documentation string.
-         ,(with-temp-buffer
-            (insert docstring)
-            (newline 2)
-            (insert
-             "[Compatibility "
-             (if version
-                 (format
-                  "%s for `%S', defined in Emacs %s.  \
-If this is not documented on your system, you can check \
+       `(progn
+          (,(cond
+             ((eq type 'function) 'defun)
+             ((eq type 'macro) 'defmacro)
+             ((error "Unknown type")))
+           ,(if (plist-get rest :prefix)
+                (intern (format "compat--explicit-%s" oldname))
+              realname)
+           ,arglist
+           ;; Prepend compatibility notice to the actual
+           ;; documentation string.
+           ,(with-temp-buffer
+              (insert docstring)
+              (newline 2)
+              (insert
+               "[Compatibility "
+               (if version
+                   (format
+                    "%s for `%S', defined in Emacs %s.  \
+If this is not documented on yourself system, you can check \
 `(compat) Emacs %s' for more details."
-                  type oldname version version)
-               (format
-                "code %s for `%S'"
-                type oldname))
-             "]")
-            (let ((fill-column 80))
-              (fill-region (point-min) (point-max)))
-            (buffer-string))
-         ,@body))
+                    type oldname version version)
+                 (format
+                  "code %s for `%S'"
+                  type oldname))
+               "]")
+              (let ((fill-column 80))
+                (fill-region (point-min) (point-max)))
+              (buffer-string))
+           ,@body)
+          ,@(and (plist-get rest :prefix)
+                 (message "COMPAT realname=%S name=%S oldname=%S" realname name oldname)
+                 (if (string= realname name)
+                     `((defalias ',name ',(intern (format "compat--explicit-%s" oldname)))
+                       (make-obsolete
+                        ',name
+                        "Use `compat-funcall' or `compat-function' instead"
+                        "29.1"))
+                   `((defalias ',realname #',(intern (format "compat--explicit-%s" oldname))))))))
      (lambda (realname _version)
-         ;; Functions and macros are installed by aliasing the name of the
-         ;; compatible function to the name of the compatibility function.
-       `(defalias ',name #',realname))
+       ;; Functions and macros are installed by aliasing the name of the
+       ;; compatible function to the name of the compatibility function.
+       (if (and (plist-get rest :prefix) (string= realname oldname))
+           `(progn
+              (defalias ',name ',realname)
+              (make-obsolete
+               ',name
+               "Use `compat-funcall' or `compat-function' instead"
+               "29.1"))
+         `(defalias ',name #',realname)))
      (lambda ()
        `(not (fboundp ',name)))
      rest)))
