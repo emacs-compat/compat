@@ -127,11 +127,7 @@ DEF-FN, INSTALL-FN, CHECK-FN, ATTR and TYPE."
                         `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
                       body))))))
      (check
-      (let* ((body (if (eq type 'advice)
-                       `(,@check
-                         ,(funcall def-fn realname version)
-                         ,(funcall install-fn realname version))
-                     `(,@check ,(funcall def-fn name version)))))
+      (let ((body `(,@check ,(funcall def-fn name version))))
         (if feature
             ;; See https://nullprogram.com/blog/2018/02/22/:
             `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
@@ -169,7 +165,6 @@ attributes (see `compat-generate-common')."
          ,(let ((type (cond
                        ((eq type 'func) "function")
                        ((eq type 'macro) "macro")
-                       ((eq type 'advice) "advice")
                        ((error "Unknown type")))))
             (with-temp-buffer
               (insert docstring)
@@ -189,27 +184,13 @@ If this is not documented on your system, you can check \
               (let ((fill-column 80))
                 (fill-region (point-min) (point-max)))
               (buffer-string)))
-         ;; Advice may use the implicit variable `oldfun', but
-         ;; to avoid triggering the byte compiler, we make
-         ;; sure the argument is used at least once.
-         ,@(if (eq type 'advice)
-               (cons '(ignore oldfun) body)
-             body)))
+         ,@body))
      (lambda (realname _version)
-       (cond
-        ((memq type '(func macro))
-         ;; Functions and macros are installed by
-         ;; aliasing the name of the compatible
-         ;; function to the name of the compatibility
-         ;; function.
-         `(defalias ',name #',realname))
-        ((eq type 'advice)
-         `(advice-add ',name :around #',realname))))
+         ;; Functions and macros are installed by aliasing the name of the
+         ;; compatible function to the name of the compatibility function.
+       `(defalias ',name #',realname))
      (lambda ()
-       (cond
-        ((memq type '(func macro))
-         `(not (fboundp ',name)))
-        ((eq type 'advice) t)))
+       `(not (fboundp ',name)))
      rest type)))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
@@ -241,21 +222,6 @@ function was defined in, as indicated by the `:version'
 attribute, is greater than the current Emacs version."
   (declare (debug compat-defun) (doc-string 3) (indent 2))
   (compat--define-function 'macro name arglist docstring rest))
-
-(defmacro compat-advise (name arglist docstring &rest rest)
-  "Define NAME with arguments ARGLIST as a compatibility advice.
-The advice function must be documented in DOCSTRING.  REST may
-begin with a plist, that is interpreted by this macro but not
-passed on to the actual advice function.  See
-`compat-generate-common' for a listing of attributes.  The advice
-wraps the old definition, that is accessible via using the symbol
-`oldfun'.
-
-The advice will only be installed, if the version this function
-was defined in, as indicated by the `:version' attribute, is
-greater than the current Emacs version."
-  (declare (debug compat-defun) (doc-string 3) (indent 2))
-  (compat--define-function 'advice name (cons 'oldfun arglist) docstring rest))
 
 (defmacro compat-defvar (name initval docstring &rest attr)
   "Declare compatibility variable NAME with initial value INITVAL.
