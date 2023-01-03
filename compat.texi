@@ -3037,8 +3037,3 @@ FSF copyright assignment}, before any non-trivial contribution (roughly
 @printindex vr
 
 @bye
-
-@c Local Variables:
-@c mode: texinfo
-@c TeX-master: t
-@c End:
