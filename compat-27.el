@@ -1,6 +1,6 @@
 ;;; compat-27.el --- Compatibility Layer for Emacs 27.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
@@ -39,7 +39,7 @@
 
 ;;; Code:
 
-(require 'compat-macs "compat-macs.el")
+(eval-when-compile (load "compat-macs.el" nil t t))
 
 (compat-declare-version "27.1")
 
@@ -352,11 +352,7 @@ On Unix, absolute file names start with `/'.  In Emacs, an absolute
 file name can also start with an initial `~' or `~USER' component,
 where USER is a valid login name."
   ;; See definitions in filename.h
-  (let ((seperator
-         (eval-when-compile
-           (if (memq system-type '(cygwin windows-nt ms-dos))
-               "[\\/]" "/")))
-        (drive
+  (let ((drive
          (eval-when-compile
            (cond
             ((memq system-type '(windows-nt ms-dos))

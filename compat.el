@@ -1,10 +1,10 @@
 ;;; compat.el --- Emacs Lisp Compatibility Library -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 28.1.2.2
+;; Version: 29.1.0.0-dev
 ;; URL: https://sr.ht/~pkal/compat
 ;; Package-Requires: ((emacs "24.3") (nadvice "0.3"))
 ;; Keywords: lisp
@@ -47,12 +47,10 @@
   ;; the file (which is disabled by `compat--inhibit-prefixed', so
   ;; that the file can be loaded again at some later point when the
   ;; prefixed definitions are needed).
-  (dolist (vers '(24 25 26 27 28))
-    (unless (memq (intern (format "compat-%d" vers)) features)
-      (load (format "compat-%d%s" vers
-                    (if (bound-and-true-p compat-testing)
-                        ".el" ""))
-            nil t))))
+  (dolist (version '(24 25 26 27 28 29))
+    (let ((feature-name (format "compat-%d" version)))
+      (unless (memq (intern feature-name) features)
+        (load feature-name nil t)))))
 
 (provide 'compat)
 ;;; compat.el ends here

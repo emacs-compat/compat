@@ -1,6 +1,6 @@
 ;;; compat-25.el --- Compatibility Layer for Emacs 25.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
@@ -32,7 +32,7 @@
 
 ;;; Code:
 
-(require 'compat-macs "compat-macs.el")
+(eval-when-compile (load "compat-macs.el" nil t t))
 
 (compat-declare-version "25.1")
 
@@ -130,8 +130,6 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
         default)))
     (if entry (cdr entry) default)))
 
-;;;; Defined in subr-x.el
-
 (compat-defmacro if-let (spec then &rest else)
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
@@ -148,8 +146,6 @@ SYMBOL is checked for nil.
 As a special case, interprets a SPEC of the form \(SYMBOL SOMETHING)
 like \((SYMBOL SOMETHING)).  This exists for backward compatibility
 with an old syntax that accepted only one binding."
-  :realname compat--if-let
-  :feature 'subr-x
   (declare (indent 2)
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
@@ -158,7 +154,16 @@ with an old syntax that accepted only one binding."
              (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
-  `(compat--if-let* ,spec ,then ,(macroexp-progn else)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var spec)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(if (cdr var) (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,then ,@else))))
 
 (compat-defmacro when-let (spec &rest body)
   "Bind variables according to SPEC and conditionally evaluate BODY.
@@ -166,9 +171,26 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  :feature 'subr-x
-  (declare (indent 1) (debug if-let))
-  `(compat--if-let ,spec ,(macroexp-progn body)))
+  (declare (indent 1)
+           (debug ([&or (symbolp form)
+                        (&rest [&or symbolp (symbolp form) (form)])]
+                   body)))
+  (when (and (<= (length spec) 2)
+             (not (listp (car spec))))
+    ;; Adjust the single binding case
+    (setq spec (list spec)))
+  (let ((empty (make-symbol "s"))
+        (last t) list)
+    (dolist (var spec)
+      (push `(,(if (cdr var) (car var) empty)
+              (and ,last ,(if (cdr var) (cadr var) (car var))))
+            list)
+      (when (or (cdr var) (consp (car var)))
+        (setq last (caar list))))
+    `(let* ,(nreverse list)
+       (if ,(caar list) ,(macroexp-progn body)))))
+
+;;;; Defined in subr-x.el
 
 (compat-defmacro thread-first (&rest forms)
   "Thread FORMS elements as the first argument of their successor.
@@ -289,7 +311,7 @@ recursion."
     (dolist (file (sort (file-name-all-completions "" dir)
                         'string<))
       (unless (member file '("./" "../"))
-        (if (directory-name-p file)
+        (if (compat--directory-name-p file)
             (let* ((leaf (substring file 0 (1- (length file))))
                    (full-file (concat dir "/" leaf)))
               ;; Don't follow symlinks to other directories.
