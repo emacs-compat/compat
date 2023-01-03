@@ -152,7 +152,7 @@ attributes (see `compat--generate-function')."
              ((eq type 'macro) 'defmacro)
              ((error "Unknown type")))
            ,(if (plist-get rest :explicit)
-                (intern (format "compat--explicit-%s" oldname))
+                (intern (format "compat--%s" oldname))
               realname)
            ,arglist
            ;; Prepend compatibility notice to the actual
@@ -178,12 +178,12 @@ If this is not documented on yourself system, you can check \
            ,@body)
           ,@(and (plist-get rest :explicit)
                  (if (string= realname name)
-                     `((defalias ',name ',(intern (format "compat--explicit-%s" oldname)))
+                     `((defalias ',name ',(intern (format "compat--%s" oldname)))
                        (make-obsolete
                         ',name
                         "Use `compat-funcall' or `compat-function' instead"
                         "29.1"))
-                   `((defalias ',realname #',(intern (format "compat--explicit-%s" oldname))))))))
+                   `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
      (lambda (realname _version)
        ;; Functions and macros are installed by aliasing the name of the
        ;; compatible function to the name of the compatibility function.
