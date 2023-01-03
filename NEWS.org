@@ -13,6 +13,7 @@
   new calling convention you can use ~(compat-funcall assoc KEY ALIST)~.
 - Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
   ~compat-funcall~ or ~compat-function~ macros.
+- The ~compat-alist-get~ generalized variable has been deprecated.
 - Deprecate ~compat-help.el~ and ~compat-font-lock.el~
 - Drop support for Emacs 24.3
 
