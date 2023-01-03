@@ -30,8 +30,9 @@
 ;;; Code:
 
 (require 'ert)
-
 (require 'compat-macs)
+
+(setq ert-quiet t)
 
 (defun compat--generate-testable (name def-fn install-fn check-fn attr type)
   "Generate a more verbose compatibility definition, fit for testing.
