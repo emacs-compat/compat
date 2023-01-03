@@ -30,22 +30,21 @@ contributions.
 Source code
 -----------
 
-Compat is developed on [SourceHut]. A restricted [GitHub] mirror is
-also provided.
+Compat is developed on [GitHub].  The code is also mirrored on [SourceHut].
 
+[GitHub]:
+	https://github.com/emacs-compat/compat
 [SourceHut]:
 	https://sr.ht/~pkal/compat
-[GitHub]:
-	https://github.com/phikal/compat.el
 
 Bug and patches
 ---------------
 
-Patches and comments can be sent to the [development mailing list].
-Bug reports and issues should be directed to the [issue tracker] (also
-accessible via [email]).  [GitHub] can also be used to submit patches
-("Pull Request").  These may include issues in the compatibility code,
-missing definitions or performance issues.
+Patches, bug reports and comments can be sent via [GitHub].  These may
+include issues in the compatibility code, missing definitions or
+performance issues.  If you do not have a GitHub account, we also
+provide a [development mailing list] and a [issue tracker] on
+SourceHut, the latter also being accessible via [email].
 
 When contributing, make sure to provide test and use the existing
 tests defined in compat-test.el.  These can be easily executed using
