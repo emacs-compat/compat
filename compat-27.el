@@ -766,15 +766,13 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun prop-match-p (match)
   "Return non-nil if MATCH is a `prop-match' object."
-  :realname compat--prop-match-p-with-vector
   :max-version "26.1"
-  (and (vectorp match) (eq (aref match 0) 'prop-match)))
+  (and (vectorp match) (eq (aref match 0) 'prop-match))) ;; Vector
 
 (compat-defun prop-match-p (match)
   "Return non-nil if MATCH is a `prop-match' object."
-  :realname compat--prop-match-p-with-record
   :min-version "26.1"
-  (eq (type-of match) 'prop-match))
+  (eq (type-of match) 'prop-match)) ;; Record
 
 (compat-defun prop-match-beginning (match)
   "Retrieve the position where MATCH begins."
