@@ -1817,6 +1817,17 @@ being compared against."
   (expect wrong-type-argument '(0 0 0 0 a))
   (expect wrong-type-argument '(0 0 0 0 0 a)))
 
+(compat-deftests func-arity
+  (should (equal '(0 . 0) (func-arity (lambda ()))))
+  (should (equal '(1 . 1) (func-arity (lambda (x) x))))
+  (should (equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
+  (should (equal '(0 . many) (func-arity (lambda (&rest _)))))
+  (ought '(1 . 1) 'identity)
+  (ought '(0 . many) 'ignore)
+  (ought '(2 . many) 'defun)
+  (ought '(2 . 3) 'defalias)
+  (ought '(1 . unevalled) 'defvar))
+
 (compat-deftests subr-primitive-p
   (ought t (symbol-function 'identity))       ;function from fns.c
   (unless (fboundp 'subr-native-elisp-p)
