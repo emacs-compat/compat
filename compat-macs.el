@@ -107,15 +107,14 @@ DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
              (when (and (version<= version emacs-version)
                         (fboundp actual-name)
                         check)
-               `(,@check ,(compat--with-feature feature
-                            (funcall install-fn actual-name version)))))))
+               (compat--with-feature feature
+                 `(,@check ,(funcall install-fn actual-name version)))))))
      ((plist-get attr :realname)
       `(progn
          ,(funcall def-fn realname version)
-         ,(and check
-               `(,@check
-                 ,(compat--with-feature feature
-                    (funcall install-fn realname version))))))
+         ,(when check
+             (compat--with-feature feature
+               `(,@check ,(funcall install-fn realname version))))))
      (check
       (compat--with-feature feature
         `(,@check ,(funcall def-fn name version)))))))
