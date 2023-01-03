@@ -1,6 +1,6 @@
 ;;; compat-29.el --- Compatibility Layer for Emacs 29.1  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021, 2022 Free Software Foundation, Inc.
+;; Copyright (C) 2021, 2022, 2023 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>
 ;; Keywords: lisp
