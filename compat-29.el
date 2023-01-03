@@ -507,7 +507,7 @@ to `default-directory', and the result will also be relative."
      (t
       parent))))
 
-(defvar compat--file-has-changed-p--hash-table (make-hash-table :test #'equal)
+(defvar compat--file-has-changed-hash-table (make-hash-table :test #'equal)
   "Internal variable used by `file-has-changed-p'.")
 
 ;;* UNTESTED
@@ -527,9 +527,9 @@ the symbol of the calling function, for example."
                     (cons (nth 7 fileattr)
                           (nth 5 fileattr))))
          (sym (concat (symbol-name tag) "@" file))
-         (cachedattr (gethash sym compat--file-has-changed-p--hash-table)))
+         (cachedattr (gethash sym compat--file-has-changed-hash-table)))
      (when (not (equal attr cachedattr))
-       (puthash sym attr compat--file-has-changed-p--hash-table))))
+       (puthash sym attr compat--file-has-changed-hash-table))))
 
 ;;;; Defined in keymap.el
 
