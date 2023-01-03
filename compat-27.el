@@ -46,9 +46,8 @@ A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
   :min-version "26.1"
   :max-version "26.3"
-  :realname compat--proper-list-p-length-signal
   (condition-case nil
-      (and (listp object) (length object))
+      (and (listp object) (length object)) ;; Throws a signal
     (wrong-type-argument nil)
     (circular-list nil)))
 
@@ -57,7 +56,7 @@ is nil)."
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
   :max-version "25.3"
-  :realname compat--proper-list-p-tortoise-hare
+  ;; On Emacs older than 25.3 we have to use the Tortoise and Hare algorithm
   (when (listp object)
     (catch 'cycle
       (let ((hare object) (tortoise object)

@@ -457,7 +457,7 @@ being compared against."
   (ought '(1 2 3) '(1 2 3))                ;multiple element list
   (ought '(1) 1))                          ;atom
 
-(compat-deftests (proper-list-p compat--proper-list-p-length-signal)
+(compat-deftests proper-list-p
   (ought 0 ())				;empty list
   (ought 1 '(1))				;single element
   (ought 3 '(1 2 3))			;multiple elements
@@ -467,21 +467,6 @@ being compared against."
                (setf (nthcdr 3 l) l)
                l))
   (ought nil 1)                       ;non-lists
-  (ought nil "")
-  (ought nil "abc")
-  (ought nil [])
-  (ought nil [1 2 3]))
-
-(compat-deftests (proper-list-p compat--proper-list-p-tortoise-hare)
-  (ought 0 ())				;empty list
-  (ought 1 '(1))                        ;single element
-  (ought 3 '(1 2 3))			;multiple elements
-  (ought nil '(1 . 2))			;cons
-  (ought nil '(1 2 . 3))                ;dotted
-  (ought nil (let ((l (list 1 2 3)))    ;circular
-               (setf (nthcdr 3 l) l)
-               l))
-  (ought nil 1)                         ;non-lists
   (ought nil "")
   (ought nil "abc")
   (ought nil [])
