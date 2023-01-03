@@ -24,7 +24,7 @@
 
 (require 'compat-28)
 (eval-when-compile (load "compat-macs.el" nil t t))
-(compat-declare-version "29.1")
+(compat-declare-version "29.0") ;; TODO Update this to 29.1 before release
 
 ;;;; Defined in xdisp.c
 
