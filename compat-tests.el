@@ -1176,6 +1176,11 @@ being compared against."
                         ((lop (and (setq b (not b)) (1+ i)))))))
               'ok)))
 
+(compat-deftests directory-files-recursively
+  (should (equal
+           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
+           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
+
 (compat-deftests directory-name-p
   (ought t "/")
   (ought nil "/file")
