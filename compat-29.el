@@ -762,8 +762,9 @@ KEY is a string that satisfies `key-valid-p'.
 
 Note that if KEY has a local binding in the current buffer,
 that local binding will continue to shadow any global binding
-that you make with this function."
-  :note "The compatibility version of is not a command."
+that you make with this function.
+
+NOTE: The compatibility version is not a command."
   (compat--keymap-set (current-global-map) key command))
 
 ;;* UNTESTED
@@ -775,8 +776,9 @@ a symbol naming an interactively-callable function.
 KEY is a string that satisfies `key-valid-p'.
 
 The binding goes in the current buffer's local map, which in most
-cases is shared with all other buffers in the same major mode."
-  :note "The compatibility version of is not a command."
+cases is shared with all other buffers in the same major mode.
+
+NOTE: The compatibility version is not a command."
   (let ((map (current-local-map)))
     (unless map
       (use-local-map (setq map (make-sparse-keymap))))
@@ -788,8 +790,9 @@ cases is shared with all other buffers in the same major mode."
 KEY is a string that satisfies `key-valid-p'.
 
 If REMOVE (interactively, the prefix arg), remove the binding
-instead of unsetting it.  See `keymap-unset' for details."
-  :note "The compatibility version of is not a command."
+instead of unsetting it.  See `keymap-unset' for details.
+
+NOTE: The compatibility version is not a command."
   (compat--keymap-unset (current-global-map) key remove))
 
 ;;* UNTESTED
@@ -798,8 +801,9 @@ instead of unsetting it.  See `keymap-unset' for details."
 KEY is a string that satisfies `key-valid-p'.
 
 If REMOVE (interactively, the prefix arg), remove the binding
-instead of unsetting it.  See `keymap-unset' for details."
-  :note "The compatibility version of is not a command."
+instead of unsetting it.  See `keymap-unset' for details.
+
+NOTE: The compatibility version is not a command."
   (when (current-local-map)
     (compat--keymap-unset (current-local-map) key remove)))
 
@@ -929,8 +933,9 @@ This function's return values are the same as those of `keymap-lookup'
 
 If optional argument ACCEPT-DEFAULT is non-nil, recognize default
 bindings; see the description of `keymap-lookup' for more details
-about this."
-  :note "The compatibility version of is not a command."
+about this.
+
+NOTE: The compatibility version is not a command."
   (compat--keymap-lookup (current-global-map) keys accept-default))
 
 ;;* UNTESTED

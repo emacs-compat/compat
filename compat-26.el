@@ -637,8 +637,9 @@ NAME is a short name for the entry to be displayed while prompting
 \(if there's no room, it might be shortened).
 
 If LONG-FORM, do a `completing-read' over the NAME elements in
-CHOICES instead."
-  :note "This is a partial implementation of `read-multiple-choice', that
+CHOICES instead.
+
+NOTE: This is a partial implementation of `read-multiple-choice', that
 among other things doesn't offer any help and ignores the
 optional DESCRIPTION field."
   (if long-form

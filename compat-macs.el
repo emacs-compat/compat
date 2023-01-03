@@ -69,9 +69,6 @@ ignored:
 - :realname :: Manual specification of a \"realname\" to use for
   the compatibility definition (symbol).
 
-- :notes :: Additional notes that a developer using this
-  compatibility function should keep in mind.
-
 - :prefix :: Add a `compat-' prefix to the name, and define the
   compatibility code unconditionally.
 

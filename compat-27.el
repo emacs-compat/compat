@@ -325,8 +325,9 @@ represent a JSON false value.  It defaults to `:false'."
 
 (compat-defun time-equal-p (t1 t2)
   "Return non-nil if time value T1 is equal to time value T2.
-A nil value for either argument stands for the current time."
-  :note "This function is not as accurate as the actual `time-equal-p'."
+A nil value for either argument stands for the current time.
+
+NOTE: This function is not as accurate as the actual `time-equal-p'."
   (cond
    ((eq t1 t2))
    ((and (consp t1) (consp t2))
