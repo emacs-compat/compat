@@ -33,5 +33,7 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
-    - name: Compile and run tests
+    - name: Compile
+      run: make compile
+    - name: Run tests
       run: make test
