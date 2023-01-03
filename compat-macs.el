@@ -136,6 +136,11 @@ attributes (see `compat--generate-function')."
       (when (version<= emacs-version "25")
         (delq (assq 'side-effect-free (car body)) (car body))
         (delq (assq 'pure (car body)) (car body))))
+    ;; Ensure that :realname is not the same as compat--<name>,
+    ;; since this is the compat-funcall/compat-function naming convention.
+    (when (and (plist-get rest :realname)
+               (string= (plist-get rest :realname) (format "compat--%s" name)))
+      (error "%s: :realname must not be the same as compat--<name>" name))
     ;; Check if we want an explicitly prefixed function
     (when (plist-get rest :prefix)
       (setq name (intern (format "compat-%s" name))))

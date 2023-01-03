@@ -80,7 +80,7 @@ Do not use this function if the buffer specified by BUFFER-OR-NAME is
 already displayed in WINDOW.  `window-text-pixel-size' is cheaper in
 that case because it does not have to temporarily show that buffer in
 WINDOW."
-  :realname compat--buffer-text-pixel-size
+  :realname compat--internal-buffer-text-pixel-size
   (setq buffer-or-name (or buffer-or-name (current-buffer)))
   (setq window (or window (selected-window)))
   (save-window-excursion
@@ -286,7 +286,7 @@ CONDITION is either:
     to be met.
   * `or': the cdr is a list of recursive condition, of which at
     least one has to be met."
-  :realname compat--buffer-match-p
+  :realname compat--internal-buffer-match-p
   (letrec
       ((buffer (get-buffer buffer-or-name))
        (match
@@ -298,7 +298,7 @@ CONDITION is either:
                      ((stringp condition)
                       (string-match-p condition (buffer-name buffer)))
                      ((functionp condition)
-                      (if (eq 1 (cdr (compat--func-arity condition)))
+                      (if (eq 1 (cdr (compat--internal-func-arity condition)))
                           (funcall condition buffer)
                         (funcall condition buffer arg)))
                      ((eq (car-safe condition) 'major-mode)
@@ -306,7 +306,7 @@ CONDITION is either:
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'derived-mode)
-                      (compat--provided-mode-derived-p
+                      (compat--internal-provided-mode-derived-p
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'not)
@@ -332,7 +332,7 @@ ARG is passed to `buffer-match', for predicate conditions in
 CONDITION."
   (let (bufs)
     (dolist (buf (or buffers (buffer-list)))
-      (when (compat--buffer-match-p condition (get-buffer buf) arg)
+      (when (compat--internal-buffer-match-p condition (get-buffer buf) arg)
         (push buf bufs)))
     bufs))
 
@@ -394,7 +394,7 @@ than this function."
     (with-current-buffer (get-buffer-create " *string-pixel-width*")
       (delete-region (point-min) (point-max))
       (insert string)
-      (car (compat--buffer-text-pixel-size nil nil t)))))
+      (car (compat--internal-buffer-text-pixel-size nil nil t)))))
 
 ;;* UNTESTED
 (compat-defmacro with-buffer-unmodified-if-unchanged (&rest body)
@@ -573,7 +573,7 @@ Modifiers have to be specified in this order:
 which is
 
    Alt-Control-Hyper-Meta-Shift-super"
-  :realname compat--key-valid-p
+  :realname compat--internal-key-valid-p
   (declare (pure t) (side-effect-free t))
   (let ((case-fold-search nil))
     (and
@@ -611,7 +611,7 @@ which is
 (compat-defun key-parse (keys)
   "Convert KEYS to the internal Emacs key representation.
 See `kbd' for a descripion of KEYS."
-  :realname compat--key-parse
+  :realname compat--internal-key-parse
   (declare (pure t) (side-effect-free t))
   ;; A pure function is expected to preserve the match data.
   (save-match-data
@@ -721,16 +721,16 @@ DEFINITION is anything that can be a key's definition:
  or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
  or an extended menu item definition.
  (See info node `(elisp)Extended Menu Items'.)"
-  :realname compat--keymap-set
-  (unless (compat--key-valid-p key)
+  :realname compat--internal-keymap-set
+  (unless (compat--internal-key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   ;; If we're binding this key to another key, then parse that other
   ;; key, too.
   (when (stringp definition)
-    (unless (compat--key-valid-p key)
+    (unless (compat--internal-key-valid-p key)
       (error "%S is not a valid key definition; see `key-valid-p'" key))
-    (setq definition (compat--key-parse definition)))
-  (define-key keymap (compat--key-parse key) definition))
+    (setq definition (compat--internal-key-parse definition)))
+  (define-key keymap (compat--internal-key-parse key) definition))
 
 ;;* UNTESTED
 (compat-defun keymap-unset (keymap key &optional remove)
@@ -742,10 +742,10 @@ makes a difference when there's a parent keymap.  When unsetting
 a key in a child map, it will still shadow the same key in the
 parent keymap.  Removing the binding will allow the key in the
 parent keymap to be used."
-  :realname compat--keymap-unset
-  (unless (compat--key-valid-p key)
+  :realname compat--internal-keymap-unset
+  (unless (compat--internal-key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
-  (compat--define-key-with-remove keymap (compat--key-parse key) nil remove))
+  (compat--define-key-with-remove keymap (compat--internal-key-parse key) nil remove))
 
 ;;* UNTESTED
 (compat-defun keymap-global-set (key command)
@@ -760,7 +760,7 @@ that local binding will continue to shadow any global binding
 that you make with this function.
 
 NOTE: The compatibility version is not a command."
-  (compat--keymap-set (current-global-map) key command))
+  (compat--internal-keymap-set (current-global-map) key command))
 
 ;;* UNTESTED
 (compat-defun keymap-local-set (key command)
@@ -777,7 +777,7 @@ NOTE: The compatibility version is not a command."
   (let ((map (current-local-map)))
     (unless map
       (use-local-map (setq map (make-sparse-keymap))))
-    (compat--keymap-set map key command)))
+    (compat--internal-keymap-set map key command)))
 
 ;;* UNTESTED
 (compat-defun keymap-global-unset (key &optional remove)
@@ -788,7 +788,7 @@ If REMOVE (interactively, the prefix arg), remove the binding
 instead of unsetting it.  See `keymap-unset' for details.
 
 NOTE: The compatibility version is not a command."
-  (compat--keymap-unset (current-global-map) key remove))
+  (compat--internal-keymap-unset (current-global-map) key remove))
 
 ;;* UNTESTED
 (compat-defun keymap-local-unset (key &optional remove)
@@ -800,7 +800,7 @@ instead of unsetting it.  See `keymap-unset' for details.
 
 NOTE: The compatibility version is not a command."
   (when (current-local-map)
-    (compat--keymap-unset (current-local-map) key remove)))
+    (compat--internal-keymap-unset (current-local-map) key remove)))
 
 ;;* UNTESTED
 (compat-defun keymap-substitute (keymap olddef newdef &optional oldmap prefix)
@@ -849,13 +849,13 @@ Bindings are always added before any inherited map.
 
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
-  (unless (compat--key-valid-p key)
+  (unless (compat--internal-key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   (when after
-    (unless (compat--key-valid-p key)
+    (unless (compat--internal-key-valid-p key)
       (error "%S is not a valid key definition; see `key-valid-p'" key)))
-  (define-key-after keymap (compat--key-parse key) definition
-    (and after (compat--key-parse after))))
+  (define-key-after keymap (compat--internal-key-parse key) definition
+    (and after (compat--internal-key-parse after))))
 
 (compat-defun keymap-lookup
     (keymap key &optional accept-default no-remap position)
@@ -890,13 +890,13 @@ position as returned by `event-start' and `event-end', and the lookup
 occurs in the keymaps associated with it instead of KEY.  It can also
 be a number or marker, in which case the keymap properties at the
 specified buffer position instead of point are used."
-  :realname compat--keymap-lookup
-  (unless (compat--key-valid-p key)
+  :realname compat--internal-keymap-lookup
+  (unless (compat--internal-key-valid-p key)
     (error "%S is not a valid key definition; see `key-valid-p'" key))
   (when (and keymap position)
     (error "Can't pass in both keymap and position"))
   (if keymap
-      (let ((value (lookup-key keymap (compat--key-parse key) accept-default)))
+      (let ((value (lookup-key keymap (compat--internal-key-parse key) accept-default)))
         (if (and (not no-remap)
                    (symbolp value))
             (or (command-remapping value) value)
@@ -915,7 +915,7 @@ bindings; see the description of `keymap-lookup' for more details
 about this."
   (let ((map (current-local-map)))
     (when map
-      (compat--keymap-lookup map keys accept-default))))
+      (compat--internal-keymap-lookup map keys accept-default))))
 
 ;;* UNTESTED
 (compat-defun keymap-global-lookup (keys &optional accept-default _message)
@@ -931,7 +931,7 @@ bindings; see the description of `keymap-lookup' for more details
 about this.
 
 NOTE: The compatibility version is not a command."
-  (compat--keymap-lookup (current-global-map) keys accept-default))
+  (compat--internal-keymap-lookup (current-global-map) keys accept-default))
 
 ;;* UNTESTED
 (compat-defun define-keymap (&rest definitions)
@@ -1010,7 +1010,7 @@ should be a MENU form as accepted by `easy-menu-define'.
           (let ((def (pop definitions)))
             (if (eq key :menu)
                 (easy-menu-define nil keymap "" def)
-              (compat--keymap-set keymap key def)))))
+              (compat--internal-keymap-set keymap key def)))))
       keymap)))
 
 ;;* UNTESTED

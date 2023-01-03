@@ -617,13 +617,13 @@ Errors if the FILENAME or EXTENSION are empty, or if the given
 FILENAME has the format of a directory.
 
 See also `file-name-sans-extension'."
-  (let ((extn (compat--string-trim-left extension "[.]")))
+  (let ((extn (compat--internal-string-trim-left extension "[.]")))
     (cond
      ((string= filename "")
       (error "Empty filename"))
      ((string= extn "")
       (error "Malformed extension: %s" extension))
-     ((compat--directory-name-p filename)
+     ((compat--internal-directory-name-p filename)
       (error "Filename is a directory: %s" filename))
      (t
       (concat (file-name-sans-extension filename) "." extn)))))

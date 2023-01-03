@@ -44,14 +44,14 @@ FUNC must be a function of some kind.
 The returned value is a cons cell (MIN . MAX).  MIN is the minimum number
 of args.  MAX is the maximum number, or the symbol `many', for a
 function with `&rest' args, or `unevalled' for a special form."
-  :realname compat--func-arity
+  :realname compat--internal-func-arity
   (cond
    ((or (null func) (and (symbolp func) (not (fboundp func))))
     (signal 'void-function func))
    ((and (symbolp func) (not (null func)))
-    (compat--func-arity (symbol-function func)))
+    (compat--internal-func-arity (symbol-function func)))
    ((eq (car-safe func) 'macro)
-    (compat--func-arity (cdr func)))
+    (compat--internal-func-arity (cdr func)))
    ((subrp func)
     (subr-arity func))
    ((memq (car-safe func) '(closure lambda))
@@ -106,7 +106,7 @@ function with `&rest' args, or `unevalled' for a special form."
       (cons mandatory (if arglist 'many nonrest))))
    ((autoloadp func)
     (autoload-do-load func)
-    (compat--func-arity func))
+    (compat--internal-func-arity func))
    ((signal 'invalid-function func))))
 
 ;;;; Defined in fns.c
@@ -192,7 +192,7 @@ from the absolute start of the buffer, disregarding the narrowing."
   "Trim STRING of leading string matching REGEXP.
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
-  :realname compat--string-trim-left
+  :realname compat--internal-string-trim-left
   :prefix t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
@@ -202,7 +202,7 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
   "Trim STRING of trailing string matching REGEXP.
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
-  :realname compat--string-trim-right
+  :realname compat--internal-string-trim-right
   :prefix t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
@@ -217,8 +217,8 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   ;; `string-trim-left' and `string-trim-right' were moved from subr-x
   ;; to subr in Emacs 27, so to avoid loading subr-x we use the
   ;; compatibility function here:
-  (compat--string-trim-left
-   (compat--string-trim-right
+  (compat--internal-string-trim-left
+   (compat--internal-string-trim-right
     string
     trim-right)
    trim-left))
@@ -445,15 +445,15 @@ and the method of accessing the host, leaving only the part that
 identifies FILE locally on the remote system.
 The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
-  :realname compat--file-local-name
+  :realname compat--internal-file-local-name
   (or (file-remote-p file 'localname) file))
 
 (compat-defun file-name-quoted-p (name &optional top)
   "Whether NAME is quoted with prefix \"/:\".
 If NAME is a remote file name and TOP is nil, check the local part of NAME."
-  :realname compat--file-name-quoted-p
+  :realname compat--internal-file-name-quoted-p
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (string-prefix-p "/:" (compat--file-local-name name))))
+    (string-prefix-p "/:" (compat--internal-file-local-name name))))
 
 (compat-defun file-name-quote (name &optional top)
   "Add the quotation prefix \"/:\" to file NAME.
@@ -461,9 +461,9 @@ If NAME is a remote file name and TOP is nil, the local part of
 NAME is quoted.  If NAME is already a quoted file name, NAME is
 returned unchanged."
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (if (compat--file-name-quoted-p name top)
+    (if (compat--internal-file-name-quoted-p name top)
         name
-      (concat (file-remote-p name) "/:" (compat--file-local-name name)))))
+      (concat (file-remote-p name) "/:" (compat--internal-file-local-name name)))))
 
 ;;* UNTESTED
 (compat-defun temporary-file-directory ()

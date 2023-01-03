@@ -174,7 +174,7 @@ any JSON false values."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  :realname compat--json-serialize
+  :realname compat--internal-json-serialize
   (require 'json)
   (letrec ((fix (lambda (obj)
                   (cond
@@ -235,7 +235,7 @@ OBJECT."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  (insert (apply #'compat--json-serialize object args)))
+  (insert (apply #'compat--internal-json-serialize object args)))
 
 (compat-defun json-parse-string (string &rest args)
   "Parse the JSON STRING into a Lisp object.
@@ -395,7 +395,7 @@ where USER is a valid login name."
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
-  :realname compat--provided-mode-derived-p
+  :realname compat--internal-provided-mode-derived-p
   ;; If MODE is an alias, then look up the real mode function first.
   (let ((alias (symbol-function mode)))
     (when (and alias (symbolp alias))
@@ -412,7 +412,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 (compat-defun derived-mode-p (&rest modes)
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
-  (apply #'compat--provided-mode-derived-p major-mode modes))
+  (apply #'compat--internal-provided-mode-derived-p major-mode modes))
 
 ;;* UNTESTED
 (compat-defmacro ignore-error (condition &rest body)
@@ -603,7 +603,7 @@ The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
 If `default-directory' is a local directory, this function returns
 the value of the variable `exec-path'."
-  :realname compat--exec-path
+  :realname compat--internal-exec-path
   (cond
    ((let ((handler (find-file-name-handler default-directory 'exec-path)))
       ;; FIXME: The handler was added in 27.1, and this compatibility
@@ -643,7 +643,7 @@ REMOTE is non-nil, search on the remote host indicated by
                   (mapcar
                    (apply-partially
                     #'concat (file-remote-p default-directory))
-                   (compat--exec-path))
+                   (compat--internal-exec-path))
                   exec-suffixes 'file-executable-p)))
         (when (stringp res) (compat--file-local-name res)))
     (executable-find command)))

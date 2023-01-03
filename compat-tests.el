@@ -1272,29 +1272,29 @@ being compared against."
     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
 
 (ert-deftest compat-json-serialize ()
-  "Check if `compat--json-serialize' was implemented properly."
+  "Check if `compat--internal-json-serialize' was implemented properly."
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
         (input-2 '(:key ["abc" 2] yek t))
         (input-3 (let ((ht (make-hash-table)))
                    (puthash "key" ["abc" 2] ht)
                    (puthash "yek" t ht)
                    ht)))
-    (should (equal (compat--json-serialize input-1)
+    (should (equal (compat--internal-json-serialize input-1)
                    "{\":key\":[\"abc\",2],\"yek\":true}"))
-    (should (equal (compat--json-serialize input-2)
+    (should (equal (compat--internal-json-serialize input-2)
                    "{\"key\":[\"abc\",2],\"yek\":true}"))
-    (should (member (compat--json-serialize input-2)
+    (should (member (compat--internal-json-serialize input-2)
                     '("{\"key\":[\"abc\",2],\"yek\":true}"
                       "{\"yek\":true,\"key\":[\"abc\",2]}")))
-    (should-error (compat--json-serialize '(("a" . 1)))
+    (should-error (compat--internal-json-serialize '(("a" . 1)))
                   :type '(wrong-type-argument symbolp "a"))
-    (should-error (compat--json-serialize '("a" 1))
+    (should-error (compat--internal-json-serialize '("a" 1))
                   :type '(wrong-type-argument symbolp "a"))
-    (should-error (compat--json-serialize '("a" 1 2))
+    (should-error (compat--internal-json-serialize '("a" 1 2))
                   :type '(wrong-type-argument symbolp "a"))
-    (should-error (compat--json-serialize '(:a 1 2))
+    (should-error (compat--internal-json-serialize '(:a 1 2))
                   :type '(wrong-type-argument consp nil))
-    (should-error (compat--json-serialize
+    (should-error (compat--internal-json-serialize
                    (let ((ht (make-hash-table)))
                      (puthash 'a 1 ht)
                      ht))

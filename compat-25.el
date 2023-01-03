@@ -79,7 +79,7 @@ This implementation is equivalent to `format'."
 
 (compat-defun directory-name-p (name)
   "Return non-nil if NAME ends with a directory separator character."
-  :realname compat--directory-name-p
+  :realname compat--internal-directory-name-p
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
             ?\\ ?/))
@@ -296,7 +296,7 @@ subdirectory is to be descended into).
 If FOLLOW-SYMLINKS is non-nil, symbolic links that point to
 directories are followed.  Note that this can lead to infinite
 recursion."
-  :realname compat--directory-files-recursively
+  :realname compat--internal-directory-files-recursively
   (let* ((result nil)
          (files nil)
          (dir (directory-file-name dir))
@@ -306,7 +306,7 @@ recursion."
     (dolist (file (sort (file-name-all-completions "" dir)
                         'string<))
       (unless (member file '("./" "../"))
-        (if (compat--directory-name-p file)
+        (if (compat--internal-directory-name-p file)
             (let* ((leaf (substring file 0 (1- (length file))))
                    (full-file (concat dir "/" leaf)))
               ;; Don't follow symlinks to other directories.
@@ -320,11 +320,11 @@ recursion."
                 (let ((sub-files
                        (if (eq predicate t)
                            (condition-case nil
-                               (compat--directory-files-recursively
+                               (compat--internal-directory-files-recursively
                                 full-file regexp include-directories
                                 predicate follow-symlinks)
                              (file-error nil))
-                         (compat--directory-files-recursively
+                         (compat--internal-directory-files-recursively
                           full-file regexp include-directories
                           predicate follow-symlinks))))
                   (setq result (nconc result sub-files))))
