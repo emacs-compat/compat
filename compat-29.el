@@ -306,7 +306,7 @@ CONDITION is either:
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'derived-mode)
-                      (compat--internal-provided-mode-derived-p
+                      (provided-mode-derived-p
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'not)

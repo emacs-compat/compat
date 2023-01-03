@@ -395,7 +395,6 @@ where USER is a valid login name."
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
-  :realname compat--internal-provided-mode-derived-p
   ;; If MODE is an alias, then look up the real mode function first.
   (let ((alias (symbol-function mode)))
     (when (and alias (symbolp alias))
@@ -412,7 +411,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 (compat-defun derived-mode-p (&rest modes)
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
-  (apply #'compat--internal-provided-mode-derived-p major-mode modes))
+  (apply #'provided-mode-derived-p major-mode modes))
 
 ;;* UNTESTED
 (compat-defmacro ignore-error (condition &rest body)
