@@ -57,9 +57,6 @@ ignored:
   For prefixed functions, this can be interpreted as a test to
   `defalias' an existing definition or not.
 
-- :no-highlight :: Do not highlight this definition as
-  compatibility function.
-
 - :version :: Manual specification of the version the compatee
   code was defined in (string).
 
