@@ -743,7 +743,6 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr)
   "Constructor for objects of type ‘prop-match’."
-  :realname compat--make-prop-match-with-vector
   :max-version "26.1"
   :feature text-property-search
   (vector
@@ -754,7 +753,6 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr)
   "Constructor for objects of type ‘prop-match’."
-  :realname compat--make-prop-match-with-record
   :min-version "26.1"
   :feature text-property-search
   (record

@@ -1659,11 +1659,5 @@
 ;; ;;   (should-equal '(2 . 3) 'defalias)
 ;; ;;   (should-equal '(1 . unevalled) 'defvar))
 
-;; (unless (fboundp 'make-prop-match)
-;;   (defalias 'make-prop-match
-;;     (if (version< emacs-version "26.1")
-;;         #'compat--make-prop-match-with-vector
-;;       #'compat--make-prop-match-with-record)))
-
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
