@@ -419,7 +419,7 @@ If `default-directory' is already an existing directory, it's not changed."
                binders)
      (let ,binders ,@body)))
 
-(compat-defun ensure-list (object) ;; <UNTESTED>
+(compat-defun ensure-list (object) ;; <OK>
   "Return OBJECT as a list.
 If OBJECT is already a list, return OBJECT itself.  If it's
 not a list, return a one-element list containing OBJECT."
@@ -427,7 +427,7 @@ not a list, return a one-element list containing OBJECT."
       object
     (list object)))
 
-(compat-defun subr-primitive-p (object) ;; <UNTESTED>
+(compat-defun subr-primitive-p (object) ;; <OK>
   "Return t if OBJECT is a built-in primitive function."
   (subrp object))
 
@@ -580,7 +580,7 @@ as the new values of the bound variables in the recursive invocation."
 
 ;;;; Defined in files.el
 
-(compat-defun file-name-with-extension (filename extension) ;; <UNTESTED>
+(compat-defun file-name-with-extension (filename extension) ;; <OK>
   "Set the EXTENSION of a FILENAME.
 The extension (in a file name) is the part that begins with the last \".\".
 
@@ -614,7 +614,7 @@ See `file-symlink-p' to distinguish symlinks."
   (and (file-directory-p dir)
        (null (directory-files dir nil directory-files-no-dot-files-regexp t))))
 
-(compat-defun file-modes-number-to-symbolic (mode &optional filetype) ;; <UNTESTED>
+(compat-defun file-modes-number-to-symbolic (mode &optional filetype) ;; <OK>
   "Return a string describing a file's MODE.
 For instance, if MODE is #o700, then it produces `-rwx------'.
 FILETYPE if provided should be a character denoting the type of file,
@@ -671,7 +671,7 @@ recent files are first."
           (push candidate files))))
     (sort files #'file-newer-than-file-p)))
 
-(compat-defun make-lock-file-name (filename) ;; <UNTESTED>
+(compat-defun make-lock-file-name (filename) ;; <OK>
   "Make a lock file name for FILENAME.
 This prepends \".#\" to the non-directory part of FILENAME, and
 doesn't respect `lock-file-name-transforms', as Emacs 28.1 and
@@ -694,7 +694,7 @@ onwards does."
 
 ;;;; Defined in minibuffer.el
 
-(compat-defun format-prompt (prompt default &rest format-args) ;; <UNTESTED>
+(compat-defun format-prompt (prompt default &rest format-args) ;; <OK>
   "Format PROMPT with DEFAULT.
 If FORMAT-ARGS is nil, PROMPT is used as a plain string.  If
 FORMAT-ARGS is non-nil, PROMPT is used as a format control

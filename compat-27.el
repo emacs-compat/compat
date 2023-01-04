@@ -365,7 +365,7 @@ where USER is a valid login name."
 
 ;;;; Defined in subr.el
 
-(compat-defmacro setq-local (&rest pairs) ;; <UNTESTED>
+(compat-defmacro setq-local (&rest pairs) ;; <OK>
   "Handle multiple assignments."
   :explicit t
   (unless (zerop (mod (length pairs) 2))
@@ -771,7 +771,7 @@ The return value is a string (or nil in case we can’t find it)."
   :feature text-property-search
   (aref match 3))
 
-(compat-defun text-property-search-forward ;; <UNTESTED>
+(compat-defun text-property-search-forward ;; <OK>
     (property &optional value predicate not-current)
   "Search for the next region of text where PREDICATE is true.
 PREDICATE is used to decide whether a value of PROPERTY should be
@@ -876,7 +876,7 @@ the buffer positions that limit the region, and
         (and (not (eq ended t))
              ended))))))
 
-(compat-defun text-property-search-backward ;; <UNTESTED>
+(compat-defun text-property-search-backward ;; <OK>
     (property &optional value predicate not-current)
   "Search for the previous region of text whose PROPERTY matches VALUE.
 
