@@ -28,7 +28,7 @@
 
 ;;;; Defined in alloc.c
 
-(compat-defun bool-vector (&rest objects) ;; UNTESTED
+(compat-defun bool-vector (&rest objects) ;; <UNTESTED>
   "Return a new bool-vector with specified arguments as elements.
 Allows any number of arguments, including zero.
 usage: (bool-vector &rest OBJECTS)"
@@ -43,7 +43,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in fns.c
 
-(compat-defun sort (seq predicate) ;; UNTESTED
+(compat-defun sort (seq predicate) ;; <UNTESTED>
   "Extend `sort' to sort SEQ as a vector."
   :explicit t
   (cond
@@ -58,7 +58,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in editfns.c
 
-(compat-defun format-message (string &rest objects) ;; UNTESTED
+(compat-defun format-message (string &rest objects) ;; <UNTESTED>
   "Format a string out of a format-string and arguments.
 The first argument is a format control string.
 The other arguments are substituted into it to make the result, a string.
@@ -72,7 +72,7 @@ This implementation is equivalent to `format'."
 
 ;;;; Defined in fileio.c
 
-(compat-defun directory-name-p (name) ;; UNTESTED
+(compat-defun directory-name-p (name) ;; <UNTESTED>
   "Return non-nil if NAME ends with a directory separator character."
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
@@ -81,7 +81,7 @@ This implementation is equivalent to `format'."
 
 ;;;; Defined in subr.el
 
-(compat-defun string-greaterp (string1 string2) ;; UNTESTED
+(compat-defun string-greaterp (string1 string2) ;; <UNTESTED>
   "Return non-nil if STRING1 is greater than STRING2 in lexicographic order.
 Case is significant.
 Symbols are also allowed; their print names are used instead."
@@ -99,7 +99,7 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
-(compat-defun alist-get (key alist &optional default remove testfn) ;; UNTESTED
+(compat-defun alist-get (key alist &optional default remove testfn) ;; <UNTESTED>
   "Find the first element of ALIST whose `car' equals KEY and return its `cdr'.
 If KEY is not found in ALIST, return DEFAULT.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
@@ -228,7 +228,7 @@ threading."
 ;;;; Defined in macroexp.el
 
 (declare-function macrop nil (object))
-(compat-defun macroexpand-1 (form &optional environment) ;; UNTESTED
+(compat-defun macroexpand-1 (form &optional environment) ;; <UNTESTED>
   "Perform (at most) one step of macro expansion."
   :feature macroexp
   (cond
@@ -255,7 +255,7 @@ threading."
 
 ;;;; Defined in byte-run.el
 
-(compat-defun function-put (func prop value) ;; UNTESTED
+(compat-defun function-put (func prop value) ;; <UNTESTED>
   "Set FUNCTION's property PROP to VALUE.
 The namespace for PROP is shared with symbols.
 So far, FUNCTION can only be a symbol, not a lambda expression."
@@ -264,7 +264,7 @@ So far, FUNCTION can only be a symbol, not a lambda expression."
 
 ;;;; Defined in files.el
 
-(compat-defun directory-files-recursively ;; UNTESTED
+(compat-defun directory-files-recursively ;; <UNTESTED>
     (dir regexp &optional include-directories predicate follow-symlinks)
   "Return list of all files under directory DIR whose names match REGEXP.
 This function works recursively.  Files are returned in \"depth

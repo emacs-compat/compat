@@ -28,7 +28,7 @@
 
 ;;;; Defined in fns.c
 
-(compat-defun proper-list-p (object) ;; UNTESTED
+(compat-defun proper-list-p (object) ;; <UNTESTED>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
@@ -39,7 +39,7 @@ is nil)."
     (wrong-type-argument nil)
     (circular-list nil)))
 
-(compat-defun proper-list-p (object) ;; UNTESTED
+(compat-defun proper-list-p (object) ;; <UNTESTED>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
@@ -60,7 +60,7 @@ is nil)."
             (throw 'cycle nil)))
         (and (null hare) (length object))))))
 
-(compat-defun string-distance (string1 string2 &optional bytecompare) ;; UNTESTED
+(compat-defun string-distance (string1 string2 &optional bytecompare) ;; <UNTESTED>
   "Return Levenshtein distance between STRING1 and STRING2.
 The distance is the number of deletions, insertions, and substitutions
 required to transform STRING1 into STRING2.
@@ -94,7 +94,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in window.c
 
-(compat-defun recenter (&optional arg redisplay) ;; UNTESTED
+(compat-defun recenter (&optional arg redisplay) ;; <UNTESTED>
   "Handle optional argument REDISPLAY."
   :explicit t
   (recenter arg)
@@ -103,7 +103,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in keymap.c
 
-(compat-defun lookup-key (keymap key &optional accept-default) ;; UNTESTED
+(compat-defun lookup-key (keymap key &optional accept-default) ;; <UNTESTED>
   "Allow for KEYMAP to be a list of keymaps."
   :explicit t
   (cond
@@ -131,7 +131,7 @@ Letter-case is significant, but text properties are ignored."
 ;; The function is declared to satisfy the byte compiler while testing
 ;; if native JSON parsing is available.;
 (declare-function json-serialize nil (object &rest args))
-(compat-defun json-serialize (object &rest args) ;; UNTESTED
+(compat-defun json-serialize (object &rest args) ;; <UNTESTED>
   "Return the JSON representation of OBJECT as a string.
 
 OBJECT must be t, a number, string, vector, hashtable, alist, plist,
@@ -212,7 +212,7 @@ any JSON false values."
            (json-null (or (plist-get args :null-object) :null)))
     (json-encode (funcall fix object))))
 
-(compat-defun json-insert (object &rest args) ;; UNTESTED
+(compat-defun json-insert (object &rest args) ;; <UNTESTED>
   "Insert the JSON representation of OBJECT before point.
 This is the same as (insert (json-serialize OBJECT)), but potentially
 faster.  See the function `json-serialize' for allowed values of
@@ -224,7 +224,7 @@ OBJECT."
                (json-unavailable nil)))
   (insert (apply #'json-serialize object args)))
 
-(compat-defun json-parse-string (string &rest args) ;; UNTESTED
+(compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
   "Parse the JSON STRING into a Lisp object.
 This is essentially the reverse operation of `json-serialize', which
 see.  The returned object will be the JSON null value, the JSON false
@@ -265,7 +265,7 @@ represent a JSON false value.  It defaults to `:false'."
         (json-read-from-string string))
     (json-error (signal 'json-parse-error err))))
 
-(compat-defun json-parse-buffer (&rest args) ;; UNTESTED
+(compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
   "Read JSON object from current buffer starting at point.
 Move point after the end of the object if parsing was successful.
 On error, don't move point.
@@ -312,7 +312,7 @@ represent a JSON false value.  It defaults to `:false'."
 
 ;;;; Defined in timefns.c
 
-(compat-defun time-equal-p (t1 t2) ;; UNTESTED
+(compat-defun time-equal-p (t1 t2) ;; <UNTESTED>
   "Return non-nil if time value T1 is equal to time value T2.
 A nil value for either argument stands for the current time.
 
@@ -331,7 +331,7 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
 
 ;;;; Defined in fileio.c
 
-(compat-defun file-name-absolute-p (filename) ;; UNTESTED
+(compat-defun file-name-absolute-p (filename) ;; <UNTESTED>
   "Return t if FILENAME is an absolute file name.
 On Unix, absolute file names start with `/'.  In Emacs, an absolute
 file name can also start with an initial `~' or `~USER' component,
@@ -380,7 +380,7 @@ where USER is a valid login name."
               body)))
     (cons 'progn (nreverse body))))
 
-(compat-defun provided-mode-derived-p (mode &rest modes) ;; UNTESTED
+(compat-defun provided-mode-derived-p (mode &rest modes) ;; <UNTESTED>
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
@@ -396,7 +396,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
          (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
   mode)
 
-(compat-defun derived-mode-p (&rest modes) ;; UNTESTED
+(compat-defun derived-mode-p (&rest modes) ;; <UNTESTED>
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'provided-mode-derived-p major-mode modes))
@@ -437,7 +437,7 @@ print the reporter message followed by the word \"done\".
        (progress-reporter-done ,prep)
        (or ,@(cdr (cdr spec)) nil))))
 
-(compat-defun flatten-tree (tree) ;; UNTESTED
+(compat-defun flatten-tree (tree) ;; <UNTESTED>
   "Return a \"flattened\" copy of TREE.
 In other words, return a list of the non-nil terminal nodes, or
 leaves, of the tree of cons cells rooted at TREE.  Leaves in the
@@ -455,7 +455,7 @@ returned list are in the same order as in TREE.
     (if tree (push tree elems))
     (nreverse elems)))
 
-(compat-defun xor (cond1 cond2) ;; UNTESTED
+(compat-defun xor (cond1 cond2) ;; <UNTESTED>
   "Return the boolean exclusive-or of COND1 and COND2.
 If only one of the arguments is non-nil, return it; otherwise
 return nil."
@@ -467,7 +467,7 @@ return nil."
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 
-(compat-defun assoc-delete-all (key alist &optional test) ;; UNTESTED
+(compat-defun assoc-delete-all (key alist &optional test) ;; <UNTESTED>
   "Delete from ALIST all elements whose car is KEY.
 Compare keys with TEST.  Defaults to `equal'.
 Return the modified alist.
@@ -487,48 +487,48 @@ Elements of ALIST that are not conses are ignored."
 
 ;;;; Defined in simple.el
 
-(compat-defun decoded-time-second (time) ;; UNTESTED
+(compat-defun decoded-time-second (time) ;; <UNTESTED>
   "The seconds in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 60 (inclusive).  (60 is a leap
 second, which only some operating systems support.)"
   (nth 0 time))
 
-(compat-defun decoded-time-minute (time) ;; UNTESTED
+(compat-defun decoded-time-minute (time) ;; <UNTESTED>
   "The minutes in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 59 (inclusive)."
   (nth 1 time))
 
-(compat-defun decoded-time-hour (time) ;; UNTESTED
+(compat-defun decoded-time-hour (time) ;; <UNTESTED>
   "The hours in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 23 (inclusive)."
   (nth 2 time))
 
-(compat-defun decoded-time-day (time) ;; UNTESTED
+(compat-defun decoded-time-day (time) ;; <UNTESTED>
   "The day-of-the-month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 31 (inclusive)."
   (nth 3 time))
 
-(compat-defun decoded-time-month (time) ;; UNTESTED
+(compat-defun decoded-time-month (time) ;; <UNTESTED>
   "The month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 12 (inclusive).  January is 1."
   (nth 4 time))
 
-(compat-defun decoded-time-year (time) ;; UNTESTED
+(compat-defun decoded-time-year (time) ;; <UNTESTED>
   "The year in TIME, which is a value returned by `decode-time'.
 This is a four digit integer."
   (nth 5 time))
 
-(compat-defun decoded-time-weekday (time) ;; UNTESTED
+(compat-defun decoded-time-weekday (time) ;; <UNTESTED>
   "The day-of-the-week in TIME, which is a value returned by `decode-time'.
 This is a number between 0 and 6, and 0 is Sunday."
   (nth 6 time))
 
-(compat-defun decoded-time-dst (time) ;; UNTESTED
+(compat-defun decoded-time-dst (time) ;; <UNTESTED>
   "The daylight saving time in TIME, which is a value returned by `decode-time'.
 This is t if daylight saving time is in effect, and nil if not."
   (nth 7 time))
 
-(compat-defun decoded-time-zone (time) ;; UNTESTED
+(compat-defun decoded-time-zone (time) ;; <UNTESTED>
   "The time zone in TIME, which is a value returned by `decode-time'.
 This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."
@@ -538,7 +538,7 @@ the number of seconds east of Greenwich."
 
 ;;;; Defined in files.el
 
-(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; UNTESTED
+(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <UNTESTED>
   "Handle the optional third and forth argument:
 
 Optional third argument SPACE is a string put between the number and unit.
@@ -572,7 +572,7 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
-(compat-defun exec-path () ;; UNTESTED
+(compat-defun exec-path () ;; <UNTESTED>
   "Return list of directories to search programs to run in remote subprocesses.
 The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
@@ -604,7 +604,7 @@ the value of the variable `exec-path'."
           (nreverse path)))))
    (exec-path)))
 
-(compat-defun executable-find (command &optional remote) ;; UNTESTED
+(compat-defun executable-find (command &optional remote) ;; <UNTESTED>
   "Search for COMMAND in `exec-path' and return the absolute file name.
 Return nil if COMMAND is not found anywhere in `exec-path'.  If
 REMOTE is non-nil, search on the remote host indicated by
@@ -621,7 +621,7 @@ REMOTE is non-nil, search on the remote host indicated by
         (when (stringp res) (file-local-name res)))
     (executable-find command)))
 
-(compat-defun make-empty-file (filename &optional parents) ;; UNTESTED
+(compat-defun make-empty-file (filename &optional parents) ;; <UNTESTED>
   "Create an empty file FILENAME.
 Optional arg PARENTS, if non-nil then creates parent dirs as needed."
   (when (and (file-exists-p filename) (null parents))
@@ -633,7 +633,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 ;;;; Defined in regexp-opt.el
 
-(compat-defun regexp-opt (strings &optional paren) ;; UNTESTED
+(compat-defun regexp-opt (strings &optional paren) ;; <UNTESTED>
   "Handle an empty list of strings."
   :explicit t
   (if (null strings)
@@ -653,7 +653,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 (declare-function lm-header "lisp-mnt")
 
-(compat-defun package-get-version () ;; UNTESTED
+(compat-defun package-get-version () ;; <UNTESTED>
   "Return the version number of the package in which this is used.
 Assumes it is used from an Elisp file placed inside the top-level directory
 of an installed ELPA package.
@@ -695,7 +695,7 @@ The return value is a string (or nil in case we can’t find it)."
  dired-get-marked-files "dired.el"
  (&optional localp arg filter distinguish-one-marked error))
 
-(compat-defun dired-get-marked-files ;; UNTESTED
+(compat-defun dired-get-marked-files ;; <UNTESTED>
     (&optional localp arg filter distinguish-one-marked error)
   "Return the marked files’ names as list of strings."
   :feature dired
@@ -707,7 +707,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in time-date.el
 
-(compat-defun date-days-in-month (year month) ;; UNTESTED
+(compat-defun date-days-in-month (year month) ;; <UNTESTED>
   "The number of days in MONTH in YEAR."
   :feature time-date
   (unless (and (numberp month)
@@ -724,7 +724,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in text-property-search.el
 
-(compat-defun make-prop-match (&rest attr) ;; UNTESTED
+(compat-defun make-prop-match (&rest attr) ;; <UNTESTED>
   "Constructor for objects of type ‘prop-match’."
   :max-version "26.1"
   :feature text-property-search
@@ -734,7 +734,7 @@ The return value is a string (or nil in case we can’t find it)."
    (plist-get attr :end)
    (plist-get attr :value)))
 
-(compat-defun make-prop-match (&rest attr) ;; UNTESTED
+(compat-defun make-prop-match (&rest attr) ;; <UNTESTED>
   "Constructor for objects of type ‘prop-match’."
   :min-version "26.1"
   :feature text-property-search
@@ -744,34 +744,34 @@ The return value is a string (or nil in case we can’t find it)."
    (plist-get attr :end)
    (plist-get attr :value)))
 
-(compat-defun prop-match-p (match) ;; UNTESTED
+(compat-defun prop-match-p (match) ;; <UNTESTED>
   "Return non-nil if MATCH is a `prop-match' object."
   :max-version "26.1"
   :feature text-property-search
   (and (vectorp match) (eq (aref match 0) 'prop-match))) ;; Vector
 
-(compat-defun prop-match-p (match) ;; UNTESTED
+(compat-defun prop-match-p (match) ;; <UNTESTED>
   "Return non-nil if MATCH is a `prop-match' object."
   :min-version "26.1"
   :feature text-property-search
   (eq (type-of match) 'prop-match)) ;; Record
 
-(compat-defun prop-match-beginning (match) ;; UNTESTED
+(compat-defun prop-match-beginning (match) ;; <UNTESTED>
   "Retrieve the position where MATCH begins."
   :feature text-property-search
   (aref match 1))
 
-(compat-defun prop-match-end (match) ;; UNTESTED
+(compat-defun prop-match-end (match) ;; <UNTESTED>
   "Retrieve the position where MATCH ends."
   :feature text-property-search
   (aref match 2))
 
-(compat-defun prop-match-value (match) ;; UNTESTED
+(compat-defun prop-match-value (match) ;; <UNTESTED>
   "Retrieve the value that MATCH holds."
   :feature text-property-search
   (aref match 3))
 
-(compat-defun text-property-search-forward ;; UNTESTED
+(compat-defun text-property-search-forward ;; <UNTESTED>
     (property &optional value predicate not-current)
   "Search for the next region of text where PREDICATE is true.
 PREDICATE is used to decide whether a value of PROPERTY should be
@@ -876,7 +876,7 @@ the buffer positions that limit the region, and
         (and (not (eq ended t))
              ended))))))
 
-(compat-defun text-property-search-backward ;; UNTESTED
+(compat-defun text-property-search-backward ;; <UNTESTED>
     (property &optional value predicate not-current)
   "Search for the previous region of text whose PROPERTY matches VALUE.
 

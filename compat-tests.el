@@ -20,7 +20,7 @@
 ;; Tests for compatibility functions from compat.el.
 ;;
 ;; Note that not all functions have tests yet.  Grep the Compat code for
-;; UNTESTED labels.  If you intend to use a function, which doesn't have
+;; <UNTESTED> labels.  If you intend to use a function, which doesn't have
 ;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
 ;; FUNCTIONS WITHOUT TESTS.
 
