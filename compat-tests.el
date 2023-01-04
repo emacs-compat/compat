@@ -576,30 +576,23 @@
                         ((lop (and (setq b (not b)) (1+ i)))))))
               'ok)))
 
-(ert-deftest compat-call-alist-get-gv ()
-  "Test if the `compat-call alist-get' can be used as a generalised variable."
+(ert-deftest alist-get-gv ()
   (let ((alist-1 (list (cons 1 "one")
                        (cons 2 "two")
                        (cons 3 "three")))
         (alist-2 (list (cons "one" 1)
                        (cons "two" 2)
                        (cons "three" 3))))
+
     (setf (compat-call alist-get 1 alist-1) "eins")
     (should (equal (compat-call alist-get 1 alist-1) "eins"))
     (setf (compat-call alist-get 2 alist-1 nil 'remove) nil)
     (should (equal alist-1 '((1 . "eins") (3 . "three"))))
     (setf (compat-call alist-get "one" alist-2 nil nil #'string=) "eins")
     (should (equal (compat-call alist-get "one" alist-2 nil nil #'string=)
-                   "eins"))))
+                   "eins"))
 
-(ert-deftest alist-get-gv ()
-  "Test if the `compat-alist-get' can be used as a generalised variable."
-  (let ((alist-1 (list (cons 1 "one")
-                       (cons 2 "two")
-                       (cons 3 "three")))
-        (alist-2 (list (cons "one" 1)
-                       (cons "two" 2)
-                       (cons "three" 3))))
+    ;; Obsolete compat-alist-get
     (setf (compat-alist-get 1 alist-1) "eins")
     (should (equal (compat-alist-get 1 alist-1) "eins"))
     (setf (compat-alist-get 2 alist-1 nil 'remove) nil)
