@@ -1,5 +1,4 @@
-#+options: toc:nil num:nil
-#+link:    compat https://todo.sr.ht/~pkal/compat/
+#+title: compat.el - Changelog
 
 * Development
 
