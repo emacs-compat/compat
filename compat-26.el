@@ -455,7 +455,7 @@ It is a nonnegative integer."
 It is an integer."
   (nth 11 attributes))
 
-(compat-defun file-attribute-collect (attributes &rest attr-names) ;; <UNTESTED>
+(compat-defun file-attribute-collect (attributes &rest attr-names) ;; <OK>
   "Return a sublist of ATTRIBUTES returned by `file-attributes'.
 ATTR-NAMES are symbols with the selected attribute names.
 

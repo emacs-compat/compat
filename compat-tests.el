@@ -741,6 +741,11 @@
     (should-equal (file-attribute-inode-number attrs) 'inode-number)
     (should-equal (file-attribute-device-number attrs) 'device-number)))
 
+(ert-deftest file-attribute-collect ()
+  (let ((attrs '(t l u g a m s S m U i d)))
+    (should-equal (file-attribute-collect attrs 'group-id 'user-id) '(g u))
+    (should-equal (file-attribute-collect attrs 'size 'inode-number 'type) '(S i t))))
+
 (ert-deftest file-size-human-readable ()
   (should-equal "1000" (compat-call file-size-human-readable 1000))
   (should-equal "1k" (compat-call file-size-human-readable 1024))
