@@ -46,6 +46,16 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest ignore-error ()
+  (should-equal (ignore-error (end-of-file)
+                  (read ""))
+                nil)
+  (should-equal (ignore-error end-of-file
+                  (read ""))
+                nil)
+  (should-error (ignore-error foo
+                  (read ""))))
+
 (ert-deftest thread-first ()
   (should-equal (thread-first (+ 40 2)) 42)
   (should-equal (thread-first

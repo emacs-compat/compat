@@ -401,7 +401,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'provided-mode-derived-p major-mode modes))
 
-(compat-defmacro ignore-error (condition &rest body) ;; <UNTESTED>
+(compat-defmacro ignore-error (condition &rest body) ;; <OK>
   "Execute BODY; if the error CONDITION occurs, return nil.
 Otherwise, return result of last form in BODY.
 
