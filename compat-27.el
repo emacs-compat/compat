@@ -674,6 +674,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 Assumes it is used from an Elisp file placed inside the top-level directory
 of an installed ELPA package.
 The return value is a string (or nil in case we can’t find it)."
+  :feature package
   ;; In a sense, this is a lie, but it does just what we want: precompute
   ;; the version at compile time and hardcodes it into the .elc file!
   (declare (pure t))

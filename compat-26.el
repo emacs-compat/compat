@@ -579,6 +579,7 @@ Properties can be set with
   (setf (image-property IMAGE PROPERTY) VALUE)
 
 If VALUE is nil, PROPERTY is removed from IMAGE."
+  ;; :feature image
   (plist-get (cdr image) property))
 
 ;;* UNTESTED
