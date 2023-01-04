@@ -146,9 +146,8 @@ from the absolute start of the buffer, disregarding the narrowing."
       (compat--alist-get-full-elisp key alist default remove testfn)
     (alist-get key alist default remove)))
 
-(gv-define-expander compat-alist-get
+(gv-define-expander compat--alist-get
   (lambda (do key alist &optional default remove testfn)
-    (warn "The compat-alist-get gv has been deprecated")
     (macroexp-let2 macroexp-copyable-p k key
       (gv-letplace (getter setter) alist
         (macroexp-let2 nil p `(compat--internal-assoc ,k ,getter ,testfn)
