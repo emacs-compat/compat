@@ -822,7 +822,7 @@ directory or directories specified."
 
 ;;;; Defined in time-data.el
 
-(compat-defun decoded-time-period (time) ;; <UNTESTED>
+(compat-defun decoded-time-period (time) ;; <OK>
   "Interpret DECODED as a period and return its length in seconds.
 For computational purposes, years are 365 days long and months
 are 30 days long."

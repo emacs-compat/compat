@@ -103,7 +103,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in keymap.c
 
-(compat-defun lookup-key (keymap key &optional accept-default) ;; <UNTESTED>
+(compat-defun lookup-key (keymap key &optional accept-default) ;; <OK>
   "Allow for KEYMAP to be a list of keymaps."
   :explicit t
   (cond
@@ -633,7 +633,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 ;;;; Defined in regexp-opt.el
 
-(compat-defun regexp-opt (strings &optional paren) ;; <UNTESTED>
+(compat-defun regexp-opt (strings &optional paren) ;; <OK>
   "Handle an empty list of strings."
   :explicit t
   (if (null strings)
