@@ -721,7 +721,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in text-property-search.el
 
-(compat-defun make-prop-match (&rest attr) ;; <UNTESTED>
+(compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
   :max-version "26.1"
   :feature text-property-search
@@ -731,7 +731,7 @@ The return value is a string (or nil in case we can’t find it)."
    (plist-get attr :end)
    (plist-get attr :value)))
 
-(compat-defun make-prop-match (&rest attr) ;; <UNTESTED>
+(compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
   :min-version "26.1"
   :feature text-property-search
@@ -741,29 +741,29 @@ The return value is a string (or nil in case we can’t find it)."
    (plist-get attr :end)
    (plist-get attr :value)))
 
-(compat-defun prop-match-p (match) ;; <UNTESTED>
+(compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
   :max-version "26.1"
   :feature text-property-search
   (and (vectorp match) (eq (aref match 0) 'prop-match))) ;; Vector
 
-(compat-defun prop-match-p (match) ;; <UNTESTED>
+(compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
   :min-version "26.1"
   :feature text-property-search
   (eq (type-of match) 'prop-match)) ;; Record
 
-(compat-defun prop-match-beginning (match) ;; <UNTESTED>
+(compat-defun prop-match-beginning (match) ;; <OK>
   "Retrieve the position where MATCH begins."
   :feature text-property-search
   (aref match 1))
 
-(compat-defun prop-match-end (match) ;; <UNTESTED>
+(compat-defun prop-match-end (match) ;; <OK>
   "Retrieve the position where MATCH ends."
   :feature text-property-search
   (aref match 2))
 
-(compat-defun prop-match-value (match) ;; <UNTESTED>
+(compat-defun prop-match-value (match) ;; <OK>
   "Retrieve the value that MATCH holds."
   :feature text-property-search
   (aref match 3))
