@@ -53,6 +53,60 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest assoc ()
+  ;; Fallback behaviour:
+  (should-equal nil (compat-call assoc 1 nil))               ;empty list
+  (should-equal '(1) (compat-call assoc 1 '((1))))            ;single element list
+  (should-equal nil (compat-call assoc 1 '(1)))
+  (should-equal '(2) (compat-call assoc 2 '((1) (2) (3))))    ;multiple element list
+  (should-equal nil (compat-call assoc 2 '(1 2 3)))
+  (should-equal '(2) (compat-call assoc 2 '(1 (2) 3)))
+  (should-equal nil (compat-call assoc 2 '((1) 2 (3))))
+  (should-equal '(1) (compat-call assoc 1 '((3) (2) (1))))
+  (should-equal '("a") (compat-call assoc "a" '(("a") ("b") ("c"))))  ;non-primitive elements
+  (should-equal '("a" 0) (compat-call assoc "a" '(("c" . "a") "b" ("a" 0))))
+  ;; With testfn:
+  (should-equal '(1) (compat-call assoc 3 '((10) (4) (1) (9)) #'<))
+  (should-equal '("a") (compat-call assoc "b" '(("c") ("a") ("b")) #'string-lessp))
+  (should-equal '("b") (compat-call assoc "a" '(("a") ("a") ("b"))
+         (lambda (s1 s2) (not (string= s1 s2)))))
+  (should-equal
+   '("\\.el\\'" . emacs-lisp-mode)
+   (compat-call assoc
+                "file.el"
+                '(("\\.c\\'" . c-mode)
+                  ("\\.p\\'" . pascal-mode)
+                  ("\\.el\\'" . emacs-lisp-mode)
+                  ("\\.awk\\'" . awk-mode))
+                #'string-match-p)))
+
+(ert-deftest assoc-delete-all ()
+  (should-equal (list) (compat-call assoc-delete-all 0 (list)))
+  ;; Test `eq'
+  (should-equal '((1 . one)) (compat-call assoc-delete-all 0 (list (cons 1 'one))))
+  (should-equal '((1 . one) a) (compat-call assoc-delete-all 0 (list (cons 1 'one) 'a)))
+  (should-equal '((1 . one)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one))))
+  (should-equal '((1 . one)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one))))
+  (should-equal '((1 . one)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero))))
+  (should-equal '((1 . one) a) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero))))
+  (should-equal '(a (1 . one)) (compat-call assoc-delete-all 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero))))
+  ;; Test `equal'
+  (should-equal '(("one" . one)) (compat-call assoc-delete-all "zero" (list (cons "one" 'one))))
+  (should-equal '(("one" . one) a) (compat-call assoc-delete-all "zero" (list (cons "one" 'one) 'a)))
+  (should-equal '(("one" . one)) (compat-call assoc-delete-all "zero" (list (cons "zero" 'zero) (cons "one" 'one))))
+  (should-equal '(("one" . one)) (compat-call assoc-delete-all "zero" (list (cons "zero" 'zero) (cons "zero" 'zero) (cons "one" 'one))))
+  (should-equal '(("one" . one)) (compat-call assoc-delete-all "zero" (list (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero))))
+  (should-equal '(("one" . one) a) (compat-call assoc-delete-all "zero" (list (cons "zero" 'zero) (cons "one" 'one) 'a  (cons "zero" 'zero))))
+  (should-equal '(a ("one" . one)) (compat-call assoc-delete-all "zero" (list 'a (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero))))
+  ;; Test custom predicate
+  (should-equal '() (compat-call assoc-delete-all 0 (list (cons 1 'one)) #'/=))
+  (should-equal '(a) (compat-call assoc-delete-all 0 (list (cons 1 'one) 'a) #'/=))
+  (should-equal '((0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one)) #'/=))
+  (should-equal '((0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one)) #'/=))
+  (should-equal '((0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=))
+  (should-equal '((0 . zero) a (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=))
+  (should-equal '(a (0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)))
+
 (ert-deftest provided-mode-derived-p ()
   (let ((one (make-symbol "1"))
         (two (make-symbol "2"))
@@ -1177,32 +1231,6 @@
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
 
-;; (ert-deftest assoc
-;;   ;; Fallback behaviour:
-;;   (should-equal nil 1 nil)               ;empty list
-;;   (should-equal '(1) 1 '((1)))            ;single element list
-;;   (should-equal nil 1 '(1))
-;;   (should-equal '(2) 2 '((1) (2) (3)))    ;multiple element list
-;;   (should-equal nil 2 '(1 2 3))
-;;   (should-equal '(2) 2 '(1 (2) 3))
-;;   (should-equal nil 2 '((1) 2 (3)))
-;;   (should-equal '(1) 1 '((3) (2) (1)))
-;;   (should-equal '("a") "a" '(("a") ("b") ("c")))  ;non-primitive elements
-;;   (should-equal '("a" 0) "a" '(("c" . "a") "b" ("a" 0)))
-;;   ;; With testfn (advised behaviour):
-;;   (should-equal '(1) 3 '((10) (4) (1) (9)) #'<)
-;;   (should-equal '("a") "b" '(("c") ("a") ("b")) #'string-lessp)
-;;   (should-equal '("b") "a" '(("a") ("a") ("b"))
-;;          (lambda (s1 s2) (not (string= s1 s2))))
-;;   (ought
-;;    '("\\.el\\'" . emacs-lisp-mode)
-;;    "file.el"
-;;    '(("\\.c\\'" . c-mode)
-;;      ("\\.p\\'" . pascal-mode)
-;;      ("\\.el\\'" . emacs-lisp-mode)
-;;      ("\\.awk\\'" . awk-mode))
-;;    #'string-match-p))
-
 ;; ;; (when (fboundp 'alist-get)
 ;; ;;   (ert-deftest alist-get-1 ()
 ;; ;;     (ert-deftest alist-get
@@ -1217,7 +1245,7 @@
 ;; ;;       (should-equal 'a 1 '((3 . c) (2 . b) (1 . a)))
 ;; ;;       (should-equal nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
 
-;; ;;       ;; With testfn (advised behaviour):
+;; ;;       ;; With testfn:
 ;; ;;       (should-equal 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
 ;; ;;       (should-equal 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
 ;; ;;       (should-equal '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
@@ -1244,7 +1272,7 @@
 ;;   (should-equal nil 2 '((1 . a) 2 (3 . c)))
 ;;   (should-equal 'a 1 '((3 . c) (2 . b) (1 . a)))
 ;;   (should-equal nil "a" '(("a" . 1) ("b" . 2) ("c" . 3))) ;non-primitive elements
-;;   ;; With testfn (advised behaviour):
+;;   ;; With testfn:
 ;;   (should-equal 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
 ;;   (should-equal 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
 ;;   (should-equal '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
@@ -1479,33 +1507,6 @@
 ;;   (should-equal  2 (bool-vector t nil t nil))
 ;;   (should-equal  3 (bool-vector t nil t t))
 ;;   (should-error wrong-type-argument (vector)))
-
-;; (ert-deftest assoc-delete-all
-;;   (should-equal (list) 0 (list))
-;;   ;; Test `eq'
-;;   (should-equal '((1 . one)) 0 (list (cons 1 'one)))
-;;   (should-equal '((1 . one) a) 0 (list (cons 1 'one) 'a))
-;;   (should-equal '((1 . one)) 0 (list (cons 0 'zero) (cons 1 'one)))
-;;   (should-equal '((1 . one)) 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one)))
-;;   (should-equal '((1 . one)) 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero)))
-;;   (should-equal '((1 . one) a) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)))
-;;   (should-equal '(a (1 . one)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)))
-;;   ;; Test `equal'
-;;   (should-equal '(("one" . one)) "zero" (list (cons "one" 'one)))
-;;   (should-equal '(("one" . one) a) "zero" (list (cons "one" 'one) 'a))
-;;   (should-equal '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "one" 'one)))
-;;   (should-equal '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "zero" 'zero) (cons "one" 'one)))
-;;   (should-equal '(("one" . one)) "zero" (list (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero)))
-;;   (should-equal '(("one" . one) a) "zero" (list (cons "zero" 'zero) (cons "one" 'one) 'a  (cons "zero" 'zero)))
-;;   (should-equal '(a ("one" . one)) "zero" (list 'a (cons "zero" 'zero) (cons "one" 'one) (cons "zero" 'zero)))
-;;   ;; Test custom predicate
-;;   (should-equal '() 0 (list (cons 1 'one)) #'/=)
-;;   (should-equal '(a) 0 (list (cons 1 'one) 'a) #'/=)
-;;   (should-equal '((0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one)) #'/=)
-;;   (should-equal '((0 . zero) (0 . zero)) 0 (list (cons 0 'zero) (cons 0 'zero) (cons 1 'one)) #'/=)
-;;   (should-equal '((0 . zero) (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)
-;;   (should-equal '((0 . zero) a (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=)
-;;   (should-equal '(a (0 . zero) (0 . zero)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=))
 
 ;; (ert-deftest color-values-from-color-spec
 ;;   ;; #RGB notation
