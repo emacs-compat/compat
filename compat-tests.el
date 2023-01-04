@@ -233,32 +233,6 @@
     (json-insert '((:key . ["abc" 2]) (yek . t)))
     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
 
-;; (defun compat--ought (name compat)
-;;   "Implementation for the `ought' macro for NAME.
-;; COMPAT is the name of the compatibility function the behaviour is
-;; being compared against."
-;;   (lambda (result &rest args)
-;;     (let ((real-test (intern (format "%s-%04d-actual/ought" compat compat-test-counter)))
-;;           (comp-test (intern (format "%s-%04d-compat/ought" compat compat-test-counter))))
-;;       (setq compat-test-counter (1+ compat-test-counter))
-;;       (macroexp-progn
-;;        (list (and (fboundp name)
-;;                   (or (not (get compat 'compat-version))
-;;                       (version<= emacs-version (get compat 'compat-version)))
-;;                   `(ert-set-test
-;;                     ',real-test
-;;                     (make-ert-test
-;;                      :name ',real-test
-;;                      :tags '(,name)
-;;                      :body (lambda () (should (equal ,result (,name ,@args)))))))
-;;              (and (fboundp compat)
-;;                   `(ert-set-test
-;;                     ',comp-test
-;;                     (make-ert-test
-;;                      :name ',comp-test
-;;                      :tags '(,name)
-;;                      :body (lambda () (should (equal ,result (,compat ,@args))))))))))))
-
 ;; (defun compat--expect (name compat)
 ;;   "Implementation for the `expect' macro for NAME.
 ;; COMPAT is the name of the compatibility function the behaviour is
@@ -297,28 +271,6 @@
 ;;                                  ,(if (consp error-spec)
 ;;                                       `(equal res ',error-spec)
 ;;                                     `(eq (car res) ',error-spec))))))))))))))
-
-;; (defmacro compat-deftests (name &rest body)
-;;   "Test NAME in BODY."
-;;   (declare (debug (sexp &rest body))
-;;            (indent 1))
-;;   (let* ((compat-test-counter 0)
-;;          (real-name (if (consp name) (car name) name))
-;;          (compat-name (if (consp name)
-;;                           (cadr name)
-;;                         (intern (format "compat--t-%s" real-name))))
-;;          (env (list
-;;                (cons 'ought (compat--ought real-name compat-name))
-;;                (cons 'expect (compat--expect real-name compat-name)))))
-;;     (and (or (not (get compat-name 'compat-min-version))
-;;              (version< (get compat-name 'compat-min-version) emacs-version))
-;;          (or (not (get compat-name 'compat-max-version))
-;;              (version< emacs-version (get compat-name 'compat-max-version)))
-;;          (macroexpand-all
-;;           (macroexp-progn body)
-;;           (append env macroexpand-all-environment)))))
-
-;; 
 
 ;; (compat-deftests string-search
 ;;   ;; Find needle at the beginning of a haystack:
