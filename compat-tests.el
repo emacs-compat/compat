@@ -473,7 +473,8 @@
 
 (ert-deftest string-lines ()
   (should-equal '("a" "b" "c") (string-lines "a\nb\nc"))
-  (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
+  ;; TODO behavior changed on Emacs master (Emacs version 30)
+  ;; (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
   (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n" t))
   (should-equal '("abc" "bcd" "cde") (string-lines "abc\nbcd\ncde"))
   (should-equal '(" abc" " bcd " "cde ") (string-lines " abc\n bcd \ncde ")))
