@@ -29,13 +29,13 @@
   (setq compat--current-version version)
   nil)
 
-(defun compat--with-feature (feature body)
+(defun compat--with-feature (feature &rest body)
   "Protect BODY with `eval-after-load' if FEATURE is non-nil."
   (declare (indent 1))
   (if feature
       ;; See https://nullprogram.com/blog/2018/02/22/:
-      `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
-    body))
+      `(eval-after-load ',feature `(funcall ',(lambda () ,@body)))
+    (macroexp-progn body)))
 
 (defun compat--generate (name def-fn install-fn check-fn attr)
   "Function used to generate compatibility code.
@@ -79,18 +79,10 @@ ignored:
          (cond (plist-get attr :cond))
          (version (or (plist-get attr :version)
                       compat--current-version))
-         (check (cond
-                 ((or (and min-version
-                           (version< emacs-version min-version))
-                      (and max-version
-                           (version< max-version emacs-version)))
-                  nil)
-                 ((plist-get attr :explicit)
-                  '(progn))
-                 ((and version (version<= version emacs-version) (not cond))
-                  nil)
-                 (`(when (and ,(if cond cond t)
-                              ,(funcall check-fn)))))))
+         (check))
+    (when (and (plist-get attr :realname)
+               (string= name (plist-get attr :realname)))
+      (error "%S: Name is equal to realname" name))
     ;; We always require subr-x for the check since many functions have been
     ;; moved around
     (when (eq feature 'subr-x)
@@ -99,9 +91,19 @@ ignored:
     (when feature
       (unless (require feature nil t)
         (setq feature nil)))
-    (when (and (plist-get attr :realname)
-               (string= name (plist-get attr :realname)))
-      (error "%S: Name is equal to realname" name))
+    (setq check
+          (cond
+           ((or (and min-version
+                     (version< emacs-version min-version))
+                (and max-version
+                     (version< max-version emacs-version)))
+            nil)
+           ((plist-get attr :explicit)
+            t)
+           ((and version (version<= version emacs-version) (not cond))
+            nil)
+           ((and (if cond (eval cond t) t)
+                 (funcall check-fn)))))
     (cond
      ((and (plist-get attr :explicit)
            (let ((actual-name (intern (substring (symbol-name name)
@@ -110,17 +112,17 @@ ignored:
                         (fboundp actual-name)
                         check)
                (compat--with-feature feature
-                 `(,@check ,(funcall install-fn actual-name version)))))))
+                 (funcall install-fn actual-name version))))))
      ((let ((realname (plist-get attr :realname)))
         (when realname
           `(progn
              ,(funcall def-fn realname version)
              ,(when check
                 (compat--with-feature feature
-                  `(,@check ,(funcall install-fn realname version))))))))
+                  (funcall install-fn realname version)))))))
      (check
       (compat--with-feature feature
-        `(,@check ,(funcall def-fn name version)))))))
+        (funcall def-fn name version))))))
 
 (defun compat--define-function (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
