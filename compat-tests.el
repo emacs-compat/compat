@@ -39,6 +39,7 @@
 (require 'ert)
 (require 'compat)
 (require 'subr-x)
+(require 'time-date)
 (require 'text-property-search nil t)
 (setq ert-quiet t)
 
@@ -1514,6 +1515,62 @@
   (should-not (time-equal-p '(1 2 3 4) '(2 2 3 4)))
   (should-not (time-equal-p '(2 2 3 4) '(1 2 3 4))))
 
+(ert-deftest decoded-time-period ()
+  (should-equal 0 (decoded-time-period '()))
+  (should-equal 0 (decoded-time-period '(0)))
+  (should-equal 1 (decoded-time-period '(1)))
+  (should-equal 0.125 (decoded-time-period '((1 . 8))))
+
+  (should-equal 60 (decoded-time-period '(0 1)))
+  (should-equal 61 (decoded-time-period '(1 1)))
+  (should-equal -59 (decoded-time-period '(1 -1)))
+
+  (should-equal (* 60 60) (decoded-time-period '(0 0 1)))
+  (should-equal (+ (* 60 60) 60) (decoded-time-period '(0 1 1)))
+  (should-equal (+ (* 60 60) 120 1) (decoded-time-period '(1 2 1)))
+
+  (should-equal (* 60 60 24) (decoded-time-period '(0 0 0 1)))
+  (should-equal (+ (* 60 60 24) 1) (decoded-time-period '(1 0 0 1)))
+  (should-equal (+ (* 60 60 24) (* 60 60) 60 1) (decoded-time-period '(1 1 1 1)))
+  (should-equal (+ (* 60 60 24) (* 60 60) 120 1) (decoded-time-period '(1 2 1 1)))
+
+  (should-equal (* 60 60 24 30) (decoded-time-period '(0 0 0 0 1)))
+  (should-equal (+ (* 60 60 24 30) 1) (decoded-time-period '(1 0 0 0 1)))
+  (should-equal (+ (* 60 60 24 30) 60 1) (decoded-time-period '(1 1 0 0 1)))
+  (should-equal (+ (* 60 60 24 30) (* 60 60) 60 1)
+         (decoded-time-period '(1 1 1 0 1)))
+  (should-equal (+ (* 60 60 24 30) (* 60 60 24) (* 60 60) 120 1)
+         (decoded-time-period '(1 2 1 1 1)))
+
+  (should-equal (* 60 60 24 365) (decoded-time-period '(0 0 0 0 0 1)))
+  (should-equal (+ (* 60 60 24 365) 1)
+         (decoded-time-period '(1 0 0 0 0 1)))
+  (should-equal (+ (* 60 60 24 365) 60 1)
+         (decoded-time-period '(1 1 0 0 0 1)))
+  (should-equal (+ (* 60 60 24 365) (* 60 60) 60 1)
+         (decoded-time-period '(1 1 1 0 0 1)))
+  (should-equal (+ (* 60 60 24 365) (* 60 60 24) (* 60 60) 60 1)
+         (decoded-time-period '(1 1 1 1 0 1)))
+  (should-equal (+ (* 60 60 24 365)
+            (* 60 60 24 30)
+            (* 60 60 24)
+            (* 60 60)
+            120 1)
+         (decoded-time-period '(1 2 1 1 1 1)))
+
+  (should-error (decoded-time-period 'a) :type 'wrong-type-argument)
+  (should-error (decoded-time-period '(0 a)) :type 'wrong-type-argument)
+  (should-error (decoded-time-period '(0 0 a)) :type 'wrong-type-argument)
+  (should-error (decoded-time-period '(0 0 0 a)) :type 'wrong-type-argument)
+  (should-error (decoded-time-period '(0 0 0 0 a)) :type 'wrong-type-argument)
+  (should-error (decoded-time-period '(0 0 0 0 0 a)) :type 'wrong-type-argument))
+
+(ert-deftest date-days-in-month ()
+  (should-equal 31 (date-days-in-month 2020 1))
+  (should-equal 30 (date-days-in-month 2020 4))
+  (should-equal 29 (date-days-in-month 2020 2))
+  (should-equal 28 (date-days-in-month 2021 2)))
+
 ;; (ert-deftest regexp-opt ()
 ;;   ;; Ensure `regexp-opt' doesn't change the existing
 ;;   ;; behaviour:
@@ -1583,62 +1640,6 @@
 ;;     (should-not (string-match-p (with-no-warnings compat--t-regexp-unmatchable) str))
 ;;     (when (boundp 'regexp-unmatchable)
 ;;       (should-not (string-match-p regexp-unmatchable str)))))
-
-;; (ert-deftest date-days-in-month
-;;   (should-equal 31 2020 1)
-;;   (should-equal 30 2020 4)
-;;   (should-equal 29 2020 2)
-;;   (should-equal 28 2021 2))
-
-;; (ert-deftest decoded-time-period
-;;   (should-equal 0 '())
-;;   (should-equal 0 '(0))
-;;   (should-equal 1 '(1))
-;;   (should-equal 0.125 '((1 . 8)))
-
-;;   (should-equal 60 '(0 1))
-;;   (should-equal 61 '(1 1))
-;;   (should-equal -59 '(1 -1))
-
-;;   (should-equal (* 60 60) '(0 0 1))
-;;   (should-equal (+ (* 60 60) 60) '(0 1 1))
-;;   (should-equal (+ (* 60 60) 120 1) '(1 2 1))
-
-;;   (should-equal (* 60 60 24) '(0 0 0 1))
-;;   (should-equal (+ (* 60 60 24) 1) '(1 0 0 1))
-;;   (should-equal (+ (* 60 60 24) (* 60 60) 60 1) '(1 1 1 1))
-;;   (should-equal (+ (* 60 60 24) (* 60 60) 120 1) '(1 2 1 1))
-
-;;   (should-equal (* 60 60 24 30) '(0 0 0 0 1))
-;;   (should-equal (+ (* 60 60 24 30) 1) '(1 0 0 0 1))
-;;   (should-equal (+ (* 60 60 24 30) 60 1) '(1 1 0 0 1))
-;;   (should-equal (+ (* 60 60 24 30) (* 60 60) 60 1)
-;;          '(1 1 1 0 1))
-;;   (should-equal (+ (* 60 60 24 30) (* 60 60 24) (* 60 60) 120 1)
-;;          '(1 2 1 1 1))
-
-;;   (should-equal (* 60 60 24 365) '(0 0 0 0 0 1))
-;;   (should-equal (+ (* 60 60 24 365) 1)
-;;          '(1 0 0 0 0 1))
-;;   (should-equal (+ (* 60 60 24 365) 60 1)
-;;          '(1 1 0 0 0 1))
-;;   (should-equal (+ (* 60 60 24 365) (* 60 60) 60 1)
-;;          '(1 1 1 0 0 1))
-;;   (should-equal (+ (* 60 60 24 365) (* 60 60 24) (* 60 60) 60 1)
-;;          '(1 1 1 1 0 1))
-;;   (should-equal (+ (* 60 60 24 365)
-;;             (* 60 60 24 30)
-;;             (* 60 60 24)
-;;             (* 60 60)
-;;             120 1)
-;;          '(1 2 1 1 1 1))
-
-;;   (should-error wrong-type-argument 'a)
-;;   (should-error wrong-type-argument '(0 a))
-;;   (should-error wrong-type-argument '(0 0 a))
-;;   (should-error wrong-type-argument '(0 0 0 a))
-;;   (should-error wrong-type-argument '(0 0 0 0 a))
-;;   (should-error wrong-type-argument '(0 0 0 0 0 a)))
 
 ;; TODO func-arity seems broken
 ;; (ert-deftest func-arity
