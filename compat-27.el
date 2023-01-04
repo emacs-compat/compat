@@ -34,10 +34,7 @@ A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
   :min-version "26.1"
   :max-version "26.3"
-  (condition-case nil
-      (and (listp object) (length object)) ;; Throws a signal
-    (wrong-type-argument nil)
-    (circular-list nil)))
+  (and (listp object) (ignore-errors (length object))))
 
 (compat-defun proper-list-p (object) ;; <OK>
   "Return OBJECT's length if it is a proper list, nil otherwise.
