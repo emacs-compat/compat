@@ -53,6 +53,32 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest insert-into-buffer ()
+  ;; Without optional compat--arguments
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other))
+      (should (string= (buffer-string) "abcdef"))))
+  ;; With one optional argument
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other 2))
+      (should (string= (buffer-string) "abcef"))))
+  ;; With two optional arguments
+  (with-temp-buffer
+    (let ((other (current-buffer)))
+      (insert "abc")
+      (with-temp-buffer
+        (insert "def")
+        (insert-into-buffer other 2 3))
+      (should (string= (buffer-string) "abce")))))
+
 (ert-deftest bool-vector-exclusive-or ()
   (let ((a (bool-vector t t nil nil))
         (b (bool-vector t nil t nil)))
@@ -593,6 +619,23 @@
   (should-not (directory-name-p "dir/file"))
   (should (directory-name-p "dir/subdir/"))
   (should-not (directory-name-p "dir/subdir")))
+
+(ert-deftest make-lock-file-name ()
+  (should-equal (expand-file-name ".#") (make-lock-file-name ""))
+  (should-equal (expand-file-name ".#a") (make-lock-file-name "a"))
+  (should-equal (expand-file-name ".#foo") (make-lock-file-name "foo"))
+  (should-equal (expand-file-name ".#.") (make-lock-file-name "."))
+  (should-equal (expand-file-name ".#.#") (make-lock-file-name ".#"))
+  (should-equal (expand-file-name ".#.a") (make-lock-file-name ".a"))
+  (should-equal (expand-file-name ".#.#") (make-lock-file-name ".#"))
+  (should-equal (expand-file-name "a/.#") (make-lock-file-name "a/"))
+  (should-equal (expand-file-name "a/.#b") (make-lock-file-name "a/b"))
+  (should-equal (expand-file-name "a/.#.#") (make-lock-file-name "a/.#"))
+  (should-equal (expand-file-name "a/.#.") (make-lock-file-name "a/."))
+  (should-equal (expand-file-name "a/.#.b") (make-lock-file-name "a/.b"))
+  (should-equal (expand-file-name "a/.#foo") (make-lock-file-name "a/foo"))
+  (should-equal (expand-file-name "bar/.#b") (make-lock-file-name "bar/b"))
+  (should-equal (expand-file-name "bar/.#foo") (make-lock-file-name "bar/foo")))
 
 (ert-deftest file-size-human-readable ()
   (should-equal "1000" (compat-call file-size-human-readable 1000))
@@ -1376,56 +1419,6 @@
 ;;   (should-not
 ;;    (and-let* (((= 5 6))) t)))
 
-;; (ert-deftest insert-into-buffer ()
-;;   ;; Without optional compat--arguments
-;;   (with-temp-buffer
-;;     (let ((other (current-buffer)))
-;;       (insert "abc")
-;;       (with-temp-buffer
-;;         (insert "def")
-;;         (compat--t-insert-into-buffer other))
-;;       (should (string= (buffer-string) "abcdef"))))
-;;   (when (fboundp 'insert-into-buffer)
-;;     (with-temp-buffer
-;;       (let ((other (current-buffer)))
-;;         (insert "abc")
-;;         (with-temp-buffer
-;;           (insert "def")
-;;           (insert-into-buffer other))
-;;         (should (string= (buffer-string) "abcdef")))))
-;;   ;; With one optional argument
-;;   (with-temp-buffer
-;;     (let ((other (current-buffer)))
-;;       (insert "abc")
-;;       (with-temp-buffer
-;;         (insert "def")
-;;         (compat--t-insert-into-buffer other 2))
-;;       (should (string= (buffer-string) "abcef"))))
-;;   (when (fboundp 'insert-into-buffer)
-;;     (with-temp-buffer
-;;       (let ((other (current-buffer)))
-;;         (insert "abc")
-;;         (with-temp-buffer
-;;           (insert "def")
-;;           (insert-into-buffer other 2))
-;;         (should (string= (buffer-string) "abcef")))))
-;;   ;; With two optional arguments
-;;   (with-temp-buffer
-;;     (let ((other (current-buffer)))
-;;       (insert "abc")
-;;       (with-temp-buffer
-;;         (insert "def")
-;;         (compat--t-insert-into-buffer other 2 3))
-;;       (should (string= (buffer-string) "abce"))))
-;;   (when (fboundp 'insert-into-buffer)
-;;     (with-temp-buffer
-;;       (let ((other (current-buffer)))
-;;         (insert "abc")
-;;         (with-temp-buffer
-;;           (insert "def")
-;;           (insert-into-buffer other 2 3))
-;;         (should (string= (buffer-string) "abce"))))))
-
 ;; (ert-deftest regexp-unmatchable ()
 ;;   (dolist (str '(""                     ;empty string
 ;;                  "a"                    ;simple string
@@ -1569,23 +1562,6 @@
 ;;   ;; (should-equal nil "rgbi: 0/ 0/ 0")
 ;;   (should-equal nil "rgbi : 0/0/0")
 ;;   (should-equal nil "rgbi:0/0.5/10"))
-
-;; (ert-deftest make-lock-file-name
-;;   (should-equal (expand-file-name ".#") "")
-;;   (should-equal (expand-file-name ".#a") "a")
-;;   (should-equal (expand-file-name ".#foo") "foo")
-;;   (should-equal (expand-file-name ".#.") ".")
-;;   (should-equal (expand-file-name ".#.#") ".#")
-;;   (should-equal (expand-file-name ".#.a") ".a")
-;;   (should-equal (expand-file-name ".#.#") ".#")
-;;   (should-equal (expand-file-name "a/.#") "a/")
-;;   (should-equal (expand-file-name "a/.#b") "a/b")
-;;   (should-equal (expand-file-name "a/.#.#") "a/.#")
-;;   (should-equal (expand-file-name "a/.#.") "a/.")
-;;   (should-equal (expand-file-name "a/.#.b") "a/.b")
-;;   (should-equal (expand-file-name "a/.#foo") "a/foo")
-;;   (should-equal (expand-file-name "bar/.#b") "bar/b")
-;;   (should-equal (expand-file-name "bar/.#foo") "bar/foo"))
 
 ;; (ert-deftest time-equal-p
 ;;   (should-equal t nil nil)
