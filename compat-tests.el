@@ -46,13 +46,26 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
-(ert-deftest compat-call ()
+(ert-deftest plist-get ()
+  (let (list)
+    (setq list (compat-call plist-put list 'first 1))
+    (setq list (compat-call plist-put list 'second 2))
+    (setq list (compat-call plist-put list 'first 10))
+    (should (eq (compat-call plist-get list 'first) 10))
+    (should (eq (compat-call plist-get list 'second) 2))
+    (should (compat-call plist-member list 'first))
+    (should-not (compat-call plist-member list 'third)))
   (let (list)
     (setq list (compat-call plist-put list "first" 1 #'string=))
     (setq list (compat-call plist-put list "second" 2 #'string=))
     (setq list (compat-call plist-put list "first" 10 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 10))
-    (should (eq (compat-call plist-get list "second" #'string=) 2))))
+    (should (eq (compat-call plist-get list "second" #'string=) 2))
+    (should (compat-call plist-member list "first" #'string=))
+    (should-not (compat-call plist-member list "third" #'string=))))
+
+(ert-deftest garbage-collect-maybe ()
+  (garbage-collect-maybe 10))
 
 (ert-deftest insert-into-buffer ()
   ;; Without optional compat--arguments

@@ -52,7 +52,7 @@ issues are inherited."
     (let ((case-fold-search nil))
       (string-match (regexp-quote needle) haystack start-pos))))
 
-(compat-defun length= (sequence length) ;; <UNTESTED>
+(compat-defun length= (sequence length) ;; <OK>
   "Returns non-nil if SEQUENCE has a length equal to LENGTH."
   (cond
    ((null sequence) (zerop length))
@@ -64,7 +64,7 @@ issues are inherited."
     (= (length sequence) length))
    ((signal 'wrong-type-argument sequence))))
 
-(compat-defun length< (sequence length) ;; <UNTESTED>
+(compat-defun length< (sequence length) ;; <OK>
   "Returns non-nil if SEQUENCE is shorter than LENGTH."
   (cond
    ((null sequence) (not (zerop length)))
@@ -74,7 +74,7 @@ issues are inherited."
     (< (length sequence) length))
    ((signal 'wrong-type-argument sequence))))
 
-(compat-defun length> (sequence length) ;; <UNTESTED>
+(compat-defun length> (sequence length) ;; <OK>
   "Returns non-nil if SEQUENCE is longer than LENGTH."
   (cond
    ((listp sequence)
@@ -105,7 +105,7 @@ inserted before contatenating."
 
 ;;;; Defined in alloc.c
 
-(compat-defun garbage-collect-maybe (_factor) ;; <UNTESTED>
+(compat-defun garbage-collect-maybe (_factor) ;; <OK>
   "Call ‘garbage-collect’ if enough allocation happened.
 FACTOR determines what \"enough\" means here: If FACTOR is a
 positive number N, it means to run GC if more than 1/Nth of the
@@ -393,7 +393,7 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
-(compat-defmacro with-existing-directory (&rest body)
+(compat-defmacro with-existing-directory (&rest body) ;; <UNTESTED>
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."
   (declare (indent 0) (debug t))
@@ -410,7 +410,7 @@ If `default-directory' is already an existing directory, it's not changed."
            (throw ',quit (let ((default-directory dir))
                            ,@body)))))))
 
-(compat-defmacro dlet (binders &rest body)
+(compat-defmacro dlet (binders &rest body) ;; <UNTESTED>
   "Like `let' but using dynamic scoping."
   (declare (indent 1) (debug let))
   `(let (_)
@@ -491,7 +491,7 @@ the string."
       (substring string 0 -1)
     string))
 
-(compat-defmacro named-let (name bindings &rest body)
+(compat-defmacro named-let (name bindings &rest body) ;; <UNTESTED>
   "Looping construct taken from Scheme.
 Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by
@@ -764,7 +764,7 @@ Other uses risk returning non-nil value that point to the wrong file."
 
 ;;;; Defined in env.el
 
-(compat-defmacro with-environment-variables (variables &rest body)
+(compat-defmacro with-environment-variables (variables &rest body) ;; <UNTESTED>
   "Set VARIABLES in the environent and execute BODY.
 VARIABLES is a list of variable settings of the form (VAR VALUE),
 where VAR is the name of the variable (a string) and VALUE

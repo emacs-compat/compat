@@ -28,7 +28,7 @@
 
 ;;;; Defined in fns.c
 
-(compat-defun proper-list-p (object) ;; <UNTESTED>
+(compat-defun proper-list-p (object) ;; <OK>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
@@ -39,7 +39,7 @@ is nil)."
     (wrong-type-argument nil)
     (circular-list nil)))
 
-(compat-defun proper-list-p (object) ;; <UNTESTED>
+(compat-defun proper-list-p (object) ;; <OK>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
@@ -60,7 +60,7 @@ is nil)."
             (throw 'cycle nil)))
         (and (null hare) (length object))))))
 
-(compat-defun string-distance (string1 string2 &optional bytecompare) ;; <UNTESTED>
+(compat-defun string-distance (string1 string2 &optional bytecompare) ;; <OK>
   "Return Levenshtein distance between STRING1 and STRING2.
 The distance is the number of deletions, insertions, and substitutions
 required to transform STRING1 into STRING2.
@@ -365,7 +365,7 @@ where USER is a valid login name."
 
 ;;;; Defined in subr.el
 
-(compat-defmacro setq-local (&rest pairs)
+(compat-defmacro setq-local (&rest pairs) ;; <UNTESTED>
   "Handle multiple assignments."
   :explicit t
   (unless (zerop (mod (length pairs) 2))
@@ -380,7 +380,7 @@ where USER is a valid login name."
               body)))
     (cons 'progn (nreverse body))))
 
-(compat-defun provided-mode-derived-p (mode &rest modes) ;; <UNTESTED>
+(compat-defun provided-mode-derived-p (mode &rest modes) ;; <OK>
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
@@ -401,7 +401,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'provided-mode-derived-p major-mode modes))
 
-(compat-defmacro ignore-error (condition &rest body)
+(compat-defmacro ignore-error (condition &rest body) ;; <UNTESTED>
   "Execute BODY; if the error CONDITION occurs, return nil.
 Otherwise, return result of last form in BODY.
 
@@ -409,7 +409,7 @@ CONDITION can also be a list of error conditions."
   (declare (debug t) (indent 1))
   `(condition-case nil (progn ,@body) (,condition nil)))
 
-(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body)
+(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body) ;; <UNTESTED>
   "Loop over a list and report progress in the echo area.
 Evaluate BODY with VAR bound to each car from LIST, in turn.
 Then evaluate RESULT to get return value, default nil.
@@ -437,7 +437,7 @@ print the reporter message followed by the word \"done\".
        (progress-reporter-done ,prep)
        (or ,@(cdr (cdr spec)) nil))))
 
-(compat-defun flatten-tree (tree) ;; <UNTESTED>
+(compat-defun flatten-tree (tree) ;; <OK>
   "Return a \"flattened\" copy of TREE.
 In other words, return a list of the non-nil terminal nodes, or
 leaves, of the tree of cons cells rooted at TREE.  Leaves in the
@@ -455,7 +455,7 @@ returned list are in the same order as in TREE.
     (if tree (push tree elems))
     (nreverse elems)))
 
-(compat-defun xor (cond1 cond2) ;; <UNTESTED>
+(compat-defun xor (cond1 cond2) ;; <OK>
   "Return the boolean exclusive-or of COND1 and COND2.
 If only one of the arguments is non-nil, return it; otherwise
 return nil."
@@ -467,7 +467,7 @@ return nil."
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 
-(compat-defun assoc-delete-all (key alist &optional test) ;; <UNTESTED>
+(compat-defun assoc-delete-all (key alist &optional test) ;; <OK>
   "Delete from ALIST all elements whose car is KEY.
 Compare keys with TEST.  Defaults to `equal'.
 Return the modified alist.
@@ -538,7 +538,7 @@ the number of seconds east of Greenwich."
 
 ;;;; Defined in files.el
 
-(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <UNTESTED>
+(compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <OK>
   "Handle the optional third and forth argument:
 
 Optional third argument SPACE is a string put between the number and unit.

@@ -106,7 +106,7 @@ Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
-(compat-defun plist-get (plist prop &optional predicate) ;; <UNTESTED>
+(compat-defun plist-get (plist prop &optional predicate) ;; <OK>
   "Extract a value from a property list.
 PLIST is a property list, which is a list of the form
 \(PROP1 VALUE1 PROP2 VALUE2...).
@@ -125,7 +125,7 @@ This function doesn't signal an error if PLIST is invalid."
           (throw 'found (cadr plist)))
         (setq plist (cddr plist))))))
 
-(compat-defun plist-put (plist prop val &optional predicate) ;; <UNTESTED>
+(compat-defun plist-put (plist prop val &optional predicate) ;; <OK>
   "Change value in PLIST of PROP to VAL.
 PLIST is a property list, which is a list of the form
 \(PROP1 VALUE1 PROP2 VALUE2 ...).
@@ -148,7 +148,7 @@ The PLIST is modified by side effects."
           (setq tail (cddr tail))))
       (nconc plist (list prop val)))))
 
-(compat-defun plist-member (plist prop &optional predicate) ;; <UNTESTED>
+(compat-defun plist-member (plist prop &optional predicate) ;; <OK>
   "Return non-nil if PLIST has the property PROP.
 PLIST is a property list, which is a list of the form
 \(PROP1 VALUE1 PROP2 VALUE2 ...).
@@ -380,7 +380,7 @@ than this function."
       (insert string)
       (car (buffer-text-pixel-size nil nil t)))))
 
-(compat-defmacro with-buffer-unmodified-if-unchanged (&rest body)
+(compat-defmacro with-buffer-unmodified-if-unchanged (&rest body) ;; <UNTESTED>
   "Like `progn', but change buffer-modified status only if buffer text changes.
 If the buffer was unmodified before execution of BODY, and
 buffer text after execution of BODY is identical to what it was
@@ -458,7 +458,7 @@ this defaults to the current buffer."
           (put-text-property sub-start sub-end 'display disp)))
       (setq sub-start sub-end))))
 
-(compat-defmacro while-let (spec &rest body)
+(compat-defmacro while-let (spec &rest body) ;; <UNTESTED>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all bindings are non-nil, eval BODY and repeat.
@@ -976,7 +976,7 @@ should be a MENU form as accepted by `easy-menu-define'.
               (keymap-set keymap key def)))))
       keymap)))
 
-(compat-defmacro defvar-keymap (variable-name &rest defs)
+(compat-defmacro defvar-keymap (variable-name &rest defs) ;; <UNTESTED>
   "Define VARIABLE-NAME as a variable with a keymap definition.
 See `define-keymap' for an explanation of the keywords and KEY/DEFINITION.
 

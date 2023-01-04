@@ -207,7 +207,7 @@ If this is not documented on yourself system, you can check \
        `(not (fboundp ',name)))
      rest)))
 
-(defmacro compat-defun (name arglist docstring &rest rest) ;; <UNTESTED>
+(defmacro compat-defun (name arglist docstring &rest rest)
   "Define NAME with arguments ARGLIST as a compatibility function.
 The function must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by the macro but not passed on

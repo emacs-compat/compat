@@ -115,7 +115,7 @@ just like `assoc'."
             (throw 'found ent))))
     (assoc key alist)))
 
-(compat-defun mapcan (func sequence) ;; <UNTESTED>
+(compat-defun mapcan (func sequence) ;; <OK>
   "Apply FUNC to each element of SEQUENCE.
 Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
@@ -209,122 +209,122 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
     trim-right)
    trim-left))
 
-(compat-defun caaar (x) ;; <UNTESTED>
+(compat-defun caaar (x) ;; <OK>
   "Return the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (car (car (car x))))
 
-(compat-defun caadr (x) ;; <UNTESTED>
+(compat-defun caadr (x) ;; <OK>
   "Return the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (car (cdr x))))
 
-(compat-defun cadar (x) ;; <UNTESTED>
+(compat-defun cadar (x) ;; <OK>
   "Return the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (cdr (car x))))
 
-(compat-defun caddr (x) ;; <UNTESTED>
+(compat-defun caddr (x) ;; <OK>
   "Return the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (cdr x))))
 
-(compat-defun cdaar (x) ;; <UNTESTED>
+(compat-defun cdaar (x) ;; <OK>
   "Return the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (car (car x))))
 
-(compat-defun cdadr (x) ;; <UNTESTED>
+(compat-defun cdadr (x) ;; <OK>
   "Return the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (cdr x))))
 
-(compat-defun cddar (x) ;; <UNTESTED>
+(compat-defun cddar (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (car x))))
 
-(compat-defun cdddr (x) ;; <UNTESTED>
+(compat-defun cdddr (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (cdr x))))
 
-(compat-defun caaaar (x) ;; <UNTESTED>
+(compat-defun caaaar (x) ;; <OK>
   "Return the `car' of the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (car (car (car (car x)))))
 
-(compat-defun caaadr (x) ;; <UNTESTED>
+(compat-defun caaadr (x) ;; <OK>
   "Return the `car' of the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (car (car (cdr x)))))
 
-(compat-defun caadar (x) ;; <UNTESTED>
+(compat-defun caadar (x) ;; <OK>
   "Return the `car' of the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (car (cdr (car x)))))
 
-(compat-defun caaddr (x) ;; <UNTESTED>
+(compat-defun caaddr (x) ;; <OK>
   "Return the `car' of the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (car (cdr (cdr x)))))
 
-(compat-defun cadaar (x) ;; <UNTESTED>
+(compat-defun cadaar (x) ;; <OK>
   "Return the `car' of the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (car (cdr (car (car x)))))
 
-(compat-defun cadadr (x) ;; <UNTESTED>
+(compat-defun cadadr (x) ;; <OK>
   "Return the `car' of the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (car (cdr x)))))
 
-(compat-defun caddar (x) ;; <UNTESTED>
+(compat-defun caddar (x) ;; <OK>
   "Return the `car' of the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (cdr (cdr (car x)))))
 
-(compat-defun cadddr (x) ;; <UNTESTED>
+(compat-defun cadddr (x) ;; <OK>
   "Return the `car' of the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (cdr (cdr x)))))
 
-(compat-defun cdaaar (x) ;; <UNTESTED>
+(compat-defun cdaaar (x) ;; <OK>
   "Return the `cdr' of the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (car (car (car x)))))
 
-(compat-defun cdaadr (x) ;; <UNTESTED>
+(compat-defun cdaadr (x) ;; <OK>
   "Return the `cdr' of the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (car (cdr x)))))
 
-(compat-defun cdadar (x) ;; <UNTESTED>
+(compat-defun cdadar (x) ;; <OK>
   "Return the `cdr' of the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (car (cdr (car x)))))
 
-(compat-defun cdaddr (x) ;; <UNTESTED>
+(compat-defun cdaddr (x) ;; <OK>
   "Return the `cdr' of the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (cdr (cdr x)))))
 
-(compat-defun cddaar (x) ;; <UNTESTED>
+(compat-defun cddaar (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (car (car x)))))
 
-(compat-defun cddadr (x) ;; <UNTESTED>
+(compat-defun cddadr (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (car (cdr x)))))
 
-(compat-defun cdddar (x) ;; <UNTESTED>
+(compat-defun cdddar (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (cdr (car x)))))
 
-(compat-defun cddddr (x) ;; <UNTESTED>
+(compat-defun cddddr (x) ;; <OK>
   "Return the `cdr' of the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (cdr (cdr x)))))
@@ -341,7 +341,7 @@ PREFIX is a string, and defaults to \"g\"."
                      (1+ gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
-(compat-defmacro if-let* (varlist then &rest else)
+(compat-defmacro if-let* (varlist then &rest else) ;; <UNTESTED>
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
@@ -359,7 +359,7 @@ This is like `if-let' but doesn't handle a VARLIST of the form
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let* (varlist &rest body)
+(compat-defmacro when-let* (varlist &rest body) ;; <UNTESTED>
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
@@ -377,7 +377,7 @@ This is like `when-let' but doesn't handle a VARLIST of the form
     `(let* ,(nreverse list)
        (when ,(caar list) ,@body))))
 
-(compat-defmacro and-let* (varlist &rest body)
+(compat-defmacro and-let* (varlist &rest body) ;; <UNTESTED>
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."

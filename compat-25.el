@@ -81,13 +81,13 @@ This implementation is equivalent to `format'."
 
 ;;;; Defined in subr.el
 
-(compat-defun string-greaterp (string1 string2) ;; <UNTESTED>
+(compat-defun string-greaterp (string1 string2) ;; <OK>
   "Return non-nil if STRING1 is greater than STRING2 in lexicographic order.
 Case is significant.
 Symbols are also allowed; their print names are used instead."
   (string-lessp string2 string1))
 
-(compat-defmacro with-file-modes (modes &rest body)
+(compat-defmacro with-file-modes (modes &rest body) ;; <UNTESTED>
   "Execute BODY with default file permissions temporarily set to MODES.
 MODES is as for `set-default-file-modes'."
   (declare (indent 1) (debug t))
@@ -118,7 +118,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
         default)))
     (if entry (cdr entry) default)))
 
-(compat-defmacro if-let (spec then &rest else)
+(compat-defmacro if-let (spec then &rest else) ;; <UNTESTED>
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
 binding value is nil.  If all are non-nil return the value of
@@ -153,7 +153,7 @@ with an old syntax that accepted only one binding."
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let (spec &rest body)
+(compat-defmacro when-let (spec &rest body) ;; <UNTESTED>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
@@ -180,7 +180,7 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in subr-x.el
 
-(compat-defmacro thread-first (&rest forms)
+(compat-defmacro thread-first (&rest forms) ;; <UNTESTED>
   "Thread FORMS elements as the first argument of their successor.
 Example:
     (thread-first
@@ -204,7 +204,7 @@ threading."
                          (cdr form))))
     body))
 
-(compat-defmacro thread-last (&rest forms)
+(compat-defmacro thread-last (&rest forms) ;; <UNTESTED>
   "Thread FORMS elements as the last argument of their successor.
 Example:
     (thread-last

@@ -27,7 +27,7 @@
 
 ;;;; Defined in data.c
 
-(compat-defun = (number-or-marker &rest numbers-or-markers) ;; <UNTESTED>
+(compat-defun = (number-or-marker &rest numbers-or-markers) ;; <OK>
   "Handle multiple arguments."
   :explicit t
   (catch 'fail
@@ -37,7 +37,7 @@
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-defun < (number-or-marker &rest numbers-or-markers) ;; <UNTESTED>
+(compat-defun < (number-or-marker &rest numbers-or-markers) ;; <OK>
   "Handle multiple arguments."
   :explicit t
   (catch 'fail
@@ -47,7 +47,7 @@
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-defun > (number-or-marker &rest numbers-or-markers) ;; <UNTESTED>
+(compat-defun > (number-or-marker &rest numbers-or-markers) ;; <OK>
   "Handle multiple arguments."
   :explicit t
   (catch 'fail
@@ -57,7 +57,7 @@
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-defun <= (number-or-marker &rest numbers-or-markers) ;; <UNTESTED>
+(compat-defun <= (number-or-marker &rest numbers-or-markers) ;; <OK>
   "Handle multiple arguments."
   :explicit t
   (catch 'fail
@@ -67,7 +67,7 @@
       (setq number-or-marker (pop numbers-or-markers)))
     t))
 
-(compat-defun >= (number-or-marker &rest numbers-or-markers) ;; <UNTESTED>
+(compat-defun >= (number-or-marker &rest numbers-or-markers) ;; <OK>
   "Handle multiple arguments."
   :explicit t
   (catch 'fail
@@ -76,7 +76,7 @@
         (throw 'fail nil)))
     t))
 
-(compat-defun bool-vector-exclusive-or (a b &optional c) ;; <UNTESTED>
+(compat-defun bool-vector-exclusive-or (a b &optional c) ;; <OR>
   "Return A ^ B, bitwise exclusive or.
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
@@ -99,7 +99,7 @@ Return the destination vector if it changed or nil otherwise."
         (aset dest i val)))
     (if c (and changed c) dest)))
 
-(compat-defun bool-vector-union (a b &optional c) ;; <UNTESTED>
+(compat-defun bool-vector-union (a b &optional c) ;; <OK>
   "Return A | B, bitwise or.
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
@@ -122,7 +122,7 @@ Return the destination vector if it changed or nil otherwise."
         (aset dest i val)))
     (if c (and changed c) dest)))
 
-(compat-defun bool-vector-intersection (a b &optional c) ;; <UNTESTED>
+(compat-defun bool-vector-intersection (a b &optional c) ;; <OK>
   "Return A & B, bitwise and.
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
@@ -145,7 +145,7 @@ Return the destination vector if it changed or nil otherwise."
         (aset dest i val)))
     (if c (and changed c) dest)))
 
-(compat-defun bool-vector-set-difference (a b &optional c) ;; <UNTESTED>
+(compat-defun bool-vector-set-difference (a b &optional c) ;; <OK>
   "Return A &~ B, set difference.
 If optional third argument C is given, store result into C.
 A, B, and C must be bool vectors of the same length.
@@ -168,7 +168,7 @@ Return the destination vector if it changed or nil otherwise."
         (aset dest i val)))
     (if c (and changed c) dest)))
 
-(compat-defun bool-vector-not (a &optional b) ;; <UNTESTED>
+(compat-defun bool-vector-not (a &optional b) ;; <OK>
   "Compute ~A, set complement.
 If optional second argument B is given, store result into B.
 A and B must be bool vectors of the same length.
@@ -184,7 +184,7 @@ Return the destination vector."
       (aset dest i (not (aref a i))))
     dest))
 
-(compat-defun bool-vector-subsetp (a b) ;; <UNTESTED>
+(compat-defun bool-vector-subsetp (a b) ;; <OK>
   "Return t if every t value in A is also t in B, nil otherwise.
 A and B must be bool vectors of the same length."
   (unless (bool-vector-p a)
@@ -199,7 +199,7 @@ A and B must be bool vectors of the same length."
         (throw 'not-subset nil)))
     t))
 
-(compat-defun bool-vector-count-consecutive (a b i) ;; <UNTESTED>
+(compat-defun bool-vector-count-consecutive (a b i) ;; <OK>
   "Count how many consecutive elements in A equal B starting at I.
 A is a bool vector, B is t or nil, and I is an index into A."
   (unless (bool-vector-p a)
@@ -212,7 +212,7 @@ A is a bool vector, B is t or nil, and I is an index into A."
       (setq i (1+ i)))
     (- i n)))
 
-(compat-defun bool-vector-count-population (a) ;; <UNTESTED>
+(compat-defun bool-vector-count-population (a) ;; <OK>
   "Count how many elements in A are t.
 A is a bool vector.  To count A's nil elements, subtract the
 return value from A's length."
@@ -226,7 +226,7 @@ return value from A's length."
 
 ;;;; Defined in subr.el
 
-(compat-defmacro with-eval-after-load (file &rest body)
+(compat-defmacro with-eval-after-load (file &rest body)UNTESTED>
   "Execute BODY after FILE is loaded.
 FILE is normally a feature name, but it can also be a file name,
 in case that file does not provide any feature.  See `eval-after-load'
@@ -236,7 +236,7 @@ for more details about the different forms of FILE and their semantics."
   ;; `eval-after-load' is used to preserve compatibility with 24.3.
   `(eval-after-load ,file `(funcall ',,`(lambda () ,@body))))
 
-(compat-defun special-form-p (object) ;; <UNTESTED>
+(compat-defun special-form-p (object) ;; <OK>
   "Non-nil if and only if OBJECT is a special form."
   (if (and (symbolp object) (fboundp object))
       (setq object (condition-case nil
@@ -244,7 +244,7 @@ for more details about the different forms of FILE and their semantics."
                      (void-function nil))))
   (and (subrp object) (eq (cdr (subr-arity object)) 'unevalled)))
 
-(compat-defun macrop (object) ;; <UNTESTED>
+(compat-defun macrop (object) ;; <OK>
   "Non-nil if and only if OBJECT is a macro."
   (let ((def (condition-case nil
                  (indirect-function object)
@@ -253,7 +253,7 @@ for more details about the different forms of FILE and their semantics."
       (or (eq 'macro (car def))
           (and (autoloadp def) (memq (nth 4 def) '(macro t)))))))
 
-(compat-defun string-suffix-p (suffix string  &optional ignore-case) ;; <UNTESTED>
+(compat-defun string-suffix-p (suffix string  &optional ignore-case) ;; <OK>
   "Return non-nil if SUFFIX is a suffix of STRING.
 If IGNORE-CASE is non-nil, the comparison is done without paying
 attention to case differences."
@@ -262,7 +262,7 @@ attention to case differences."
          (eq t (compare-strings suffix nil nil
                                 string start-pos nil ignore-case)))))
 
-(compat-defun split-string (string &optional separators omit-nulls trim) ;; <UNTESTED>
+(compat-defun split-string (string &optional separators omit-nulls trim) ;; <OK>
   "Extend `split-string' by a TRIM argument.
 The remaining arguments STRING, SEPARATORS and OMIT-NULLS are
 handled just as with `split-string'."
@@ -280,7 +280,7 @@ handled just as with `split-string'."
                     token)))
     (if omit-nulls (delete "" trimmed) trimmed)))
 
-(compat-defun delete-consecutive-dups (list &optional circular) ;; <UNTESTED>
+(compat-defun delete-consecutive-dups (list &optional circular) ;; <OK>
   "Destructively remove `equal' consecutive duplicates from LIST.
 First and last elements are considered consecutive if CIRCULAR is
 non-nil."
@@ -363,7 +363,7 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
 
 ;;;; Defined in subr-x.el
 
-(compat-defun hash-table-keys (hash-table) ;; <UNTESTED>
+(compat-defun hash-table-keys (hash-table) ;; <OK>
   "Return a list of keys in HASH-TABLE."
   (let (values)
     (maphash
@@ -371,7 +371,7 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
      hash-table)
     values))
 
-(compat-defun hash-table-values (hash-table) ;; <UNTESTED>
+(compat-defun hash-table-values (hash-table) ;; <OK>
   "Return a list of values in HASH-TABLE."
   (let (values)
     (maphash
@@ -379,29 +379,29 @@ When IGNORE-CASE is non-nil, FUN is expected to be case-insensitive."
      hash-table)
     values))
 
-(compat-defun string-empty-p (string) ;; <UNTESTED>
+(compat-defun string-empty-p (string) ;; <OK>
   "Check whether STRING is empty."
   (string= string ""))
 
-(compat-defun string-join (strings &optional separator) ;; <UNTESTED>
+(compat-defun string-join (strings &optional separator) ;; <OK>
   "Join all STRINGS using SEPARATOR.
 Optional argument SEPARATOR must be a string, a vector, or a list of
 characters; nil stands for the empty string."
   (mapconcat #'identity strings separator))
 
-(compat-defun string-blank-p (string) ;; <UNTESTED>
+(compat-defun string-blank-p (string) ;; <OK>
   "Check whether STRING is either empty or only whitespace.
 The following characters count as whitespace here: space, tab, newline and
 carriage return."
   (string-match-p "\\`[ \t\n\r]*\\'" string))
 
-(compat-defun string-remove-prefix (prefix string) ;; <UNTESTED>
+(compat-defun string-remove-prefix (prefix string) ;; <OK>
   "Remove PREFIX from STRING if present."
   (if (string-prefix-p prefix string)
       (substring string (length prefix))
     string))
 
-(compat-defun string-remove-suffix (suffix string) ;; <UNTESTED>
+(compat-defun string-remove-suffix (suffix string) ;; <OK>
   "Remove SUFFIX from STRING if present."
   (if (string-suffix-p suffix string)
       (substring string 0 (- (length string) (length suffix)))
