@@ -53,6 +53,49 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest if-let* ()
+  (should
+   (if-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true nil))
+  (should-not
+   (if-let* (((= 5 6))) t nil)))
+
+(ert-deftest if-let ()
+  (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
+              e))
+  (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
+                               (d (memq 0 '(1 2 3 0 5 6))))
+                  t))
+  (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
+                               (e (memq 0 '(1 2 3 5 6))))
+                  t))
+  (should-not
+   (if-let (((= 5 6))) t nil)))
+
+(ert-deftest and-let* ()
+  (should                               ;trivial body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true))
+  (should                               ;no body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))))
+  (should-not
+   (and-let* (((= 5 6))) t)))
+
 (ert-deftest assoc ()
   ;; Fallback behaviour:
   (should-equal nil (compat-call assoc 1 nil))               ;empty list
@@ -1312,49 +1355,6 @@
 ;; ;;  (should-equal
 ;; ;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
 ;; ;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
-
-;; (ert-deftest if-let* ()
-;;   (should
-;;    (compat--t-if-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))
-;;     true nil))
-;;   (should-not
-;;    (compat--t-if-let* (((= 5 6))) t nil)))
-
-;; (ert-deftest if-let ()
-;;   (should (compat--t-if-let ((e (memq 0 '(1 2 3 0 5 6))))
-;;               e))
-;;   (should-not (compat--t-if-let ((e (memq 0 '(1 2 3 5 6)))
-;;                                (d (memq 0 '(1 2 3 0 5 6))))
-;;                   t))
-;;   (should-not (compat--t-if-let ((d (memq 0 '(1 2 3 0 5 6)))
-;;                                (e (memq 0 '(1 2 3 5 6))))
-;;                   t))
-;;   (should-not
-;;    (compat--t-if-let (((= 5 6))) t nil)))
-
-;; (ert-deftest and-let* ()
-;;   (should                               ;trivial body
-;;    (compat--t-and-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))
-;;     true))
-;;   (should                               ;no body
-;;    (compat--t-and-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))))
-;;   (should-not
-;;    (compat--t-and-let* (((= 5 6))) t)))
 
 ;; (ert-deftest lookup-key
 ;;   (let ((a-map (make-sparse-keymap))
