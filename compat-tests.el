@@ -1087,6 +1087,34 @@
                         ((lop (and (setq b (not b)) (1+ i)))))))
               'ok)))
 
+(ert-deftest alist-get ()
+  ;; Fallback behaviour:
+  (should-equal nil (alist-get 1 nil))                      ;empty list
+  (should-equal 'a (alist-get 1 '((1 . a))))                  ;single element list
+  (should-equal nil (alist-get 1 '(1)))
+  (should-equal 'b (alist-get 2 '((1 . a) (2 . b) (3 . c))))  ;multiple element list
+  (should-equal nil (alist-get 2 '(1 2 3)))
+  (should-equal 'b (alist-get 2 '(1 (2 . b) 3)))
+  (should-equal nil (alist-get 2 '((1 . a) 2 (3 . c))))
+  (should-equal 'a (alist-get 1 '((3 . c) (2 . b) (1 . a))))
+  (should-equal nil (alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3))))  ;non-primitive elements
+
+  ;; With testfn:
+  (should-equal 1 (compat-call alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal))
+  (should-equal 1 (compat-call alist-get 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<))
+  (should-equal '(a) (compat-call alist-get "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp))
+  (should-equal 'c (compat-call alist-get "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
+                (lambda (s1 s2) (not (string= s1 s2)))))
+  (should-equal 'emacs-lisp-mode
+                (compat-call alist-get "file.el"
+                '(("\\.c\\'" . c-mode)
+                  ("\\.p\\'" . pascal-mode)
+                  ("\\.el\\'" . emacs-lisp-mode)
+                  ("\\.awk\\'" . awk-mode))
+                nil nil #'string-match-p))
+  (should-equal 'd (compat-call alist-get 0 '((1 . a) (2 . b) (3 . c)) 'd)) ;default value
+  (should-equal 'd (compat-call alist-get 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore)))
+
 (ert-deftest alist-get-gv ()
   (let ((alist-1 (list (cons 1 "one")
                        (cons 2 "two")
@@ -1287,36 +1315,6 @@
 ;;                    "aaa"                ;longer string
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
-
-;; ;; (when (fboundp 'alist-get)
-;; ;;   (ert-deftest alist-get-1 ()
-;; ;;     (ert-deftest alist-get
-;; ;;       ;; Fallback behaviour:
-;; ;;       (should-equal nil 1 nil)                      ;empty list
-;; ;;       (should-equal 'a 1 '((1 . a)))                  ;single element list
-;; ;;       (should-equal nil 1 '(1))
-;; ;;       (should-equal 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
-;; ;;       (should-equal nil 2 '(1 2 3))
-;; ;;       (should-equal 'b 2 '(1 (2 . b) 3))
-;; ;;       (should-equal nil 2 '((1 . a) 2 (3 . c)))
-;; ;;       (should-equal 'a 1 '((3 . c) (2 . b) (1 . a)))
-;; ;;       (should-equal nil "a" '(("a" . 1) ("b" . 2) ("c" . 3)))  ;non-primitive elements
-
-;; ;;       ;; With testfn:
-;; ;;       (should-equal 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
-;; ;;       (should-equal 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
-;; ;;       (should-equal '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
-;; ;;       (should-equal 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
-;; ;;                        (lambda (s1 s2) (not (string= s1 s2))))
-;; ;;       (should-equal 'emacs-lisp-mode
-;; ;;                        "file.el"
-;; ;;                        '(("\\.c\\'" . c-mode)
-;; ;;                          ("\\.p\\'" . pascal-mode)
-;; ;;                          ("\\.el\\'" . emacs-lisp-mode)
-;; ;;                          ("\\.awk\\'" . awk-mode))
-;; ;;                        nil nil #'string-match-p)
-;; ;;       (should-equal 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
-;; ;;       (should-equal 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
 ;; (ert-deftest (alist-get compat--alist-get-full-elisp)
 ;;   ;; Fallback behaviour:
