@@ -146,11 +146,11 @@ call these definitions ``Explicit Definitions''. In contrast,
 If you intend to use a compatibility function in your code it is
 strongly recommended that you check the tests in
 @file{compat-tests.el}.  Alternatively grep the Compat code for
-<UNTESTED> labels.  There you will find the supported calling convention,
-which is guaranteed to work on the supported Emacs versions. We ensure
-this using continuous integration.  If a function is not tested yet in
-@file{compat-tests.el} NO GUARANTEES CAN BE MADE.  You are invited to
-contribute tests in this case
+<UNTESTED> labels.  There you will find the supported calling
+convention, which is guaranteed to work on the supported Emacs
+versions. We ensure this using continuous integration.  FUNCTIONS
+WITHOUT TESTS SHOULD BE CONSIDERED BROKEN.  You are invited to
+contribute missing tests.
 
 It is recommended to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
