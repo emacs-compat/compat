@@ -46,6 +46,36 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest thread-first ()
+  (should-equal (thread-first (+ 40 2)) 42)
+  (should-equal (thread-first
+                   5
+                   (+ 20)
+                   (/ 25)
+                   -
+                   (+ 40)) 39)
+  (should-equal (thread-first
+                   "this-is-a-string"
+                   (split-string "-")
+                   (nbutlast 2)
+                   (append (list "good")))
+                 (list "this" "is" "good")))
+
+(ert-deftest thread-last ()
+  (should-equal (thread-last (+ 40 2)) 42)
+  (should-equal (thread-last
+                   5
+                   (+ 20)
+                   (/ 25)
+                   -
+                   (+ 40)) 39)
+  (should-equal (thread-last
+                   (list 1 -2 3 -4 5)
+                   (mapcar #'abs)
+                   (cl-reduce #'+)
+                   (format "abs sum is: %s"))
+                 "abs sum is: 15"))
+
 (ert-deftest ntake ()
   (should-not (ntake 5 nil))
   (should-equal '(1 2) (ntake 5 '(1 2)))

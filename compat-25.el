@@ -176,7 +176,7 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in subr-x.el
 
-(compat-defmacro thread-first (&rest forms) ;; <UNTESTED>
+(compat-defmacro thread-first (&rest forms) ;; <OK>
   "Thread FORMS elements as the first argument of their successor.
 Example:
     (thread-first
@@ -200,7 +200,7 @@ threading."
                          (cdr form))))
     body))
 
-(compat-defmacro thread-last (&rest forms) ;; <UNTESTED>
+(compat-defmacro thread-last (&rest forms) ;; <OK>
   "Thread FORMS elements as the last argument of their successor.
 Example:
     (thread-last
