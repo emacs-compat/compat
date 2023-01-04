@@ -479,6 +479,18 @@
   (should-equal '(1 2 3 4) (delete-consecutive-dups '(1 2 2 3 4 4)))
   (should-equal '(1 2 3 2 4) (delete-consecutive-dups '(1 2 2 3 2 4 4))))
 
+(ert-deftest sort ()
+  (should-equal (list 1 2 3) (compat-call sort (list 1 2 3) #'<))
+  (should-equal (list 1 2 3) (compat-call sort (list 3 2 1) #'<))
+  (should-equal '[1 2 3] (compat-call sort '[1 2 3] #'<))
+  (should-equal '[1 2 3] (compat-call sort '[3 2 1] #'<)))
+
+(ert-deftest string-greaterp ()
+  (should (string-greaterp "b" "a"))
+  (should-not (string-greaterp "a" "b"))
+  (should (string-greaterp "aaab" "aaaa"))
+  (should-not (string-greaterp "aaaa" "aaab")))
+
 (ert-deftest string-suffix-p ()
   (should (string-suffix-p "a" "abba"))
   (should (string-suffix-p "ba" "ba" "abba"))
@@ -956,6 +968,17 @@
     (should-equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins")))
 
+(ert-deftest json-parse-string ()
+  (should-equal 0 (json-parse-string "0"))
+  (should-equal 1 (json-parse-string "1"))
+  (should-equal 0.5 (json-parse-string "0.5"))
+  (should-equal [1 2 3] (json-parse-string "[1,2,3]"))
+  (should-equal ["a" 2 3] (json-parse-string "[\"a\",2,3]"))
+  (should-equal [["a" 2] 3] (json-parse-string "[[\"a\",2],3]"))
+  (should-equal '(("a" 2) 3) (json-parse-string "[[\"a\",2],3]" :array-type 'list))
+  (should-equal 'foo (json-parse-string "null" :null-object 'foo))
+  (should-equal ["false" t] (json-parse-string "[false, true]" :false-object "false")))
+
 (ert-deftest json-serialize ()
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
         (input-2 '(:key ["abc" 2] yek t))
@@ -1205,18 +1228,6 @@
 ;;   (should-equal 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;;   (should-equal 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
 
-;; (ert-deftest string-greaterp
-;;   (should-equal t "b" "a")
-;;   (should-equal nil "a" "b")
-;;   (should-equal t "aaab" "aaaa")
-;;   (should-equal nil "aaaa" "aaab"))
-
-;; (ert-deftest sort
-;;   (should-equal (list 1 2 3) (list 1 2 3) #'<)
-;;   (should-equal (list 1 2 3) (list 3 2 1) #'<)
-;;   (should-equal '[1 2 3] '[1 2 3] #'<)
-;;   (should-equal '[1 2 3] '[3 2 1] #'<))
-
 ;; (ert-deftest macroexpand-1
 ;;   (should-equal '(if a b c) '(if a b c))
 ;;   (should-equal '(if a (progn b)) '(when a b))
@@ -1294,17 +1305,6 @@
 ;;      (true t))))
 ;;   (should-not
 ;;    (compat--t-and-let* (((= 5 6))) t)))
-
-;; (ert-deftest json-parse-string
-;;   (should-equal 0 "0")
-;;   (should-equal 1 "1")
-;;   (should-equal 0.5 "0.5")
-;;   (should-equal [1 2 3] "[1,2,3]")
-;;   (should-equal ["a" 2 3] "[\"a\",2,3]")
-;;   (should-equal [["a" 2] 3] "[[\"a\",2],3]")
-;;   (should-equal '(("a" 2) 3) "[[\"a\",2],3]" :array-type 'list)
-;;   (should-equal 'foo "null" :null-object 'foo)
-;;   (should-equal ["false" t] "[false, true]" :false-object "false"))
 
 ;; (ert-deftest lookup-key
 ;;   (let ((a-map (make-sparse-keymap))
