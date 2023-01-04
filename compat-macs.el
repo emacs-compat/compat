@@ -187,7 +187,7 @@ If this is not documented on yourself system, you can check \
                        (make-obsolete
                         ',name
                         "Use `compat-call' or `compat-function' instead"
-                        "29.1"))
+                        "29.1.0.0"))
                    `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
      (lambda (realname _version)
        `(progn
@@ -202,7 +202,7 @@ If this is not documented on yourself system, you can check \
               `((make-obsolete
                  ',name
                  "Use `compat-call' or `compat-function' instead"
-                 "29.1")))))
+                 "29.1.0.0")))))
      (lambda ()
        `(not (fboundp ',name)))
      rest)))
