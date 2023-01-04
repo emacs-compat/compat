@@ -194,7 +194,6 @@ Is equivalent to:
     (+ (- (/ (+ 5 20) 25)) 40)
 Note how the single `-' got converted into a list before
 threading."
-  :feature subr-x
   (declare (indent 1)
            (debug (form &rest [&or symbolp (sexp &rest form)])))
   (let ((body (car forms)))
@@ -219,7 +218,6 @@ Is equivalent to:
     (+ 40 (- (/ 25 (+ 20 5))))
 Note how the single `-' got converted into a list before
 threading."
-  :feature subr-x
   (declare (indent 1) (debug thread-first))
   (let ((body (car forms)))
     (dolist (form (cdr forms))

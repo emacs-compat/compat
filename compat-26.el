@@ -179,8 +179,6 @@ from the absolute start of the buffer, disregarding the narrowing."
   "Trim STRING of leading string matching REGEXP.
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
-  :realname compat--internal-string-trim-left
-  :explicit t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
@@ -189,8 +187,6 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
   "Trim STRING of trailing string matching REGEXP.
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
-  :realname compat--internal-string-trim-right
-  :explicit t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
             string)))
@@ -200,12 +196,8 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
   "Trim STRING of leading with and trailing matching TRIM-LEFT and TRIM-RIGHT.
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
-  :explicit t
-  ;; `string-trim-left' and `string-trim-right' were moved from subr-x
-  ;; to subr in Emacs 27, so to avoid loading subr-x we use the
-  ;; compatibility function here:
-  (compat--internal-string-trim-left
-   (compat--internal-string-trim-right
+  (string-trim-left
+   (string-trim-right
     string
     trim-right)
    trim-left))
@@ -382,7 +374,6 @@ This is like `when-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
-  :feature subr-x
   (declare (indent 1)
            (debug ((&rest [&or symbolp (symbolp form) (form)])
                    body)))

@@ -91,6 +91,11 @@ ignored:
                   nil)
                  (`(when (and ,(if cond cond t)
                               ,(funcall check-fn)))))))
+    ;; We always require subr-x for the check since many functions have been
+    ;; moved around
+    (when (eq feature 'subr-x)
+      (error "Feature subr-x is forbidden"))
+    (require 'subr-x)
     (when feature
       (unless (require feature nil t)
         (setq feature nil)))

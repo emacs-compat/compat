@@ -446,7 +446,6 @@ not a list, return a one-element list containing OBJECT."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature subr-x
   (let ((blank "[[:blank:]\r\n]+"))
     (replace-regexp-in-string
      "^[[:blank:]\r\n]+\\|[[:blank:]\r\n]+$"
@@ -459,7 +458,6 @@ removed."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature subr-x
   (with-temp-buffer
     (insert string)
     (goto-char (point-min))
@@ -471,7 +469,6 @@ removed."
 (compat-defun string-lines (string &optional omit-nulls)
   "Split STRING into a list of lines.
 If OMIT-NULLS, empty lines will be removed from the results."
-  :feature subr-x
   (split-string string "\n" omit-nulls))
 
 (compat-defun string-pad (string length &optional padding start)
@@ -485,7 +482,6 @@ is done.
 If START is nil (or not present), the padding is done to the end
 of the string, and if non-nil, padding is done to the start of
 the string."
-  :feature subr-x
   (unless (natnump length)
     (signal 'wrong-type-argument (list 'natnump length)))
   (let ((pad-length (- length (length string))))
@@ -499,7 +495,6 @@ the string."
 
 (compat-defun string-chop-newline (string)
   "Remove the final newline (if any) from STRING."
-  :feature subr-x
   (if (and (>= (length string) 1) (= (aref string (1- (length string))) ?\n))
       (substring string 0 -1)
     string))
@@ -510,7 +505,6 @@ Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by
 calling NAME, where the arguments passed to NAME are used
 as the new values of the bound variables in the recursive invocation."
-  :feature subr-x
   (declare (indent 2) (debug (symbolp (&rest (symbolp form)) body)))
   (let ((fargs (mapcar (lambda (b)
                          (let ((var (if (consp b) (car b) b)))
@@ -605,7 +599,9 @@ Errors if the FILENAME or EXTENSION are empty, or if the given
 FILENAME has the format of a directory.
 
 See also `file-name-sans-extension'."
-  (let ((extn (compat--internal-string-trim-left extension "[.]")))
+  (let ((extn (if (string-prefix-p "." extension)
+                  (substring extension 1)
+                extension)))
     (cond
      ((string= filename "")
       (error "Empty filename"))
