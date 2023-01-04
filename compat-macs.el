@@ -29,13 +29,6 @@
   (setq compat--current-version version)
   nil)
 
-(defmacro compat-feature (feature &rest body)
-  (declare (indent 1))
-  (when feature
-    (unless (require feature nil t)
-      (setq feature nil)))
-  (compat--with-feature feature (macroexp-progn body)))
-
 (defun compat--with-feature (feature body)
   "Protect BODY with `eval-after-load' if FEATURE is non-nil."
   (declare (indent 1))
