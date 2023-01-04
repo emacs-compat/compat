@@ -3,6 +3,8 @@
 
 * Development
 
+- Many bugfixes
+- Many new tests
 - Add the macros ~compat-call~ and ~compat-function~ to call compatibility
   functions. Since Compat avoids overwriting already existing functions, we must
   define separate compatibility function definitions for functions which changed
