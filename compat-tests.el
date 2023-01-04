@@ -89,6 +89,17 @@
 (ert-deftest format-message ()
   (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
 
+(defvar test-boundp)
+(defvar test-global-boundp)
+(ert-deftest buffer-local-boundp ()
+  (let ((buf (generate-new-buffer "boundp")))
+    (with-current-buffer buf
+      (setq-local test-boundp t))
+    (setq test-global-boundp t)
+    (should (buffer-local-boundp 'test-boundp buf))
+    (should-not (buffer-local-boundp 'test-not-boundp buf))
+    (should (buffer-local-boundp 'test-global-boundp buf))))
+
 (defvar compat-local-a nil)
 (defvar compat-local-b nil)
 (defvar compat-local-c nil)

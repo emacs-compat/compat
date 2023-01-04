@@ -384,7 +384,7 @@ REPLACEMENT can use the following special elements:
       (and (not (zerop matches))
            matches))))
 
-(compat-defun buffer-local-boundp (symbol buffer) ;; <UNTESTED>
+(compat-defun buffer-local-boundp (symbol buffer) ;; <OK>
   "Return non-nil if SYMBOL is bound in BUFFER.
 Also see `local-variable-p'."
   (catch 'fail
