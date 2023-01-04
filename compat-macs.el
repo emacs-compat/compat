@@ -37,7 +37,7 @@
       `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
     body))
 
-(defvar compat--generate-function #'compat--generate-default
+(defun compat--generate (name def-fn install-fn check-fn attr)
   "Function used to generate compatibility code.
 The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
 CHECK-FN and ATTR.  The resulting body is constructed by invoking
@@ -72,12 +72,7 @@ ignored:
   the compatibility definition (symbol).
 
 - :explicit :: Add a `compat-' prefix to the name, and define the
-  compatibility code unconditionally.")
-
-(defun compat--generate-default (name def-fn install-fn check-fn attr)
-  "Generate a leaner compatibility definition.
-See `compat--generate-function' for details on the arguments NAME,
-DEF-FN, INSTALL-FN, CHECK-FN and ATTR."
+  compatibility code unconditionally."
   (let* ((min-version (plist-get attr :min-version))
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
@@ -125,7 +120,7 @@ TYPE is one of `func', for functions and `macro' for macros, and
 `advice' ARGLIST is passed on directly to the definition, and
 DOCSTRING is prepended with a compatibility note.  REST contains
 the remaining definition, that may begin with a property list of
-attributes (see `compat--generate-function')."
+attributes (see `compat--generate')."
   (let ((oldname name) (body rest))
     (while (keywordp (car body))
       (setq body (cddr body)))
@@ -143,7 +138,7 @@ attributes (see `compat--generate-function')."
     ;; Check if we want an explicitly prefixed function
     (when (plist-get rest :explicit)
       (setq name (intern (format "compat-%s" name))))
-    (funcall compat--generate-function
+    (compat--generate
      name
      (lambda (realname version)
        `(progn
@@ -206,7 +201,7 @@ If this is not documented on yourself system, you can check \
   "Define NAME with arguments ARGLIST as a compatibility function.
 The function must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by the macro but not passed on
-to the actual function.  See `compat--generate-function' for a
+to the actual function.  See `compat--generate' for a
 listing of attributes.
 
 The definition will only be installed, if the version this
@@ -223,7 +218,7 @@ attribute, is greater than the current Emacs version."
   "Define NAME with arguments ARGLIST as a compatibility macro.
 The macro must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by this macro but not passed on
-to the actual macro.  See `compat--generate-function' for a
+to the actual macro.  See `compat--generate' for a
 listing of attributes.
 
 The definition will only be installed, if the version this
@@ -237,7 +232,7 @@ attribute, is greater than the current Emacs version."
 The obligatory documentation string DOCSTRING must be given.
 
 The remaining arguments ATTR form a plist, modifying the
-behaviour of this macro.  See `compat--generate-function' for a
+behaviour of this macro.  See `compat--generate' for a
 listing of attributes.  Furthermore, `compat-defvar' also handles
 the attribute `:local' that either makes the variable permanent
 local with a value of `permanent' or just buffer local with any
@@ -246,7 +241,7 @@ non-nil value."
            (doc-string 3) (indent 2))
   (when (or (plist-get attr :explicit) (plist-get attr :realname))
     (error ":explicit cannot be specified for compatibility variables"))
-  (funcall compat--generate-function
+  (compat--generate
            name
            (lambda (realname version)
              (let ((localp (plist-get attr :local)))
