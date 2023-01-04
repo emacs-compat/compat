@@ -42,15 +42,12 @@ Bug and patches
 
 Patches, bug reports and comments can be sent via [GitHub].  These may
 include issues in the compatibility code, missing definitions or
-performance issues.  If you do not have a GitHub account, we also
-provide a [development mailing list] and a [issue tracker] on
-SourceHut, the latter also being accessible via [email].
+performance issues.  We also provide a [development mailing list] and
+a [issue tracker] on SourceHut, the latter also being accessible via
+[email].
 
-When contributing, make sure to provide test and use the existing
-tests defined in compat-test.el.  These can be easily executed using
-the bundled Makefile:
-
-    make test
+When contributing, you are required to provide tests. We use continuous
+integration to check if patches preserve existing functionality.
 
 [development mailing list]:
     https://lists.sr.ht/~pkal/compat-devel

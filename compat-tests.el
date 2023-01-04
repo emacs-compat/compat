@@ -19,13 +19,9 @@
 
 ;; Tests for compatibility functions from compat.el.
 ;;
-;; Note that not all functions have tests (yet), for the most part
-;; because it is difficult to create a reproducible environment to
-;; test these in or their tests are trivial -- or a combination of
-;; both.
-;;
-;; Tests are welcome, but until then anyone working on these functions
-;; should take care to test these manually.
+;; Note that not all functions have tests yet. Additions are very welcome. The
+;; tests are written in a simple, explicit style. If you intend to use a
+;; function, which doesn't have tests yet, please add them here.
 
 ;;; Code:
 
