@@ -222,7 +222,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;;;; xfaces.c
 
-(compat-defun color-values-from-color-spec (spec) ;; <UNTESTED>
+(compat-defun color-values-from-color-spec (spec) ;; <OK>
   "Parse color SPEC as a numeric color and return (RED GREEN BLUE).
 This function recognises the following formats for SPEC:
 

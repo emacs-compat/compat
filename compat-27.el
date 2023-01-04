@@ -312,7 +312,7 @@ represent a JSON false value.  It defaults to `:false'."
 
 ;;;; Defined in timefns.c
 
-(compat-defun time-equal-p (t1 t2) ;; <UNTESTED>
+(compat-defun time-equal-p (t1 t2) ;; <OK>
   "Return non-nil if time value T1 is equal to time value T2.
 A nil value for either argument stands for the current time.
 
@@ -331,7 +331,7 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
 
 ;;;; Defined in fileio.c
 
-(compat-defun file-name-absolute-p (filename) ;; <UNTESTED>
+(compat-defun file-name-absolute-p (filename) ;; <OK>
   "Return t if FILENAME is an absolute file name.
 On Unix, absolute file names start with `/'.  In Emacs, an absolute
 file name can also start with an initial `~' or `~USER' component,
@@ -396,7 +396,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
          (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
   mode)
 
-(compat-defun derived-mode-p (&rest modes) ;; <UNTESTED>
+(compat-defun derived-mode-p (&rest modes) ;; <OK>
   "Non-nil if the current major mode is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards."
   (apply #'provided-mode-derived-p major-mode modes))
@@ -707,7 +707,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in time-date.el
 
-(compat-defun date-days-in-month (year month) ;; <UNTESTED>
+(compat-defun date-days-in-month (year month) ;; <OK>
   "The number of days in MONTH in YEAR."
   :feature time-date
   (unless (and (numberp month)

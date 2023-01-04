@@ -46,6 +46,9 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest format-message ()
+  (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
+
 (defvar compat-local-a nil)
 (defvar compat-local-b nil)
 (defvar compat-local-c nil)
@@ -298,7 +301,7 @@
   (should-equal '((0 . zero) a (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=))
   (should-equal '(a (0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)))
 
-(ert-deftest provided-mode-derived-p ()
+(ert-deftest derived-mode-p ()
   (let ((one (make-symbol "1"))
         (two (make-symbol "2"))
         (three (make-symbol "3"))
@@ -319,7 +322,14 @@
     (should-equal two (provided-mode-derived-p three one.5 one two))
     (should-equal two (provided-mode-derived-p three one.5 two one))
     (should-equal three (provided-mode-derived-p three one.5 two one three))
-    (should-equal three (provided-mode-derived-p three one.5 three two one))))
+    (should-equal three (provided-mode-derived-p three one.5 three two one))
+    (let ((major-mode three))
+      (should-equal one (derived-mode-p one))
+      (should-equal one (derived-mode-p one.5 one))
+      (should-equal two (derived-mode-p one.5 one two))
+      (should-equal two (derived-mode-p one.5 two one))
+      (should-equal three (derived-mode-p one.5 two one three))
+      (should-equal three (derived-mode-p one.5 three two one)))))
 
 (ert-deftest format-prompt ()
   (should-equal "Prompt: " (format-prompt "Prompt" nil))

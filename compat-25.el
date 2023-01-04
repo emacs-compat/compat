@@ -58,7 +58,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in editfns.c
 
-(compat-defun format-message (string &rest objects) ;; <UNTESTED>
+(compat-defun format-message (string &rest objects) ;; <OK>
   "Format a string out of a format-string and arguments.
 The first argument is a format control string.
 The other arguments are substituted into it to make the result, a string.
