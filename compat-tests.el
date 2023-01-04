@@ -53,6 +53,63 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest bool-vector-not ()
+  (should-equal (bool-vector) (bool-vector-not (bool-vector)))
+  (should-equal (bool-vector t) (bool-vector-not (bool-vector nil)))
+  (should-equal (bool-vector nil) (bool-vector-not (bool-vector t)))
+  (should-equal (bool-vector t t) (bool-vector-not (bool-vector nil nil)))
+  (should-equal (bool-vector t nil) (bool-vector-not (bool-vector nil t)))
+  (should-equal (bool-vector nil t) (bool-vector-not (bool-vector t nil)))
+  (should-equal (bool-vector nil nil) (bool-vector-not (bool-vector t t)))
+  (should-error (bool-vector-not (vector)) :type 'wrong-type-argument))
+
+(ert-deftest bool-vector-count-consecutive ()
+  (should-equal 0 (bool-vector-count-consecutive (bool-vector nil) (bool-vector nil) 0))
+  (should-equal 0 (bool-vector-count-consecutive (make-bool-vector 10 nil) t 0))
+  (should-equal 10 (bool-vector-count-consecutive (make-bool-vector 10 nil) nil 0))
+  (should-equal 0 (bool-vector-count-consecutive (make-bool-vector 10 nil) t 1))
+  (should-equal 9 (bool-vector-count-consecutive (make-bool-vector 10 nil) nil 1))
+  (should-equal 0 (bool-vector-count-consecutive (make-bool-vector 10 nil) t 1))
+  (should-equal 9 (bool-vector-count-consecutive (make-bool-vector 10 t) t 1))
+  (should-equal 0 (bool-vector-count-consecutive (make-bool-vector 10 nil) t 8))
+  (should-equal 2 (bool-vector-count-consecutive (make-bool-vector 10 nil) nil 8))
+  (should-equal 2 (bool-vector-count-consecutive (make-bool-vector 10 t) t 8))
+  (should-equal 10 (bool-vector-count-consecutive (make-bool-vector 10 t) (make-bool-vector 10 t) 0))
+  (should-equal 4 (bool-vector-count-consecutive (bool-vector t t t t nil t t t t t) t 0))
+  (should-equal 0 (bool-vector-count-consecutive (bool-vector t t t t nil t t t t t) t 4))
+  (should-equal 5 (bool-vector-count-consecutive (bool-vector t t t t nil t t t t t) t 5))
+  (should-error (bool-vector-count-consecutive (vector) nil 0) :type 'wrong-type-argument))
+
+(ert-deftest bool-vector-count-population ()
+  (should-equal  0 (bool-vector-count-population (bool-vector)))
+  (should-equal  0 (bool-vector-count-population (make-bool-vector 10 nil)))
+  (should-equal 10 (bool-vector-count-population (make-bool-vector 10 t)))
+  (should-equal  1 (bool-vector-count-population (bool-vector nil nil t nil)))
+  (should-equal  1 (bool-vector-count-population (bool-vector nil nil nil t)))
+  (should-equal  1 (bool-vector-count-population (bool-vector t nil nil nil)))
+  (should-equal  2 (bool-vector-count-population (bool-vector t nil nil t)))
+  (should-equal  2 (bool-vector-count-population (bool-vector t nil t nil)))
+  (should-equal  3 (bool-vector-count-population (bool-vector t nil t t)))
+  (should-error (bool-vector-count-population (vector)) :type 'wrong-type-argument))
+
+(ert-deftest bool-vector-subsetp ()
+  (should (bool-vector-subsetp (bool-vector) (bool-vector)))
+  (should (bool-vector-subsetp (bool-vector t) (bool-vector t)))
+  (should (bool-vector-subsetp (bool-vector nil) (bool-vector t)))
+  (should-not (bool-vector-subsetp (bool-vector t) (bool-vector nil)))
+  (should (bool-vector-subsetp (bool-vector nil) (bool-vector nil)))
+  (should (bool-vector-subsetp (bool-vector t t) (bool-vector t t)))
+  (should (bool-vector-subsetp (bool-vector nil nil) (bool-vector t t)))
+  (should (bool-vector-subsetp (bool-vector nil nil) (bool-vector t nil)))
+  (should (bool-vector-subsetp (bool-vector nil nil) (bool-vector nil t)))
+  (should-not (bool-vector-subsetp (bool-vector t nil) (bool-vector nil nil)))
+  (should-not (bool-vector-subsetp (bool-vector nil t) (bool-vector nil nil)))
+  (when (version<= "24.4" emacs-version)
+    (should-error (bool-vector-subsetp (bool-vector nil) (bool-vector nil nil)) :type 'wrong-length-argument))
+  (should-error (bool-vector-subsetp (bool-vector) (vector)) :type 'wrong-type-argument)
+  (should-error (bool-vector-subsetp (vector) (bool-vector)) :type 'wrong-type-argument)
+  (should-error (bool-vector-subsetp (vector) (vector))) :type 'wrong-type-argument)
+
 (ert-deftest assoc ()
   ;; Fallback behaviour:
   (should-equal nil (compat-call assoc 1 nil))               ;empty list
@@ -1316,33 +1373,6 @@
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
 
-;; (ert-deftest (alist-get compat--alist-get-full-elisp)
-;;   ;; Fallback behaviour:
-;;   (should-equal nil 1 nil)                      ;empty list
-;;   (should-equal 'a 1 '((1 . a)))                  ;single element list
-;;   (should-equal nil 1 '(1))
-;;   (should-equal 'b 2 '((1 . a) (2 . b) (3 . c)))  ;multiple element list
-;;   (should-equal nil 2 '(1 2 3))
-;;   (should-equal 'b 2 '(1 (2 . b) 3))
-;;   (should-equal nil 2 '((1 . a) 2 (3 . c)))
-;;   (should-equal 'a 1 '((3 . c) (2 . b) (1 . a)))
-;;   (should-equal nil "a" '(("a" . 1) ("b" . 2) ("c" . 3))) ;non-primitive elements
-;;   ;; With testfn:
-;;   (should-equal 1 "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal)
-;;   (should-equal 1 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<)
-;;   (should-equal '(a) "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp)
-;;   (should-equal 'c "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
-;;          (lambda (s1 s2) (not (string= s1 s2))))
-;;   (should-equal 'emacs-lisp-mode
-;;          "file.el"
-;;          '(("\\.c\\'" . c-mode)
-;;            ("\\.p\\'" . pascal-mode)
-;;            ("\\.el\\'" . emacs-lisp-mode)
-;;            ("\\.awk\\'" . awk-mode))
-;;          nil nil #'string-match-p)
-;;   (should-equal 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
-;;   (should-equal 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
-
 ;; (ert-deftest macroexpand-1
 ;;   (should-equal '(if a b c) '(if a b c))
 ;;   (should-equal '(if a (progn b)) '(when a b))
@@ -1447,64 +1477,6 @@
 ;;     (should-error wrong-type-argument (bool-vector) (vector) (vector))
 ;;     (should-error wrong-type-argument (vector) (bool-vector) (vector))
 ;;     (should-error wrong-type-argument (vector) (vector) (vector))))
-
-;; (ert-deftest bool-vector-not
-;;   (should-equal (bool-vector) (bool-vector))
-;;   (should-equal (bool-vector t) (bool-vector nil))
-;;   (should-equal (bool-vector nil) (bool-vector t))
-;;   (should-equal (bool-vector t t) (bool-vector nil nil))
-;;   (should-equal (bool-vector t nil) (bool-vector nil t))
-;;   (should-equal (bool-vector nil t) (bool-vector t nil))
-;;   (should-equal (bool-vector nil nil) (bool-vector t t))
-;;   (should-error wrong-type-argument (vector))
-;;   (should-error wrong-type-argument (vector) (vector)))
-
-;; (ert-deftest bool-vector-subsetp
-;;   (should-equal t (bool-vector) (bool-vector))
-;;   (should-equal t (bool-vector t) (bool-vector t))
-;;   (should-equal t (bool-vector nil) (bool-vector t))
-;;   (should-equal nil (bool-vector t) (bool-vector nil))
-;;   (should-equal t (bool-vector nil) (bool-vector nil))
-;;   (should-equal t (bool-vector t t) (bool-vector t t))
-;;   (should-equal t (bool-vector nil nil) (bool-vector t t))
-;;   (should-equal t (bool-vector nil nil) (bool-vector t nil))
-;;   (should-equal t (bool-vector nil nil) (bool-vector nil t))
-;;   (should-equal nil (bool-vector t nil) (bool-vector nil nil))
-;;   (should-equal nil (bool-vector nil t) (bool-vector nil nil))
-;;   (when (version<= "24.4" emacs-version)
-;;     (should-error wrong-length-argument (bool-vector nil) (bool-vector nil nil)))
-;;   (should-error wrong-type-argument (bool-vector) (vector))
-;;   (should-error wrong-type-argument (vector) (bool-vector))
-;;   (should-error wrong-type-argument (vector) (vector)))
-
-;; (ert-deftest bool-vector-count-consecutive
-;;   (should-equal 0 (bool-vector nil) (bool-vector nil) 0)
-;;   (should-equal 0 (make-bool-vector 10 nil) t 0)
-;;   (should-equal 10 (make-bool-vector 10 nil) nil 0)
-;;   (should-equal 0 (make-bool-vector 10 nil) t 1)
-;;   (should-equal 9 (make-bool-vector 10 nil) nil 1)
-;;   (should-equal 0 (make-bool-vector 10 nil) t 1)
-;;   (should-equal 9 (make-bool-vector 10 t) t 1)
-;;   (should-equal 0 (make-bool-vector 10 nil) t 8)
-;;   (should-equal 2 (make-bool-vector 10 nil) nil 8)
-;;   (should-equal 2 (make-bool-vector 10 t) t 8)
-;;   (should-equal 10 (make-bool-vector 10 t) (make-bool-vector 10 t) 0)
-;;   (should-equal 4 (bool-vector t t t t nil t t t t t) t 0)
-;;   (should-equal 0 (bool-vector t t t t nil t t t t t) t 4)
-;;   (should-equal 5 (bool-vector t t t t nil t t t t t) t 5)
-;;   (should-error wrong-type-argument (vector) nil 0))
-
-;; (ert-deftest bool-vector-count-population
-;;   (should-equal  0 (bool-vector))
-;;   (should-equal  0 (make-bool-vector 10 nil))
-;;   (should-equal 10 (make-bool-vector 10 t))
-;;   (should-equal  1 (bool-vector nil nil t nil))
-;;   (should-equal  1 (bool-vector nil nil nil t))
-;;   (should-equal  1 (bool-vector t nil nil nil))
-;;   (should-equal  2 (bool-vector t nil nil t))
-;;   (should-equal  2 (bool-vector t nil t nil))
-;;   (should-equal  3 (bool-vector t nil t t))
-;;   (should-error wrong-type-argument (vector)))
 
 ;; (ert-deftest color-values-from-color-spec
 ;;   ;; #RGB notation
