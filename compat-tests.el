@@ -1171,6 +1171,20 @@
     (remhash 1 ht)
     (should-equal '(two) (hash-table-values ht))))
 
+(ert-deftest if-let ()
+  (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
+              e))
+  (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
+              e))
+  (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
+                               (d (memq 0 '(1 2 3 0 5 6))))
+                  t))
+  (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
+                               (e (memq 0 '(1 2 3 5 6))))
+                  t))
+  (should-not
+   (if-let (((= 5 6))) t nil)))
+
 (ert-deftest and-let* ()
   (should                               ;trivial body
    (and-let*
@@ -1619,18 +1633,6 @@
 ;;     true nil))
 ;;   (should-not
 ;;    (if-let* (((= 5 6))) t nil)))
-
-;; (ert-deftest if-let ()
-;;   (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
-;;               e))
-;;   (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
-;;                                (d (memq 0 '(1 2 3 0 5 6))))
-;;                   t))
-;;   (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
-;;                                (e (memq 0 '(1 2 3 5 6))))
-;;                   t))
-;;   (should-not
-;;    (if-let (((= 5 6))) t nil)))
 
 ;; (ert-deftest regexp-unmatchable ()
 ;;   (dolist (str '(""                     ;empty string
