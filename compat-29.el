@@ -347,7 +347,7 @@ character.
 When shortening strings for display purposes,
 `truncate-string-to-width' is almost always a better alternative
 than this function."
-  :feature 'subr-x
+  :feature subr-x
   (unless (natnump length)
     (signal 'wrong-type-argument (list 'natnump length)))
   (if coding-system
@@ -376,7 +376,7 @@ than this function."
 ;;* UNTESTED
 (compat-defun string-pixel-width (string)
   "Return the width of STRING in pixels."
-  :feature 'subr-x
+  :feature subr-x
   (if (zerop (length string))
       0
     ;; Keeping a work buffer around is more efficient than creating a
@@ -406,7 +406,7 @@ changes that are normally perceived as \"buffer modifications\", such
 as changes in text properties, `buffer-file-coding-system', buffer
 multibyteness, etc. -- will not be noticed, and the buffer will still
 be marked unmodified, effectively ignoring those changes."
-  :feature 'subr-x
+  :feature subr-x
   (declare (debug t) (indent 0))
   (let ((hash (make-symbol "hash"))
         (buffer (make-symbol "buffer")))
@@ -434,7 +434,7 @@ properties are retained.
 
 If OBJECT is non-nil, it should be a string or a buffer.  If nil,
 this defaults to the current buffer."
-  :feature 'subr-x
+  :feature subr-x
   (let ((sub-start start)
         (sub-end 0)
         disp)

@@ -194,7 +194,7 @@ Is equivalent to:
     (+ (- (/ (+ 5 20) 25)) 40)
 Note how the single `-' got converted into a list before
 threading."
-  :feature 'subr-x
+  :feature subr-x
   (declare (indent 1)
            (debug (form &rest [&or symbolp (sexp &rest form)])))
   (let ((body (car forms)))
@@ -219,7 +219,7 @@ Is equivalent to:
     (+ 40 (- (/ 25 (+ 20 5))))
 Note how the single `-' got converted into a list before
 threading."
-  :feature 'subr-x
+  :feature subr-x
   (declare (indent 1) (debug thread-first))
   (let ((body (car forms)))
     (dolist (form (cdr forms))
@@ -233,7 +233,7 @@ threading."
 (declare-function macrop nil (object))
 (compat-defun macroexpand-1 (form &optional environment)
   "Perform (at most) one step of macro expansion."
-  :feature 'macroexp
+  :feature macroexp
   (cond
    ((consp form)
     (let* ((head (car form))

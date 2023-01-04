@@ -446,7 +446,7 @@ not a list, return a one-element list containing OBJECT."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature 'subr-x
+  :feature subr-x
   (let ((blank "[[:blank:]\r\n]+"))
     (replace-regexp-in-string
      "^[[:blank:]\r\n]+\\|[[:blank:]\r\n]+$"
@@ -459,7 +459,7 @@ removed."
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
 removed."
-  :feature 'subr-x
+  :feature subr-x
   (with-temp-buffer
     (insert string)
     (goto-char (point-min))
@@ -471,7 +471,7 @@ removed."
 (compat-defun string-lines (string &optional omit-nulls)
   "Split STRING into a list of lines.
 If OMIT-NULLS, empty lines will be removed from the results."
-  :feature 'subr-x
+  :feature subr-x
   (split-string string "\n" omit-nulls))
 
 (compat-defun string-pad (string length &optional padding start)
@@ -485,7 +485,7 @@ is done.
 If START is nil (or not present), the padding is done to the end
 of the string, and if non-nil, padding is done to the start of
 the string."
-  :feature 'subr-x
+  :feature subr-x
   (unless (natnump length)
     (signal 'wrong-type-argument (list 'natnump length)))
   (let ((pad-length (- length (length string))))
@@ -499,7 +499,7 @@ the string."
 
 (compat-defun string-chop-newline (string)
   "Remove the final newline (if any) from STRING."
-  :feature 'subr-x
+  :feature subr-x
   (if (and (>= (length string) 1) (= (aref string (1- (length string))) ?\n))
       (substring string 0 -1)
     string))
@@ -510,7 +510,7 @@ Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by
 calling NAME, where the arguments passed to NAME are used
 as the new values of the bound variables in the recursive invocation."
-  :feature 'subr-x
+  :feature subr-x
   (declare (indent 2) (debug (symbolp (&rest (symbolp form)) body)))
   (let ((fargs (mapcar (lambda (b)
                          (let ((var (if (consp b) (car b) b)))
@@ -760,7 +760,7 @@ just the selected frame."
   "Return the THING at mouse click.
 Like `thing-at-point', but tries to use the event
 where the mouse button is clicked to find a thing nearby."
-  :feature 'thingatpt
+  :feature thingatpt
   (save-excursion
     (mouse-set-point event)
     (thing-at-point thing no-properties)))
@@ -775,7 +775,7 @@ A non-nil result is expected to be reliable when called from a macro in order
 to find the file in which the macro's call was found, and it should be
 reliable as well when used at the top-level of a file.
 Other uses risk returning non-nil value that point to the wrong file."
-  :feature 'macroexp
+  :feature macroexp
   (let ((file (car (last current-load-list))))
     (or (if (stringp file) file)
         (bound-and-true-p byte-compile-current-file))))
@@ -807,7 +807,7 @@ The previous values will be be restored upon exit."
 When clicked, CALLBACK will be called with the DATA as the
 function argument.  If DATA isn't present (or is nil), the button
 itself will be used instead as the function argument."
-  :feature 'button
+  :feature button
   (propertize string
               'face 'button
               'button t
@@ -847,7 +847,7 @@ directory or directories specified."
   "Interpret DECODED as a period and return its length in seconds.
 For computational purposes, years are 365 days long and months
 are 30 days long."
-  :feature 'time-date
+  :feature time-date
   :version "28"
   ;; Inlining the definitions from compat-27
   (+ (if (consp (nth 0 time))

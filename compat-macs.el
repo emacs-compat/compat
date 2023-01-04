@@ -34,7 +34,7 @@
   (declare (indent 1))
   (if feature
       ;; See https://nullprogram.com/blog/2018/02/22/:
-      `(eval-after-load ,feature `(funcall ',(lambda () ,body)))
+      `(eval-after-load ',feature `(funcall ',(lambda () ,body)))
     body))
 
 (defun compat--generate (name def-fn install-fn check-fn attr)
@@ -91,6 +91,9 @@ ignored:
                   nil)
                  (`(when (and ,(if cond cond t)
                               ,(funcall check-fn)))))))
+    (when feature
+      (unless (require feature nil t)
+        (setq feature nil)))
     (when (and (plist-get attr :realname)
                (string= name (plist-get attr :realname)))
       (error "%S: Name is equal to realname" name))

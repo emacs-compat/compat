@@ -382,7 +382,7 @@ This is like `when-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
-  :feature 'subr-x
+  :feature subr-x
   (declare (indent 1)
            (debug ((&rest [&or symbolp (symbolp form) (form)])
                    body)))

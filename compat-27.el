@@ -720,7 +720,7 @@ The return value is a string (or nil in case we can’t find it)."
 (compat-defun dired-get-marked-files
     (&optional localp arg filter distinguish-one-marked error)
   "Return the marked files’ names as list of strings."
-  :feature 'dired
+  :feature dired
   :explicit t
   (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))
     (if (and (null result) error)
@@ -731,7 +731,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun date-days-in-month (year month)
   "The number of days in MONTH in YEAR."
-  :feature 'time-date
+  :feature time-date
   (unless (and (numberp month)
                (<= 1 month)
                (<= month 12))
