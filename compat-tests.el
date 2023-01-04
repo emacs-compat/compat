@@ -1171,6 +1171,18 @@
     (remhash 1 ht)
     (should-equal '(two) (hash-table-values ht))))
 
+(ert-deftest when-let* ()
+  (should-equal "second"
+   (when-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    "first" "second"))
+  (should-not
+   (when-let* (((= 5 6))) "first" "second")))
+
 (ert-deftest if-let* ()
   (should-equal "then"
    (if-let*
