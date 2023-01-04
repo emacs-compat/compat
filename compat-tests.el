@@ -870,6 +870,13 @@
   (should-equal '[1 2 3] (compat-call sort '[1 2 3] #'<))
   (should-equal '[1 2 3] (compat-call sort '[3 2 1] #'<)))
 
+(ert-deftest string-equal-ignore-case ()
+  (should (string-equal-ignore-case "abc" "abc"))
+  (should (string-equal-ignore-case "abc" "ABC"))
+  (should (string-equal-ignore-case "abc" "abC"))
+  (should-not (string-equal-ignore-case "abc" "abCD"))
+  (should (string-equal-ignore-case "S" "s")))
+
 (ert-deftest string-greaterp ()
   (should (string-greaterp "b" "a"))
   (should-not (string-greaterp "a" "b"))

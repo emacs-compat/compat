@@ -99,7 +99,7 @@ If N is greater or equal to the length of LIST, return LIST (or a copy)."
       (setq n (1- n)))
     (nreverse copy)))
 
-(compat-defun string-equal-ignore-case (string1 string2) ;; <UNTESTED>
+(compat-defun string-equal-ignore-case (string1 string2) ;; <OK>
   "Like `string-equal', but case-insensitive.
 Upper-case and lower-case letters are treated as equal.
 Unibyte strings are converted to multibyte for comparison."
