@@ -1195,6 +1195,16 @@
   (should-equal "else"
    (if-let* (((= 5 6))) "then" "else")))
 
+(ert-deftest when-let ()
+  (should-equal "last"
+                (when-let (e (memq 0 '(1 2 3 0 5 6)))
+                  "first" "last"))
+  (should-equal "last" (when-let ((e (memq 0 '(1 2 3 0 5 6))))
+                         "first" "last"))
+  (should-not (when-let ((e (memq 0 '(1 2 3 5 6)))
+                               (d (memq 0 '(1 2 3 0 5 6))))
+                  "first" "last")))
+
 (ert-deftest if-let ()
   (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
               e))
