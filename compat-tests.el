@@ -1171,6 +1171,25 @@
     (remhash 1 ht)
     (should-equal '(two) (hash-table-values ht))))
 
+(ert-deftest and-let* ()
+  (should                               ;trivial body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    true))
+  (should                               ;no body
+   (and-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))))
+  (should-not
+   (and-let* (((= 5 6))) t)))
+
 (ert-deftest named-let ()
   (should (= (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
@@ -1612,25 +1631,6 @@
 ;;                   t))
 ;;   (should-not
 ;;    (if-let (((= 5 6))) t nil)))
-
-;; (ert-deftest and-let* ()
-;;   (should                               ;trivial body
-;;    (and-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))
-;;     true))
-;;   (should                               ;no body
-;;    (and-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))))
-;;   (should-not
-;;    (and-let* (((= 5 6))) t)))
 
 ;; (ert-deftest regexp-unmatchable ()
 ;;   (dolist (str '(""                     ;empty string
