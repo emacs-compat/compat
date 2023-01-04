@@ -418,6 +418,48 @@
   (should (equal '(1 2 3 4) (flatten-tree '((1) nil 2 ((3 4))))))
   (should (equal '(1 2 3 4) (flatten-tree '(((1 nil)) 2 (((3 nil nil) 4)))))))
 
+(ert-deftest string-empty-p ()
+  (should (string-empty-p ""))
+  (should-not (string-empty-p " "))
+  (should (string-empty-p (make-string 0 ?x)))
+  (should-not (string-empty-p (make-string 1 ?x))))
+
+(ert-deftest string-join ()
+  (should (equal "" (string-join '(""))))
+  (should (equal "" (string-join '("") " ")))
+  (should (equal "a" (string-join '("a"))))
+  (should (equal "a" (string-join '("a") " ")))
+  (should (equal "abc" (string-join '("a" "b" "c"))))
+  (should (equal "a b c" (string-join '("a" "b" "c") " "))))
+
+(ert-deftest string-blank-p ()
+  (should (equal 0 (string-blank-p "")))
+  (should (equal 0 (string-blank-p " ")))
+  (should (equal 0 (string-blank-p (make-string 0 ?x))))
+  (should (equal nil (string-blank-p (make-string 1 ?x)))))
+
+(ert-deftest string-remove-prefix ()
+  (should (equal "" (string-remove-prefix "" "")))
+  (should (equal "a" (string-remove-prefix "" "a")))
+  (should (equal "" (string-remove-prefix "a" "")))
+  (should (equal "bc" (string-remove-prefix "a" "abc")))
+  (should (equal "abc" (string-remove-prefix "c" "abc")))
+  (should (equal "bbcc" (string-remove-prefix "aa" "aabbcc")))
+  (should (equal "aabbcc" (string-remove-prefix "bb" "aabbcc")))
+  (should (equal "aabbcc" (string-remove-prefix "cc" "aabbcc")))
+  (should (equal "aabbcc" (string-remove-prefix "dd" "aabbcc"))))
+
+(ert-deftest string-remove-suffix ()
+  (should (equal "" (string-remove-suffix "" "")))
+  (should (equal "a" (string-remove-suffix "" "a")))
+  (should (equal "" (string-remove-suffix "a" "")))
+  (should (equal "abc" (string-remove-suffix "a" "abc")))
+  (should (equal "ab" (string-remove-suffix "c" "abc")))
+  (should (equal "aabbcc" (string-remove-suffix "aa" "aabbcc")))
+  (should (equal "aabbcc" (string-remove-suffix "bb" "aabbcc")))
+  (should (equal "aabb" (string-remove-suffix "cc" "aabbcc")))
+  (should (equal "aabbcc" (string-remove-suffix "dd" "aabbcc"))))
+
 (ert-deftest string-distance ()
   (should (equal 3 (string-distance "kitten" "sitting")))    ;from wikipedia
   (if (version<= "28" emacs-version) ;trivial examples
@@ -1321,48 +1363,6 @@
 ;;     (should (equal 'bar b-map "x")
 ;;     (should (equal 'foo (list a-map b-map) "x")
 ;;     (should (equal 'bar (list b-map a-map) "x")))
-
-;; (ert-deftest string-empty-p
-;;   (should (equal t "")
-;;   (should (equal nil " ")
-;;   (should (equal t (make-string 0 ?x))
-;;   (should (equal nil (make-string 1 ?x)))
-
-;; (ert-deftest string-join
-;;   (should (equal "" '(""))
-;;   (should (equal "" '("") " ")
-;;   (should (equal "a" '("a"))
-;;   (should (equal "a" '("a") " ")
-;;   (should (equal "abc" '("a" "b" "c"))
-;;   (should (equal "a b c" '("a" "b" "c") " "))
-
-;; (ert-deftest string-blank-p
-;;   (should (equal 0 "")
-;;   (should (equal 0 " ")
-;;   (should (equal 0 (make-string 0 ?x))
-;;   (should (equal nil (make-string 1 ?x)))
-
-;; (ert-deftest string-remove-prefix
-;;   (should (equal "" "" "")
-;;   (should (equal "a" "" "a")
-;;   (should (equal "" "a" "")
-;;   (should (equal "bc" "a" "abc")
-;;   (should (equal "abc" "c" "abc")
-;;   (should (equal "bbcc" "aa" "aabbcc")
-;;   (should (equal "aabbcc" "bb" "aabbcc")
-;;   (should (equal "aabbcc" "cc" "aabbcc")
-;;   (should (equal "aabbcc" "dd" "aabbcc"))
-
-;; (ert-deftest string-remove-suffix
-;;   (should (equal "" "" "")
-;;   (should (equal "a" "" "a")
-;;   (should (equal "" "a" "")
-;;   (should (equal "abc" "a" "abc")
-;;   (should (equal "ab" "c" "abc")
-;;   (should (equal "aabbcc" "aa" "aabbcc")
-;;   (should (equal "aabbcc" "bb" "aabbcc")
-;;   (should (equal "aabb" "cc" "aabbcc")
-;;   (should (equal "aabbcc" "dd" "aabbcc"))
 
 ;; (let ((a (bool-vector t t nil nil))
 ;;       (b (bool-vector t nil t nil)))
