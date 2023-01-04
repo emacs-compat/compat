@@ -50,6 +50,36 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest special-form-p ()
+  (should (special-form-p 'if))
+  (should (special-form-p 'cond))
+  (should-not (special-form-p 'when))
+  (should-not (special-form-p 'defun))
+  (should-not (special-form-p '+))
+  (should-not (special-form-p nil))
+  (should-not (special-form-p "macro"))
+  (should-not (special-form-p '(macro . +))))
+
+(ert-deftest macrop ()
+  (should (macrop 'lambda))
+  (should (macrop 'defun))
+  (should (macrop 'defmacro))
+  (should-not (macrop 'defalias))
+  (should-not (macrop 'foobar))
+  (should-not (macrop 'if))
+  (should-not (macrop '+))
+  (should-not (macrop 1))
+  (should-not (macrop nil))
+  (should-not (macrop "macro"))
+  (should (macrop '(macro . +))))
+
+(ert-deftest subr-primitive-p ()
+  (should (subr-primitive-p (symbol-function 'identity)))       ;function from fns.c
+  (unless (fboundp 'subr-native-elisp-p)
+    (should-not (subr-primitive-p (symbol-function 'match-string)))) ;function from subr.el
+  (should-not (subr-primitive-p (symbol-function 'defun)))        ;macro from subr.el
+  (should-not (subr-primitive-p nil)))
+
 (ert-deftest = ()
   (should (compat-call = 0 0))
   (should (compat-call = 0 0 0))
@@ -1120,29 +1150,6 @@
 ;;   (should (equal '[1 2 3] '[1 2 3] #'<)
 ;;   (should (equal '[1 2 3] '[3 2 1] #'<))
 
-;; (ert-deftest special-form-p
-;;   (should (equal t 'if)
-;;   (should (equal t 'cond)
-;;   (should (equal nil 'when)
-;;   (should (equal nil 'defun)
-;;   (should (equal nil '+)
-;;   (should (equal nil nil)
-;;   (should (equal nil "macro")
-;;   (should (equal nil '(macro . +)))
-
-;; (ert-deftest macrop
-;;   (should (equal t 'lambda)
-;;   (should (equal t 'defun)
-;;   (should (equal t 'defmacro)
-;;   (should (equal nil 'defalias)
-;;   (should (equal nil 'foobar)
-;;   (should (equal nil 'if)
-;;   (should (equal nil '+)
-;;   (should (equal nil 1)
-;;   (should (equal nil nil)
-;;   (should (equal nil "macro")
-;;   (should (equal t '(macro . +)))
-
 ;; (ert-deftest string-suffix-p
 ;;   (should (equal t "a" "abba")
 ;;   (should (equal t "ba" "abba")
@@ -1734,13 +1741,6 @@
 ;; ;;   (should (equal '(2 . many) 'defun)
 ;; ;;   (should (equal '(2 . 3) 'defalias)
 ;; ;;   (should (equal '(1 . unevalled) 'defvar))
-
-;; (ert-deftest subr-primitive-p
-;;   (should (equal t (symbol-function 'identity))       ;function from fns.c
-;;   (unless (fboundp 'subr-native-elisp-p)
-;;     (should (equal nil (symbol-function 'match-string))) ;function from subr.el
-;;   (should (equal nil (symbol-function 'defun))        ;macro from subr.el
-;;   (should (equal nil nil))
 
 ;; (let ((one (make-symbol "1"))
 ;;       (two (make-symbol "2"))
