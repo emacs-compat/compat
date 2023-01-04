@@ -42,16 +42,13 @@ Bug and patches
 
 Patches, bug reports and comments can be sent via [GitHub].  These may
 include issues in the compatibility code, missing definitions or
-performance issues.  We also provide a [development mailing list] and
-a [issue tracker] on GitHub.
+performance issues.  We also provide a [development mailing list].
 
 When contributing, you are required to provide tests. We use continuous
 integration to check if patches preserve existing functionality.
 
 [development mailing list]:
     https://lists.sr.ht/~pkal/compat-devel
-[issue tracker]:
-    https://github.com/emacs-compat/compat/issues
 
 Distribution
 ------------
