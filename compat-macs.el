@@ -30,11 +30,12 @@
   nil)
 
 (defun compat--with-feature (feature &rest body)
-  "Protect BODY with `eval-after-load' if FEATURE is non-nil."
+  "Protect BODY with `with-eval-after-load' if FEATURE is non-nil."
   (declare (indent 1))
   (if feature
       ;; See https://nullprogram.com/blog/2018/02/22/:
-      `(eval-after-load ',feature `(funcall ',(lambda () ,@body)))
+      `(with-eval-after-load ',feature
+         ,@body)
     (macroexp-progn body)))
 
 (defun compat--generate (name def-fn install-fn check-fn attr)
