@@ -443,6 +443,20 @@
   (should-equal t (always 1))                    ;; single argument
   (should-equal t (always 1 2 3 4)))             ;; multiple arguments
 
+(ert-deftest directory-name-p ()
+  (should (directory-name-p "/"))
+  (should-not (directory-name-p "/file"))
+  (should-not (directory-name-p "/dir/file"))
+  (should (directory-name-p "/dir/"))
+  (should-not (directory-name-p "/dir"))
+  (should (directory-name-p "/dir/subdir/"))
+  (should-not (directory-name-p "/dir/subdir"))
+  (should (directory-name-p "dir/"))
+  (should-not (directory-name-p "file"))
+  (should-not (directory-name-p "dir/file"))
+  (should (directory-name-p "dir/subdir/"))
+  (should-not (directory-name-p "dir/subdir")))
+
 (ert-deftest file-size-human-readable ()
   (should-equal "1000" (compat-call file-size-human-readable 1000))
   (should-equal "1k" (compat-call file-size-human-readable 1024))
@@ -1298,20 +1312,6 @@
 ;; ;;  (should-equal
 ;; ;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
 ;; ;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
-
-;; (ert-deftest directory-name-p
-;;   (should-equal t "/")
-;;   (should-equal nil "/file")
-;;   (should-equal nil "/dir/file")
-;;   (should-equal t "/dir/")
-;;   (should-equal nil "/dir")
-;;   (should-equal t "/dir/subdir/")
-;;   (should-equal nil "/dir/subdir")
-;;   (should-equal t "dir/")
-;;   (should-equal nil "file")
-;;   (should-equal nil "dir/file")
-;;   (should-equal t "dir/subdir/")
-;;   (should-equal nil "dir/subdir"))
 
 ;; (ert-deftest if-let* ()
 ;;   (should
