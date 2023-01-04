@@ -172,6 +172,8 @@
     (should (member (json-serialize input-2)
                     '("{\"key\":[\"abc\",2],\"yek\":true}"
                       "{\"yek\":true,\"key\":[\"abc\",2]}")))
+    (should (equal (json-serialize input-3)
+                   "{\"key\":[\"abc\",2],\"yek\":true}"))
     (should-error (json-serialize '(("a" . 1)))
                   :type '(wrong-type-argument symbolp "a"))
     (should-error (json-serialize '("a" 1))
