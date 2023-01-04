@@ -44,6 +44,33 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest mapcan ()
+  (should (equal nil (mapcan #'identity nil)))
+  (should (equal (list 1)
+                 (mapcan #'identity
+                         (list (list 1)))))
+  (should (equal (list 1 2 3 4)
+                 (mapcan #'identity
+                         (list (list 1) (list 2 3) (list 4)))))
+  (should (equal (list (list 1) (list 2 3) (list 4))
+                 (mapcan #'list
+                         (list (list 1) (list 2 3) (list 4)))))
+  (should (equal (list 1 2 3 4)
+                 (mapcan #'identity
+                         (list (list 1) (list) (list 2 3) (list 4)))))
+  (should (equal (list (list 1) (list) (list 2 3) (list 4))
+                 (mapcan #'list
+                         (list (list 1) (list) (list 2 3) (list 4)))))
+  (should (equal (list)
+                 (mapcan #'identity
+                         (list (list) (list) (list) (list))))))
+
+(ert-deftest xor ()
+  (should (equal t (xor t nil)))
+  (should (equal t (xor nil t)))
+  (should (equal nil (xor nil nil)))
+  (should (equal nil (xor t t))))
+
 (ert-deftest length= ()
   (should (equal t (length= '() 0)))                  ;empty list
   (should (equal t (length= '(1) 1)))                 ;single element
@@ -644,12 +671,6 @@
 ;;   (ought '(1 2 3 4) '((1) nil 2 ((3 4))))
 ;;   (ought '(1 2 3 4) '(((1 nil)) 2 (((3 nil nil) 4)))))
 
-;; (ert-deftest xor
-;;   (ought t t nil)
-;;   (ought t nil t)
-;;   (ought nil nil nil)
-;;   (ought nil t t))
-
 ;; (ert-deftest string-distance
 ;;   (ought 3 "kitten" "sitting")     ;from wikipedia
 ;;   (if (version<= "28" emacs-version) ;trivial examples
@@ -783,27 +804,6 @@
 ;;          nil nil #'string-match-p)
 ;;   (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;;   (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
-
-;; (ert-deftest mapcan
-;;   (ought nil #'identity nil)
-;;   (ought (list 1)
-;;          #'identity
-;;          (list (list 1)))
-;;   (ought (list 1 2 3 4)
-;;          #'identity
-;;          (list (list 1) (list 2 3) (list 4)))
-;;   (ought (list (list 1) (list 2 3) (list 4))
-;;          #'list
-;;          (list (list 1) (list 2 3) (list 4)))
-;;   (ought (list 1 2 3 4)
-;;          #'identity
-;;          (list (list 1) (list) (list 2 3) (list 4)))
-;;   (ought (list (list 1) (list) (list 2 3) (list 4))
-;;          #'list
-;;          (list (list 1) (list) (list 2 3) (list 4)))
-;;   (ought (list)
-;;          #'identity
-;;          (list (list) (list) (list) (list))))
 
 ;; ;; Note: as the cXXX+r implementations are relatively trivial, their
 ;; ;; tests are not as extensive.
