@@ -161,7 +161,8 @@ any JSON false values."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  (require 'json)
+  (unless (fboundp 'json-encode)
+    (require 'json))
   (letrec ((fix (lambda (obj)
                   (cond
                    ((hash-table-p obj)
@@ -252,7 +253,8 @@ represent a JSON false value.  It defaults to `:false'."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  (require 'json)
+  (unless (fboundp 'json-read-from-string)
+    (require 'json))
   (condition-case err
       (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
             (json-array-type (or (plist-get args :array-type) 'vector))
@@ -296,7 +298,8 @@ represent a JSON false value.  It defaults to `:false'."
                (:success t)
                (void-function nil)
                (json-unavailable nil)))
-  (require 'json)
+  (unless (fboundp 'json-read)
+    (require 'json))
   (condition-case err
       (let ((json-object-type (or (plist-get args :object-type) 'hash-table))
             (json-array-type (or (plist-get args :array-type) 'vector))
