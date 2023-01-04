@@ -32,6 +32,7 @@
 (require 'ert)
 (require 'compat)
 (require 'subr-x)
+(require 'text-property-search nil t)
 (setq ert-quiet t)
 
 (ert-deftest compat-call ()
@@ -248,6 +249,46 @@
   (with-temp-buffer
     (json-insert '((:key . ["abc" 2]) (yek . t)))
     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
+
+(ert-deftest compat-text-property-search-forward ()
+  (with-temp-buffer
+    (insert "one "
+            (propertize "two " 'prop 'val)
+            "three "
+            (propertize "four " 'prop 'wert)
+            "five ")
+    (goto-char (point-min))
+    (let ((match (text-property-search-forward 'prop)))
+      (should (eq (prop-match-beginning match) 5))
+      (should (eq (prop-match-end match) 9))
+      (should (eq (prop-match-value match) 'val)))
+    (let ((match (text-property-search-forward 'prop)))
+      (should (eq (prop-match-beginning match) 15))
+      (should (eq (prop-match-end match) 20))
+      (should (eq (prop-match-value match) 'wert)))
+    (should (null (text-property-search-forward 'prop)))
+    (goto-char (point-min))
+    (should (null (text-property-search-forward 'non-existant)))))
+
+(ert-deftest compat-text-property-search-backward ()
+  (with-temp-buffer
+    (insert "one "
+            (propertize "two " 'prop 'val)
+            "three "
+            (propertize "four " 'prop 'wert)
+            "five ")
+    (goto-char (point-max))
+    (let ((match (text-property-search-backward 'prop)))
+      (should (eq (prop-match-beginning match) 15))
+      (should (eq (prop-match-end match) 20))
+      (should (eq (prop-match-value match) 'wert)))
+    (let ((match (text-property-search-backward 'prop)))
+      (should (eq (prop-match-beginning match) 5))
+      (should (eq (prop-match-end match) 9))
+      (should (eq (prop-match-value match) 'val)))
+    (should (null (text-property-search-backward 'prop)))
+    (goto-char (point-max))
+    (should (null (text-property-search-backward 'non-existant)))))
 
 ;; (defun compat--expect (name compat)
 ;;   "Implementation for the `expect' macro for NAME.
@@ -1770,84 +1811,6 @@
 ;;     (if (version< emacs-version "26.1")
 ;;         #'compat--make-prop-match-with-vector
 ;;       #'compat--make-prop-match-with-record)))
-
-;; (ert-deftest compat-text-property-search-forward ()
-;;   (when (fboundp 'text-property-search-forward)
-;;     (with-temp-buffer
-;;       (insert "one "
-;;               (propertize "two " 'prop 'val)
-;;               "three "
-;;               (propertize "four " 'prop 'wert)
-;;               "five ")
-;;       (goto-char (point-min))
-;;       (let ((match (text-property-search-forward 'prop)))
-;;         (should (eq (prop-match-beginning match) 5))
-;;         (should (eq (prop-match-end match) 9))
-;;         (should (eq (prop-match-value match) 'val)))
-;;       (let ((match (text-property-search-forward 'prop)))
-;;         (should (eq (prop-match-beginning match) 15))
-;;         (should (eq (prop-match-end match) 20))
-;;         (should (eq (prop-match-value match) 'wert)))
-;;       (should (null (text-property-search-forward 'prop)))
-;;       (goto-char (point-min))
-;;       (should (null (text-property-search-forward 'non-existant)))))
-;;   (with-temp-buffer
-;;     (insert "one "
-;;             (propertize "two " 'prop 'val)
-;;             "three "
-;;             (propertize "four " 'prop 'wert)
-;;             "five ")
-;;     (goto-char (point-min))
-;;     (let ((match (compat--t-text-property-search-forward 'prop)))
-;;       (should (eq (compat--t-prop-match-beginning match) 5))
-;;       (should (eq (compat--t-prop-match-end match) 9))
-;;       (should (eq (compat--t-prop-match-value match) 'val)))
-;;     (let ((match (compat--t-text-property-search-forward 'prop)))
-;;       (should (eq (compat--t-prop-match-beginning match) 15))
-;;       (should (eq (compat--t-prop-match-end match) 20))
-;;       (should (eq (compat--t-prop-match-value match) 'wert)))
-;;     (should (null (compat--t-text-property-search-forward 'prop)))
-;;     (goto-char (point-min))
-;;     (should (null (compat--t-text-property-search-forward 'non-existant)))))
-
-;; (ert-deftest compat-text-property-search-backward ()
-;;   (when (fboundp 'text-property-search-backward)
-;;     (with-temp-buffer
-;;       (insert "one "
-;;               (propertize "two " 'prop 'val)
-;;               "three "
-;;               (propertize "four " 'prop 'wert)
-;;               "five ")
-;;       (goto-char (point-max))
-;;       (let ((match (text-property-search-backward 'prop)))
-;;         (should (eq (prop-match-beginning match) 15))
-;;         (should (eq (prop-match-end match) 20))
-;;         (should (eq (prop-match-value match) 'wert)))
-;;       (let ((match (text-property-search-backward 'prop)))
-;;         (should (eq (prop-match-beginning match) 5))
-;;         (should (eq (prop-match-end match) 9))
-;;         (should (eq (prop-match-value match) 'val)))
-;;       (should (null (text-property-search-backward 'prop)))
-;;       (goto-char (point-max))
-;;       (should (null (text-property-search-backward 'non-existant)))))
-;;   (with-temp-buffer
-;;     (insert "one "
-;;             (propertize "two " 'prop 'val)
-;;             "three "
-;;             (propertize "four " 'prop 'wert)
-;;             "five ")
-;;     (goto-char (point-max))
-;;     (let ((match (compat--t-text-property-search-backward 'prop)))
-;;       (should (eq (compat--t-prop-match-beginning match) 15))
-;;       (should (eq (compat--t-prop-match-end match) 20))
-;;       (should (eq (compat--t-prop-match-value match) 'wert)))
-;;     (let ((match (compat--t-text-property-search-backward 'prop)))
-;;       (should (eq (compat--t-prop-match-beginning match) 5))
-;;       (should (eq (compat--t-prop-match-end match) 9))
-;;       (should (eq (compat--t-prop-match-value match) 'val)))
-;;     (should (null (compat--t-text-property-search-backward 'prop)))
-;;     (goto-char (point-max))
-;;     (should (null (compat--t-text-property-search-backward 'non-existant)))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
