@@ -14,7 +14,8 @@
 - Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
   ~compat-call~ or ~compat-function~ macros.
 - Deprecate ~compat-help.el~ and ~compat-font-lock.el~
-- Drop support for Emacs 24.3
+- BREAKING: Drop broken function ~func-arity~
+- BREAKING: Drop support for Emacs 24.3
 
 * Release of "Compat" Version 28.1.2.2
 

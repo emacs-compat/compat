@@ -763,36 +763,6 @@ The following functions and macros implemented in 26.1, and are provided
 by Compat:
 
 @c copied from lispref/functions.texi
-@defun func-arity function
-This function provides information about the argument list of the
-specified @var{function}.  The returned value is a cons cell of the form
-@w{@code{(@var{min} . @var{max})}}, where @var{min} is the minimum
-number of arguments, and @var{max} is either the maximum number of
-arguments, or the symbol @code{many} for functions with @code{&rest}
-arguments, or the symbol @code{unevalled} if @var{function} is a special
-form.
-
-Note that this function might return inaccurate results in some
-situations, such as the following:
-
-@itemize @minus
-@item
-Functions defined using @code{apply-partially} (@pxref{Calling
-Functions,apply-partially,,elisp}).
-
-@item
-Functions that are advised using @code{advice-add} (@pxref{Advising
-Named Functions,,,elisp}).
-
-@item
-Functions that determine the argument list dynamically, as part of their
-code.
-@end itemize
-
-@xref{What Is a Function,,,elisp}.
-@end defun
-
-@c copied from lispref/functions.texi
 @defun mapcan function sequence
 This function applies @var{function} to each element of @var{sequence},
 like @code{mapcar}, but instead of collecting the results into a list,

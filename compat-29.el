@@ -286,9 +286,10 @@ CONDITION is either:
                      ((stringp condition)
                       (string-match-p condition (buffer-name buffer)))
                      ((functionp condition)
-                      (if (eq 1 (cdr (func-arity condition)))
+                      (condition-case nil
                           (funcall condition buffer)
-                        (funcall condition buffer arg)))
+                        (wrong-number-of-arguments
+                         (funcall condition buffer arg))))
                      ((eq (car-safe condition) 'major-mode)
                       (eq
                        (buffer-local-value 'major-mode buffer)
