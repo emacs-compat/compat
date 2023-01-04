@@ -29,7 +29,7 @@
 ;;;; Defined in fns.c
 
 ;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
-(compat-defun string-search (needle haystack &optional start-pos) ;; <UNTESTED>
+(compat-defun string-search (needle haystack &optional start-pos) ;; <OK>
   "Search for the string NEEDLE in the strign HAYSTACK.
 
 The return value is the position of the first occurrence of
@@ -135,7 +135,7 @@ continuing as if the error did not occur."
 
 ;;;; Defined in characters.c
 
-(compat-defun string-width (string &optional from to) ;; <UNTESTED>
+(compat-defun string-width (string &optional from to) ;; <OK>
   "Handle optional arguments FROM and TO:
 
 Optional arguments FROM and TO specify the substring of STRING to
@@ -299,7 +299,7 @@ and BLUE, is normalized to have its value in [0,65535]."
 ;;;; Defined in subr.el
 
 ;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
-(compat-defun string-replace (fromstring tostring instring) ;; <UNTESTED>
+(compat-defun string-replace (fromstring tostring instring) ;; <OK>
   "Replace FROMSTRING with TOSTRING in INSTRING each time it occurs."
   (when (equal fromstring "")
     (signal 'wrong-length-argument '(0)))
@@ -309,13 +309,13 @@ and BLUE, is normalized to have its value in [0,65535]."
      tostring instring
      t t)))
 
-(compat-defun always (&rest _arguments) ;; <UNTESTED>
+(compat-defun always (&rest _arguments) ;; <OK>
   "Do nothing and return t.
 This function accepts any number of ARGUMENTS, but ignores them.
 Also see `ignore'."
   t)
 
-(compat-defun insert-into-buffer (buffer &optional start end) ;; <UNTESTED>
+(compat-defun insert-into-buffer (buffer &optional start end) ;; <OK>
   "Insert the contents of the current buffer into BUFFER.
 If START/END, only insert that region from the current buffer.
 Point in BUFFER will be placed after the inserted text."
@@ -433,7 +433,7 @@ not a list, return a one-element list containing OBJECT."
 
 ;;;; Defined in subr-x.el
 
-(compat-defun string-clean-whitespace (string) ;; <UNTESTED>
+(compat-defun string-clean-whitespace (string) ;; <OK>
   "Clean up whitespace in STRING.
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
@@ -445,7 +445,7 @@ removed."
      (replace-regexp-in-string
       blank " " string))))
 
-(compat-defun string-fill (string length) ;; <UNTESTED>
+(compat-defun string-fill (string length) ;; <OK>
   "Clean up whitespace in STRING.
 All sequences of whitespaces in STRING are collapsed into a
 single space character, and leading/trailing whitespace is
@@ -458,12 +458,12 @@ removed."
       (fill-region (point-min) (point-max)))
     (buffer-string)))
 
-(compat-defun string-lines (string &optional omit-nulls) ;; <UNTESTED>
+(compat-defun string-lines (string &optional omit-nulls) ;; <OK>
   "Split STRING into a list of lines.
 If OMIT-NULLS, empty lines will be removed from the results."
   (split-string string "\n" omit-nulls))
 
-(compat-defun string-pad (string length &optional padding start) ;; <UNTESTED>
+(compat-defun string-pad (string length &optional padding start) ;; <OK>
   "Pad STRING to LENGTH using PADDING.
 If PADDING is nil, the space character is used.  If not nil, it
 should be a character.
@@ -485,13 +485,13 @@ the string."
               (and (not start)
                    (make-string pad-length (or padding ?\s)))))))
 
-(compat-defun string-chop-newline (string) ;; <UNTESTED>
+(compat-defun string-chop-newline (string) ;; <OK>
   "Remove the final newline (if any) from STRING."
   (if (and (>= (length string) 1) (= (aref string (1- (length string))) ?\n))
       (substring string 0 -1)
     string))
 
-(compat-defmacro named-let (name bindings &rest body) ;; <UNTESTED>
+(compat-defmacro named-let (name bindings &rest body) ;; <OK>
   "Looping construct taken from Scheme.
 Like `let', bind variables in BINDINGS and then evaluate BODY,
 but with the twist that BODY can evaluate itself recursively by

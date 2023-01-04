@@ -28,7 +28,7 @@
 
 ;;;; Defined in alloc.c
 
-(compat-defun bool-vector (&rest objects) ;; <UNTESTED>
+(compat-defun bool-vector (&rest objects) ;; <OK>
   "Return a new bool-vector with specified arguments as elements.
 Allows any number of arguments, including zero.
 usage: (bool-vector &rest OBJECTS)"
@@ -43,7 +43,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in fns.c
 
-(compat-defun sort (seq predicate) ;; <UNTESTED>
+(compat-defun sort (seq predicate) ;; <OK>
   "Extend `sort' to sort SEQ as a vector."
   :explicit t
   (cond
@@ -66,13 +66,9 @@ The other arguments are substituted into it to make the result, a string.
 This implementation is equivalent to `format'."
   (apply #'format string objects))
 
-;;;; Defined in minibuf.c
-
-;; TODO advise read-buffer to handle 4th argument
-
 ;;;; Defined in fileio.c
 
-(compat-defun directory-name-p (name) ;; <UNTESTED>
+(compat-defun directory-name-p (name) ;; <OK>
   "Return non-nil if NAME ends with a directory separator character."
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
@@ -99,7 +95,7 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
-(compat-defun alist-get (key alist &optional default remove testfn) ;; <UNTESTED>
+(compat-defun alist-get (key alist &optional default remove testfn) ;; <OK>
   "Find the first element of ALIST whose `car' equals KEY and return its `cdr'.
 If KEY is not found in ALIST, return DEFAULT.
 Equality with KEY is tested by TESTFN, defaulting to `eq'."
@@ -118,7 +114,7 @@ Equality with KEY is tested by TESTFN, defaulting to `eq'."
         default)))
     (if entry (cdr entry) default)))
 
-(compat-defmacro if-let (spec then &rest else) ;; <UNTESTED>
+(compat-defmacro if-let (spec then &rest else) ;; <OK>
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
 binding value is nil.  If all are non-nil return the value of
@@ -153,7 +149,7 @@ with an old syntax that accepted only one binding."
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let (spec &rest body) ;; <UNTESTED>
+(compat-defmacro when-let (spec &rest body) ;; <OK>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
@@ -228,7 +224,7 @@ threading."
 ;;;; Defined in macroexp.el
 
 (declare-function macrop nil (object))
-(compat-defun macroexpand-1 (form &optional environment) ;; <UNTESTED>
+(compat-defun macroexpand-1 (form &optional environment) ;; <OK>
   "Perform (at most) one step of macro expansion."
   :feature macroexp
   (cond

@@ -46,6 +46,11 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest gensym ()
+  (should (symbolp (gensym "compat")))
+  (should (string-prefix-p "compat" (symbol-name (gensym 'compat))))
+  (should (string-prefix-p "compat" (symbol-name (gensym "compat")))))
+
 (ert-deftest plist-get ()
   (let (list)
     (setq list (compat-call plist-put list 'first 1))

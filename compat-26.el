@@ -100,7 +100,7 @@ function with `&rest' args, or `unevalled' for a special form."
 
 ;;;; Defined in fns.c
 
-(compat-defun assoc (key alist &optional testfn) ;; <UNTESTED>
+(compat-defun assoc (key alist &optional testfn) ;; <OK>
   "Handle the optional argument TESTFN.
 Equality is defined by the function TESTFN, defaulting to
 `equal'.  TESTFN is called with 2 arguments: a car of an alist
@@ -138,7 +138,7 @@ from the absolute start of the buffer, disregarding the narrowing."
 ;;;; Defined in subr.el
 
 (declare-function alist-get nil (key alist &optional default remove))
-(compat-defun alist-get (key alist &optional default remove testfn) ;; <UNTESTED>
+(compat-defun alist-get (key alist &optional default remove testfn) ;; <OK>
   "Handle TESTFN manually."
   :explicit t
   (if testfn
@@ -174,7 +174,7 @@ from the absolute start of the buffer, disregarding the narrowing."
                                                `(delq ,p ,getter))))))
                             ,v))))))))))
 
-(compat-defun string-trim-left (string &optional regexp) ;; <UNTESTED>
+(compat-defun string-trim-left (string &optional regexp) ;; <OK>
   "Trim STRING of leading string matching REGEXP.
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
@@ -184,7 +184,7 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
       (substring string (match-end 0))
     string))
 
-(compat-defun string-trim-right (string &optional regexp) ;; <UNTESTED>
+(compat-defun string-trim-right (string &optional regexp) ;; <OK>
   "Trim STRING of trailing string matching REGEXP.
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
@@ -195,7 +195,7 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
             string)))
     (if i (substring string 0 i) string)))
 
-(compat-defun string-trim (string &optional trim-left trim-right) ;; <UNTESTED>
+(compat-defun string-trim (string &optional trim-left trim-right) ;; <OK>
   "Trim STRING of leading with and trailing matching TRIM-LEFT and TRIM-RIGHT.
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
@@ -332,7 +332,7 @@ TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
 (compat-defvar gensym-counter 0
   "Number used to construct the name of the next symbol created by `gensym'.")
 
-(compat-defun gensym (&optional prefix) ;; <UNTESTED>
+(compat-defun gensym (&optional prefix) ;; <OK>
   "Return a new uninterned symbol.
 The name is made by appending `gensym-counter' to PREFIX.
 PREFIX is a string, and defaults to \"g\"."
@@ -341,7 +341,7 @@ PREFIX is a string, and defaults to \"g\"."
                      (1+ gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
-(compat-defmacro if-let* (varlist then &rest else) ;; <UNTESTED>
+(compat-defmacro if-let* (varlist then &rest else) ;; <OK>
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
@@ -359,7 +359,7 @@ This is like `if-let' but doesn't handle a VARLIST of the form
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let* (varlist &rest body) ;; <UNTESTED>
+(compat-defmacro when-let* (varlist &rest body) ;; <OK>
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
@@ -377,7 +377,7 @@ This is like `when-let' but doesn't handle a VARLIST of the form
     `(let* ,(nreverse list)
        (when ,(caar list) ,@body))))
 
-(compat-defmacro and-let* (varlist &rest body) ;; <UNTESTED>
+(compat-defmacro and-let* (varlist &rest body) ;; <OK>
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
@@ -422,7 +422,7 @@ same meaning as in `make-temp-file'."
          "^" (regexp-opt '("/afs/" "/media/" "/mnt" "/net/" "/tmp_mnt/")))))
   "File systems that ought to be mounted.")
 
-(compat-defun file-local-name (file) ;; <UNTESTED>
+(compat-defun file-local-name (file) ;; <OK>
   "Return the local name component of FILE.
 This function removes from FILE the specification of the remote host
 and the method of accessing the host, leaving only the part that
@@ -431,14 +431,14 @@ The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
   (or (file-remote-p file 'localname) file))
 
-(compat-defun file-name-quoted-p (name &optional top) ;; <UNTESTED>
+(compat-defun file-name-quoted-p (name &optional top) ;; <OK>
   "Whether NAME is quoted with prefix \"/:\".
 If NAME is a remote file name and TOP is nil, check the local part of NAME."
   :explicit t
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (file-local-name name))))
 
-(compat-defun file-name-quote (name &optional top) ;; <UNTESTED>
+(compat-defun file-name-quote (name &optional top) ;; <OK>
   "Add the quotation prefix \"/:\" to file NAME.
 If NAME is a remote file name and TOP is nil, the local part of
 NAME is quoted.  If NAME is already a quoted file name, NAME is
