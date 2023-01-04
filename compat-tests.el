@@ -523,7 +523,6 @@
     (should (equal '(two) (hash-table-values ht)))))
 
 (ert-deftest named-let ()
-  "Check if `named-let' was implemented properly."
   (should (= (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
   (should (= (named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
@@ -610,7 +609,6 @@
                    "eins"))))
 
 (ert-deftest json-serialize ()
-  "Check if `json-serialize' was implemented properly."
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
         (input-2 '(:key ["abc" 2] yek t))
         (input-3 (let ((ht (make-hash-table)))
@@ -642,7 +640,6 @@
                   :type '(wrong-type-argument stringp a))))
 
 (ert-deftest json-parse-string ()
-  "Check if `compat--t-json-parse-string' was implemented properly."
   (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
     (let ((obj (json-parse-string input :object-type 'alist)))
       (should (equal (cdr (assq 'key obj)) ["abc" 2]))
@@ -701,7 +698,6 @@
 
 
 ;; (ert-deftest insert-into-buffer ()
-;;   "Check if `insert-into-buffer' was implemented correctly."
 ;;   ;; Without optional compat--arguments
 ;;   (with-temp-buffer
 ;;     (let ((other (current-buffer)))
@@ -752,7 +748,6 @@
 ;;         (should (string= (buffer-string) "abce"))))))
 
 ;; (ert-deftest regexp-unmatchable ()
-;;   "Check if `compat--string-distance' was implemented correctly."
 ;;   (dolist (str '(""                     ;empty string
 ;;                  "a"                    ;simple string
 ;;                  "aaa"                  ;longer string
@@ -772,7 +767,6 @@
 ;;   (should (equal "\\<\\(\\`a\\`\\)\\>" '() 'words))
 
 ;; (ert-deftest regexp-opt ()
-;;   "Check if `compat--regexp-opt' advice was defined correctly."
 ;;   (let ((unmatchable "\\(?:\\`a\\`\\)"))
 ;;     (dolist (str '(""                   ;empty string
 ;;                    "a"                  ;simple string
@@ -808,7 +802,6 @@
 
 ;; ;; (when (fboundp 'alist-get)
 ;; ;;   (ert-deftest alist-get-1 ()
-;; ;;     "Check if `compat--alist-get' was advised correctly."
 ;; ;;     (ert-deftest alist-get
 ;; ;;       ;; Fallback behaviour:
 ;; ;;       (should (equal nil 1 nil)                      ;empty list
@@ -1251,7 +1244,6 @@
 ;;   (should (equal nil "dir/subdir"))
 
 ;; (ert-deftest if-let* ()
-;;   "Check if `compat--t-if-let*' was implemented properly."
 ;;   (should
 ;;    (compat--t-if-let*
 ;;     ((x 3)
@@ -1264,7 +1256,6 @@
 ;;    (compat--t-if-let* (((= 5 6))) t nil)))
 
 ;; (ert-deftest if-let ()
-;;   "Check if `compat--t-if-let' was implemented properly."
 ;;   (should (compat--t-if-let ((e (memq 0 '(1 2 3 0 5 6))))
 ;;               e))
 ;;   (should-not (compat--t-if-let ((e (memq 0 '(1 2 3 5 6)))
@@ -1277,7 +1268,6 @@
 ;;    (compat--t-if-let (((= 5 6))) t nil)))
 
 ;; (ert-deftest and-let* ()
-;;   "Check if `compat--t-and-let*' was implemented properly."
 ;;   (should                               ;trivial body
 ;;    (compat--t-and-let*
 ;;     ((x 3)
