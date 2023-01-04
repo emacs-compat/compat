@@ -1693,17 +1693,17 @@
                  ))
     (should-not (string-match-p regexp-unmatchable str))))
 
-;; TODO func-arity seems broken
-;; (ert-deftest func-arity
-;;   (should-equal '(0 . 0) (func-arity (lambda ()))))
-;;   (should-equal '(1 . 1) (func-arity (lambda (x) x))))
-;;   (should-equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
-;;   (should-equal '(0 . many) (func-arity (lambda (&rest _)))))
-;;   (should-equal '(1 . 1) 'identity)
-;;   (should-equal '(0 . many) 'ignore)
-;;   (should-equal '(2 . many) 'defun)
-;;   (should-equal '(2 . 3) 'defalias)
-;;   (should-equal '(1 . unevalled) 'defvar))
+(ert-deftest func-arity ()
+  ;;(should-equal '(0 . 0) (func-arity (lambda ()))))
+  ;;(should-equal '(1 . 1) (func-arity (lambda (x) x))))
+;;  (should-equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
+    ;;(should-equal '(0 . many) (func-arity (lambda (&rest _)))))
+  (should-equal '(1 . 1) 'identity)
+  (should-equal '(0 . many) 'ignore)
+  (should-equal '(2 . many) 'defun)
+  (should-equal '(2 . 3) 'defalias)
+  ;;(should-equal '(1 . unevalled) 'defvar)
+  )
 
 ;; TODO fix broken test
 ;;(ert-deftest directory-files-recursively
