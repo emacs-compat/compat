@@ -207,7 +207,7 @@ If this is not documented on yourself system, you can check \
        `(not (fboundp ',name)))
      rest)))
 
-(defmacro compat-defun (name arglist docstring &rest rest)
+(defmacro compat-defun (name arglist docstring &rest rest) ;; UNTESTED
   "Define NAME with arguments ARGLIST as a compatibility function.
 The function must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by the macro but not passed on
@@ -234,7 +234,7 @@ listing of attributes.
 The definition will only be installed, if the version this
 function was defined in, as indicated by the `:version'
 attribute, is greater than the current Emacs version."
-  (declare (debug compat-defun) (doc-string 3) (indent 2))
+  (declare (debug compat-defun) (doc-string 3) (indent 2)) ;; UNTESTED
   (compat--define-function 'macro name arglist docstring rest))
 
 (defmacro compat-defvar (name initval docstring &rest attr)
