@@ -750,6 +750,7 @@ The return value is a string (or nil in case we can’t find it)."
   "Constructor for objects of type ‘prop-match’."
   :realname compat--make-prop-match-with-vector
   :max-version "26.1"
+  :feature text-property-search
   (vector
    'prop-match
    (plist-get attr :beginning)
@@ -760,6 +761,7 @@ The return value is a string (or nil in case we can’t find it)."
   "Constructor for objects of type ‘prop-match’."
   :realname compat--make-prop-match-with-record
   :min-version "26.1"
+  :feature text-property-search
   (record
    'prop-match
    (plist-get attr :beginning)
@@ -769,23 +771,28 @@ The return value is a string (or nil in case we can’t find it)."
 (compat-defun prop-match-p (match)
   "Return non-nil if MATCH is a `prop-match' object."
   :max-version "26.1"
+  :feature text-property-search
   (and (vectorp match) (eq (aref match 0) 'prop-match))) ;; Vector
 
 (compat-defun prop-match-p (match)
   "Return non-nil if MATCH is a `prop-match' object."
   :min-version "26.1"
+  :feature text-property-search
   (eq (type-of match) 'prop-match)) ;; Record
 
 (compat-defun prop-match-beginning (match)
   "Retrieve the position where MATCH begins."
+  :feature text-property-search
   (aref match 1))
 
 (compat-defun prop-match-end (match)
   "Retrieve the position where MATCH ends."
+  :feature text-property-search
   (aref match 2))
 
 (compat-defun prop-match-value (match)
   "Retrieve the value that MATCH holds."
+  :feature text-property-search
   (aref match 3))
 
 (compat-defun text-property-search-forward
@@ -824,6 +831,7 @@ If found, move point to the end of the region and return a
 of the match, use `prop-match-beginning' and `prop-match-end' for
 the buffer positions that limit the region, and
 `prop-match-value' for the value of PROPERTY in the region."
+  :feature text-property-search
   (let* ((match-p
           (lambda (prop-value)
             (funcall
@@ -898,6 +906,7 @@ the buffer positions that limit the region, and
 
 Like `text-property-search-forward', which see, but searches backward,
 and if a matching region is found, place point at the start of the region."
+  :feature text-property-search
   (let* ((match-p
           (lambda (prop-value)
             (funcall
