@@ -68,6 +68,21 @@
   (should (equal t (always 1)))                    ;; single argument
   (should (equal t (always 1 2 3 4))))             ;; multiple arguments
 
+(ert-deftest string-width ()
+  (should (equal 0 (compat-call string-width "")))
+  (should (equal 3 (compat-call string-width "abc")))                 ;; no argument
+  (should (equal 5 (compat-call string-width "abcあ")))
+  (should (equal (1+ tab-width) (compat-call string-width "a	")))
+  (should (equal 2 (compat-call string-width "abc" 1)))               ;; with from
+  (should (equal 4 (compat-call string-width "abcあ" 1)))
+  (should (equal tab-width (compat-call string-width "a	" 1)))
+  (should (equal 2 (compat-call string-width "abc" 0 2)))             ;; with to
+  (should (equal 3 (compat-call string-width "abcあ" 0 3)))
+  (should (equal 1 (compat-call string-width "a	" 0 1)))
+  (should (equal 1 (compat-call string-width "abc" 1 2)))             ;; with from and to
+  (should (equal 2 (compat-call string-width "abcあ" 3 4)))
+  (should (equal 0 (compat-call string-width "a	" 1 1))))
+
 (ert-deftest compat-hash-table-keys ()
   (let ((ht (make-hash-table)))
     (should (null (hash-table-keys ht)))
@@ -537,21 +552,6 @@
 ;;   (expect error "file" "")
 ;;   (expect error "rel/" "ext")
 ;;   (expect error "/abs/" "ext"))
-
-;; (compat-deftests compat-string-width
-;;   (ought 0 "")
-;;   (ought 3 "abc")			;no argument
-;;   (ought 5 "abcあ")
-;;   (ought (1+ tab-width) "a	")
-;;   (ought 2 "abc" 1)               ;with from
-;;   (ought 4 "abcあ" 1)
-;;   (ought tab-width "a	" 1)
-;;   (ought 2 "abc" 0 2)             ;with to
-;;   (ought 3 "abcあ" 0 3)
-;;   (ought 1 "a	" 0 1)
-;;   (ought 1 "abc" 1 2)             ;with from and to
-;;   (ought 2 "abcあ" 3 4)
-;;   (ought 0 "a	" 1 1))
 
 ;; (compat-deftests flatten-tree
 ;;   ;; Example from docstring:
