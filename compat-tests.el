@@ -19,9 +19,14 @@
 
 ;; Tests for compatibility functions from compat.el.
 ;;
-;; Note that not all functions have tests yet. Additions are very welcome. The
-;; tests are written in a simple, explicit style. If you intend to use a
-;; function, which doesn't have tests yet, please add them here.
+;; Note that not all functions have tests yet.  Additions are very welcome.
+;; If you intend to use a function, which doesn't have tests yet, please
+;; add tests here.  NO GUARANTEES ARE MADE FOR FUNCTIONS WITHOUT TESTS.
+
+;; The tests are written in a simple, explicit style.  The functions tested
+;; here are guaranteed to work on the Emacs versions tested by continuous
+;; integration.  This includes 24.4, 24.5, 25.1, 25.2, 25.3, 26.1, 26.2,
+;; 26.3, 27.1, 27.2, 28.1 and the current Emacs master branch.
 
 ;;; Code:
 
@@ -38,6 +43,50 @@
     (setq list (compat-call plist-put list "first" 10 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
+
+(ert-deftest length= ()
+  (should (equal t (length= '() 0)))                  ;empty list
+  (should (equal t (length= '(1) 1)))                 ;single element
+  (should (equal t (length= '(1 2 3) 3)))             ;multiple elements
+  (should (equal nil (length= '(1 2 3) 2)))           ;less than
+  (should (equal nil (length= '(1) 0)))
+  (should (equal nil (length= '(1 2 3) 4)))           ;more than
+  (should (equal nil (length= '(1) 2)))
+  (should (equal nil (length= '() 1)))
+  (should (equal t (length= [] 0)))                   ;empty vector
+  (should (equal t (length= [1] 1)))                  ;single element vector
+  (should (equal t (length= [1 2 3] 3)))              ;multiple element vector
+  (should (equal nil (length= [1 2 3] 2)))            ;less than
+  (should (equal nil (length= [1 2 3] 4)))            ;more than
+  (should-error (length= 3 nil) :type 'wrong-type-argument))
+
+(ert-deftest length< ()
+  (should (equal nil (length< '(1) 0)))               ;single element
+  (should (equal nil (length< '(1 2 3) 2)))           ;multiple elements
+  (should (equal nil (length< '(1 2 3) 3)))           ;equal length
+  (should (equal nil (length< '(1) 1)))
+  (should (equal t (length< '(1 2 3) 4)))             ;more than
+  (should (equal t (length< '(1) 2)))
+  (should (equal t (length< '() 1)))
+  (should (equal nil (length< [1] 0)))                ;single element vector
+  (should (equal nil (length< [1 2 3] 2)))            ;multiple element vector
+  (should (equal nil (length< [1 2 3] 3)))            ;equal length
+  (should (equal t (length< [1 2 3] 4)))              ;more than
+  (should-error (length< 3 nil) :type 'wrong-type-argument))
+
+(ert-deftest length> ()
+  (should (equal t (length> '(1) 0)))                 ;single element
+  (should (equal t (length> '(1 2 3) 2)))             ;multiple elements
+  (should (equal nil (length> '(1 2 3) 3)))           ;equal length
+  (should (equal nil (length> '(1) 1)))
+  (should (equal nil (length> '(1 2 3) 4)))           ;more than
+  (should (equal nil (length> '(1) 2)))
+  (should (equal nil (length> '() 1)))
+  (should (equal t (length> [1] 0)))                  ;single element vector
+  (should (equal t (length> [1 2 3] 2)))              ;multiple element vector
+  (should (equal nil (length> [1 2 3] 3)))            ;equal length
+  (should (equal nil (length> [1 2 3] 4)))            ;more than
+  (should-error (length< 3 nil) :type 'wrong-type-argument))
 
 (ert-deftest ensure-list ()
   (should (equal nil (ensure-list nil)))           ;; empty list
@@ -355,45 +404,6 @@
     (goto-char (point-max))
     (should (null (text-property-search-backward 'non-existant)))))
 
-;; (defun compat--expect (name compat)
-;;   "Implementation for the `expect' macro for NAME.
-;; COMPAT is the name of the compatibility function the behaviour is
-;; being compared against."
-;;   (lambda (error-spec &rest args)
-;;     (let ((real-test (intern (format "%s-%04d-actual/expect" compat compat-test-counter)))
-;;           (comp-test (intern (format "%s-%04d-compat/expect" compat compat-test-counter)))
-;;           (error-type (if (consp error-spec) (car error-spec) error-spec)))
-;;       (setq compat-test-counter (1+ compat-test-counter))
-;;       (macroexp-progn
-;;        (list (and (fboundp name)
-;;                   (or (not (get compat 'compat-version))
-;;                       (version<= emacs-version (get compat 'compat-version)))
-;;                   `(ert-set-test
-;;                     ',real-test
-;;                     (make-ert-test
-;;                      :name ',real-test
-;;                      :tags '(,name)
-;;                      :body (lambda ()
-;;                              (should
-;;                               (let ((res (should-error (,name ,@args) :type ',error-type)))
-;;                                 (should
-;;                                  ,(if (consp error-spec)
-;;                                       `(equal res ',error-spec)
-;;                                     `(eq (car res) ',error-spec)))))))))
-;;              (and (fboundp compat)
-;;                   `(ert-set-test
-;;                     ',comp-test
-;;                     (make-ert-test
-;;                      :name ',comp-test
-;;                      :tags '(,name)
-;;                      :body (lambda ()
-;;                              (should
-;;                               (let ((res (should-error (,name ,@args) :type ',error-type)))
-;;                                 (should
-;;                                  ,(if (consp error-spec)
-;;                                       `(equal res ',error-spec)
-;;                                     `(eq (car res) ',error-spec))))))))))))))
-
 ;; (ert-deftest string-search
 ;;   ;; Find needle at the beginning of a haystack:
 ;;   (ought 0 "a" "abb")
@@ -545,50 +555,6 @@
 ;;     ;; therefore fail this test, even if the right symbol is being
 ;;     ;; thrown.
 ;;     (expect wrong-length-argument "" "x" "abc")))
-
-;; (ert-deftest length=
-;;   (ought t '() 0)                  ;empty list
-;;   (ought t '(1) 1)			;single element
-;;   (ought t '(1 2 3) 3)             ;multiple elements
-;;   (ought nil '(1 2 3) 2)           ;less than
-;;   (ought nil '(1) 0)
-;;   (ought nil '(1 2 3) 4)           ;more than
-;;   (ought nil '(1) 2)
-;;   (ought nil '() 1)
-;;   (ought t [] 0)                   ;empty vector
-;;   (ought t [1] 1)			;single element vector
-;;   (ought t [1 2 3] 3)              ;multiple element vector
-;;   (ought nil [1 2 3] 2)            ;less than
-;;   (ought nil [1 2 3] 4)            ;more than
-;;   (expect wrong-type-argument 3 nil))
-
-;; (ert-deftest length<
-;;   (ought nil '(1) 0)               ;single element
-;;   (ought nil '(1 2 3) 2)           ;multiple elements
-;;   (ought nil '(1 2 3) 3)           ;equal length
-;;   (ought nil '(1) 1)
-;;   (ought t '(1 2 3) 4)             ;more than
-;;   (ought t '(1) 2)
-;;   (ought t '() 1)
-;;   (ought nil [1] 0)                ;single element vector
-;;   (ought nil [1 2 3] 2)            ;multiple element vector
-;;   (ought nil [1 2 3] 3)            ;equal length
-;;   (ought t [1 2 3] 4)              ;more than
-;;   (expect wrong-type-argument 3 nil))
-
-;; (ert-deftest length>
-;;   (ought t '(1) 0)			;single element
-;;   (ought t '(1 2 3) 2)             ;multiple elements
-;;   (ought nil '(1 2 3) 3)           ;equal length
-;;   (ought nil '(1) 1)
-;;   (ought nil '(1 2 3) 4)           ;more than
-;;   (ought nil '(1) 2)
-;;   (ought nil '() 1)
-;;   (ought t [1] 0)			;single element vector
-;;   (ought t [1 2 3] 2)              ;multiple element vector
-;;   (ought nil [1 2 3] 3)            ;equal length
-;;   (ought nil [1 2 3] 4)            ;more than
-;;   (expect wrong-type-argument 3 nil))
 
 ;; (ert-deftest compat-insert-into-buffer ()
 ;;   "Check if `insert-into-buffer' was implemented correctly."
