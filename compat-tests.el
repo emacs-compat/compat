@@ -46,6 +46,11 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(defun compat-function-put-test ())
+(ert-deftest function-put ()
+  (function-put #'compat-function-put-test 'compat-test 42)
+  (should-equal 42 (function-get #'compat-function-put-test 'compat-test)))
+
 (ert-deftest ignore-error ()
   (should-equal (ignore-error (end-of-file)
                   (read ""))

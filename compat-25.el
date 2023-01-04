@@ -251,7 +251,7 @@ threading."
 
 ;;;; Defined in byte-run.el
 
-(compat-defun function-put (func prop value) ;; <UNTESTED>
+(compat-defun function-put (func prop value) ;; <OK>
   "Set FUNCTION's property PROP to VALUE.
 The namespace for PROP is shared with symbols.
 So far, FUNCTION can only be a symbol, not a lambda expression."
