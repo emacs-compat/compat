@@ -376,7 +376,7 @@ where USER is a valid login name."
              (val (pop pairs)))
         (unless (symbolp sym)
           (error "Attempting to set a non-symbol: %s" (car pairs)))
-        (push `(set (make-local-variable ,sym) ,val)
+        (push `(set (make-local-variable ',sym) ,val)
               body)))
     (cons 'progn (nreverse body))))
 
