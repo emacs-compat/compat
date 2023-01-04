@@ -48,6 +48,21 @@
   (should (equal '(1 2 3) (ensure-list '(1 2 3)))) ;; multiple element list
   (should (equal '(1) (ensure-list 1))))           ;; atom
 
+(ert-deftest proper-list-p ()
+  (should (equal 0 (proper-list-p ())))            ;; empty list
+  (should (equal 1 (proper-list-p '(1))))          ;; single element
+  (should (equal 3 (proper-list-p '(1 2 3))))      ;; multiple elements
+  (should (equal nil (proper-list-p '(1 . 2))))    ;; cons
+  (should (equal nil (proper-list-p '(1 2 . 3))))  ;; dotted
+  (should (equal nil (let ((l (list 1 2 3)))       ;; circular
+                       (setf (nthcdr 3 l) l)
+                       (proper-list-p l))))
+  (should (equal nil (proper-list-p 1)))           ;; non-lists
+  (should (equal nil (proper-list-p "")))
+  (should (equal nil (proper-list-p "abc")))
+  (should (equal nil (proper-list-p [])))
+  (should (equal nil (proper-list-p [1 2 3]))))
+
 (ert-deftest compat-always ()
   (should (equal t (always)))                      ;; no arguments
   (should (equal t (always 1)))                    ;; single argument
@@ -585,21 +600,6 @@
 ;;   (ought 1 "abc" 1 2)             ;with from and to
 ;;   (ought 2 "abcあ" 3 4)
 ;;   (ought 0 "a	" 1 1))
-
-;; (compat-deftests proper-list-p
-;;   (ought 0 ())				;empty list
-;;   (ought 1 '(1))				;single element
-;;   (ought 3 '(1 2 3))			;multiple elements
-;;   (ought nil '(1 . 2))			;cons
-;;   (ought nil '(1 2 . 3))			;dotted
-;;   (ought nil (let ((l (list 1 2 3)))		;circular
-;;                (setf (nthcdr 3 l) l)
-;;                l))
-;;   (ought nil 1)                       ;non-lists
-;;   (ought nil "")
-;;   (ought nil "abc")
-;;   (ought nil [])
-;;   (ought nil [1 2 3]))
 
 ;; (compat-deftests flatten-tree
 ;;   ;; Example from docstring:
