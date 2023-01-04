@@ -143,6 +143,14 @@ call these definitions ``Explicit Definitions''. In contrast,
 (mapcan FUNCTION SEQUENCE)               ;; Implicit
 @end example
 
+If you intend to use a compatibility function in your code it is
+strongly recommended that you check the tests in
+@file{compat-tests.el}.  There you will find the supported calling
+convention, which is guaranteed to work on the supported Emacs
+versions.  We ensure this using continuous integration.  If a function
+is not tested yet in @file{compat-tests.el} NO GUARANTEES CAN BE MADE.
+You are invited to contribute tests in this case.
+
 It is recommended to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
 mailing list to be notified when new versions are released or relevant
@@ -155,7 +163,7 @@ The library intends to provide support back until Emacs 24.4.  The
 intended audience are package developers that are interested in using
 newer developments, without having to break compatibility.
 
-Sadly, total backwards compatibility cannot be provided for technical
+Total backwards compatibility cannot be provided for technical
 reasons.  These might include:
 
 @itemize
@@ -165,7 +173,7 @@ To support these cases, the function or macro would have to be
 advised. As this is regarded as invasive and adds significant
 overhead, even when the new feature is not used, this approach is not
 used. As a compromise, compatibility functions and macros with a
-changed calling convetion can be accessed via the
+changed calling convention can be accessed via the
 @code{compat-function} and @code{compat-call} macros.
 
 @item
@@ -180,9 +188,9 @@ other times it would be infeasible to duplicate an entire library within
 Compat while also providing the necessary backwards compatibility.
 
 @item
-It just wasn't added, and there is no good reason (though good excuses
-might exist).  If you happen to find such a function, @ref{Development,
-, reporting} it would be much appreciated.
+It just wasn't added, and there is no good reason.  If you happen to
+find such a function, @ref{Development, , reporting} it would be much
+appreciated.
 
 Always begin by assuming that this might be the case, unless proven
 otherwise.
