@@ -1639,32 +1639,22 @@
   (should-equal 29 (date-days-in-month 2020 2))
   (should-equal 28 (date-days-in-month 2021 2)))
 
-;; (ert-deftest regexp-opt ()
-;;   ;; Ensure `regexp-opt' doesn't change the existing
-;;   ;; behaviour:
-;;   (should-equal (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
-;;   (should-equal (regexp-opt '("abc" "def" "ghe")) '("abc" "def" "ghe"))
-;;   (should-equal (regexp-opt '("a" "b" "c") 'words) '("a" "b" "c") 'words)
-;;   ;; Test empty list:
-;;   (should-equal "\\(?:\\`a\\`\\)" '())
-;;   (should-equal "\\<\\(\\`a\\`\\)\\>" '() 'words))
+(ert-deftest regexp-opt ()
+  ;; Ensure `regexp-opt' doesn't change the existing
+  ;; behaviour:
+  (should-equal "[abc]" (compat-call regexp-opt '("a" "b" "c")))
+  (should-equal "\\(?:abc\\|def\\|ghe\\)" (compat-call regexp-opt '("abc" "def" "ghe")))
+  (should-equal "\\<\\([abc]\\)\\>" (compat-call regexp-opt '("a" "b" "c") 'words))
+  ;; Test empty list:
+  (should-equal "\\(?:\\`a\\`\\)" (compat-call regexp-opt '()))
+  (should-equal "\\<\\(\\`a\\`\\)\\>" (compat-call regexp-opt '() 'words)))
 
-;; (ert-deftest regexp-opt ()
-;;   (let ((unmatchable "\\(?:\\`a\\`\\)"))
-;;     (dolist (str '(""                   ;empty string
-;;                    "a"                  ;simple string
-;;                    "aaa"                ;longer string
-;;                    ))
-;;       (should-not (string-match-p unmatchable str)))))
-
-;; (ert-deftest regexp-unmatchable ()
-;;   (dolist (str '(""                     ;empty string
-;;                  "a"                    ;simple string
-;;                  "aaa"                  ;longer string
-;;                  ))
-;;     (should-not (string-match-p (with-no-warnings compat--t-regexp-unmatchable) str))
-;;     (when (boundp 'regexp-unmatchable)
-;;       (should-not (string-match-p regexp-unmatchable str)))))
+(ert-deftest regexp-unmatchable ()
+  (dolist (str '(""                     ;empty string
+                 "a"                    ;simple string
+                 "aaa"                  ;longer string
+                 ))
+    (should-not (string-match-p regexp-unmatchable str))))
 
 ;; TODO func-arity seems broken
 ;; (ert-deftest func-arity
