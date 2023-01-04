@@ -726,7 +726,7 @@
   (should-equal (expand-file-name "bar/.#b") (make-lock-file-name "bar/b"))
   (should-equal (expand-file-name "bar/.#foo") (make-lock-file-name "bar/foo")))
 
-(ert-deftest file-attributes ()
+(ert-deftest file-attribute-getters ()
   (let ((attrs '(type link-number user-id group-id access-time modification-time
                  status-change-time size modes unspecified inode-number device-number)))
     (should-equal (file-attribute-type attrs) 'type)
@@ -1685,6 +1685,18 @@
   (should-not (time-equal-p '(1 3 3 4) '(1 2 3 4)))
   (should-not (time-equal-p '(1 2 3 4) '(2 2 3 4)))
   (should-not (time-equal-p '(2 2 3 4) '(1 2 3 4))))
+
+(ert-deftest decoded-time-getters ()
+  (let ((time '(second minute hour day month year weekday dst zone)))
+    (should-equal (decode-time-second time) 'second)
+    (should-equal (decode-time-minute time) 'minute)
+    (should-equal (decode-time-hour time) 'hour)
+    (should-equal (decode-time-day time) 'day)
+    (should-equal (decode-time-month time) 'month)
+    (should-equal (decode-time-year time) 'year)
+    (should-equal (decode-time-weekday time) 'weekday)
+    (should-equal (decode-time-dst time) 'dst)
+    (should-equal (decode-time-zone time) 'zone)))
 
 (ert-deftest decoded-time-period ()
   (should-equal 0 (decoded-time-period '()))
