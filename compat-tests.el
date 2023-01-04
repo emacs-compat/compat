@@ -147,6 +147,57 @@
   (should (equal t (always 1)))                    ;; single argument
   (should (equal t (always 1 2 3 4))))             ;; multiple arguments
 
+(ert-deftest file-modes-number-to-symbolic ()
+  (should (equal "-rwx------" (file-modes-number-to-symbolic #o700)))
+  (should (equal "-rwxrwx---" (file-modes-number-to-symbolic #o770)))
+  (should (equal "-rwx---rwx" (file-modes-number-to-symbolic #o707)))
+  (should (equal "-rw-r-xr--" (file-modes-number-to-symbolic #o654)))
+  (should (equal "--wx-w---x" (file-modes-number-to-symbolic #o321)))
+  (should (equal "drwx------" (file-modes-number-to-symbolic #o700 ?d)))
+  (should (equal "?rwx------" (file-modes-number-to-symbolic #o700 ??)))
+  (should (equal "lrwx------" (file-modes-number-to-symbolic #o120700)))
+  (should (equal "prwx------" (file-modes-number-to-symbolic #o10700)))
+  (should (equal "-rwx------" (file-modes-number-to-symbolic #o30700))))
+
+(ert-deftest file-local-name ()
+  (should (equal "" (file-local-name "")))
+  (should (equal "foo" (file-local-name "foo")))
+  (should (equal "/bar/foo" (file-local-name "/bar/foo")))
+  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; TRAMP path back then.
+  ;;
+  ;; (should (equal "/ssh:foo" "/ssh:foo")
+  ;; (should (equal "/ssh:/bar/foo" "/ssh:/bar/foo")
+  (should (equal "foo" (file-local-name "/ssh::foo")))
+  (should (equal "/bar/foo" (file-local-name "/ssh::/bar/foo")))
+  (should (equal ":foo" (file-local-name "/ssh:::foo")))
+  (should (equal ":/bar/foo" (file-local-name "/ssh:::/bar/foo"))))
+
+(ert-deftest file-name-quoted-p ()
+  (should (equal nil (file-name-quoted-p "")))
+  (should (equal t (file-name-quoted-p "/:")))
+  (should (equal nil (file-name-quoted-p "//:")))
+  (should (equal t (file-name-quoted-p "/::")))
+  (should (equal nil (file-name-quoted-p "/ssh::")))
+  (should (equal nil (file-name-quoted-p "/ssh::a")))
+  (should (equal t (file-name-quoted-p "/ssh::/:a")))
+  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; TRAMP path back then.
+  ;;
+  ;; (should (equal nil "/ssh:/:a")
+  )
+
+(ert-deftest file-name-quote ()
+  (should (equal "/:" (file-name-quote "")))
+  (should (equal "/::"(file-name-quote  ":")))
+  (should (equal "/:/" (file-name-quote "/")))
+  (should (equal "/:" (file-name-quote "/:")))
+  (should (equal "/:a" (file-name-quote "a")))
+  (should (equal "/::a" (file-name-quote ":a")))
+  (should (equal "/:/a" (file-name-quote "/a")))
+  (should (equal "/:a" (file-name-quote "/:a")))
+  (should (equal (concat "/ssh:" (system-name) ":/:a") (file-name-quote "/ssh::a"))))
+
 (ert-deftest file-name-with-extension ()
   (should (equal "file.ext" (file-name-with-extension "file" "ext")))
   (should (equal "file.ext" (file-name-with-extension "file" ".ext")))
@@ -649,7 +700,7 @@
     (should (null (text-property-search-backward 'non-existant)))))
 
 
-;; (ert-deftest compat-insert-into-buffer ()
+;; (ert-deftest insert-into-buffer ()
 ;;   "Check if `insert-into-buffer' was implemented correctly."
 ;;   ;; Without optional compat--arguments
 ;;   (with-temp-buffer
@@ -700,7 +751,7 @@
 ;;           (insert-into-buffer other 2 3))
 ;;         (should (string= (buffer-string) "abce"))))))
 
-;; (ert-deftest compat-regexp-unmatchable ()
+;; (ert-deftest regexp-unmatchable ()
 ;;   "Check if `compat--string-distance' was implemented correctly."
 ;;   (dolist (str '(""                     ;empty string
 ;;                  "a"                    ;simple string
@@ -710,7 +761,7 @@
 ;;     (when (boundp 'regexp-unmatchable)
 ;;       (should-not (string-match-p regexp-unmatchable str)))))
 
-;; (ert-deftest compat-regexp-opt
+;; (ert-deftest regexp-opt
 ;;   ;; Ensure `compat--regexp-opt' doesn't change the existing
 ;;   ;; behaviour:
 ;;   (should (equal (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
@@ -720,7 +771,7 @@
 ;;   (should (equal "\\(?:\\`a\\`\\)" '())
 ;;   (should (equal "\\<\\(\\`a\\`\\)\\>" '() 'words))
 
-;; (ert-deftest compat-regexp-opt ()
+;; (ert-deftest regexp-opt ()
 ;;   "Check if `compat--regexp-opt' advice was defined correctly."
 ;;   (let ((unmatchable "\\(?:\\`a\\`\\)"))
 ;;     (dolist (str '(""                   ;empty string
@@ -729,7 +780,7 @@
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
 
-;; (ert-deftest compat-assoc
+;; (ert-deftest assoc
 ;;   ;; Fallback behaviour:
 ;;   (should (equal nil 1 nil)               ;empty list
 ;;   (should (equal '(1) 1 '((1)))            ;single element list
@@ -756,9 +807,9 @@
 ;;    #'string-match-p))
 
 ;; ;; (when (fboundp 'alist-get)
-;; ;;   (ert-deftest compat-alist-get-1 ()
+;; ;;   (ert-deftest alist-get-1 ()
 ;; ;;     "Check if `compat--alist-get' was advised correctly."
-;; ;;     (ert-deftest compat-alist-get
+;; ;;     (ert-deftest alist-get
 ;; ;;       ;; Fallback behaviour:
 ;; ;;       (should (equal nil 1 nil)                      ;empty list
 ;; ;;       (should (equal 'a 1 '((1 . a)))                  ;single element list
@@ -924,13 +975,13 @@
 ;;   (should (equal t "aaab" "aaaa")
 ;;   (should (equal nil "aaaa" "aaab"))
 
-;; (ert-deftest compat-sort
+;; (ert-deftest sort
 ;;   (should (equal (list 1 2 3) (list 1 2 3) #'<)
 ;;   (should (equal (list 1 2 3) (list 3 2 1) #'<)
 ;;   (should (equal '[1 2 3] '[1 2 3] #'<)
 ;;   (should (equal '[1 2 3] '[3 2 1] #'<))
 
-;; (ert-deftest compat-=
+;; (ert-deftest =
 ;;   (should (equal t 0 0)
 ;;   (should (equal t 0 0 0)
 ;;   (should (equal t 0 0 0 0)
@@ -946,7 +997,7 @@
 ;;   (should (equal nil 0 1 'a)
 ;;   (should (equal nil 0.0 0.0 0.0 0.1))
 
-;; (ert-deftest compat-<
+;; (ert-deftest <
 ;;   (should (equal nil 0 0)
 ;;   (should (equal nil 0 0 0)
 ;;   (should (equal nil 0 0 0 0)
@@ -968,7 +1019,7 @@
 ;;   (should (equal t -0.1 0.0 0.2 0.4)
 ;;   (should (equal t -0.1 0 0.2 0.4))
 
-;; (ert-deftest compat->
+;; (ert-deftest >
 ;;   (should (equal nil 0 0)
 ;;   (should (equal nil 0 0 0)
 ;;   (should (equal nil 0 0 0 0)
@@ -990,7 +1041,7 @@
 ;;   (should (equal t 0.4 0.2 0.0 -0.1)
 ;;   (should (equal t 0.4 0.2 0 -0.1))
 
-;; (ert-deftest compat-<=
+;; (ert-deftest <=
 ;;   (should (equal t 0 0)
 ;;   (should (equal t 0 0 0)
 ;;   (should (equal t 0 0 0 0)
@@ -1022,7 +1073,7 @@
 ;;   (should (equal nil 0.4 0.2 0 0.0 0.0 -0.1)
 ;;   (should (equal nil 0.4 0.2 0 -0.1))
 
-;; (ert-deftest compat->=
+;; (ert-deftest >=
 ;;   (should (equal t 0 0)
 ;;   (should (equal t 0 0 0)
 ;;   (should (equal t 0 0 0 0)
@@ -1087,7 +1138,7 @@
 ;;   (should (equal nil "cddc" "abba")
 ;;   (should (equal nil "aabba" "abba"))
 
-;; (ert-deftest compat-split-string
+;; (ert-deftest split-string
 ;;   (should (equal '("a" "b" "c") "a b c")
 ;;   (should (equal '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
 ;;   (should (equal '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+"))
@@ -1153,7 +1204,7 @@
 ;;   (should (equal '(if a (progn b)) '(when a b))
 ;;   (should (equal '(if a (progn (unless b c))) '(when a (unless b c))))
 
-;; (ert-deftest compat-file-size-human-readable
+;; (ert-deftest file-size-human-readable
 ;;     (should (equal "1000" 1000)
 ;;     (should (equal "1k" 1024)
 ;;     (should (equal "1M" (* 1024 1024))
@@ -1199,7 +1250,7 @@
 ;;   (should (equal t "dir/subdir/")
 ;;   (should (equal nil "dir/subdir"))
 
-;; (ert-deftest compat-if-let* ()
+;; (ert-deftest if-let* ()
 ;;   "Check if `compat--t-if-let*' was implemented properly."
 ;;   (should
 ;;    (compat--t-if-let*
@@ -1212,7 +1263,7 @@
 ;;   (should-not
 ;;    (compat--t-if-let* (((= 5 6))) t nil)))
 
-;; (ert-deftest compat-if-let ()
+;; (ert-deftest if-let ()
 ;;   "Check if `compat--t-if-let' was implemented properly."
 ;;   (should (compat--t-if-let ((e (memq 0 '(1 2 3 0 5 6))))
 ;;               e))
@@ -1225,7 +1276,7 @@
 ;;   (should-not
 ;;    (compat--t-if-let (((= 5 6))) t nil)))
 
-;; (ert-deftest compat-and-let* ()
+;; (ert-deftest and-let* ()
 ;;   "Check if `compat--t-and-let*' was implemented properly."
 ;;   (should                               ;trivial body
 ;;    (compat--t-and-let*
@@ -1245,7 +1296,7 @@
 ;;   (should-not
 ;;    (compat--t-and-let* (((= 5 6))) t)))
 
-;; (ert-deftest compat-json-parse-string
+;; (ert-deftest json-parse-string
 ;;   (should (equal 0 "0")
 ;;   (should (equal 1 "1")
 ;;   (should (equal 0.5 "0.5")
@@ -1256,7 +1307,7 @@
 ;;   (should (equal 'foo "null" :null-object 'foo)
 ;;   (should (equal ["false" t] "[false, true]" :false-object "false"))
 
-;; (ert-deftest compat-lookup-key
+;; (ert-deftest lookup-key
 ;;   (let ((a-map (make-sparse-keymap))
 ;;         (b-map (make-sparse-keymap)))
 ;;     (define-key a-map "x" 'foo)
@@ -1313,7 +1364,7 @@
 ;;   (ert-deftest bool-vector-exclusive-or
 ;;     (should (equal (bool-vector nil t t nil) a b)
 ;;     (should (equal (bool-vector nil t t nil) b a)
-;;     (ert-deftest compat-bool-vector-exclusive-or-sideeffect ()
+;;     (ert-deftest bool-vector-exclusive-or-sideeffect ()
 ;;       (let ((c (make-bool-vector 4 nil)))
 ;;         (compat--t-bool-vector-exclusive-or a b c)
 ;;         (should (equal (bool-vector nil t t nil) c))
@@ -1334,7 +1385,7 @@
 ;;   (ert-deftest bool-vector-union
 ;;     (should (equal (bool-vector t t t nil) a b)
 ;;     (should (equal (bool-vector t t t nil) b a)
-;;     (ert-deftest compat-bool-vector-union-sideeffect ()
+;;     (ert-deftest bool-vector-union-sideeffect ()
 ;;       (let ((c (make-bool-vector 4 nil)))
 ;;         (compat--t-bool-vector-union a b c)
 ;;         (should (equal (bool-vector t t t nil) c))))
@@ -1354,7 +1405,7 @@
 ;;   (ert-deftest bool-vector-intersection
 ;;     (should (equal (bool-vector t nil nil nil) a b)
 ;;     (should (equal (bool-vector t nil nil nil) b a)
-;;     (ert-deftest compat-bool-vector-intersection-sideeffect ()
+;;     (ert-deftest bool-vector-intersection-sideeffect ()
 ;;       (let ((c (make-bool-vector 4 nil)))
 ;;         (compat--t-bool-vector-intersection a b c)
 ;;         (should (equal (bool-vector t nil nil nil) c))))
@@ -1374,7 +1425,7 @@
 ;;   (ert-deftest bool-vector-set-difference
 ;;     (should (equal (bool-vector nil t nil nil) a b)
 ;;     (should (equal (bool-vector nil nil t nil) b a)
-;;     (ert-deftest compat-bool-vector-set-difference-sideeffect ()
+;;     (ert-deftest bool-vector-set-difference-sideeffect ()
 ;;       (let ((c (make-bool-vector 4 nil)))
 ;;         (compat--t-bool-vector-set-difference a b c)
 ;;         (should (equal (bool-vector nil t nil nil) c)))
@@ -1450,7 +1501,7 @@
 ;;   (should (equal  3 (bool-vector t nil t t))
 ;;   (should-error wrong-type-argument (vector)))
 
-;; (ert-deftest compat-assoc-delete-all
+;; (ert-deftest assoc-delete-all
 ;;   (should (equal (list) 0 (list))
 ;;   ;; Test `eq'
 ;;   (should (equal '((1 . one)) 0 (list (cons 1 'one)))
@@ -1572,57 +1623,6 @@
 ;;   ;; (should (equal nil "rgbi: 0/ 0/ 0")
 ;;   (should (equal nil "rgbi : 0/0/0")
 ;;   (should (equal nil "rgbi:0/0.5/10"))
-
-;; (ert-deftest file-modes-number-to-symbolic
-;;   (should (equal "-rwx------" #o700)
-;;   (should (equal "-rwxrwx---" #o770)
-;;   (should (equal "-rwx---rwx" #o707)
-;;   (should (equal "-rw-r-xr--" #o654)
-;;   (should (equal "--wx-w---x" #o321)
-;;   (should (equal "drwx------" #o700 ?d)
-;;   (should (equal "?rwx------" #o700 ??)
-;;   (should (equal "lrwx------" #o120700)
-;;   (should (equal "prwx------" #o10700)
-;;   (should (equal "-rwx------" #o30700))
-
-;; (ert-deftest file-local-name
-;;   (should (equal "" "")
-;;   (should (equal "foo" "foo")
-;;   (should (equal "/bar/foo" "/bar/foo")
-;;   ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
-;;   ;; TRAMP path back then.
-;;   ;;
-;;   ;; (should (equal "/ssh:foo" "/ssh:foo")
-;;   ;; (should (equal "/ssh:/bar/foo" "/ssh:/bar/foo")
-;;   (should (equal "foo" "/ssh::foo")
-;;   (should (equal "/bar/foo" "/ssh::/bar/foo")
-;;   (should (equal ":foo" "/ssh:::foo")
-;;   (should (equal ":/bar/foo" "/ssh:::/bar/foo"))
-
-;; (ert-deftest file-name-quoted-p
-;;   (should (equal nil "")
-;;   (should (equal t "/:")
-;;   (should (equal nil "//:")
-;;   (should (equal t "/::")
-;;   (should (equal nil "/ssh::")
-;;   (should (equal nil "/ssh::a")
-;;   (should (equal t "/ssh::/:a")
-;;   ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
-;;   ;; TRAMP path back then.
-;;   ;;
-;;   ;; (should (equal nil "/ssh:/:a")
-;;   )
-
-;; (ert-deftest file-name-quote
-;;   (should (equal "/:" "")
-;;   (should (equal "/::" ":")
-;;   (should (equal "/:/" "/")
-;;   (should (equal "/:" "/:")
-;;   (should (equal "/:a" "a")
-;;   (should (equal "/::a" ":a")
-;;   (should (equal "/:/a" "/a")
-;;   (should (equal "/:a" "/:a")
-;;   (should (equal (concat "/ssh:" (system-name) ":/:a") "/ssh::a"))
 
 ;; (ert-deftest make-lock-file-name
 ;;   (should (equal (expand-file-name ".#") "")
