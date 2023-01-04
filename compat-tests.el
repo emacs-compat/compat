@@ -1375,6 +1375,162 @@
     (goto-char (point-max))
     (should-not (text-property-search-backward 'non-existant))))
 
+(ert-deftest color-values-from-color-spec ()
+  ;; #RGB notation
+  (should-equal '(0 0 0) (color-values-from-color-spec "#000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "#000000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "#000000000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "#000000000000"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#00F"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#0000FF"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#000000FFF"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#00000000FFFF"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#00f"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#0000ff"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#000000fff"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#00000000ffff"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "#00000000ffFF"))
+  (should-equal '(#xffff #x0000 #x5555) (color-values-from-color-spec "#f05"))
+  (should-equal '(#x1f1f #xb0b0 #xc5c5) (color-values-from-color-spec "#1fb0C5"))
+  (should-equal '(#x1f83 #xb0ad #xc5e2) (color-values-from-color-spec "#1f83b0ADC5e2"))
+  (should-not (color-values-from-color-spec ""))
+  (should-not (color-values-from-color-spec "#"))
+  (should-not (color-values-from-color-spec "#0"))
+  (should-not (color-values-from-color-spec "#00"))
+  (should-not (color-values-from-color-spec "#0000FG"))
+  (should-not (color-values-from-color-spec "#0000FFF"))
+  (should-not (color-values-from-color-spec "#0000FFFF"))
+  (should-equal '(0 4080 65535) (color-values-from-color-spec "#0000FFFFF"))
+  (should-not (color-values-from-color-spec "#000FF"))
+  (should-not (color-values-from-color-spec "#0000F"))
+  (should-not (color-values-from-color-spec " #000000"))
+  (should-not (color-values-from-color-spec "#000000 "))
+  (should-not (color-values-from-color-spec " #000000 "))
+  (should-not (color-values-from-color-spec "#1f83b0ADC5e2g"))
+  (should-not (color-values-from-color-spec "#1f83b0ADC5e20"))
+  (should-not (color-values-from-color-spec "#12345"))
+  ;; rgb: notation
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgb:0/0/0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgb:0/0/00"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgb:0/00/000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgb:0/000/0000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgb:000/0000/0"))
+  (should-equal '(0 0 65535) (color-values-from-color-spec "rgb:000/0000/F"))
+  (should-equal '(65535 0 65535) (color-values-from-color-spec "rgb:FFF/0000/F"))
+  (should-equal '(65535 0 65535) (color-values-from-color-spec "rgb:FFFF/0000/FFFF"))
+  (should-equal '(0 255 65535) (color-values-from-color-spec "rgb:0/00FF/FFFF"))
+  (should-equal '(#xffff #x2323 #x28a2) (color-values-from-color-spec "rgb:f/23/28a"))
+  (should-equal '(#x1234 #x5678 #x09ab) (color-values-from-color-spec "rgb:1234/5678/09ab"))
+  (should-not (color-values-from-color-spec "rgb:/0000/FFFF"))
+  (should-not (color-values-from-color-spec "rgb:0000/0000/FFFG"))
+  (should-not (color-values-from-color-spec "rgb:0000/0000/FFFFF"))
+  (should-not (color-values-from-color-spec "rgb:0000/0000"))
+  (should-not (color-values-from-color-spec "rg:0000/0000/0000"))
+  (should-not (color-values-from-color-spec "rgb: 0000/0000/0000"))
+  (should-not (color-values-from-color-spec "rgbb:0000/0000/0000"))
+  (should-not (color-values-from-color-spec "rgb:0000/0000/0000   "))
+  (should-not (color-values-from-color-spec " rgb:0000/0000/0000  "))
+  (should-not (color-values-from-color-spec "  rgb:0000/0000/0000"))
+  (should-not (color-values-from-color-spec "rgb:0000/ 0000 /0000"))
+  (should-not (color-values-from-color-spec "rgb: 0000 /0000 /0000"))
+  (should-not (color-values-from-color-spec "rgb:0//0"))
+  ;; rgbi: notation
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0/0/0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0.0/0.0/0.0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0.0/0/0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0.0/0/0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0/0/0."))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0/0/0.0000"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0/0/.0"))
+  (should-equal '(0 0 0) (color-values-from-color-spec "rgbi:0/0/.0000"))
+  (should-equal '(65535 0 0) (color-values-from-color-spec "rgbi:1/0/0.0000"))
+  (should-equal '(65535 0 0) (color-values-from-color-spec "rgbi:1./0/0.0000"))
+  (should-equal '(65535 0 0) (color-values-from-color-spec "rgbi:1.0/0/0.0000"))
+  (should-equal '(65535 32768 0) (color-values-from-color-spec "rgbi:1.0/0.5/0.0000"))
+  (should-equal '(6554 21843 65469) (color-values-from-color-spec "rgbi:0.1/0.3333/0.999"))
+  (should-equal '(0 32768 6554) (color-values-from-color-spec "rgbi:0/0.5/0.1"))
+  (should-equal '(66 655 65535) (color-values-from-color-spec "rgbi:1e-3/1.0e-2/1e0"))
+  (should-equal '(6554 21843 65469) (color-values-from-color-spec "rgbi:1e-1/+0.3333/0.00999e2"))
+  (should-not (color-values-from-color-spec "rgbi:1.0001/0/0"))
+  (should-not (color-values-from-color-spec "rgbi:2/0/0"))
+  (should-not (color-values-from-color-spec "rgbi:0.a/0/0"))
+  (should-not (color-values-from-color-spec "rgbi:./0/0"))
+  (should-not (color-values-from-color-spec "rgbi:./0/0"))
+  (should-not (color-values-from-color-spec " rgbi:0/0/0"))
+  (should-not (color-values-from-color-spec "rgbi:0/0/0 "))
+  (should-not (color-values-from-color-spec "	rgbi:0/0/0 "))
+  (should-not (color-values-from-color-spec "rgbi:0 /0/ 0"))
+  (should-not (color-values-from-color-spec "rgbi:0/ 0 /0"))
+  (should-not (color-values-from-color-spec "rgbii:0/0/0"))
+  (should-not (color-values-from-color-spec "rgbi :0/0/0"))
+  ;; strtod ignores leading whitespace, making these legal colour
+  ;; specifications:
+  ;;
+  ;; (should-not (color-values-from-color-spec "rgbi: 0/0/0"))
+  ;; (should-not (color-values-from-color-spec "rgbi: 0/ 0/ 0"))
+  (should-not (color-values-from-color-spec "rgbi : 0/0/0"))
+  (should-not (color-values-from-color-spec "rgbi:0/0.5/10")))
+
+(ert-deftest lookup-key ()
+  (let ((a-map (make-sparse-keymap))
+        (b-map (make-sparse-keymap)))
+    (define-key a-map "x" 'foo)
+    (define-key b-map "x" 'bar)
+    (should-equal 'foo (compat-call lookup-key a-map "x"))
+    (should-equal 'bar (compat-call lookup-key b-map "x"))
+    (should-equal 'foo (compat-call lookup-key (list a-map b-map) "x"))
+    (should-equal 'bar (compat-call lookup-key (list b-map a-map) "x"))))
+
+(ert-deftest macroexpand-1 ()
+  (should-equal '(if a b c) (macroexpand-1 '(if a b c)))
+  (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))
+  (should-equal '(if a (progn (unless b c))) (macroexpand-1 '(when a (unless b c)))))
+
+(ert-deftest time-equal-p ()
+  (should (time-equal-p nil nil))
+
+  ;; FIXME: Testing these values can be tricky, because the timestamp
+  ;; might change between evaluating (current-time) and evaluating
+  ;; `time-equal-p', especially in the interpreted compatibility
+  ;; version.
+
+  ;; (should (time-equal-p (current-time) nil))
+  ;; (should (time-equal-p nil (current-time)))
+
+  ;; While `sleep-for' returns nil, indicating the current time, this
+  ;; behaviour seems to be undefined.  Relying on it is therefore not
+  ;; advised.
+  ;;(should-not (time-equal-p (current-time) (ignore (sleep-for 0.01))))
+  ;;(should-not (time-equal-p (current-time) (progn
+  ;;                             (sleep-for 0.01)
+  ;;                            (current-time))))
+  (should (time-equal-p '(1 2 3 4) '(1 2 3 4)))
+  (should-not (time-equal-p '(1 2 3 4) '(1 2 3 5)))
+  (should-not (time-equal-p '(1 2 3 5) '(1 2 3 4)))
+  (should-not (time-equal-p '(1 2 3 4) '(1 2 4 4)))
+  (should-not (time-equal-p '(1 2 4 4) '(1 2 3 4)))
+  (should-not (time-equal-p '(1 2 3 4) '(1 3 3 4)))
+  (should-not (time-equal-p '(1 3 3 4) '(1 2 3 4)))
+  (should-not (time-equal-p '(1 2 3 4) '(2 2 3 4)))
+  (should-not (time-equal-p '(2 2 3 4) '(1 2 3 4))))
+
+;; (ert-deftest regexp-opt ()
+;;   ;; Ensure `regexp-opt' doesn't change the existing
+;;   ;; behaviour:
+;;   (should-equal (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
+;;   (should-equal (regexp-opt '("abc" "def" "ghe")) '("abc" "def" "ghe"))
+;;   (should-equal (regexp-opt '("a" "b" "c") 'words) '("a" "b" "c") 'words)
+;;   ;; Test empty list:
+;;   (should-equal "\\(?:\\`a\\`\\)" '())
+;;   (should-equal "\\<\\(\\`a\\`\\)\\>" '() 'words))
+
+;; (ert-deftest regexp-opt ()
+;;   (let ((unmatchable "\\(?:\\`a\\`\\)"))
+;;     (dolist (str '(""                   ;empty string
+;;                    "a"                  ;simple string
+;;                    "aaa"                ;longer string
+;;                    ))
+;;       (should-not (string-match-p unmatchable str)))))
 
 ;; (ert-deftest if-let* ()
 ;;   (should
@@ -1427,169 +1583,6 @@
 ;;     (should-not (string-match-p (with-no-warnings compat--t-regexp-unmatchable) str))
 ;;     (when (boundp 'regexp-unmatchable)
 ;;       (should-not (string-match-p regexp-unmatchable str)))))
-
-;; (ert-deftest regexp-opt
-;;   ;; Ensure `compat--regexp-opt' doesn't change the existing
-;;   ;; behaviour:
-;;   (should-equal (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
-;;   (should-equal (regexp-opt '("abc" "def" "ghe")) '("abc" "def" "ghe"))
-;;   (should-equal (regexp-opt '("a" "b" "c") 'words) '("a" "b" "c") 'words)
-;;   ;; Test empty list:
-;;   (should-equal "\\(?:\\`a\\`\\)" '())
-;;   (should-equal "\\<\\(\\`a\\`\\)\\>" '() 'words))
-
-;; (ert-deftest regexp-opt ()
-;;   (let ((unmatchable "\\(?:\\`a\\`\\)"))
-;;     (dolist (str '(""                   ;empty string
-;;                    "a"                  ;simple string
-;;                    "aaa"                ;longer string
-;;                    ))
-;;       (should-not (string-match-p unmatchable str)))))
-
-;; (ert-deftest macroexpand-1
-;;   (should-equal '(if a b c) '(if a b c))
-;;   (should-equal '(if a (progn b)) '(when a b))
-;;   (should-equal '(if a (progn (unless b c))) '(when a (unless b c))))
-
-;; ;; TODO fix broken test
-;; ;;(ert-deftest directory-files-recursively
-;; ;;  (should-equal
-;; ;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
-;; ;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
-
-;; (ert-deftest lookup-key
-;;   (let ((a-map (make-sparse-keymap))
-;;         (b-map (make-sparse-keymap)))
-;;     (define-key a-map "x" 'foo)
-;;     (define-key b-map "x" 'bar)
-;;     (should-equal 'foo a-map "x")
-;;     (should-equal 'bar b-map "x")
-;;     (should-equal 'foo (list a-map b-map) "x")
-;;     (should-equal 'bar (list b-map a-map) "x")))
-
-;; (ert-deftest color-values-from-color-spec
-;;   ;; #RGB notation
-;;   (should-equal '(0 0 0) "#000")
-;;   (should-equal '(0 0 0) "#000000")
-;;   (should-equal '(0 0 0) "#000000000")
-;;   (should-equal '(0 0 0) "#000000000000")
-;;   (should-equal '(0 0 65535) "#00F")
-;;   (should-equal '(0 0 65535) "#0000FF")
-;;   (should-equal '(0 0 65535) "#000000FFF")
-;;   (should-equal '(0 0 65535) "#00000000FFFF")
-;;   (should-equal '(0 0 65535) "#00f")
-;;   (should-equal '(0 0 65535) "#0000ff")
-;;   (should-equal '(0 0 65535) "#000000fff")
-;;   (should-equal '(0 0 65535) "#00000000ffff")
-;;   (should-equal '(0 0 65535) "#00000000ffFF")
-;;   (should-equal '(#xffff #x0000 #x5555) "#f05")
-;;   (should-equal '(#x1f1f #xb0b0 #xc5c5) "#1fb0C5")
-;;   (should-equal '(#x1f83 #xb0ad #xc5e2) "#1f83b0ADC5e2")
-;;   (should-equal nil "")
-;;   (should-equal nil "#")
-;;   (should-equal nil "#0")
-;;   (should-equal nil "#00")
-;;   (should-equal nil "#0000FG")
-;;   (should-equal nil "#0000FFF")
-;;   (should-equal nil "#0000FFFF")
-;;   (should-equal '(0 4080 65535) "#0000FFFFF")
-;;   (should-equal nil "#000FF")
-;;   (should-equal nil "#0000F")
-;;   (should-equal nil " #000000")
-;;   (should-equal nil "#000000 ")
-;;   (should-equal nil " #000000 ")
-;;   (should-equal nil "#1f83b0ADC5e2g")
-;;   (should-equal nil "#1f83b0ADC5e20")
-;;   (should-equal nil "#12345")
-;;   ;; rgb: notation
-;;   (should-equal '(0 0 0) "rgb:0/0/0")
-;;   (should-equal '(0 0 0) "rgb:0/0/00")
-;;   (should-equal '(0 0 0) "rgb:0/00/000")
-;;   (should-equal '(0 0 0) "rgb:0/000/0000")
-;;   (should-equal '(0 0 0) "rgb:000/0000/0")
-;;   (should-equal '(0 0 65535) "rgb:000/0000/F")
-;;   (should-equal '(65535 0 65535) "rgb:FFF/0000/F")
-;;   (should-equal '(65535 0 65535) "rgb:FFFF/0000/FFFF")
-;;   (should-equal '(0 255 65535) "rgb:0/00FF/FFFF")
-;;   (should-equal '(#xffff #x2323 #x28a2) "rgb:f/23/28a")
-;;   (should-equal '(#x1234 #x5678 #x09ab) "rgb:1234/5678/09ab")
-;;   (should-equal nil "rgb:/0000/FFFF")
-;;   (should-equal nil "rgb:0000/0000/FFFG")
-;;   (should-equal nil "rgb:0000/0000/FFFFF")
-;;   (should-equal nil "rgb:0000/0000")
-;;   (should-equal nil "rg:0000/0000/0000")
-;;   (should-equal nil "rgb: 0000/0000/0000")
-;;   (should-equal nil "rgbb:0000/0000/0000")
-;;   (should-equal nil "rgb:0000/0000/0000   ")
-;;   (should-equal nil " rgb:0000/0000/0000  ")
-;;   (should-equal nil "  rgb:0000/0000/0000")
-;;   (should-equal nil "rgb:0000/ 0000 /0000")
-;;   (should-equal nil "rgb: 0000 /0000 /0000")
-;;   (should-equal nil "rgb:0//0")
-;;   ;; rgbi: notation
-;;   (should-equal '(0 0 0) "rgbi:0/0/0")
-;;   (should-equal '(0 0 0) "rgbi:0.0/0.0/0.0")
-;;   (should-equal '(0 0 0) "rgbi:0.0/0/0")
-;;   (should-equal '(0 0 0) "rgbi:0.0/0/0")
-;;   (should-equal '(0 0 0) "rgbi:0/0/0.")
-;;   (should-equal '(0 0 0) "rgbi:0/0/0.0000")
-;;   (should-equal '(0 0 0) "rgbi:0/0/.0")
-;;   (should-equal '(0 0 0) "rgbi:0/0/.0000")
-;;   (should-equal '(65535 0 0) "rgbi:1/0/0.0000")
-;;   (should-equal '(65535 0 0) "rgbi:1./0/0.0000")
-;;   (should-equal '(65535 0 0) "rgbi:1.0/0/0.0000")
-;;   (should-equal '(65535 32768 0) "rgbi:1.0/0.5/0.0000")
-;;   (should-equal '(6554 21843 65469) "rgbi:0.1/0.3333/0.999")
-;;   (should-equal '(0 32768 6554) "rgbi:0/0.5/0.1")
-;;   (should-equal '(66 655 65535) "rgbi:1e-3/1.0e-2/1e0")
-;;   (should-equal '(6554 21843 65469) "rgbi:1e-1/+0.3333/0.00999e2")
-;;   (should-equal nil "rgbi:1.0001/0/0")
-;;   (should-equal nil "rgbi:2/0/0")
-;;   (should-equal nil "rgbi:0.a/0/0")
-;;   (should-equal nil "rgbi:./0/0")
-;;   (should-equal nil "rgbi:./0/0")
-;;   (should-equal nil " rgbi:0/0/0")
-;;   (should-equal nil "rgbi:0/0/0 ")
-;;   (should-equal nil "	rgbi:0/0/0 ")
-;;   (should-equal nil "rgbi:0 /0/ 0")
-;;   (should-equal nil "rgbi:0/ 0 /0")
-;;   (should-equal nil "rgbii:0/0/0")
-;;   (should-equal nil "rgbi :0/0/0")
-;;   ;; strtod ignores leading whitespace, making these legal colour
-;;   ;; specifications:
-;;   ;;
-;;   ;; (should-equal nil "rgbi: 0/0/0")
-;;   ;; (should-equal nil "rgbi: 0/ 0/ 0")
-;;   (should-equal nil "rgbi : 0/0/0")
-;;   (should-equal nil "rgbi:0/0.5/10"))
-
-;; (ert-deftest time-equal-p
-;;   (should-equal t nil nil)
-
-;;   ;; FIXME: Testing these values can be tricky, because the timestamp
-;;   ;; might change between evaluating (current-time) and evaluating
-;;   ;; `time-equal-p', especially in the interpreted compatibility
-;;   ;; version.
-
-;;   ;; (should-equal t (current-time) nil)
-;;   ;; (should-equal t nil (current-time))
-
-;;   ;; While `sleep-for' returns nil, indicating the current time, this
-;;   ;; behaviour seems to be undefined.  Relying on it is therefore not
-;;   ;; advised.
-;;   (should-equal nil (current-time) (ignore (sleep-for 0.01)))
-;;   (should-equal nil (current-time) (progn
-;;                               (sleep-for 0.01)
-;;                               (current-time)))
-;;   (should-equal t '(1 2 3 4) '(1 2 3 4))
-;;   (should-equal nil '(1 2 3 4) '(1 2 3 5))
-;;   (should-equal nil '(1 2 3 5) '(1 2 3 4))
-;;   (should-equal nil '(1 2 3 4) '(1 2 4 4))
-;;   (should-equal nil '(1 2 4 4) '(1 2 3 4))
-;;   (should-equal nil '(1 2 3 4) '(1 3 3 4))
-;;   (should-equal nil '(1 3 3 4) '(1 2 3 4))
-;;   (should-equal nil '(1 2 3 4) '(2 2 3 4))
-;;   (should-equal nil '(2 2 3 4) '(1 2 3 4)))
 
 ;; (ert-deftest date-days-in-month
 ;;   (should-equal 31 2020 1)
@@ -1647,17 +1640,23 @@
 ;;   (should-error wrong-type-argument '(0 0 0 0 a))
 ;;   (should-error wrong-type-argument '(0 0 0 0 0 a)))
 
-;; ;; TODO func-arity seems broken
-;; ;; (ert-deftest func-arity
-;; ;;   (should-equal '(0 . 0) (func-arity (lambda ()))))
-;; ;;   (should-equal '(1 . 1) (func-arity (lambda (x) x))))
-;; ;;   (should-equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
-;; ;;   (should-equal '(0 . many) (func-arity (lambda (&rest _)))))
-;; ;;   (should-equal '(1 . 1) 'identity)
-;; ;;   (should-equal '(0 . many) 'ignore)
-;; ;;   (should-equal '(2 . many) 'defun)
-;; ;;   (should-equal '(2 . 3) 'defalias)
-;; ;;   (should-equal '(1 . unevalled) 'defvar))
+;; TODO func-arity seems broken
+;; (ert-deftest func-arity
+;;   (should-equal '(0 . 0) (func-arity (lambda ()))))
+;;   (should-equal '(1 . 1) (func-arity (lambda (x) x))))
+;;   (should-equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
+;;   (should-equal '(0 . many) (func-arity (lambda (&rest _)))))
+;;   (should-equal '(1 . 1) 'identity)
+;;   (should-equal '(0 . many) 'ignore)
+;;   (should-equal '(2 . many) 'defun)
+;;   (should-equal '(2 . 3) 'defalias)
+;;   (should-equal '(1 . unevalled) 'defvar))
+
+;; TODO fix broken test
+;;(ert-deftest directory-files-recursively
+;;  (should-equal
+;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
+;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
