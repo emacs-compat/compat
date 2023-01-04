@@ -53,6 +53,60 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest cXXXr ()
+  (let ((xxx '(((a . b) . (c . d)) . ((e . f) . (g . h)))))
+    (should-equal nil (caaar ()))
+    (should-equal nil (caadr ()))
+    (should-equal nil (cadar ()))
+    (should-equal nil (caddr ()))
+    (should-equal nil (cdaar ()))
+    (should-equal nil (cdadr ()))
+    (should-equal nil (cddar ()))
+    (should-equal nil (cdddr ()))
+    (should-equal 'a (caaar xxx))
+    (should-equal 'e (caadr xxx))
+    (should-equal 'c (cadar xxx))
+    (should-equal 'g (caddr xxx))
+    (should-equal 'b (cdaar xxx))
+    (should-equal 'f (cdadr xxx))
+    (should-equal 'd (cddar xxx))
+    (should-equal 'h (cdddr xxx))))
+
+(ert-deftest cXXXXr ()
+  (let ((xxxx
+         '((((a . b) . (c . d)) . ((e . f) . (g . h))) .
+           (((i . j) . (k . l)) . ((m . j) . (o . p))))))
+    (should-equal nil (caaaar ()))
+    (should-equal nil (caaadr ()))
+    (should-equal nil (caadar ()))
+    (should-equal nil (caaddr ()))
+    (should-equal nil (cadaar ()))
+    (should-equal nil (cadadr ()))
+    (should-equal nil (caddar ()))
+    (should-equal nil (cadddr ()))
+    (should-equal nil (cdaaar ()))
+    (should-equal nil (cdaadr ()))
+    (should-equal nil (cdadar ()))
+    (should-equal nil (cdaddr ()))
+    (should-equal nil (cddaar ()))
+    (should-equal nil (cddadr ()))
+    (should-equal nil (cdddar ()))
+    (should-equal 'a (caaaar xxxx))
+    (should-equal 'i (caaadr xxxx))
+    (should-equal 'e (caadar xxxx))
+    (should-equal 'm (caaddr xxxx))
+    (should-equal 'c (cadaar xxxx))
+    (should-equal 'k (cadadr xxxx))
+    (should-equal 'g (caddar xxxx))
+    (should-equal 'o (cadddr xxxx))
+    (should-equal 'b (cdaaar xxxx))
+    (should-equal 'j (cdaadr xxxx))
+    (should-equal 'f (cdadar xxxx))
+    (should-equal 'j (cdaddr xxxx))
+    (should-equal 'd (cddaar xxxx))
+    (should-equal 'l (cddadr xxxx))
+    (should-equal 'h (cdddar xxxx))))
+
 (ert-deftest special-form-p ()
   (should (special-form-p 'if))
   (should (special-form-p 'cond))
@@ -1150,111 +1204,6 @@
 ;;          nil nil #'string-match-p)
 ;;   (should-equal 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;;   (should-equal 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
-
-;; ;; Note: as the cXXX+r implementations are relatively trivial, their
-;; ;; tests are not as extensive.
-
-;; (defvar compat-cXXXr-test
-;;   '(((a . b) . (c . d)) . ((e . f) . (g . h)))
-;;   "Testcase for cXXXr functions.")
-
-;; (defvar compat-cXXXXr-test
-;;   '((((a . b) . (c . d)) . ((e . f) . (g . h))) .
-;;     (((i . j) . (k . l)) . ((m . j) . (o . p))))
-;;   "Testcase for cXXXXr functions.")
-
-;; (ert-deftest caaar
-;;   (should-equal nil ())
-;;   (should-equal 'a compat-cXXXr-test))
-
-;; (ert-deftest caadr
-;;   (should-equal nil ())
-;;   (should-equal 'e compat-cXXXr-test))
-
-;; (ert-deftest cadar
-;;   (should-equal nil ())
-;;   (should-equal 'c compat-cXXXr-test))
-
-;; (ert-deftest caddr
-;;   (should-equal nil ())
-;;   (should-equal 'g compat-cXXXr-test))
-
-;; (ert-deftest cdaar
-;;   (should-equal nil ())
-;;   (should-equal 'b compat-cXXXr-test))
-
-;; (ert-deftest cdadr
-;;   (should-equal nil ())
-;;   (should-equal 'f compat-cXXXr-test))
-
-;; (ert-deftest cddar
-;;   (should-equal nil ())
-;;   (should-equal 'd compat-cXXXr-test))
-
-;; (ert-deftest cdddr
-;;   (should-equal nil ())
-;;   (should-equal 'h compat-cXXXr-test)
-;;   #'cdddr)
-
-;; (ert-deftest caaaar
-;;   (should-equal nil ())
-;;   (should-equal 'a compat-cXXXXr-test))
-
-;; (ert-deftest caaadr
-;;   (should-equal nil ())
-;;   (should-equal 'i compat-cXXXXr-test))
-
-;; (ert-deftest caadar
-;;   (should-equal nil ())
-;;   (should-equal 'e compat-cXXXXr-test))
-
-;; (ert-deftest caaddr
-;;   (should-equal nil ())
-;;   (should-equal 'm compat-cXXXXr-test))
-
-;; (ert-deftest cadaar
-;;   (should-equal nil ())
-;;   (should-equal 'c compat-cXXXXr-test))
-
-;; (ert-deftest cadadr
-;;   (should-equal nil ())
-;;   (should-equal 'k compat-cXXXXr-test))
-
-;; (ert-deftest caddar
-;;   (should-equal nil ())
-;;   (should-equal 'g compat-cXXXXr-test))
-
-;; (ert-deftest cadddr
-;;   (should-equal nil ())
-;;   (should-equal 'o compat-cXXXXr-test))
-
-;; (ert-deftest cdaaar
-;;   (should-equal nil ())
-;;   (should-equal 'b compat-cXXXXr-test))
-
-;; (ert-deftest cdaadr
-;;   (should-equal nil ())
-;;   (should-equal 'j compat-cXXXXr-test))
-
-;; (ert-deftest cdadar
-;;   (should-equal nil ())
-;;   (should-equal 'f compat-cXXXXr-test))
-
-;; (ert-deftest cdaddr
-;;   (should-equal nil ())
-;;   (should-equal 'j compat-cXXXXr-test))
-
-;; (ert-deftest cddaar
-;;   (should-equal nil ())
-;;   (should-equal 'd compat-cXXXXr-test))
-
-;; (ert-deftest cddadr
-;;   (should-equal nil ())
-;;   (should-equal 'l compat-cXXXXr-test))
-
-;; (ert-deftest cdddar
-;;   (should-equal nil ())
-;;   (should-equal 'h compat-cXXXXr-test))
 
 ;; (ert-deftest string-greaterp
 ;;   (should-equal t "b" "a")
