@@ -43,7 +43,7 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
-(ert-deftest compat-ensure-list ()
+(ert-deftest ensure-list ()
   (should (equal nil (ensure-list nil)))           ;; empty list
   (should (equal '(1) (ensure-list '(1))))         ;; single element list
   (should (equal '(1 2 3) (ensure-list '(1 2 3)))) ;; multiple element list
@@ -64,7 +64,7 @@
   (should (equal nil (proper-list-p [])))
   (should (equal nil (proper-list-p [1 2 3]))))
 
-(ert-deftest compat-always ()
+(ert-deftest always ()
   (should (equal t (always)))                      ;; no arguments
   (should (equal t (always 1)))                    ;; single argument
   (should (equal t (always 1 2 3 4))))             ;; multiple arguments
@@ -85,7 +85,76 @@
   (should (equal 2 (compat-call string-width "abcあ" 3 4)))
   (should (equal 0 (compat-call string-width "a	" 1 1))))
 
-(ert-deftest compat-hash-table-keys ()
+(ert-deftest string-trim-left ()
+  (should (equal "a" (compat-string-trim-left " a"))) ;; Obsolete
+  (should (equal "a" (compat-call string-trim-left "---a" "-+"))) ;; Additional regexp
+  (should (equal "" (compat-call string-trim-left "")))                          ;empty string
+  (should (equal "a" (compat-call string-trim-left "a")))                        ;"full" string
+  (should (equal "aaa" (compat-call string-trim-left "aaa")))
+  (should (equal "へっろ" (compat-call string-trim-left "へっろ")))
+  (should (equal "hello world" (compat-call string-trim-left "hello world")))
+  (should (equal "a " (compat-call string-trim-left "a ")))                        ;right trailing
+  (should (equal "aaa " (compat-call string-trim-left "aaa ")))
+  (should (equal "a    " (compat-call string-trim-left "a    ")))
+  (should (equal "a\t\t" (compat-call string-trim-left "a\t\t")))
+  (should (equal "a\n  \t" (compat-call string-trim-left "a\n  \t")))
+  (should (equal "a" (compat-call string-trim-left " a")))                        ;left trailing
+  (should (equal "aaa" (compat-call string-trim-left " aaa")))
+  (should (equal "a" (compat-call string-trim-left "a")))
+  (should (equal "a" (compat-call string-trim-left "\t\ta")))
+  (should (equal "a" (compat-call string-trim-left "\n  \ta")))
+  (should (equal "a " (compat-call string-trim-left " a ")))                        ;both trailing
+  (should (equal "aaa  " (compat-call string-trim-left " aaa  ")))
+  (should (equal "a\t\n" (compat-call string-trim-left "\t\ta\t\n")))
+  (should (equal "a  \n" (compat-call string-trim-left "\n  \ta  \n"))))
+
+(ert-deftest string-trim-right ()
+  (should (equal "a" (compat-string-trim-right "a    "))) ;; Obsolete
+  (should (equal "a" (compat-call string-trim-right "a---" "-+"))) ;; Additional regexp
+  (should (equal "" (compat-call string-trim-right "")))                          ;empty string
+  (should (equal "a" (compat-call string-trim-right "a")))                        ;"full" string
+  (should (equal "aaa" (compat-call string-trim-right "aaa")))
+  (should (equal "へっろ" (compat-call string-trim-right "へっろ")))
+  (should (equal "hello world" (compat-call string-trim-right "hello world")))
+  (should (equal "a" (compat-call string-trim-right "a")))                      ;right trailing
+  (should (equal "aaa" (compat-call string-trim-right "aaa")))
+  (should (equal "a" (compat-call string-trim-right "a    ")))
+  (should (equal "a" (compat-call string-trim-right "a\t\t")))
+  (should (equal "a" (compat-call string-trim-right "a\n  \t")))
+  (should (equal " a" (compat-call string-trim-right " a")))                       ;left trailing
+  (should (equal " aaa" (compat-call string-trim-right " aaa")))
+  (should (equal "a" (compat-call string-trim-right "a")))
+  (should (equal "\t\ta" (compat-call string-trim-right "\t\ta")))
+  (should (equal "\n  \ta" (compat-call string-trim-right "\n  \ta")))
+  (should (equal " a" (compat-call string-trim-right " a ")))                        ;both trailing
+  (should (equal " aaa" (compat-call string-trim-right " aaa")))
+  (should (equal "\t\ta" (compat-call string-trim-right "\t\ta\t\n")))
+  (should (equal "\n  \ta" (compat-call string-trim-right "\n  \ta  \n"))))
+
+(ert-deftest string-trim ()
+  (should (equal "aaa" (compat-string-trim " aaa  "))) ;; Obsolete
+  (should (equal "aaa" (compat-call string-trim "--aaa__" "-+" "_+"))) ;; Additional regexp
+  (should (equal "" (compat-call string-trim "")))                          ;empty string
+  (should (equal "a" (compat-call string-trim "a")))                        ;"full" string
+  (should (equal "aaa" (compat-call string-trim "aaa")))
+  (should (equal "へっろ" (compat-call string-trim "へっろ")))
+  (should (equal "hello world" (compat-call string-trim "hello world")))
+  (should (equal "a" (compat-call string-trim "a ")))                       ;right trailing
+  (should (equal "aaa" (compat-call string-trim "aaa ")))
+  (should (equal "a" (compat-call string-trim "a    ")))
+  (should (equal "a" (compat-call string-trim "a\t\t")))
+  (should (equal "a" (compat-call string-trim "a\n  \t")))
+  (should (equal "a" (compat-call string-trim " a")))                       ;left trailing
+  (should (equal "aaa" (compat-call string-trim " aaa")))
+  (should (equal "a" (compat-call string-trim "a")))
+  (should (equal "a" (compat-call string-trim "\t\ta")))
+  (should (equal "a" (compat-call string-trim "\n  \ta")))
+  (should (equal "a" (compat-call string-trim " a ")))                      ;both trailing
+  (should (equal "aaa" (compat-call string-trim " aaa  ")))
+  (should (equal "t\ta" (compat-call string-trim "t\ta\t\n")))
+  (should (equal "a" (compat-call string-trim "\n  \ta  \n"))))
+
+(ert-deftest hash-table-keys ()
   (let ((ht (make-hash-table)))
     (should (null (hash-table-keys ht)))
     (puthash 1 'one ht)
@@ -99,7 +168,7 @@
     (remhash 1 ht)
     (should (equal '(2) (hash-table-keys ht)))))
 
-(ert-deftest compat-hash-table-values ()
+(ert-deftest hash-table-values ()
   (let ((ht (make-hash-table)))
     (should (null (hash-table-values ht)))
     (puthash 1 'one ht)
@@ -113,7 +182,7 @@
     (remhash 1 ht)
     (should (equal '(two) (hash-table-values ht)))))
 
-(ert-deftest compat-named-let ()
+(ert-deftest named-let ()
   "Check if `named-let' was implemented properly."
   (should (= (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
              8))
@@ -184,7 +253,7 @@
     (should (equal (compat-call alist-get "one" alist-2 nil nil #'string=)
                    "eins"))))
 
-(ert-deftest compat-alist-get-gv ()
+(ert-deftest alist-get-gv ()
   "Test if the `compat-alist-get' can be used as a generalised variable."
   (let ((alist-1 (list (cons 1 "one")
                        (cons 2 "two")
@@ -200,7 +269,7 @@
     (should (equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins"))))
 
-(ert-deftest compat-json-serialize ()
+(ert-deftest json-serialize ()
   "Check if `json-serialize' was implemented properly."
   (let ((input-1 '((:key . ["abc" 2]) (yek . t)))
         (input-2 '(:key ["abc" 2] yek t))
@@ -232,7 +301,7 @@
                      ht))
                   :type '(wrong-type-argument stringp a))))
 
-(ert-deftest compat-json-parse-string ()
+(ert-deftest json-parse-string ()
   "Check if `compat--t-json-parse-string' was implemented properly."
   (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
     (let ((obj (json-parse-string input :object-type 'alist)))
@@ -245,12 +314,12 @@
       (should (equal (gethash "key" obj) ["abc" 2]))
       (should (equal (gethash "yek" obj) :null)))))
 
-(ert-deftest compat-json-insert ()
+(ert-deftest json-insert ()
   (with-temp-buffer
     (json-insert '((:key . ["abc" 2]) (yek . t)))
     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
 
-(ert-deftest compat-text-property-search-forward ()
+(ert-deftest text-property-search-forward ()
   (with-temp-buffer
     (insert "one "
             (propertize "two " 'prop 'val)
@@ -270,7 +339,7 @@
     (goto-char (point-min))
     (should (null (text-property-search-forward 'non-existant)))))
 
-(ert-deftest compat-text-property-search-backward ()
+(ert-deftest text-property-search-backward ()
   (with-temp-buffer
     (insert "one "
             (propertize "two " 'prop 'val)
@@ -329,7 +398,7 @@
 ;;                                       `(equal res ',error-spec)
 ;;                                     `(eq (car res) ',error-spec))))))))))))))
 
-;; (compat-deftests string-search
+;; (ert-deftest string-search
 ;;   ;; Find needle at the beginning of a haystack:
 ;;   (ought 0 "a" "abb")
 ;;   ;; Find needle at the begining of a haystack, with more potential
@@ -444,7 +513,7 @@
 ;;                     (string-to-multibyte "o\303\270")
 ;;                     "foo\303\270")))
 
-;; (compat-deftests string-replace
+;; (ert-deftest string-replace
 ;;   (ought "bba" "aa" "bb" "aaa")
 ;;   (ought "AAA" "aa" "bb" "AAA")
 ;;   ;; Additional test copied from subr-tests.el:
@@ -481,7 +550,7 @@
 ;;     ;; thrown.
 ;;     (expect wrong-length-argument "" "x" "abc")))
 
-;; (compat-deftests length=
+;; (ert-deftest length=
 ;;   (ought t '() 0)                  ;empty list
 ;;   (ought t '(1) 1)			;single element
 ;;   (ought t '(1 2 3) 3)             ;multiple elements
@@ -497,7 +566,7 @@
 ;;   (ought nil [1 2 3] 4)            ;more than
 ;;   (expect wrong-type-argument 3 nil))
 
-;; (compat-deftests length<
+;; (ert-deftest length<
 ;;   (ought nil '(1) 0)               ;single element
 ;;   (ought nil '(1 2 3) 2)           ;multiple elements
 ;;   (ought nil '(1 2 3) 3)           ;equal length
@@ -511,7 +580,7 @@
 ;;   (ought t [1 2 3] 4)              ;more than
 ;;   (expect wrong-type-argument 3 nil))
 
-;; (compat-deftests length>
+;; (ert-deftest length>
 ;;   (ought t '(1) 0)			;single element
 ;;   (ought t '(1 2 3) 2)             ;multiple elements
 ;;   (ought nil '(1 2 3) 3)           ;equal length
@@ -576,7 +645,7 @@
 ;;           (insert-into-buffer other 2 3))
 ;;         (should (string= (buffer-string) "abce"))))))
 
-;; (compat-deftests file-name-with-extension
+;; (ert-deftest file-name-with-extension
 ;;   (ought "file.ext" "file" "ext")
 ;;   (ought "file.ext" "file" ".ext")
 ;;   (ought "file.ext" "file." ".ext")
@@ -595,7 +664,7 @@
 ;;   (expect error "rel/" "ext")
 ;;   (expect error "/abs/" "ext"))
 
-;; (compat-deftests flatten-tree
+;; (ert-deftest flatten-tree
 ;;   ;; Example from docstring:
 ;;   (ought '(1 2 3 4 5 6 7) '(1 (2 . 3) nil (4 5 (6)) 7))
 ;;   ;; Trivial example
@@ -613,13 +682,13 @@
 ;;   (ought '(1 2 3 4) '((1) nil 2 ((3 4))))
 ;;   (ought '(1 2 3 4) '(((1 nil)) 2 (((3 nil nil) 4)))))
 
-;; (compat-deftests xor
+;; (ert-deftest xor
 ;;   (ought t t nil)
 ;;   (ought t nil t)
 ;;   (ought nil nil nil)
 ;;   (ought nil t t))
 
-;; (compat-deftests string-distance
+;; (ert-deftest string-distance
 ;;   (ought 3 "kitten" "sitting")     ;from wikipedia
 ;;   (if (version<= "28" emacs-version) ;trivial examples
 ;;       (ought 0 "" "")
@@ -650,7 +719,7 @@
 ;;     (when (boundp 'regexp-unmatchable)
 ;;       (should-not (string-match-p regexp-unmatchable str)))))
 
-;; (compat-deftests compat-regexp-opt
+;; (ert-deftest compat-regexp-opt
 ;;   ;; Ensure `compat--regexp-opt' doesn't change the existing
 ;;   ;; behaviour:
 ;;   (ought (regexp-opt '("a" "b" "c")) '("a" "b" "c"))
@@ -669,7 +738,7 @@
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
 
-;; (compat-deftests compat-assoc
+;; (ert-deftest compat-assoc
 ;;   ;; Fallback behaviour:
 ;;   (ought nil 1 nil)               ;empty list
 ;;   (ought '(1) 1 '((1)))            ;single element list
@@ -698,7 +767,7 @@
 ;; ;; (when (fboundp 'alist-get)
 ;; ;;   (ert-deftest compat-alist-get-1 ()
 ;; ;;     "Check if `compat--alist-get' was advised correctly."
-;; ;;     (compat-deftests compat-alist-get
+;; ;;     (ert-deftest compat-alist-get
 ;; ;;       ;; Fallback behaviour:
 ;; ;;       (ought nil 1 nil)                      ;empty list
 ;; ;;       (ought 'a 1 '((1 . a)))                  ;single element list
@@ -726,7 +795,7 @@
 ;; ;;       (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;; ;;       (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))))
 
-;; (compat-deftests (alist-get compat--alist-get-full-elisp)
+;; (ert-deftest (alist-get compat--alist-get-full-elisp)
 ;;   ;; Fallback behaviour:
 ;;   (ought nil 1 nil)                      ;empty list
 ;;   (ought 'a 1 '((1 . a)))                  ;single element list
@@ -753,70 +822,7 @@
 ;;   (ought 'd 0 '((1 . a) (2 . b) (3 . c)) 'd) ;default value
 ;;   (ought 'd 2 '((1 . a) (2 . b) (3 . c)) 'd nil #'ignore))
 
-;; (compat-deftests string-trim-left
-;;   (ought "" "")                          ;empty string
-;;   (ought "a" "a")                        ;"full" string
-;;   (ought "aaa" "aaa")
-;;   (ought "へっろ" "へっろ")
-;;   (ought "hello world" "hello world")
-;;   (ought "a " "a ")                        ;right trailing
-;;   (ought "aaa " "aaa ")
-;;   (ought "a    " "a    ")
-;;   (ought "a\t\t" "a\t\t")
-;;   (ought "a\n  \t" "a\n  \t")
-;;   (ought "a" " a")                        ;left trailing
-;;   (ought "aaa" " aaa")
-;;   (ought "a" "a")
-;;   (ought "a" "\t\ta")
-;;   (ought "a" "\n  \ta")
-;;   (ought "a " " a ")                        ;both trailing
-;;   (ought "aaa  " " aaa  ")
-;;   (ought "a\t\n" "\t\ta\t\n")
-;;   (ought "a  \n" "\n  \ta  \n"))
-
-;; (compat-deftests string-trim-right
-;;   (ought "" "")                          ;empty string
-;;   (ought "a" "a")                        ;"full" string
-;;   (ought "aaa" "aaa")
-;;   (ought "へっろ" "へっろ")
-;;   (ought "hello world" "hello world")
-;;   (ought "a" "a")                      ;right trailing
-;;   (ought "aaa" "aaa")
-;;   (ought "a" "a    ")
-;;   (ought "a" "a\t\t")
-;;   (ought "a" "a\n  \t")
-;;   (ought " a" " a")                       ;left trailing
-;;   (ought " aaa" " aaa")
-;;   (ought "a" "a")
-;;   (ought "\t\ta" "\t\ta")
-;;   (ought "\n  \ta" "\n  \ta")
-;;   (ought " a" " a ")                        ;both trailing
-;;   (ought " aaa" " aaa")
-;;   (ought "\t\ta" "\t\ta\t\n")
-;;   (ought "\n  \ta" "\n  \ta  \n"))
-
-;; (compat-deftests string-trim
-;;   (ought "" "")                          ;empty string
-;;   (ought "a" "a")                        ;"full" string
-;;   (ought "aaa" "aaa")
-;;   (ought "へっろ" "へっろ")
-;;   (ought "hello world" "hello world")
-;;   (ought "a" "a ")                       ;right trailing
-;;   (ought "aaa" "aaa ")
-;;   (ought "a" "a    ")
-;;   (ought "a" "a\t\t")
-;;   (ought "a" "a\n  \t")
-;;   (ought "a" " a")                       ;left trailing
-;;   (ought "aaa" " aaa")
-;;   (ought "a" "a")
-;;   (ought "a" "\t\ta")
-;;   (ought "a" "\n  \ta")
-;;   (ought "a" " a ")                      ;both trailing
-;;   (ought "aaa" " aaa  ")
-;;   (ought "t\ta" "t\ta\t\n")
-;;   (ought "a" "\n  \ta  \n"))
-
-;; (compat-deftests mapcan
+;; (ert-deftest mapcan
 ;;   (ought nil #'identity nil)
 ;;   (ought (list 1)
 ;;          #'identity
@@ -849,112 +855,112 @@
 ;;     (((i . j) . (k . l)) . ((m . j) . (o . p))))
 ;;   "Testcase for cXXXXr functions.")
 
-;; (compat-deftests caaar
+;; (ert-deftest caaar
 ;;   (ought nil ())
 ;;   (ought 'a compat-cXXXr-test))
 
-;; (compat-deftests caadr
+;; (ert-deftest caadr
 ;;   (ought nil ())
 ;;   (ought 'e compat-cXXXr-test))
 
-;; (compat-deftests cadar
+;; (ert-deftest cadar
 ;;   (ought nil ())
 ;;   (ought 'c compat-cXXXr-test))
 
-;; (compat-deftests caddr
+;; (ert-deftest caddr
 ;;   (ought nil ())
 ;;   (ought 'g compat-cXXXr-test))
 
-;; (compat-deftests cdaar
+;; (ert-deftest cdaar
 ;;   (ought nil ())
 ;;   (ought 'b compat-cXXXr-test))
 
-;; (compat-deftests cdadr
+;; (ert-deftest cdadr
 ;;   (ought nil ())
 ;;   (ought 'f compat-cXXXr-test))
 
-;; (compat-deftests cddar
+;; (ert-deftest cddar
 ;;   (ought nil ())
 ;;   (ought 'd compat-cXXXr-test))
 
-;; (compat-deftests cdddr
+;; (ert-deftest cdddr
 ;;   (ought nil ())
 ;;   (ought 'h compat-cXXXr-test)
 ;;   #'cdddr)
 
-;; (compat-deftests caaaar
+;; (ert-deftest caaaar
 ;;   (ought nil ())
 ;;   (ought 'a compat-cXXXXr-test))
 
-;; (compat-deftests caaadr
+;; (ert-deftest caaadr
 ;;   (ought nil ())
 ;;   (ought 'i compat-cXXXXr-test))
 
-;; (compat-deftests caadar
+;; (ert-deftest caadar
 ;;   (ought nil ())
 ;;   (ought 'e compat-cXXXXr-test))
 
-;; (compat-deftests caaddr
+;; (ert-deftest caaddr
 ;;   (ought nil ())
 ;;   (ought 'm compat-cXXXXr-test))
 
-;; (compat-deftests cadaar
+;; (ert-deftest cadaar
 ;;   (ought nil ())
 ;;   (ought 'c compat-cXXXXr-test))
 
-;; (compat-deftests cadadr
+;; (ert-deftest cadadr
 ;;   (ought nil ())
 ;;   (ought 'k compat-cXXXXr-test))
 
-;; (compat-deftests caddar
+;; (ert-deftest caddar
 ;;   (ought nil ())
 ;;   (ought 'g compat-cXXXXr-test))
 
-;; (compat-deftests cadddr
+;; (ert-deftest cadddr
 ;;   (ought nil ())
 ;;   (ought 'o compat-cXXXXr-test))
 
-;; (compat-deftests cdaaar
+;; (ert-deftest cdaaar
 ;;   (ought nil ())
 ;;   (ought 'b compat-cXXXXr-test))
 
-;; (compat-deftests cdaadr
+;; (ert-deftest cdaadr
 ;;   (ought nil ())
 ;;   (ought 'j compat-cXXXXr-test))
 
-;; (compat-deftests cdadar
+;; (ert-deftest cdadar
 ;;   (ought nil ())
 ;;   (ought 'f compat-cXXXXr-test))
 
-;; (compat-deftests cdaddr
+;; (ert-deftest cdaddr
 ;;   (ought nil ())
 ;;   (ought 'j compat-cXXXXr-test))
 
-;; (compat-deftests cddaar
+;; (ert-deftest cddaar
 ;;   (ought nil ())
 ;;   (ought 'd compat-cXXXXr-test))
 
-;; (compat-deftests cddadr
+;; (ert-deftest cddadr
 ;;   (ought nil ())
 ;;   (ought 'l compat-cXXXXr-test))
 
-;; (compat-deftests cdddar
+;; (ert-deftest cdddar
 ;;   (ought nil ())
 ;;   (ought 'h compat-cXXXXr-test))
 
-;; (compat-deftests string-greaterp
+;; (ert-deftest string-greaterp
 ;;   (ought t "b" "a")
 ;;   (ought nil "a" "b")
 ;;   (ought t "aaab" "aaaa")
 ;;   (ought nil "aaaa" "aaab"))
 
-;; (compat-deftests compat-sort
+;; (ert-deftest compat-sort
 ;;   (ought (list 1 2 3) (list 1 2 3) #'<)
 ;;   (ought (list 1 2 3) (list 3 2 1) #'<)
 ;;   (ought '[1 2 3] '[1 2 3] #'<)
 ;;   (ought '[1 2 3] '[3 2 1] #'<))
 
-;; (compat-deftests compat-=
+;; (ert-deftest compat-=
 ;;   (ought t 0 0)
 ;;   (ought t 0 0 0)
 ;;   (ought t 0 0 0 0)
@@ -970,7 +976,7 @@
 ;;   (ought nil 0 1 'a)
 ;;   (ought nil 0.0 0.0 0.0 0.1))
 
-;; (compat-deftests compat-<
+;; (ert-deftest compat-<
 ;;   (ought nil 0 0)
 ;;   (ought nil 0 0 0)
 ;;   (ought nil 0 0 0 0)
@@ -992,7 +998,7 @@
 ;;   (ought t -0.1 0.0 0.2 0.4)
 ;;   (ought t -0.1 0 0.2 0.4))
 
-;; (compat-deftests compat->
+;; (ert-deftest compat->
 ;;   (ought nil 0 0)
 ;;   (ought nil 0 0 0)
 ;;   (ought nil 0 0 0 0)
@@ -1014,7 +1020,7 @@
 ;;   (ought t 0.4 0.2 0.0 -0.1)
 ;;   (ought t 0.4 0.2 0 -0.1))
 
-;; (compat-deftests compat-<=
+;; (ert-deftest compat-<=
 ;;   (ought t 0 0)
 ;;   (ought t 0 0 0)
 ;;   (ought t 0 0 0 0)
@@ -1046,7 +1052,7 @@
 ;;   (ought nil 0.4 0.2 0 0.0 0.0 -0.1)
 ;;   (ought nil 0.4 0.2 0 -0.1))
 
-;; (compat-deftests compat->=
+;; (ert-deftest compat->=
 ;;   (ought t 0 0)
 ;;   (ought t 0 0 0)
 ;;   (ought t 0 0 0 0)
@@ -1076,7 +1082,7 @@
 ;;   (ought t 0.4 0.2 0 0.0 0.0 -0.1)
 ;;   (ought t 0.4 0.2 0 -0.1))
 
-;; (compat-deftests special-form-p
+;; (ert-deftest special-form-p
 ;;   (ought t 'if)
 ;;   (ought t 'cond)
 ;;   (ought nil 'when)
@@ -1086,7 +1092,7 @@
 ;;   (ought nil "macro")
 ;;   (ought nil '(macro . +)))
 
-;; (compat-deftests macrop
+;; (ert-deftest macrop
 ;;   (ought t 'lambda)
 ;;   (ought t 'defun)
 ;;   (ought t 'defmacro)
@@ -1099,7 +1105,7 @@
 ;;   (ought nil "macro")
 ;;   (ought t '(macro . +)))
 
-;; (compat-deftests string-suffix-p
+;; (ert-deftest string-suffix-p
 ;;   (ought t "a" "abba")
 ;;   (ought t "ba" "abba")
 ;;   (ought t "abba" "abba")
@@ -1111,17 +1117,17 @@
 ;;   (ought nil "cddc" "abba")
 ;;   (ought nil "aabba" "abba"))
 
-;; (compat-deftests compat-split-string
+;; (ert-deftest compat-split-string
 ;;   (ought '("a" "b" "c") "a b c")
 ;;   (ought '("..a.." "..b.." "..c..") "..a.. ..b.. ..c..")
 ;;   (ought '("a" "b" "c") "..a.. ..b.. ..c.." nil nil "\\.+"))
 
-;; (compat-deftests delete-consecutive-dups
+;; (ert-deftest delete-consecutive-dups
 ;;   (ought '(1 2 3 4) '(1 2 3 4))
 ;;   (ought '(1 2 3 4) '(1 2 2 3 4 4))
 ;;   (ought '(1 2 3 2 4) '(1 2 2 3 2 4 4)))
 
-;; (compat-deftests string-clean-whitespace
+;; (ert-deftest string-clean-whitespace
 ;;   (ought "a b c" "a b c")
 ;;   (ought "a b c" "   a b c")
 ;;   (ought "a b c" "a b c   ")
@@ -1141,7 +1147,7 @@
 ;;   (ought "aa bb cc" "aa    bb    cc    ")
 ;;   (ought "aa bb cc" "   aa    bb    cc    "))
 
-;; (compat-deftests string-fill
+;; (ert-deftest string-fill
 ;;   (ought "a a a a a" "a a a a a" 9)
 ;;   (ought "a a a a a" "a a a a a" 10)
 ;;   (ought "a a a a\na" "a a a a a" 8)
@@ -1150,14 +1156,14 @@
 ;;   (ought "a\na\na\na\na" "a a a a a" 2)
 ;;   (ought "a\na\na\na\na" "a a a a a" 1))
 
-;; (compat-deftests string-lines
+;; (ert-deftest string-lines
 ;;   (ought '("a" "b" "c") "a\nb\nc")
 ;;   (ought '("a" "b" "c" "") "a\nb\nc\n")
 ;;   (ought '("a" "b" "c") "a\nb\nc\n" t)
 ;;   (ought '("abc" "bcd" "cde") "abc\nbcd\ncde")
 ;;   (ought '(" abc" " bcd " "cde ") " abc\n bcd \ncde "))
 
-;; (compat-deftests string-pad
+;; (ert-deftest string-pad
 ;;   (ought "a   " "a" 4)
 ;;   (ought "aaaa" "aaaa" 4)
 ;;   (ought "aaaaaa" "aaaaaa" 4)
@@ -1165,19 +1171,19 @@
 ;;   (ought "   a" "a" 4 nil t)
 ;;   (ought "...a" "a" 4 ?. t))
 
-;; (compat-deftests string-chop-newline
+;; (ert-deftest string-chop-newline
 ;;   (ought "" "")
 ;;   (ought "" "\n")
 ;;   (ought "aaa" "aaa")
 ;;   (ought "aaa" "aaa\n")
 ;;   (ought "aaa\n" "aaa\n\n"))
 
-;; (compat-deftests macroexpand-1
+;; (ert-deftest macroexpand-1
 ;;   (ought '(if a b c) '(if a b c))
 ;;   (ought '(if a (progn b)) '(when a b))
 ;;   (ought '(if a (progn (unless b c))) '(when a (unless b c))))
 
-;; (compat-deftests compat-file-size-human-readable
+;; (ert-deftest compat-file-size-human-readable
 ;;     (ought "1000" 1000)
 ;;     (ought "1k" 1024)
 ;;     (ought "1M" (* 1024 1024))
@@ -1193,7 +1199,7 @@
 ;;     (ought "1 k" 1000 'si " ")
 ;;     (ought "1 kA" 1000 'si " " "A"))
 
-;; (compat-deftests format-prompt
+;; (ert-deftest format-prompt
 ;;   (ought "Prompt: " "Prompt" nil)
 ;;   (ought "Prompt: " "Prompt" "")
 ;;   (ought "Prompt (default  ): " "Prompt" " ")
@@ -1204,12 +1210,12 @@
 ;;   (ought "Prompt \"abc\" (default 3): " "Prompt %S" 3 "abc"))
 
 ;; ;; TODO fix broken test
-;; ;;(compat-deftests directory-files-recursively
+;; ;;(ert-deftest directory-files-recursively
 ;; ;;  (should (equal
 ;; ;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
 ;; ;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
 
-;; (compat-deftests directory-name-p
+;; (ert-deftest directory-name-p
 ;;   (ought t "/")
 ;;   (ought nil "/file")
 ;;   (ought nil "/dir/file")
@@ -1269,7 +1275,7 @@
 ;;   (should-not
 ;;    (compat--t-and-let* (((= 5 6))) t)))
 
-;; (compat-deftests compat-json-parse-string
+;; (ert-deftest compat-json-parse-string
 ;;   (ought 0 "0")
 ;;   (ought 1 "1")
 ;;   (ought 0.5 "0.5")
@@ -1280,7 +1286,7 @@
 ;;   (ought 'foo "null" :null-object 'foo)
 ;;   (ought ["false" t] "[false, true]" :false-object "false"))
 
-;; (compat-deftests compat-lookup-key
+;; (ert-deftest compat-lookup-key
 ;;   (let ((a-map (make-sparse-keymap))
 ;;         (b-map (make-sparse-keymap)))
 ;;     (define-key a-map "x" 'foo)
@@ -1290,13 +1296,13 @@
 ;;     (ought 'foo (list a-map b-map) "x")
 ;;     (ought 'bar (list b-map a-map) "x")))
 
-;; (compat-deftests string-empty-p
+;; (ert-deftest string-empty-p
 ;;   (ought t "")
 ;;   (ought nil " ")
 ;;   (ought t (make-string 0 ?x))
 ;;   (ought nil (make-string 1 ?x)))
 
-;; (compat-deftests string-join
+;; (ert-deftest string-join
 ;;   (ought "" '(""))
 ;;   (ought "" '("") " ")
 ;;   (ought "a" '("a"))
@@ -1304,13 +1310,13 @@
 ;;   (ought "abc" '("a" "b" "c"))
 ;;   (ought "a b c" '("a" "b" "c") " "))
 
-;; (compat-deftests string-blank-p
+;; (ert-deftest string-blank-p
 ;;   (ought 0 "")
 ;;   (ought 0 " ")
 ;;   (ought 0 (make-string 0 ?x))
 ;;   (ought nil (make-string 1 ?x)))
 
-;; (compat-deftests string-remove-prefix
+;; (ert-deftest string-remove-prefix
 ;;   (ought "" "" "")
 ;;   (ought "a" "" "a")
 ;;   (ought "" "a" "")
@@ -1321,7 +1327,7 @@
 ;;   (ought "aabbcc" "cc" "aabbcc")
 ;;   (ought "aabbcc" "dd" "aabbcc"))
 
-;; (compat-deftests string-remove-suffix
+;; (ert-deftest string-remove-suffix
 ;;   (ought "" "" "")
 ;;   (ought "a" "" "a")
 ;;   (ought "" "a" "")
@@ -1334,7 +1340,7 @@
 
 ;; (let ((a (bool-vector t t nil nil))
 ;;       (b (bool-vector t nil t nil)))
-;;   (compat-deftests bool-vector-exclusive-or
+;;   (ert-deftest bool-vector-exclusive-or
 ;;     (ought (bool-vector nil t t nil) a b)
 ;;     (ought (bool-vector nil t t nil) b a)
 ;;     (ert-deftest compat-bool-vector-exclusive-or-sideeffect ()
@@ -1355,7 +1361,7 @@
 
 ;; (let ((a (bool-vector t t nil nil))
 ;;       (b (bool-vector t nil t nil)))
-;;   (compat-deftests bool-vector-union
+;;   (ert-deftest bool-vector-union
 ;;     (ought (bool-vector t t t nil) a b)
 ;;     (ought (bool-vector t t t nil) b a)
 ;;     (ert-deftest compat-bool-vector-union-sideeffect ()
@@ -1375,7 +1381,7 @@
 
 ;; (let ((a (bool-vector t t nil nil))
 ;;       (b (bool-vector t nil t nil)))
-;;   (compat-deftests bool-vector-intersection
+;;   (ert-deftest bool-vector-intersection
 ;;     (ought (bool-vector t nil nil nil) a b)
 ;;     (ought (bool-vector t nil nil nil) b a)
 ;;     (ert-deftest compat-bool-vector-intersection-sideeffect ()
@@ -1395,7 +1401,7 @@
 
 ;; (let ((a (bool-vector t t nil nil))
 ;;       (b (bool-vector t nil t nil)))
-;;   (compat-deftests bool-vector-set-difference
+;;   (ert-deftest bool-vector-set-difference
 ;;     (ought (bool-vector nil t nil nil) a b)
 ;;     (ought (bool-vector nil nil t nil) b a)
 ;;     (ert-deftest compat-bool-vector-set-difference-sideeffect ()
@@ -1416,7 +1422,7 @@
 ;;     (expect wrong-type-argument (vector) (bool-vector) (vector))
 ;;     (expect wrong-type-argument (vector) (vector) (vector))))
 
-;; (compat-deftests bool-vector-not
+;; (ert-deftest bool-vector-not
 ;;   (ought (bool-vector) (bool-vector))
 ;;   (ought (bool-vector t) (bool-vector nil))
 ;;   (ought (bool-vector nil) (bool-vector t))
@@ -1427,7 +1433,7 @@
 ;;   (expect wrong-type-argument (vector))
 ;;   (expect wrong-type-argument (vector) (vector)))
 
-;; (compat-deftests bool-vector-subsetp
+;; (ert-deftest bool-vector-subsetp
 ;;   (ought t (bool-vector) (bool-vector))
 ;;   (ought t (bool-vector t) (bool-vector t))
 ;;   (ought t (bool-vector nil) (bool-vector t))
@@ -1445,7 +1451,7 @@
 ;;   (expect wrong-type-argument (vector) (bool-vector))
 ;;   (expect wrong-type-argument (vector) (vector)))
 
-;; (compat-deftests bool-vector-count-consecutive
+;; (ert-deftest bool-vector-count-consecutive
 ;;   (ought 0 (bool-vector nil) (bool-vector nil) 0)
 ;;   (ought 0 (make-bool-vector 10 nil) t 0)
 ;;   (ought 10 (make-bool-vector 10 nil) nil 0)
@@ -1462,7 +1468,7 @@
 ;;   (ought 5 (bool-vector t t t t nil t t t t t) t 5)
 ;;   (expect wrong-type-argument (vector) nil 0))
 
-;; (compat-deftests bool-vector-count-population
+;; (ert-deftest bool-vector-count-population
 ;;   (ought  0 (bool-vector))
 ;;   (ought  0 (make-bool-vector 10 nil))
 ;;   (ought 10 (make-bool-vector 10 t))
@@ -1474,7 +1480,7 @@
 ;;   (ought  3 (bool-vector t nil t t))
 ;;   (expect wrong-type-argument (vector)))
 
-;; (compat-deftests compat-assoc-delete-all
+;; (ert-deftest compat-assoc-delete-all
 ;;   (ought (list) 0 (list))
 ;;   ;; Test `eq'
 ;;   (ought '((1 . one)) 0 (list (cons 1 'one)))
@@ -1501,7 +1507,7 @@
 ;;   (ought '((0 . zero) a (0 . zero)) 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=)
 ;;   (ought '(a (0 . zero) (0 . zero)) 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=))
 
-;; (compat-deftests color-values-from-color-spec
+;; (ert-deftest color-values-from-color-spec
 ;;   ;; #RGB notation
 ;;   (ought '(0 0 0) "#000")
 ;;   (ought '(0 0 0) "#000000")
@@ -1597,7 +1603,7 @@
 ;;   (ought nil "rgbi : 0/0/0")
 ;;   (ought nil "rgbi:0/0.5/10"))
 
-;; (compat-deftests file-modes-number-to-symbolic
+;; (ert-deftest file-modes-number-to-symbolic
 ;;   (ought "-rwx------" #o700)
 ;;   (ought "-rwxrwx---" #o770)
 ;;   (ought "-rwx---rwx" #o707)
@@ -1609,7 +1615,7 @@
 ;;   (ought "prwx------" #o10700)
 ;;   (ought "-rwx------" #o30700))
 
-;; (compat-deftests file-local-name
+;; (ert-deftest file-local-name
 ;;   (ought "" "")
 ;;   (ought "foo" "foo")
 ;;   (ought "/bar/foo" "/bar/foo")
@@ -1623,7 +1629,7 @@
 ;;   (ought ":foo" "/ssh:::foo")
 ;;   (ought ":/bar/foo" "/ssh:::/bar/foo"))
 
-;; (compat-deftests file-name-quoted-p
+;; (ert-deftest file-name-quoted-p
 ;;   (ought nil "")
 ;;   (ought t "/:")
 ;;   (ought nil "//:")
@@ -1637,7 +1643,7 @@
 ;;   ;; (ought nil "/ssh:/:a")
 ;;   )
 
-;; (compat-deftests file-name-quote
+;; (ert-deftest file-name-quote
 ;;   (ought "/:" "")
 ;;   (ought "/::" ":")
 ;;   (ought "/:/" "/")
@@ -1648,7 +1654,7 @@
 ;;   (ought "/:a" "/:a")
 ;;   (ought (concat "/ssh:" (system-name) ":/:a") "/ssh::a"))
 
-;; (compat-deftests make-lock-file-name
+;; (ert-deftest make-lock-file-name
 ;;   (ought (expand-file-name ".#") "")
 ;;   (ought (expand-file-name ".#a") "a")
 ;;   (ought (expand-file-name ".#foo") "foo")
@@ -1665,7 +1671,7 @@
 ;;   (ought (expand-file-name "bar/.#b") "bar/b")
 ;;   (ought (expand-file-name "bar/.#foo") "bar/foo"))
 
-;; (compat-deftests time-equal-p
+;; (ert-deftest time-equal-p
 ;;   (ought t nil nil)
 
 ;;   ;; FIXME: Testing these values can be tricky, because the timestamp
@@ -1693,13 +1699,13 @@
 ;;   (ought nil '(1 2 3 4) '(2 2 3 4))
 ;;   (ought nil '(2 2 3 4) '(1 2 3 4)))
 
-;; (compat-deftests date-days-in-month
+;; (ert-deftest date-days-in-month
 ;;   (ought 31 2020 1)
 ;;   (ought 30 2020 4)
 ;;   (ought 29 2020 2)
 ;;   (ought 28 2021 2))
 
-;; (compat-deftests decoded-time-period
+;; (ert-deftest decoded-time-period
 ;;   (ought 0 '())
 ;;   (ought 0 '(0))
 ;;   (ought 1 '(1))
@@ -1750,7 +1756,7 @@
 ;;   (expect wrong-type-argument '(0 0 0 0 0 a)))
 
 ;; ;; TODO func-arity seems broken
-;; ;; (compat-deftests func-arity
+;; ;; (ert-deftest func-arity
 ;; ;;   (should (equal '(0 . 0) (func-arity (lambda ()))))
 ;; ;;   (should (equal '(1 . 1) (func-arity (lambda (x) x))))
 ;; ;;   (should (equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
@@ -1761,14 +1767,14 @@
 ;; ;;   (ought '(2 . 3) 'defalias)
 ;; ;;   (ought '(1 . unevalled) 'defvar))
 
-;; (compat-deftests subr-primitive-p
+;; (ert-deftest subr-primitive-p
 ;;   (ought t (symbol-function 'identity))       ;function from fns.c
 ;;   (unless (fboundp 'subr-native-elisp-p)
 ;;     (ought nil (symbol-function 'match-string))) ;function from subr.el
 ;;   (ought nil (symbol-function 'defun))        ;macro from subr.el
 ;;   (ought nil nil))
 
-;; (compat-deftests file-name-absolute-p   ;assuming unix
+;; (ert-deftest file-name-absolute-p   ;assuming unix
 ;;   (ought t "/")
 ;;   (ought t "/a")
 ;;   (ought nil "a")
@@ -1791,7 +1797,7 @@
 ;;   (put two 'derived-mode-parent one)
 ;;   (put one.5 'derived-mode-parent one)
 ;;   (put three 'derived-mode-parent two)
-;;   (compat-deftests provided-mode-derived-p
+;;   (ert-deftest provided-mode-derived-p
 ;;     (ought one one one)
 ;;     (ought one two one)
 ;;     (ought one three one)
