@@ -1698,11 +1698,11 @@
   ;;(should-equal '(1 . 1) (func-arity (lambda (x) x))))
 ;;  (should-equal '(1 . 2) (func-arity (lambda (x &optional _) x))))
     ;;(should-equal '(0 . many) (func-arity (lambda (&rest _)))))
-  (should-equal '(1 . 1) 'identity)
-  (should-equal '(0 . many) 'ignore)
-  (should-equal '(2 . many) 'defun)
-  (should-equal '(2 . 3) 'defalias)
-  ;;(should-equal '(1 . unevalled) 'defvar)
+  (should-equal '(1 . 1) (func-arity 'identity))
+  (should-equal '(0 . many) (func-arity 'ignore))
+  (should-equal '(2 . many) (func-arity 'defun))
+  (should-equal '(2 . 3) (func-arity 'defalias))
+  ;;(should-equal '(1 . unevalled) (func-arity 'defvar))
   )
 
 ;; TODO fix broken test
