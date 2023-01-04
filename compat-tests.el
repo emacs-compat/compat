@@ -38,8 +38,8 @@
 
 (require 'ert)
 (require 'compat)
+(require 'subr-x)
 (require 'text-property-search nil t)
-(eval-when-compile (require 'subr-x))
 (setq ert-quiet t)
 
 (defmacro should-equal (a b)
