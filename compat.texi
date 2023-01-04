@@ -143,6 +143,21 @@ call these definitions ``Explicit Definitions''. In contrast,
 (mapcan FUNCTION SEQUENCE)               ;; Implicit
 @end example
 
+@defmac compat-call FUN &rest ARGS
+This macro calls the compatibility function FUN with ARGS.  Many
+functions provided by Compat can be called directly without this
+macro.  However in the case where Compat provides an alternative
+version of an exisiting function, the function call has to go through
+@code{compat-call}.  This happens for example when the calling
+convention of a function has changed.
+@end defmac
+
+@defmac compat-function FUN
+This macro returns the compatibility function symbol for FUN.  See
+@code{compat-call} for a more convenient macro to directly call
+compatibility functions.
+@end defmac
+
 If you intend to use a compatibility function in your code it is
 strongly recommended that you check the tests in
 @file{compat-tests.el}.  Alternatively grep the Compat code for
