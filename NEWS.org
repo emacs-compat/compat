@@ -3,7 +3,11 @@
 * Development
 
 - Many bugfixes
-- Many new tests
+- Many new tests for existing APIs
+- Add new Emacs 29 APIs. Most of these are still untested and may change. If you
+  intend to use an API please be extra careful and if possible contribute test
+  cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
+  code. Over time tests for all functions will be added gradually.
 - Add the macros ~compat-call~ and ~compat-function~ to call compatibility
   functions. Since Compat avoids overwriting already existing functions, we must
   define separate compatibility function definitions for functions which changed
@@ -15,7 +19,7 @@
 - Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
   ~compat-call~ or ~compat-function~ macros.
 - Deprecate ~compat-help.el~ and ~compat-font-lock.el~
-- Development moved to [[https://github.com/emacs-compat/compat][GitHub]]
+- Development moved to GitHub
 - BREAKING: Drop broken function ~func-arity~
 - BREAKING: Drop support for Emacs 24.3
 
