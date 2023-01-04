@@ -1171,6 +1171,18 @@
     (remhash 1 ht)
     (should-equal '(two) (hash-table-values ht))))
 
+(ert-deftest if-let* ()
+  (should-equal "then"
+   (if-let*
+    ((x 3)
+     (y 2)
+     (z (+ x y))
+     ((= z 5))
+     (true t))
+    "then" "else"))
+  (should-equal "else"
+   (if-let* (((= 5 6))) "then" "else")))
+
 (ert-deftest if-let ()
   (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
               e))
@@ -1622,18 +1634,6 @@
 ;;                    "aaa"                ;longer string
 ;;                    ))
 ;;       (should-not (string-match-p unmatchable str)))))
-
-;; (ert-deftest if-let* ()
-;;   (should
-;;    (if-let*
-;;     ((x 3)
-;;      (y 2)
-;;      (z (+ x y))
-;;      ((= z 5))
-;;      (true t))
-;;     true nil))
-;;   (should-not
-;;    (if-let* (((= 5 6))) t nil)))
 
 ;; (ert-deftest regexp-unmatchable ()
 ;;   (dolist (str '(""                     ;empty string
