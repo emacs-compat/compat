@@ -914,41 +914,6 @@ Processes,,,elisp}), and as the program to run on the remote host.  If
 @xref{Magic File Names,,,elisp}.
 @end defun
 
-@c copied from lispref/files.texi
-@defmac file-name-quoted-p name
-This macro returns non-@code{nil}, when @var{name} is quoted with the
-prefix @samp{/:}.  If @var{name} is a remote file name, the local part
-of @var{name} is checked.
-
-@xref{File Name Expansion,,,elisp}.
-@end defmac
-
-@c copied from lispref/files.texi
-@defmac file-name-quote name
-This macro adds the quotation prefix @samp{/:} to the file @var{name}.
-For a local file @var{name}, it prefixes @var{name} with @samp{/:}.  If
-@var{name} is a remote file name, the local part of @var{name}
-(@pxref{Magic File Names,,,elisp}) is quoted.  If @var{name} is already
-a quoted file name, @var{name} is returned unchanged.
-
-@example
-@group
-(substitute-in-file-name (file-name-quote "bar/~/foo")) @result{}
-     "/:bar/~/foo"
-@end group
-
-@group
-(substitute-in-file-name (file-name-quote "/ssh:host:bar/~/foo"))
-     @result{} "/ssh:host:/:bar/~/foo"
-@end group
-@end example
-
-The macro cannot be used to suppress file name handlers from magic file
-names (@pxref{Magic File Names,,,elisp}).
-
-@xref{File Name Expansion,,,elisp}.
-@end defmac
-
 @defun read-multiple-choice prompt choices &optional help-string show-help long-form
 Ask user a multiple choice question.  @var{prompt} should be a string
 that will be displayed as the prompt.
@@ -1142,6 +1107,41 @@ to @samp{[ \t\n\r]+}.
 
 The compatibility version handles the optional arguments @var{trim-left}
 and @var{trim-right}.
+@end defun
+
+@c copied from lispref/files.texi
+@defun compat-call@ file-name-quoted-p name
+This macro returns non-@code{nil}, when @var{name} is quoted with the
+prefix @samp{/:}.  If @var{name} is a remote file name, the local part
+of @var{name} is checked.
+
+@xref{File Name Expansion,,,elisp}.
+@end defun
+
+@c copied from lispref/files.texi
+@defun compat-call@ file-name-quote name
+This macro adds the quotation prefix @samp{/:} to the file @var{name}.
+For a local file @var{name}, it prefixes @var{name} with @samp{/:}.  If
+@var{name} is a remote file name, the local part of @var{name}
+(@pxref{Magic File Names,,,elisp}) is quoted.  If @var{name} is already
+a quoted file name, @var{name} is returned unchanged.
+
+@example
+@group
+(substitute-in-file-name (compat-call file-name-quote "bar/~/foo")) @result{}
+     "/:bar/~/foo"
+@end group
+
+@group
+(substitute-in-file-name (compat-call file-name-quote "/ssh:host:bar/~/foo"))
+     @result{} "/ssh:host:/:bar/~/foo"
+@end group
+@end example
+
+The macro cannot be used to suppress file name handlers from magic file
+names (@pxref{Magic File Names,,,elisp}).
+
+@xref{File Name Expansion,,,elisp}.
 @end defun
 
 @subsection Missing Definitions
