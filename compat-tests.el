@@ -157,6 +157,24 @@
     (should (equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins"))))
 
+(ert-deftest compat-json-parse-string ()
+  "Check if `compat--t-json-parse-string' was implemented properly."
+  (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
+    (let ((obj (json-parse-string input :object-type 'alist)))
+      (should (equal (cdr (assq 'key obj)) ["abc" 2]))
+      (should (equal (cdr (assq 'yek obj)) :null)))
+    (let ((obj (json-parse-string input :object-type 'plist)))
+      (should (equal (plist-get obj :key) ["abc" 2]))
+      (should (equal (plist-get obj :yek) :null)))
+    (let ((obj (json-parse-string input)))
+      (should (equal (gethash "key" obj) ["abc" 2]))
+      (should (equal (gethash "yek" obj) :null)))))
+
+(ert-deftest compat-json-insert ()
+  (with-temp-buffer
+    (json-insert '((:key . ["abc" 2]) (yek . t)))
+    (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
+
 ;; (defun compat--ought (name compat)
 ;;   "Implementation for the `ought' macro for NAME.
 ;; COMPAT is the name of the compatibility function the behaviour is
@@ -1235,24 +1253,6 @@
 ;;   (ought '(("a" 2) 3) "[[\"a\",2],3]" :array-type 'list)
 ;;   (ought 'foo "null" :null-object 'foo)
 ;;   (ought ["false" t] "[false, true]" :false-object "false"))
-
-;; (ert-deftest compat-json-parse-string ()
-;;   "Check if `compat--t-json-parse-string' was implemented properly."
-;;   (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
-;;     (let ((obj (json-parse-string input :object-type 'alist)))
-;;       (should (equal (cdr (assq 'key obj)) ["abc" 2]))
-;;       (should (equal (cdr (assq 'yek obj)) :null)))
-;;     (let ((obj (json-parse-string input :object-type 'plist)))
-;;       (should (equal (plist-get obj :key) ["abc" 2]))
-;;       (should (equal (plist-get obj :yek) :null)))
-;;     (let ((obj (json-parse-string input)))
-;;       (should (equal (gethash "key" obj) ["abc" 2]))
-;;       (should (equal (gethash "yek" obj) :null)))))
-
-;; (ert-deftest compat-json-insert ()
-;;   (with-temp-buffer
-;;     (compat--t-json-insert '((:key . ["abc" 2]) (yek . t)))
-;;     (should (equal (buffer-string) "{\":key\":[\"abc\",2],\"yek\":true}"))))
 
 ;; (ert-deftest compat-json-serialize ()
 ;;   "Check if `json-serialize' was implemented properly."
