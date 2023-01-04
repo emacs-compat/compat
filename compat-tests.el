@@ -46,6 +46,16 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest ntake ()
+  (should-not (ntake 5 nil))
+  (should-equal '(1 2) (ntake 5 '(1 2)))
+  (should-equal '(1 2 3) (ntake 3 '(1 2 3 4))))
+
+(ert-deftest take ()
+  (should-not (take 5 nil))
+  (should-equal '(1 2) (take 5 '(1 2)))
+  (should-equal '(1 2 3) (take 3 '(1 2 3 4))))
+
 (ert-deftest format-message ()
   (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
 

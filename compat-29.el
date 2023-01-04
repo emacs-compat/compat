@@ -79,7 +79,7 @@ WINDOW."
 
 ;;;; Defined in fns.c
 
-(compat-defun ntake (n list) ;; <UNTESTED>
+(compat-defun ntake (n list) ;; <OK>
   "Modify LIST to keep only the first N elements.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST unmodified.
@@ -88,7 +88,7 @@ Otherwise, return LIST after truncating it."
                  (when cons (setcdr cons nil))
                  list)))
 
-(compat-defun take (n list) ;; <UNTESTED>
+(compat-defun take (n list) ;; <OK>
   "Return the first N elements of LIST.
 If N is zero or negative, return nil.
 If N is greater or equal to the length of LIST, return LIST (or a copy)."
