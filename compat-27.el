@@ -646,12 +646,6 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
       (make-directory paren-dir parents)))
   (write-region "" nil filename nil 0))
 
-;; TODO provide advice for directory-files-recursively
-
-;;;; Defined in format-spec.el
-
-;; TODO provide advice for format-spec
-
 ;;;; Defined in regexp-opt.el
 
 (compat-defun regexp-opt (strings &optional paren)
