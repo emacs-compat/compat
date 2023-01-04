@@ -745,7 +745,9 @@ The return value is a string (or nil in case we can’t find it)."
   "Return non-nil if MATCH is a `prop-match' object."
   :max-version "26.1"
   :feature text-property-search
-  (and (vectorp match) (eq (aref match 0) 'prop-match))) ;; Vector
+  (and (vectorp match) ;; Vector
+       (> (length match) 0)
+       (eq (aref match 0) 'prop-match)))
 
 (compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."

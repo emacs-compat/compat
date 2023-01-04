@@ -5,6 +5,7 @@
 - Add multiple new tests for existing APIs.
 - Bug fix for the ~setq-local~ compatibility macro
 - Bug fix for the ~proper-list-p~ compatibility function
+- Bug fix for the ~prop-match-p~ compatibility function
 - Add new Emacs 29 APIs. Most of these are still untested and may change. If you
   intend to use an API please be extra careful and if possible contribute test
   cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
