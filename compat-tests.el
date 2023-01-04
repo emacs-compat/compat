@@ -69,6 +69,7 @@
   (should (equal t (always 1 2 3 4))))             ;; multiple arguments
 
 (ert-deftest string-width ()
+  (should (equal 0 (compat-string-width "")))                         ;; Obsolete
   (should (equal 0 (compat-call string-width "")))
   (should (equal 3 (compat-call string-width "abc")))                 ;; no argument
   (should (equal 5 (compat-call string-width "abcあ")))
