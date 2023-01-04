@@ -21,6 +21,10 @@
 
 ;;; Code:
 
+;; We always require subr-x at compile since many functions have been moved
+;; around.
+(require 'subr-x)
+
 (defvar compat--current-version nil
   "Default version to use when no explicit version was given.")
 
@@ -33,9 +37,7 @@
   "Protect BODY with `with-eval-after-load' if FEATURE is non-nil."
   (declare (indent 1))
   (if feature
-      ;; See https://nullprogram.com/blog/2018/02/22/:
-      `(with-eval-after-load ',feature
-         ,@body)
+      `(with-eval-after-load ',feature ,@body)
     (macroexp-progn body)))
 
 (defun compat--generate (name def-fn install-fn check-fn attr)
@@ -84,11 +86,9 @@ ignored:
     (when (and (plist-get attr :realname)
                (string= name (plist-get attr :realname)))
       (error "%S: Name is equal to realname" name))
-    ;; We always require subr-x for the check since many functions have been
-    ;; moved around
+    ;; subr-x is available at compile time.
     (when (eq feature 'subr-x)
       (error "Feature subr-x is forbidden"))
-    (require 'subr-x)
     (when feature
       (unless (require feature nil t)
         (setq feature nil)))
