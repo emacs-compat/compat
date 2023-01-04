@@ -69,7 +69,6 @@ Introduction
 
 Support
 
-* Emacs 24.4::                   Compatibility support for Emacs 24.4
 * Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
@@ -96,14 +95,17 @@ for Emacs Lisp.  That is to say by using Compat, an Elisp package does
 not have to make the decision to either use new and useful functionality
 or support old versions of Emacs.
 
-Version 24.4 is chosen as the oldest version we can reasonably support,
-since subr-x was introduced in this version.
+Version 24.4 is chosen as the oldest version we can support, since
+Elisp has seen significant semantic changes at that version.  On the
+library level subr-x was introduced in 24.4.  Most popular Emacs
+packages which could potentially benefit from Compat already require
+24.4 or even newer versions of Emacs.  The long time release of CentOS
+7, which still distributes Emacs 24.3 reaches end of life soon (2024).
 
 Note that Compat provides functions with extended functionality for
 commands that are already defined (@code{sort}, @code{assoc},
-@code{seq}, @dots{}). These functions must be looked up explicitly
-with @code{compat-function} or called explicitly with
-@code{compat-call}.
+@dots{}).  These functions must be looked up explicitly with
+@code{compat-function} or called explicitly with @code{compat-call}.
 
 @node Usage
 @section Usage
@@ -219,267 +221,12 @@ This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 @menu
-* Emacs 24.4::                   Compatibility support for Emacs 24.4
 * Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
 @end menu
-
-@node Emacs 24.4
-@section Emacs 24.4
-
-@subsection Implicit Definitions
-The following functions and macros implemented in 24.4, and are provided
-by Compat:
-
-@c copied from lispref/eval.texi
-@defun special-form-p object
-This predicate tests whether its argument is a special form, and returns
-@code{t} if so, @code{nil} otherwise.
-
-@xref{Special Forms,,,elisp}.
-@end defun
-
-@c copied from lispref/macros.texi
-@defun macrop object
-This predicate tests whether its argument is a macro, and returns
-@code{t} if so, @code{nil} otherwise.
-
-@xref{Simple Macro,,,elisp}.
-@end defun
-
-@c copied form lispref/strings.texi
-@defun string-suffix-p suffix string &optional ignore-case
-This function returns non-@code{nil} if @var{suffix} is a suffix of
-@var{string}; i.e., if @var{string} ends with @var{suffix}.  If the
-optional argument @var{ignore-case} is non-@code{nil}, the comparison
-ignores case differences.
-
-@xref{Text Comparison,,,elisp}.
-@end defun
-
-@c based on lisp/subr.el
-@defun delete-consecutive-dups list &optional circular
-Destructively remove @code{equal} consecutive duplicates from
-@var{list}.  First and last elements are considered consecutive if
-@var{circular} is non-nil.
-@end defun
-
-@c copied from lispref/control.texi
-@defun define-error name message &optional parent
-  In order for a symbol to be an error symbol, it must be defined with
-@code{define-error} which takes a parent condition (defaults to
-@code{error}).  This parent defines the conditions that this kind of
-error belongs to.  The transitive set of parents always includes the
-error symbol itself, and the symbol @code{error}.  Because quitting is
-not considered an error, the set of parents of @code{quit} is just
-@code{(quit)}.
-
-@xref{Error Symbols,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-exclusive-or a b &optional c
-Return @dfn{bitwise exclusive or} of bool vectors @var{a} and @var{b}.
-If optional argument @var{c} is given, the result of this operation is
-stored into @var{c}.  All arguments should be bool vectors of the same
-length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-union a b &optional c
-Return @dfn{bitwise or} of bool vectors @var{a} and @var{b}.  If
-optional argument @var{c} is given, the result of this operation is
-stored into @var{c}.  All arguments should be bool vectors of the same
-length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-intersection a b &optional c
-Return @dfn{bitwise and} of bool vectors @var{a} and @var{b}.  If
-optional argument @var{c} is given, the result of this operation is
-stored into @var{c}.  All arguments should be bool vectors of the same
-length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-set-difference a b &optional c
-Return @dfn{set difference} of bool vectors @var{a} and @var{b}.  If
-optional argument @var{c} is given, the result of this operation is
-stored into @var{c}.  All arguments should be bool vectors of the same
-length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-not a &optional b
-Return @dfn{set complement} of bool vector @var{a}.  If optional
-argument @var{b} is given, the result of this operation is stored into
-@var{b}.  All arguments should be bool vectors of the same length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-subsetp a b
-Return @code{t} if every @code{t} value in @var{a} is also @code{t} in
-@var{b}, @code{nil} otherwise.  All arguments should be bool vectors of
-the same length.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-count-consecutive a b i
-Return the number of consecutive elements in @var{a} equal @var{b}
-starting at @var{i}.  @code{a} is a bool vector, @var{b} is @code{t} or
-@code{nil}, and @var{i} is an index into @code{a}.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/sequences.texi
-@defun bool-vector-count-population a
-Return the number of elements that are @code{t} in bool vector @var{a}.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@c copied from lispref/minibuf.texi
-@defun completion-table-with-cache function &optional ignore-case
-This is a wrapper for @code{completion-table-dynamic} that saves the
-last argument-result pair.  This means that multiple lookups with the
-same argument only need to call @var{function} once.  This can be useful
-when a slow operation is involved, such as calling an external process.
-
-@xref{Programmed Completion,,,elisp}.
-@end defun
-
-@c copied from lispref/display.texi
-@defun face-spec-set face spec &optional spec-type
-This function applies @var{spec} as a face spec for @code{face}.
-@var{spec} should be a face spec, as described in the above
-documentation for @code{defface}.
-
-This function also defines @var{face} as a valid face name if it is not
-already one, and (re)calculates its attributes on existing frames.
-
-The optional argument @var{spec-type} determines which spec to set.  If
-it is omitted or @code{nil} or @code{face-override-spec}, this function
-sets the @dfn{override spec}, which overrides face specs on @var{face}
-of all the other types mentioned below.  This is useful when calling
-this function outside of Custom code.  If @var{spec-type} is
-@code{customized-face} or @code{saved-face}, this function sets the
-customized spec or the saved custom spec, respectively.  If it is
-@code{face-defface-spec}, this function sets the default face spec (the
-same one set by @code{defface}).  If it is @code{reset}, this function
-clears out all customization specs and override specs from @var{face}
-(in this case, the value of @var{spec} is ignored).  The effect of any
-other value of @var{spec-type} on the face specs is reserved for
-internal use, but the function will still define @var{face} itself and
-recalculate its attributes, as described above.
-
-@xref{Defining Faces,,,elisp}.
-@end defun
-
-@subsection Explicit Definitions
-These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
-
-@c all copied from lispref/numbers.texi
-@defun compat-call@ = number-or-marker &rest number-or-markers
-This function tests whether all its arguments are numerically equal, and
-returns @code{t} if so, @code{nil} otherwise.
-
-@xref{Comparison of Numbers,,,elisp}.
-@end defun
-@defun compat-call@ < number-or-marker &rest number-or-markers
-This function tests whether each argument is strictly less than the
-following argument.  It returns @code{t} if so, @code{nil} otherwise.
-
-@xref{Comparison of Numbers,,,elisp}.
-@end defun
-@defun compat-call@ > number-or-marker &rest number-or-markers
-This function tests whether each argument is strictly greater than the
-following argument.  It returns @code{t} if so, @code{nil} otherwise.
-
-@xref{Comparison of Numbers,,,elisp}.
-@end defun
-@defun compat-call@ <= number-or-marker &rest number-or-markers
-This function tests whether each argument is less than or equal to the
-following argument.  It returns @code{t} if so, @code{nil} otherwise.
-
-@xref{Comparison of Numbers,,,elisp}.
-@end defun
-@defun compat-call@ >= number-or-marker &rest number-or-markers
-This function tests whether each argument is greater than or equal to
-the following argument.  It returns @code{t} if so, @code{nil}
-otherwise.
-
-@xref{Comparison of Numbers,,,elisp}.
-@end defun
-
-These functions differ from the previous implementation in that they
-allow for more than two argument to be compared.
-
-@c based on lispref/strings.texi
-@defun compat-call@ split-string string &optional separators omit-nulls trim
-This function splits @var{string} into substrings based on the regular
-expression @var{separators} (@pxref{Regular Expressions,,,elisp}).  Each
-match for @var{separators} defines a splitting point; the substrings
-between splitting points are made into a list, which is returned.
-
-@pxref{Creating Strings,,,elisp} for more details.
-
-This version handles the optional argument @var{trim}.  If it is
-non-@code{nil}, it should be a regular expression to match text to trim
-from the beginning and end of each substring.  If trimming makes the
-substring empty, it is treated as null.
-@end defun
-
-@subsection Missing Definitions
-Compat does not provide support for the following Lisp features
-implemented in 24.4:
-
-@itemize
-@item
-Allowing the second optional argument to @code{eval} to specify a
-lexical environment.
-@item
-The @code{define-alternatives} macro.
-@item
-Support for the @code{defalias-fset-function} symbol property.
-@item
-The @code{group-gid} and @code{groupd-read-gid} functions.
-@item
-The @code{pre-redisplay-function} hook.
-@item
-Allowing for @code{with-demoted-errors} to take a additional argument
-@code{format}.
-@item
-The @code{add-face-text-property} function.
-@item
-No @code{tty-setup-hook} hook.
-@item
-The @code{get-pos-property} function.
-@item
-The @code{define-advice} macro.
-@item
-Support for generators.
-@item
-The @code{string-trim}, @code{string-trim-left} and
-@code{string-trim-right} functions.  These are instead provided as
-explicit functions as part of @ref{Emacs 26.1} support.
-@end itemize
 
 @node Emacs 25.1
 @section Emacs 25.1
