@@ -43,7 +43,7 @@ is nil)."
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :max-version "25.3"
+  :max-version "26.1"
   ;; On Emacs older than 25.3 we have to use the Tortoise and Hare algorithm
   (when (listp object)
     (catch 'cycle
