@@ -1706,7 +1706,7 @@
 (defvar compat-local-b nil)
 (defvar compat-local-c nil)
 (ert-deftest setq-local ()
-  (compat-call setq-local compat-local-a 1 compat-local-b 2 compat-local-c 3)
+  (compat-setq-local compat-local-a 1 compat-local-b 2 compat-local-c 3)
   (should-equal compat-local-a 1)
   (should-equal compat-local-b 2)
   (should-equal compat-local-c 3))
