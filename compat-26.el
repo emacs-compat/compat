@@ -394,63 +394,63 @@ the variable `temporary-file-directory' is returned."
           default-directory
         temporary-file-directory))))
 
-(compat-defun file-attribute-type (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-type (attributes) ;; <OK>
   "The type field in ATTRIBUTES returned by `file-attributes'.
 The value is either t for directory, string (name linked to) for
 symbolic link, or nil."
   (nth 0 attributes))
 
-(compat-defun file-attribute-link-number (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-link-number (attributes) ;; <OK>
   "Return the number of links in ATTRIBUTES returned by `file-attributes'."
   (nth 1 attributes))
 
-(compat-defun file-attribute-user-id (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-user-id (attributes) ;; <OK>
   "The UID field in ATTRIBUTES returned by `file-attributes'.
 This is either a string or a number.  If a string value cannot be
 looked up, a numeric value, either an integer or a float, is
 returned."
   (nth 2 attributes))
 
-(compat-defun file-attribute-group-id (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-group-id (attributes) ;; <OK>
   "The GID field in ATTRIBUTES returned by `file-attributes'.
 This is either a string or a number.  If a string value cannot be
 looked up, a numeric value, either an integer or a float, is
 returned."
   (nth 3 attributes))
 
-(compat-defun file-attribute-access-time (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-access-time (attributes) ;; <OK>
   "The last access time in ATTRIBUTES returned by `file-attributes'.
 This a Lisp timestamp in the style of `current-time'."
   (nth 4 attributes))
 
-(compat-defun file-attribute-modification-time (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-modification-time (attributes) ;; <OK>
   "The modification time in ATTRIBUTES returned by `file-attributes'.
 This is the time of the last change to the file's contents, and
 is a Lisp timestamp in the style of `current-time'."
   (nth 5 attributes))
 
-(compat-defun file-attribute-status-change-time (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-status-change-time (attributes) ;; <OK>
   "The status modification time in ATTRIBUTES returned by `file-attributes'.
 This is the time of last change to the file's attributes: owner
 and group, access mode bits, etc., and is a Lisp timestamp in the
 style of `current-time'."
   (nth 6 attributes))
 
-(compat-defun file-attribute-size (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-size (attributes) ;; <OK>
   "The integer size (in bytes) in ATTRIBUTES returned by `file-attributes'."
   (nth 7 attributes))
 
-(compat-defun file-attribute-modes (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-modes (attributes) ;; <OK>
   "The file modes in ATTRIBUTES returned by `file-attributes'.
 This is a string of ten letters or dashes as in ls -l."
   (nth 8 attributes))
 
-(compat-defun file-attribute-inode-number (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-inode-number (attributes) ;; <OK>
   "The inode number in ATTRIBUTES returned by `file-attributes'.
 It is a nonnegative integer."
   (nth 10 attributes))
 
-(compat-defun file-attribute-device-number (attributes) ;; <UNTESTED>
+(compat-defun file-attribute-device-number (attributes) ;; <OK>
   "The file system device number in ATTRIBUTES returned by `file-attributes'.
 It is an integer."
   (nth 11 attributes))

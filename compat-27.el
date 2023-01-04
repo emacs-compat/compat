@@ -487,48 +487,48 @@ Elements of ALIST that are not conses are ignored."
 
 ;;;; Defined in simple.el
 
-(compat-defun decoded-time-second (time) ;; <UNTESTED>
+(compat-defun decoded-time-second (time) ;; <OK>
   "The seconds in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 60 (inclusive).  (60 is a leap
 second, which only some operating systems support.)"
   (nth 0 time))
 
-(compat-defun decoded-time-minute (time) ;; <UNTESTED>
+(compat-defun decoded-time-minute (time) ;; <OK>
   "The minutes in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 59 (inclusive)."
   (nth 1 time))
 
-(compat-defun decoded-time-hour (time) ;; <UNTESTED>
+(compat-defun decoded-time-hour (time) ;; <OK>
   "The hours in TIME, which is a value returned by `decode-time'.
 This is an integer between 0 and 23 (inclusive)."
   (nth 2 time))
 
-(compat-defun decoded-time-day (time) ;; <UNTESTED>
+(compat-defun decoded-time-day (time) ;; <OK>
   "The day-of-the-month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 31 (inclusive)."
   (nth 3 time))
 
-(compat-defun decoded-time-month (time) ;; <UNTESTED>
+(compat-defun decoded-time-month (time) ;; <OK>
   "The month in TIME, which is a value returned by `decode-time'.
 This is an integer between 1 and 12 (inclusive).  January is 1."
   (nth 4 time))
 
-(compat-defun decoded-time-year (time) ;; <UNTESTED>
+(compat-defun decoded-time-year (time) ;; <OK>
   "The year in TIME, which is a value returned by `decode-time'.
 This is a four digit integer."
   (nth 5 time))
 
-(compat-defun decoded-time-weekday (time) ;; <UNTESTED>
+(compat-defun decoded-time-weekday (time) ;; <OK>
   "The day-of-the-week in TIME, which is a value returned by `decode-time'.
 This is a number between 0 and 6, and 0 is Sunday."
   (nth 6 time))
 
-(compat-defun decoded-time-dst (time) ;; <UNTESTED>
+(compat-defun decoded-time-dst (time) ;; <OK>
   "The daylight saving time in TIME, which is a value returned by `decode-time'.
 This is t if daylight saving time is in effect, and nil if not."
   (nth 7 time))
 
-(compat-defun decoded-time-zone (time) ;; <UNTESTED>
+(compat-defun decoded-time-zone (time) ;; <OK>
   "The time zone in TIME, which is a value returned by `decode-time'.
 This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."

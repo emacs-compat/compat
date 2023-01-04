@@ -726,6 +726,21 @@
   (should-equal (expand-file-name "bar/.#b") (make-lock-file-name "bar/b"))
   (should-equal (expand-file-name "bar/.#foo") (make-lock-file-name "bar/foo")))
 
+(ert-deftest file-attributes ()
+  (let ((attrs '(type link-number user-id group-id access-time modification-time
+                 status-change-time size modes unspecified inode-number device-number)))
+    (should-equal (file-attribute-type attrs) 'type)
+    (should-equal (file-attribute-link-number attrs) 'link-number)
+    (should-equal (file-attribute-user-id attrs) 'user-id)
+    (should-equal (file-attribute-group-id attrs) 'group-id)
+    (should-equal (file-attribute-access-time attrs) 'access-time)
+    (should-equal (file-attribute-modification-time attrs) 'modification-time)
+    (should-equal (file-attribute-status-change-time attrs) 'status-change-time)
+    (should-equal (file-attribute-size attrs) 'size)
+    (should-equal (file-attribute-modes attrs) 'modes)
+    (should-equal (file-attribute-inode-number attrs) 'inode-number)
+    (should-equal (file-attribute-device-number attrs) 'device-number)))
+
 (ert-deftest file-size-human-readable ()
   (should-equal "1000" (compat-call file-size-human-readable 1000))
   (should-equal "1k" (compat-call file-size-human-readable 1024))
