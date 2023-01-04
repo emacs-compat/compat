@@ -50,6 +50,128 @@
     (should (eq (compat-call plist-get list "first" #'string=) 10))
     (should (eq (compat-call plist-get list "second" #'string=) 2))))
 
+(ert-deftest = ()
+  (should (compat-call = 0 0))
+  (should (compat-call = 0 0 0))
+  (should (compat-call = 0 0 0 0))
+  (should (compat-call = 0 0 0 0 0))
+  (should (compat-call = 0.0 0.0))
+  (should (compat-call = +0.0 -0.0))
+  (should (compat-call = 0.0 0.0 0.0))
+  (should (compat-call = 0.0 0.0 0.0 0.0))
+  (should-not (compat-call = 0 1))
+  (should-not (compat-call = 0 0 1))
+  (should-not (compat-call = 0 0 0 0 1))
+  (should-error (compat-call = 0 0 'a) :type 'wrong-type-argument)
+  (should-not (compat-call = 0 1 'a))
+  (should-not (compat-call = 0.0 0.0 0.0 0.1)))
+
+(ert-deftest < ()
+  (should-not (compat-call < 0 0))
+  (should-not (compat-call < 0 0 0))
+  (should-not (compat-call < 0 0 0 0))
+  (should-not (compat-call < 0 0 0 0 0))
+  (should-not (compat-call < 0.0 0.0))
+  (should-not (compat-call < +0.0 -0.0))
+  (should-not (compat-call < 0.0 0.0 0.0))
+  (should-not (compat-call < 0.0 0.0 0.0 0.0))
+  (should (compat-call < 0 1))
+  (should-not (compat-call < 1 0))
+  (should-not (compat-call < 0 0 1))
+  (should (compat-call < 0 1 2))
+  (should-not (compat-call < 2 1 0))
+  (should-not (compat-call < 0 0 0 0 1))
+  (should (compat-call < 0 1 2 3 4))
+  (should-error (compat-call < 0 1 'a) :type 'wrong-type-argument)
+  (should-not (compat-call < 0 0 'a))
+  (should-not (compat-call < 0.0 0.0 0.0 0.1))
+  (should (compat-call < -0.1 0.0 0.2 0.4))
+  (should (compat-call < -0.1 0 0.2 0.4)))
+
+(ert-deftest > ()
+  (should-not (compat-call > 0 0))
+  (should-not (compat-call > 0 0 0))
+  (should-not (compat-call > 0 0 0 0))
+  (should-not (compat-call > 0 0 0 0 0))
+  (should-not (compat-call > 0.0 0.0))
+  (should-not (compat-call > +0.0 -0.0))
+  (should-not (compat-call > 0.0 0.0 0.0))
+  (should-not (compat-call > 0.0 0.0 0.0 0.0))
+  (should (compat-call > 1 0))
+  (should-not (compat-call > 1 0 0))
+  (should-not (compat-call > 0 1 2))
+  (should (compat-call > 2 1 0))
+  (should-not (compat-call > 1 0 0 0 0))
+  (should (compat-call > 4 3 2 1 0))
+  (should-not (compat-call > 4 3 2 1 1))
+  (should-error (compat-call > 1 0 'a) :type 'wrong-type-argument)
+  (should-not (compat-call > 0 0 'a))
+  (should-not (compat-call > 0.1 0.0 0.0 0.0))
+  (should (compat-call > 0.4 0.2 0.0 -0.1))
+  (should (compat-call > 0.4 0.2 0 -0.1)))
+
+(ert-deftest <= ()
+  (should (compat-call <= 0 0))
+  (should (compat-call <= 0 0 0))
+  (should (compat-call <= 0 0 0 0))
+  (should (compat-call <= 0 0 0 0 0))
+  (should (compat-call <= 0.0 0.0))
+  (should (compat-call <= +0.0 -0.0))
+  (should (compat-call <= 0.0 0.0 0.0))
+  (should (compat-call <= 0.0 0.0 0.0 0.0))
+  (should-not (compat-call <= 1 0))
+  (should-not (compat-call <= 1 0 0))
+  (should (compat-call <= 0 1 2))
+  (should-not (compat-call <= 2 1 0))
+  (should-not (compat-call <= 1 0 0 0 0))
+  (should-not (compat-call <= 4 3 2 1 0))
+  (should-not (compat-call <= 4 3 2 1 1))
+  (should (compat-call <= 0 1 2 3 4))
+  (should (compat-call <= 1 1 2 3 4))
+  (should-error (compat-call <= 0 0 'a) :type 'wrong-type-argument)
+  (should-error (compat-call <= 0 1 'a) :type 'wrong-type-argument)
+  (should-not (compat-call <= 1 0 'a))
+  (should-not (compat-call <= 0.1 0.0 0.0 0.0))
+  (should (compat-call <= 0.0 0.0 0.0 0.1))
+  (should (compat-call <= -0.1 0.0 0.2 0.4))
+  (should (compat-call <= -0.1 0.0 0.0 0.2 0.4))
+  (should (compat-call <= -0.1 0.0 0 0.2 0.4))
+  (should (compat-call <= -0.1 0 0.2 0.4))
+  (should-not (compat-call <= 0.4 0.2 0.0 -0.1))
+  (should-not (compat-call <= 0.4 0.2 0.0 0.0 -0.1))
+  (should-not (compat-call <= 0.4 0.2 0 0.0 0.0 -0.1))
+  (should-not (compat-call <= 0.4 0.2 0 -0.1)))
+
+(ert-deftest >= ()
+  (should (compat-call >= 0 0))
+  (should (compat-call >= 0 0 0))
+  (should (compat-call >= 0 0 0 0))
+  (should (compat-call >= 0 0 0 0 0))
+  (should (compat-call >= 0.0 0.0))
+  (should (compat-call >= +0.0 -0.0))
+  (should (compat-call >= 0.0 0.0 0.0))
+  (should (compat-call >= 0.0 0.0 0.0 0.0))
+  (should (compat-call >= 1 0))
+  (should (compat-call >= 1 0 0))
+  (should-not (compat-call >= 0 1 2))
+  (should (compat-call >= 2 1 0))
+  (should (compat-call >= 1 0 0 0 0))
+  (should (compat-call >= 4 3 2 1 0))
+  (should (compat-call >= 4 3 2 1 1))
+  (should-error (compat-call >= 0 0 'a) :type 'wrong-type-argument)
+  (should-error (compat-call >= 1 0 'a) :type 'wrong-type-argument)
+  (should-not (compat-call >= 0 1 'a))
+  (should (compat-call >= 0.1 0.0 0.0 0.0))
+  (should-not (compat-call >= 0.0 0.0 0.0 0.1))
+  (should-not (compat-call >= -0.1 0.0 0.2 0.4))
+  (should-not (compat-call >= -0.1 0.0 0.0 0.2 0.4))
+  (should-not (compat-call >= -0.1 0.0 0 0.2 0.4))
+  (should-not (compat-call >= -0.1 0 0.2 0.4))
+  (should (compat-call >= 0.4 0.2 0.0 -0.1))
+  (should (compat-call >= 0.4 0.2 0.0 0.0 -0.1))
+  (should (compat-call >= 0.4 0.2 0 0.0 0.0 -0.1))
+  (should (compat-call >= 0.4 0.2 0 -0.1)))
+
 (ert-deftest mapcan ()
   (should (equal nil (mapcan #'identity nil)))
   (should (equal (list 1)
@@ -72,57 +194,57 @@
                          (list (list) (list) (list) (list))))))
 
 (ert-deftest xor ()
-  (should (equal t (xor t nil)))
-  (should (equal t (xor nil t)))
-  (should (equal nil (xor nil nil)))
-  (should (equal nil (xor t t))))
+  (should (xor t nil))
+  (should (xor nil t))
+  (should-not (xor nil nil))
+  (should-not (xor t t)))
 
 (ert-deftest length= ()
-  (should (equal t (length= '() 0)))                  ;empty list
-  (should (equal t (length= '(1) 1)))                 ;single element
-  (should (equal t (length= '(1 2 3) 3)))             ;multiple elements
-  (should (equal nil (length= '(1 2 3) 2)))           ;less than
-  (should (equal nil (length= '(1) 0)))
-  (should (equal nil (length= '(1 2 3) 4)))           ;more than
-  (should (equal nil (length= '(1) 2)))
-  (should (equal nil (length= '() 1)))
-  (should (equal t (length= [] 0)))                   ;empty vector
-  (should (equal t (length= [1] 1)))                  ;single element vector
-  (should (equal t (length= [1 2 3] 3)))              ;multiple element vector
-  (should (equal nil (length= [1 2 3] 2)))            ;less than
-  (should (equal nil (length= [1 2 3] 4)))            ;more than
+  (should (length= '() 0))                  ;empty list
+  (should (length= '(1) 1))                 ;single element
+  (should (length= '(1 2 3) 3))             ;multiple elements
+  (should-not (length= '(1 2 3) 2))           ;less than
+  (should-not (length= '(1) 0))
+  (should-not (length= '(1 2 3) 4))           ;more than
+  (should-not (length= '(1) 2))
+  (should-not (length= '() 1))
+  (should (length= [] 0))                   ;empty vector
+  (should (length= [1] 1))                  ;single element vector
+  (should (length= [1 2 3] 3))              ;multiple element vector
+  (should-not (length= [1 2 3] 2))            ;less than
+  (should-not (length= [1 2 3] 4))            ;more than
   (should-error (length= 3 nil) :type 'wrong-type-argument))
 
 (ert-deftest length< ()
-  (should (equal nil (length< '(1) 0)))               ;single element
-  (should (equal nil (length< '(1 2 3) 2)))           ;multiple elements
-  (should (equal nil (length< '(1 2 3) 3)))           ;equal length
-  (should (equal nil (length< '(1) 1)))
-  (should (equal t (length< '(1 2 3) 4)))             ;more than
-  (should (equal t (length< '(1) 2)))
-  (should (equal t (length< '() 1)))
-  (should (equal nil (length< [1] 0)))                ;single element vector
-  (should (equal nil (length< [1 2 3] 2)))            ;multiple element vector
-  (should (equal nil (length< [1 2 3] 3)))            ;equal length
-  (should (equal t (length< [1 2 3] 4)))              ;more than
+  (should-not (length< '(1) 0))               ;single element
+  (should-not (length< '(1 2 3) 2))           ;multiple elements
+  (should-not (length< '(1 2 3) 3))           ;equal length
+  (should-not (length< '(1) 1))
+  (should (length< '(1 2 3) 4))             ;more than
+  (should (length< '(1) 2))
+  (should (length< '() 1))
+  (should-not (length< [1] 0))                ;single element vector
+  (should-not (length< [1 2 3] 2))            ;multiple element vector
+  (should-not (length< [1 2 3] 3))            ;equal length
+  (should (length< [1 2 3] 4))              ;more than
   (should-error (length< 3 nil) :type 'wrong-type-argument))
 
 (ert-deftest length> ()
-  (should (equal t (length> '(1) 0)))                 ;single element
-  (should (equal t (length> '(1 2 3) 2)))             ;multiple elements
-  (should (equal nil (length> '(1 2 3) 3)))           ;equal length
-  (should (equal nil (length> '(1) 1)))
-  (should (equal nil (length> '(1 2 3) 4)))           ;more than
-  (should (equal nil (length> '(1) 2)))
-  (should (equal nil (length> '() 1)))
-  (should (equal t (length> [1] 0)))                  ;single element vector
-  (should (equal t (length> [1 2 3] 2)))              ;multiple element vector
-  (should (equal nil (length> [1 2 3] 3)))            ;equal length
-  (should (equal nil (length> [1 2 3] 4)))            ;more than
+  (should (length> '(1) 0))                 ;single element
+  (should (length> '(1 2 3) 2))             ;multiple elements
+  (should-not (length> '(1 2 3) 3))           ;equal length
+  (should-not (length> '(1) 1))
+  (should-not (length> '(1 2 3) 4))           ;more than
+  (should-not (length> '(1) 2))
+  (should-not (length> '() 1))
+  (should (length> [1] 0))                  ;single element vector
+  (should (length> [1 2 3] 2))              ;multiple element vector
+  (should-not (length> [1 2 3] 3))            ;equal length
+  (should-not (length> [1 2 3] 4))            ;more than
   (should-error (length< 3 nil) :type 'wrong-type-argument))
 
 (ert-deftest ensure-list ()
-  (should (equal nil (ensure-list nil)))           ;; empty list
+  (should-not (ensure-list nil))           ;; empty list
   (should (equal '(1) (ensure-list '(1))))         ;; single element list
   (should (equal '(1 2 3) (ensure-list '(1 2 3)))) ;; multiple element list
   (should (equal '(1) (ensure-list 1))))           ;; atom
@@ -131,21 +253,37 @@
   (should (equal 0 (proper-list-p ())))            ;; empty list
   (should (equal 1 (proper-list-p '(1))))          ;; single element
   (should (equal 3 (proper-list-p '(1 2 3))))      ;; multiple elements
-  (should (equal nil (proper-list-p '(1 . 2))))    ;; cons
-  (should (equal nil (proper-list-p '(1 2 . 3))))  ;; dotted
-  (should (equal nil (let ((l (list 1 2 3)))       ;; circular
+  (should-not (proper-list-p '(1 . 2)))    ;; cons
+  (should-not (proper-list-p '(1 2 . 3)))  ;; dotted
+  (should-not (let ((l (list 1 2 3)))       ;; circular
                        (setf (nthcdr 3 l) l)
-                       (proper-list-p l))))
-  (should (equal nil (proper-list-p 1)))           ;; non-lists
-  (should (equal nil (proper-list-p "")))
-  (should (equal nil (proper-list-p "abc")))
-  (should (equal nil (proper-list-p [])))
-  (should (equal nil (proper-list-p [1 2 3]))))
+                       (proper-list-p l)))
+  (should-not (proper-list-p 1))           ;; non-lists
+  (should-not (proper-list-p ""))
+  (should-not (proper-list-p "abc"))
+  (should-not (proper-list-p []))
+  (should-not (proper-list-p [1 2 3])))
 
 (ert-deftest always ()
   (should (equal t (always)))                      ;; no arguments
   (should (equal t (always 1)))                    ;; single argument
   (should (equal t (always 1 2 3 4))))             ;; multiple arguments
+
+(ert-deftest file-size-human-readable ()
+  (should (equal "1000" (file-size-human-readable 1000)))
+  (should (equal "1k" (file-size-human-readable 1024)))
+  (should (equal "1M" (file-size-human-readable (* 1024 1024))))
+  (should (equal "1G" (file-size-human-readable (expt 1024 3))))
+  (should (equal "1T" (file-size-human-readable (expt 1024 4))))
+  (should (equal "1k" (file-size-human-readable 1000 'si)))
+  (should (equal "1KiB" (file-size-human-readable 1024 'iec)))
+  (should (equal "1KiB" (file-size-human-readable 1024 'iec)))
+  (should (equal "1 KiB" (file-size-human-readable 1024 'iec " ")))
+  (should (equal "1KiA" (file-size-human-readable 1024 'iec nil "A")))
+  (should (equal "1 KiA" (file-size-human-readable 1024 'iec " " "A")))
+  (should (equal "1kA" (file-size-human-readable 1000 'si nil "A")))
+  (should (equal "1 k" (file-size-human-readable 1000 'si " ")))
+  (should (equal "1 kA" (file-size-human-readable 1000 'si " " "A"))))
 
 (ert-deftest file-modes-number-to-symbolic ()
   (should (equal "-rwx------" (file-modes-number-to-symbolic #o700)))
@@ -158,6 +296,21 @@
   (should (equal "lrwx------" (file-modes-number-to-symbolic #o120700)))
   (should (equal "prwx------" (file-modes-number-to-symbolic #o10700)))
   (should (equal "-rwx------" (file-modes-number-to-symbolic #o30700))))
+
+(ert-deftest file-name-absolute-p ()   ;assuming unix
+  (should (file-name-absolute-p "/"))
+  (should (file-name-absolute-p "/a"))
+  (should-not (file-name-absolute-p "a"))
+  (should-not (file-name-absolute-p "a/b"))
+  (should-not (file-name-absolute-p "a/b/"))
+  (should (file-name-absolute-p "~"))
+  (when (version< "27.1" emacs-version)
+    (should (file-name-absolute-p "~/foo"))
+    (should-not (file-name-absolute-p "~foo"))
+    (should-not (file-name-absolute-p "~foo/")))
+  (should (file-name-absolute-p "~root"))
+  (should (file-name-absolute-p "~root/"))
+  (should (file-name-absolute-p "~root/file")))
 
 (ert-deftest file-local-name ()
   (should (equal "" (file-local-name "")))
@@ -174,17 +327,17 @@
   (should (equal ":/bar/foo" (file-local-name "/ssh:::/bar/foo"))))
 
 (ert-deftest file-name-quoted-p ()
-  (should (equal nil (compat-call file-name-quoted-p "")))
-  (should (equal t (compat-call file-name-quoted-p "/:")))
-  (should (equal nil (compat-call file-name-quoted-p "//:")))
-  (should (equal t (compat-call file-name-quoted-p "/::")))
-  (should (equal nil (compat-call file-name-quoted-p "/ssh::")))
-  (should (equal nil (compat-call file-name-quoted-p "/ssh::a")))
-  (should (equal t (compat-call file-name-quoted-p "/ssh::/:a")))
+  (should-not (compat-call file-name-quoted-p ""))
+  (should (compat-call file-name-quoted-p "/:"))
+  (should-not (compat-call file-name-quoted-p "//:"))
+  (should (compat-call file-name-quoted-p "/::"))
+  (should-not (compat-call file-name-quoted-p "/ssh::"))
+  (should-not (compat-call file-name-quoted-p "/ssh::a"))
+  (should (compat-call file-name-quoted-p "/ssh::/:a"))
   ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
   ;; TRAMP path back then.
   ;;
-  ;; (should (equal nil (compat-call file-name-quoted-p "/ssh:/:a")))
+  ;; (should-not (compat-call file-name-quoted-p "/ssh:/:a")))
   )
 
 (ert-deftest file-name-quote ()
@@ -967,128 +1120,6 @@
 ;;   (should (equal '[1 2 3] '[1 2 3] #'<)
 ;;   (should (equal '[1 2 3] '[3 2 1] #'<))
 
-;; (ert-deftest =
-;;   (should (equal t 0 0)
-;;   (should (equal t 0 0 0)
-;;   (should (equal t 0 0 0 0)
-;;   (should (equal t 0 0 0 0 0)
-;;   (should (equal t 0.0 0.0)
-;;   (should (equal t +0.0 -0.0)
-;;   (should (equal t 0.0 0.0 0.0)
-;;   (should (equal t 0.0 0.0 0.0 0.0)
-;;   (should (equal nil 0 1)
-;;   (should (equal nil 0 0 1)
-;;   (should (equal nil 0 0 0 0 1)
-;;   (should-error wrong-type-argument 0 0 'a)
-;;   (should (equal nil 0 1 'a)
-;;   (should (equal nil 0.0 0.0 0.0 0.1))
-
-;; (ert-deftest <
-;;   (should (equal nil 0 0)
-;;   (should (equal nil 0 0 0)
-;;   (should (equal nil 0 0 0 0)
-;;   (should (equal nil 0 0 0 0 0)
-;;   (should (equal nil 0.0 0.0)
-;;   (should (equal nil +0.0 -0.0)
-;;   (should (equal nil 0.0 0.0 0.0)
-;;   (should (equal nil 0.0 0.0 0.0 0.0)
-;;   (should (equal t 0 1)
-;;   (should (equal nil 1 0)
-;;   (should (equal nil 0 0 1)
-;;   (should (equal t 0 1 2)
-;;   (should (equal nil 2 1 0)
-;;   (should (equal nil 0 0 0 0 1)
-;;   (should (equal t 0 1 2 3 4)
-;;   (should-error wrong-type-argument 0 1 'a)
-;;   (should (equal nil 0 0 'a)
-;;   (should (equal nil 0.0 0.0 0.0 0.1)
-;;   (should (equal t -0.1 0.0 0.2 0.4)
-;;   (should (equal t -0.1 0 0.2 0.4))
-
-;; (ert-deftest >
-;;   (should (equal nil 0 0)
-;;   (should (equal nil 0 0 0)
-;;   (should (equal nil 0 0 0 0)
-;;   (should (equal nil 0 0 0 0 0)
-;;   (should (equal nil 0.0 0.0)
-;;   (should (equal nil +0.0 -0.0)
-;;   (should (equal nil 0.0 0.0 0.0)
-;;   (should (equal nil 0.0 0.0 0.0 0.0)
-;;   (should (equal t 1 0)
-;;   (should (equal nil 1 0 0)
-;;   (should (equal nil 0 1 2)
-;;   (should (equal t 2 1 0)
-;;   (should (equal nil 1 0 0 0 0)
-;;   (should (equal t 4 3 2 1 0)
-;;   (should (equal nil 4 3 2 1 1)
-;;   (should-error wrong-type-argument 1 0 'a)
-;;   (should (equal nil 0 0 'a)
-;;   (should (equal nil 0.1 0.0 0.0 0.0)
-;;   (should (equal t 0.4 0.2 0.0 -0.1)
-;;   (should (equal t 0.4 0.2 0 -0.1))
-
-;; (ert-deftest <=
-;;   (should (equal t 0 0)
-;;   (should (equal t 0 0 0)
-;;   (should (equal t 0 0 0 0)
-;;   (should (equal t 0 0 0 0 0)
-;;   (should (equal t 0.0 0.0)
-;;   (should (equal t +0.0 -0.0)
-;;   (should (equal t 0.0 0.0 0.0)
-;;   (should (equal t 0.0 0.0 0.0 0.0)
-;;   (should (equal nil 1 0)
-;;   (should (equal nil 1 0 0)
-;;   (should (equal t 0 1 2)
-;;   (should (equal nil 2 1 0)
-;;   (should (equal nil 1 0 0 0 0)
-;;   (should (equal nil 4 3 2 1 0)
-;;   (should (equal nil 4 3 2 1 1)
-;;   (should (equal t 0 1 2 3 4)
-;;   (should (equal t 1 1 2 3 4)
-;;   (should-error wrong-type-argument 0 0 'a)
-;;   (should-error wrong-type-argument 0 1 'a)
-;;   (should (equal nil 1 0 'a)
-;;   (should (equal nil 0.1 0.0 0.0 0.0)
-;;   (should (equal t 0.0 0.0 0.0 0.1)
-;;   (should (equal t -0.1 0.0 0.2 0.4)
-;;   (should (equal t -0.1 0.0 0.0 0.2 0.4)
-;;   (should (equal t -0.1 0.0 0 0.2 0.4)
-;;   (should (equal t -0.1 0 0.2 0.4)
-;;   (should (equal nil 0.4 0.2 0.0 -0.1)
-;;   (should (equal nil 0.4 0.2 0.0 0.0 -0.1)
-;;   (should (equal nil 0.4 0.2 0 0.0 0.0 -0.1)
-;;   (should (equal nil 0.4 0.2 0 -0.1))
-
-;; (ert-deftest >=
-;;   (should (equal t 0 0)
-;;   (should (equal t 0 0 0)
-;;   (should (equal t 0 0 0 0)
-;;   (should (equal t 0 0 0 0 0)
-;;   (should (equal t 0.0 0.0)
-;;   (should (equal t +0.0 -0.0)
-;;   (should (equal t 0.0 0.0 0.0)
-;;   (should (equal t 0.0 0.0 0.0 0.0)
-;;   (should (equal t 1 0)
-;;   (should (equal t 1 0 0)
-;;   (should (equal nil 0 1 2)
-;;   (should (equal t 2 1 0)
-;;   (should (equal t 1 0 0 0 0)
-;;   (should (equal t 4 3 2 1 0)
-;;   (should (equal t 4 3 2 1 1)
-;;   (should-error wrong-type-argument 0 0 'a)
-;;   (should-error wrong-type-argument 1 0 'a)
-;;   (should (equal nil 0 1 'a)
-;;   (should (equal t 0.1 0.0 0.0 0.0)
-;;   (should (equal nil 0.0 0.0 0.0 0.1)
-;;   (should (equal nil -0.1 0.0 0.2 0.4)
-;;   (should (equal nil -0.1 0.0 0.0 0.2 0.4)
-;;   (should (equal nil -0.1 0.0 0 0.2 0.4)
-;;   (should (equal nil -0.1 0 0.2 0.4)
-;;   (should (equal t 0.4 0.2 0.0 -0.1)
-;;   (should (equal t 0.4 0.2 0.0 0.0 -0.1)
-;;   (should (equal t 0.4 0.2 0 0.0 0.0 -0.1)
-;;   (should (equal t 0.4 0.2 0 -0.1))
-
 ;; (ert-deftest special-form-p
 ;;   (should (equal t 'if)
 ;;   (should (equal t 'cond)
@@ -1189,22 +1220,6 @@
 ;;   (should (equal '(if a b c) '(if a b c))
 ;;   (should (equal '(if a (progn b)) '(when a b))
 ;;   (should (equal '(if a (progn (unless b c))) '(when a (unless b c))))
-
-;; (ert-deftest file-size-human-readable
-;;     (should (equal "1000" 1000)
-;;     (should (equal "1k" 1024)
-;;     (should (equal "1M" (* 1024 1024))
-;;     (should (equal "1G" (expt 1024 3))
-;;     (should (equal "1T" (expt 1024 4))
-;;     (should (equal "1k" 1000 'si)
-;;     (should (equal "1KiB" 1024 'iec)
-;;     (should (equal "1KiB" 1024 'iec)
-;;     (should (equal "1 KiB" 1024 'iec " ")
-;;     (should (equal "1KiA" 1024 'iec nil "A")
-;;     (should (equal "1 KiA" 1024 'iec " " "A")
-;;     (should (equal "1kA" 1000 'si nil "A")
-;;     (should (equal "1 k" 1000 'si " ")
-;;     (should (equal "1 kA" 1000 'si " " "A"))
 
 ;; (ert-deftest format-prompt
 ;;   (should (equal "Prompt: " "Prompt" nil)
@@ -1726,21 +1741,6 @@
 ;;     (should (equal nil (symbol-function 'match-string))) ;function from subr.el
 ;;   (should (equal nil (symbol-function 'defun))        ;macro from subr.el
 ;;   (should (equal nil nil))
-
-;; (ert-deftest file-name-absolute-p   ;assuming unix
-;;   (should (equal t "/")
-;;   (should (equal t "/a")
-;;   (should (equal nil "a")
-;;   (should (equal nil "a/b")
-;;   (should (equal nil "a/b/")
-;;   (should (equal t "~")
-;;   (when (version< "27.1" emacs-version)
-;;     (should (equal t "~/foo")
-;;     (should (equal nil "~foo")
-;;     (should (equal nil "~foo/"))
-;;   (should (equal t "~root")
-;;   (should (equal t "~root/")
-;;   (should (equal t "~root/file"))
 
 ;; (let ((one (make-symbol "1"))
 ;;       (two (make-symbol "2"))
