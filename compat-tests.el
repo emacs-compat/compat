@@ -48,6 +48,11 @@
   (should (equal '(1 2 3) (ensure-list '(1 2 3)))) ;; multiple element list
   (should (equal '(1) (ensure-list 1))))           ;; atom
 
+(ert-deftest compat-always ()
+  (should (equal t (always)))                      ;; no arguments
+  (should (equal t (always 1)))                    ;; single argument
+  (should (equal t (always 1 2 3 4))))             ;; multiple arguments
+
 (ert-deftest compat-hash-table-keys ()
   (let ((ht (make-hash-table)))
     (should (null (hash-table-keys ht)))
@@ -495,11 +500,6 @@
 ;;   (ought nil [1 2 3] 3)            ;equal length
 ;;   (ought nil [1 2 3] 4)            ;more than
 ;;   (expect wrong-type-argument 3 nil))
-
-;; (compat-deftests always
-;;   (ought t)                        ;no arguments
-;;   (ought t 1)                      ;single argument
-;;   (ought t 1 2 3 4))              ;multiple arguments
 
 ;; (ert-deftest compat-insert-into-buffer ()
 ;;   "Check if `insert-into-buffer' was implemented correctly."
