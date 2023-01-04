@@ -232,156 +232,156 @@
   (should (equal "t\ta" (compat-call string-trim "t\ta\t\n")))
   (should (equal "a" (compat-call string-trim "\n  \ta  \n"))))
 
-;; (ert-deftest string-search ()
-;;   ;; Find needle at the beginning of a haystack:
-;;   (should (equal 0 (string-search "a" "abb")))
-;;   ;; Find needle at the begining of a haystack, with more potential
-;;   ;; needles that could be found:
-;;   (should (equal 0 (string-search "a" "abba")))
-;;   ;; Find needle with more than one charachter at the beginning of
-;;   ;; a line:
-;;   (should (equal 0 (string-search "aa" "aabbb")))
-;;   ;; Find a needle midstring:
-;;   (should (equal 1 (string-search "a" "bab")))
-;;   ;; Find a needle at the end:
-;;   (should (equal 2 (string-search "a" "bba")))
-;;   ;; Find a longer needle midstring:
-;;   (should (equal 1 (string-search "aa" "baab")))
-;;   ;; Find a longer needle at the end:
-;;   (should (equal 2 (string-search "aa" "bbaa")))
-;;   ;; Find a case-sensitive needle:
-;;   (should (equal 2 (string-search "a" "AAa")))
-;;   ;; Find another case-sensitive needle:
-;;   (should (equal 2 (string-search "aa" "AAaa")))
-;;   ;; Test regular expression quoting (1):
-;;   (should (equal 5 (string-search "." "abbbb.b")))
-;;   ;; Test regular expression quoting (2):
-;;   (should (equal 5 (string-search ".*" "abbbb.*b")))
-;;   ;; Attempt to find non-existent needle:
-;;   (should (equal nil (string-search "a" "bbb")))
-;;   ;; Attempt to find non-existent needle that has the form of a
-;;   ;; regular expression:
-;;   (should (equal nil (string-search "." "bbb")))
-;;   ;; Handle empty string as needle:
-;;   (should (equal 0 (string-search "" "abc")))
-;;   ;; Handle empty string as haystack:
-;;   (should (equal nil (string-search "a" "")))
-;;   ;; Handle empty string as needle and haystack:
-;;   (should (equal 0 (string-search "" "")))
-;;   ;; Handle START argument:
-;;   (should (equal 3 (string-search "a" "abba" 1)))
-;;   ;; Additional test copied from:
-;;   (should (equal 6 (string-search "zot" "foobarzot")))
-;;   (should (equal 0 (string-search "foo" "foobarzot")))
-;;   (should (equal nil (string-search "fooz" "foobarzot")))
-;;   (should (equal nil (string-search "zot" "foobarzo")))
-;;   (should (equal 0 (string-search "ab" "ab")))
-;;   (should (equal nil (string-search "ab\0" "ab")))
-;;   (should (equal 4 (string-search "ab" "abababab" 3)))
-;;   (should (equal nil (string-search "ab" "ababac" 3)))
-;;   (should (equal nil (string-search "aaa" "aa")))
-;;   ;; The `make-string' calls with three arguments have been replaced
-;;   ;; here with the result of their evaluation, to avoid issues with
-;;   ;; older versions of Emacs that only support two arguments.
-;;   (should (equal 5
-;;                  (string-search (make-string 2 130)
-;;                                 ;; Per (concat "helló" (make-string 5 130 t) "bár")
-;;                                 "hellóbár")))
-;;   (should (equal 5
-;;                   (string-search (make-string 2 127)
-;;                                  ;; Per (concat "helló" (make-string 5 127 t) "bár")
-;;                                  "hellóbár")))
-;;   (should (equal 1 (string-search "\377" "a\377ø")))
-;;   (should (equal 1 (string-search "\377" "a\377a")))
-;;   (should (equal nil (string-search (make-string 1 255) "a\377ø")))
-;;   (should (equal nil (string-search (make-string 1 255) "a\377a")))
-;;   (should (equal 3 (string-search "fóo" "zotfóo")))
-;;   (should (equal nil (string-search "\303" "aøb")))
-;;   (should (equal nil (string-search "\270" "aøb")))
-;;   (should (equal nil (string-search "ø" "\303\270")))
-;;   (should (equal nil (string-search "ø" (make-string 32 ?a))))
-;;   (should (equal nil (string-search "ø" (string-to-multibyte (make-string 32 ?a)))))
-;;   (should (equal 14 (string-search "o" (string-to-multibyte
-;;                                         (apply #'string (number-sequence ?a ?z))))))
-;;   (should (equal 2 (string-search "a\U00010f98z" "a\U00010f98a\U00010f98z")))
-;;   (should-error (string-search "a" "abc" -1) :type '(args-out-of-range -1))
-;;   (should-error (string-search "a" "abc" 4) :type '(args-out-of-range 4))
-;;   (should-error (string-search "a" "abc" 100000000000) :type '(args-out-of-range 100000000000))
-;;   (should (equal nil (string-search "a" "aaa" 3)))
-;;   (should (equal nil (string-search "aa" "aa" 1)))
-;;   (should (equal nil (string-search "\0" "")))
-;;   (should (equal 0 (string-search "" "")))
-;;   (should-error (string-search "" "" 1) :type '(args-out-of-range 1))
-;;   (should (equal 0 (string-search "" "abc")))
-;;   (should (equal 2 (string-search "" "abc" 2)))
-;;   (should (equal 3 (string-search "" "abc" 3)))
-;;   (should-error (string-search "" "abc" 4) :type '(args-out-of-range 4))
-;;   (should-error (string-search "" "abc" -1) :type '(args-out-of-range -1))
-;;   (should (equal nil (string-search "ø" "foo\303\270")))
-;;   (should (equal nil (string-search "\303\270" "ø")))
-;;   (should (equal nil (string-search "\370" "ø")))
-;;   (should (equal nil (string-search (string-to-multibyte "\370") "ø")))
-;;   (should (equal nil (string-search "ø" "\370")))
-;;   (should (equal nil (string-search "ø" (string-to-multibyte "\370"))))
-;;   (should (equal nil (string-search "\303\270" "\370")))
-;;   (should (equal nil (string-search (string-to-multibyte "\303\270") "\370")))
-;;   (should (equal nil (string-search "\303\270" (string-to-multibyte "\370"))))
-;;   (should (equal nil
-;;                   (string-search (string-to-multibyte "\303\270")
-;;                                  (string-to-multibyte "\370"))))
-;;   (should (equal nil (string-search "\370" "\303\270")))
-;;   (should (equal nil (string-search (string-to-multibyte "\370") "\303\270")))
-;;   (should (equal nil (string-search "\370" (string-to-multibyte "\303\270"))))
-;;   (should (equal nil
-;;                  (string-search (string-to-multibyte "\370")
-;;                                 (string-to-multibyte "\303\270"))))
-;;   (should (equal 3 "\303\270" "foo\303\270"))
-;;   (when (version<= "27" emacs-version)
-;;     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1 in
-;;     ;; emacs.git fixes the behaviour of regular expressions matching
-;;     ;; raw bytes.  The compatibility functions should updated to
-;;     ;; backport this behaviour.
-;;     (should (equal 2 (string-search (string-to-multibyte "\377") "ab\377c")))
-;;     (should (equal 2
-;;                     (string-search (string-to-multibyte "o\303\270")
-;;                                    "foo\303\270")))))
+(ert-deftest string-search ()
+  ;; Find needle at the beginning of a haystack:
+  (should (equal 0 (string-search "a" "abb")))
+  ;; Find needle at the begining of a haystack, with more potential
+  ;; needles that could be found:
+  (should (equal 0 (string-search "a" "abba")))
+  ;; Find needle with more than one charachter at the beginning of
+  ;; a line:
+  (should (equal 0 (string-search "aa" "aabbb")))
+  ;; Find a needle midstring:
+  (should (equal 1 (string-search "a" "bab")))
+  ;; Find a needle at the end:
+  (should (equal 2 (string-search "a" "bba")))
+  ;; Find a longer needle midstring:
+  (should (equal 1 (string-search "aa" "baab")))
+  ;; Find a longer needle at the end:
+  (should (equal 2 (string-search "aa" "bbaa")))
+  ;; Find a case-sensitive needle:
+  (should (equal 2 (string-search "a" "AAa")))
+  ;; Find another case-sensitive needle:
+  (should (equal 2 (string-search "aa" "AAaa")))
+  ;; Test regular expression quoting (1):
+  (should (equal 5 (string-search "." "abbbb.b")))
+  ;; Test regular expression quoting (2):
+  (should (equal 5 (string-search ".*" "abbbb.*b")))
+  ;; Attempt to find non-existent needle:
+  (should (equal nil (string-search "a" "bbb")))
+  ;; Attempt to find non-existent needle that has the form of a
+  ;; regular expression:
+  (should (equal nil (string-search "." "bbb")))
+  ;; Handle empty string as needle:
+  (should (equal 0 (string-search "" "abc")))
+  ;; Handle empty string as haystack:
+  (should (equal nil (string-search "a" "")))
+  ;; Handle empty string as needle and haystack:
+  (should (equal 0 (string-search "" "")))
+  ;; Handle START argument:
+  (should (equal 3 (string-search "a" "abba" 1)))
+  ;; Additional test copied from:
+  (should (equal 6 (string-search "zot" "foobarzot")))
+  (should (equal 0 (string-search "foo" "foobarzot")))
+  (should (equal nil (string-search "fooz" "foobarzot")))
+  (should (equal nil (string-search "zot" "foobarzo")))
+  (should (equal 0 (string-search "ab" "ab")))
+  (should (equal nil (string-search "ab\0" "ab")))
+  (should (equal 4 (string-search "ab" "abababab" 3)))
+  (should (equal nil (string-search "ab" "ababac" 3)))
+  (should (equal nil (string-search "aaa" "aa")))
+  ;; The `make-string' calls with three arguments have been replaced
+  ;; here with the result of their evaluation, to avoid issues with
+  ;; older versions of Emacs that only support two arguments.
+  (should (equal 5
+                 (string-search (make-string 2 130)
+                                ;; Per (concat "helló" (make-string 5 130 t) "bár")
+                                "hellóbár")))
+  (should (equal 5
+                  (string-search (make-string 2 127)
+                                 ;; Per (concat "helló" (make-string 5 127 t) "bár")
+                                 "hellóbár")))
+  (should (equal 1 (string-search "\377" "a\377ø")))
+  (should (equal 1 (string-search "\377" "a\377a")))
+  (should (equal nil (string-search (make-string 1 255) "a\377ø")))
+  (should (equal nil (string-search (make-string 1 255) "a\377a")))
+  (should (equal 3 (string-search "fóo" "zotfóo")))
+  (should (equal nil (string-search "\303" "aøb")))
+  (should (equal nil (string-search "\270" "aøb")))
+  (should (equal nil (string-search "ø" "\303\270")))
+  (should (equal nil (string-search "ø" (make-string 32 ?a))))
+  (should (equal nil (string-search "ø" (string-to-multibyte (make-string 32 ?a)))))
+  (should (equal 14 (string-search "o" (string-to-multibyte
+                                        (apply #'string (number-sequence ?a ?z))))))
+  (should (equal 2 (string-search "a\U00010f98z" "a\U00010f98a\U00010f98z")))
+  (should-error (string-search "a" "abc" -1) :type '(args-out-of-range -1))
+  (should-error (string-search "a" "abc" 4) :type '(args-out-of-range 4))
+  (should-error (string-search "a" "abc" 100000000000) :type '(args-out-of-range 100000000000))
+  (should (equal nil (string-search "a" "aaa" 3)))
+  (should (equal nil (string-search "aa" "aa" 1)))
+  (should (equal nil (string-search "\0" "")))
+  (should (equal 0 (string-search "" "")))
+  (should-error (string-search "" "" 1) :type '(args-out-of-range 1))
+  (should (equal 0 (string-search "" "abc")))
+  (should (equal 2 (string-search "" "abc" 2)))
+  (should (equal 3 (string-search "" "abc" 3)))
+  (should-error (string-search "" "abc" 4) :type '(args-out-of-range 4))
+  (should-error (string-search "" "abc" -1) :type '(args-out-of-range -1))
+  (should (equal nil (string-search "ø" "foo\303\270")))
+  (should (equal nil (string-search "\303\270" "ø")))
+  (should (equal nil (string-search "\370" "ø")))
+  (should (equal nil (string-search (string-to-multibyte "\370") "ø")))
+  (should (equal nil (string-search "ø" "\370")))
+  (should (equal nil (string-search "ø" (string-to-multibyte "\370"))))
+  (should (equal nil (string-search "\303\270" "\370")))
+  (should (equal nil (string-search (string-to-multibyte "\303\270") "\370")))
+  (should (equal nil (string-search "\303\270" (string-to-multibyte "\370"))))
+  (should (equal nil
+                  (string-search (string-to-multibyte "\303\270")
+                                 (string-to-multibyte "\370"))))
+  (should (equal nil (string-search "\370" "\303\270")))
+  (should (equal nil (string-search (string-to-multibyte "\370") "\303\270")))
+  (should (equal nil (string-search "\370" (string-to-multibyte "\303\270"))))
+  (should (equal nil
+                 (string-search (string-to-multibyte "\370")
+                                (string-to-multibyte "\303\270"))))
+  (should (equal 3 (string-search "\303\270" "foo\303\270")))
+  (when (version<= "27" emacs-version)
+    ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1 in
+    ;; emacs.git fixes the behaviour of regular expressions matching
+    ;; raw bytes.  The compatibility functions should updated to
+    ;; backport this behaviour.
+    (should (equal 2 (string-search (string-to-multibyte "\377") "ab\377c")))
+    (should (equal 2
+                    (string-search (string-to-multibyte "o\303\270")
+                                   "foo\303\270")))))
 
-;; (ert-deftest string-replace ()
-;;   (should (equal "bba" "aa" "bb" "aaa")
-;;   (should (equal "AAA" "aa" "bb" "AAA")
-;;   ;; Additional test copied from subr-tests.el:
-;;   (should (equal "zot" "foo" "bar" "zot")
-;;   (should (equal "barzot" "foo" "bar" "foozot")
-;;   (should (equal "barbarzot" "foo" "bar" "barfoozot")
-;;   (should (equal "barfoobar" "zot" "bar" "barfoozot")
-;;   (should (equal "barfoobarot" "z" "bar" "barfoozot")
-;;   (should (equal "zat" "zot" "bar" "zat")
-;;   (should (equal "zat" "azot" "bar" "zat")
-;;   (should (equal "bar" "azot" "bar" "azot")
-;;   (should (equal "foozotbar" "azot" "bar" "foozotbar")
-;;   (should (equal "labarbarbarzot" "fo" "bar" "lafofofozot")
-;;   (should (equal "axb" "\377" "x" "a\377b")
-;;   (should (equal "axø" "\377" "x" "a\377ø")
-;;   (when (version<= "27" emacs-version)
-;;     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1
-;;     ;; in emacs.git fixes the behaviour of regular
-;;     ;; expressions matching raw bytes.  The compatibility
-;;     ;; functions should updated to backport this
-;;     ;; behaviour.
-;;     (should (equal "axb" (string-to-multibyte "\377") "x" "a\377b")
-;;     (should (equal "axø" (string-to-multibyte "\377") "x" "a\377ø"))
-;;   (should (equal "ANAnas" "ana" "ANA" "ananas")
-;;   (should (equal "" "a" "" "")
-;;   (should (equal "" "a" "" "aaaaa")
-;;   (should (equal "" "ab" "" "ababab")
-;;   (should (equal "ccc" "ab" "" "abcabcabc")
-;;   (should (equal "aaaaaa" "a" "aa" "aaa")
-;;   (should (equal "defg" "abc" "defg" "abc")
-;;   (when (version<= "24.4" emacs-version)
-;;     ;; FIXME: Emacs 24.3 do not know of `wrong-length-argument' and
-;;     ;; therefore fail this test, even if the right symbol is being
-;;     ;; thrown.
-;;     (expect wrong-length-argument "" "x" "abc")))
+(ert-deftest string-replace ()
+  (should (equal "bba" (string-replace "aa" "bb" "aaa")))
+  (should (equal "AAA" (string-replace "aa" "bb" "AAA")))
+  ;; Additional test copied from subr-tests.el:
+  (should (equal "zot" (string-replace "foo" "bar" "zot")))
+  (should (equal "barzot" (string-replace "foo" "bar" "foozot")))
+  (should (equal "barbarzot" (string-replace "foo" "bar" "barfoozot")))
+  (should (equal "barfoobar" (string-replace "zot" "bar" "barfoozot")))
+  (should (equal "barfoobarot" (string-replace "z" "bar" "barfoozot")))
+  (should (equal "zat" (string-replace "zot" "bar" "zat")))
+  (should (equal "zat" (string-replace "azot" "bar" "zat")))
+  (should (equal "bar" (string-replace "azot" "bar" "azot")))
+  (should (equal "foozotbar" (string-replace "azot" "bar" "foozotbar")))
+  (should (equal "labarbarbarzot" (string-replace "fo" "bar" "lafofofozot")))
+  (should (equal "axb" (string-replace "\377" "x" "a\377b")))
+  (should (equal "axø" (string-replace "\377" "x" "a\377ø")))
+  (when (version<= "27" emacs-version)
+    ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1
+    ;; in emacs.git fixes the behaviour of regular
+    ;; expressions matching raw bytes.  The compatibility
+    ;; functions should updated to backport this
+    ;; behaviour.
+    (should (equal "axb" (string-replace (string-to-multibyte "\377") "x" "a\377b")))
+    (should (equal "axø" (string-replace (string-to-multibyte "\377") "x" "a\377ø"))))
+  (should (equal "ANAnas" (string-replace "ana" "ANA" "ananas")))
+  (should (equal "" (string-replace "a" "" "")))
+  (should (equal "" (string-replace "a" "" "aaaaa")))
+  (should (equal "" (string-replace "ab" "" "ababab")))
+  (should (equal "ccc" (string-replace "ab" "" "abcabcabc")))
+  (should (equal "aaaaaa" (string-replace "a" "aa" "aaa")))
+  (should (equal "defg" (string-replace "abc" "defg" "abc")))
+  (when (version<= "24.4" emacs-version)
+    ;; FIXME: Emacs 24.3 do not know of `wrong-length-argument' and
+    ;; therefore fail this test, even if the right symbol is being
+    ;; thrown.
+    (should-error (string-replace "" "x" "abc") :type 'wrong-length-argument)))
 
 (ert-deftest hash-table-keys ()
   (let ((ht (make-hash-table)))
