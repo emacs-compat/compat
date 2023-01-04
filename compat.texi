@@ -2956,10 +2956,9 @@ Patches and comments can be sent to the
 @uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
 list} (@email{~pkal/compat-devel@@lists.sr.ht,
 ~pkal/compat-devel@@lists.sr.ht}).  Bug reports are best sent to the
-@uref{https://todo.sr.ht/~pkal/compat, issue tracker}
-(@email{~pkal/compat@@todo.sr.ht, ~pkal/compat@@todo.sr.ht}).  GitHub
-can also be used to submit patches.  These may include issues in the
-compatibility code, missing definitions or performance issues.
+@uref{https://github.com/emacs-compat/compat/issues, issue tracker}.
+These may include issues in the compatibility code, missing
+definitions or performance issues.
 
 Please note that as a GNU ELPA package, Compat requires contributors to
 have signed the
