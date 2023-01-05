@@ -1637,11 +1637,5 @@
                  ))
     (should-not (string-match-p regexp-unmatchable str))))
 
-;; TODO fix broken test
-;;(ert-deftest directory-files-recursively
-;;  (should-equal
-;;           (compat-sort (directory-files-recursively "." "make\\|copying") #'string<)
-;;           '("./.github/workflows/makefile.yml" "./COPYING" "./Makefile"))))
-
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

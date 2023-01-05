@@ -391,34 +391,6 @@ performs one step of the expansion: if the result is another macro call,
 @xref{Expansion,Expansion,,elisp}.
 @end defun
 
-@c copied from lispref/files.texi
-@defun directory-files-recursively directory regexp &optional include-directories predicate follow-symlinks
-Return all files under @var{directory} whose names match @var{regexp}.
-This function searches the specified @var{directory} and its
-sub-directories, recursively, for files whose basenames (i.e., without
-the leading directories) match the specified @var{regexp}, and returns a
-list of the absolute file names of the matching files (@pxref{Relative
-File Names, absolute file names,,elisp}).  The file names are returned
-in depth-first order, meaning that files in some sub-directory are
-returned before the files in its parent directory.  In addition,
-matching files found in each subdirectory are sorted alphabetically by
-their basenames.  By default, directories whose names match @var{regexp}
-are omitted from the list, but if the optional argument
-@var{include-directories} is non-@code{nil}, they are included.
-
-By default, all subdirectories are descended into.  If @var{predicate}
-is @code{t}, errors when trying to descend into a subdirectory (for
-instance, if it's not readable by this user) are ignored.  If it's
-neither @code{nil} nor @code{t}, it should be a function that takes one
-parameter (the subdirectory name) and should return non-@code{nil} if
-the directory is to be descended into.
-
-Symbolic links to subdirectories are not followed by default, but if
-@var{follow-symlinks} is non-@code{nil}, they are followed.
-
-@xref{Contents of Directories,,,elisp}.
-@end defun
-
 @defun bool-vector &rest objects
 This function creates and returns a bool-vector whose elements are the
 arguments, @var{objects}.

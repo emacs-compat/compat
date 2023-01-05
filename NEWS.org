@@ -24,6 +24,7 @@
 - Deprecate ~compat-help.el~ and ~compat-font-lock.el.~
 - Development moved to GitHub.
 - BREAKING: Drop broken function ~func-arity~.
+- BREAKING: Drop broken function ~directory-files-recursively~.
 - BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now.
 
 * Release of "Compat" Version 28.1.2.2
