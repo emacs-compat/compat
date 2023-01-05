@@ -115,7 +115,6 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in json.c
 
-(declare-function json-parse-string nil (string &rest args))
 (declare-function json-encode "json" (object))
 (declare-function json-read-from-string "json" (string))
 (declare-function json-read "json" ())
