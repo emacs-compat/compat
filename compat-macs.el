@@ -68,9 +68,6 @@ ignored:
   For prefixed functions, this can be interpreted as a test to
   `defalias' an existing definition or not.
 
-- :version :: Manual specification of the version the compatee
-  code was defined in (string).
-
 - :realname :: Manual specification of a \"realname\" to use for
   the compatibility definition (symbol).
 
@@ -80,8 +77,7 @@ ignored:
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version (or (plist-get attr :version)
-                      compat--current-version))
+         (version compat--current-version)
          (check))
     (when (and (plist-get attr :realname)
                (string= name (plist-get attr :realname)))
@@ -213,11 +209,7 @@ If this is not documented on yourself system, you can check \
 The function must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by the macro but not passed on
 to the actual function.  See `compat--generate' for a
-listing of attributes.
-
-The definition will only be installed, if the version this
-function was defined in, as indicated by the `:version'
-attribute, is greater than the current Emacs version."
+listing of attributes."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
@@ -230,11 +222,7 @@ attribute, is greater than the current Emacs version."
 The macro must be documented in DOCSTRING.  REST may begin
 with a plist, that is interpreted by this macro but not passed on
 to the actual macro.  See `compat--generate' for a
-listing of attributes.
-
-The definition will only be installed, if the version this
-function was defined in, as indicated by the `:version'
-attribute, is greater than the current Emacs version."
+listing of attributes."
   (declare (debug compat-defun) (doc-string 3) (indent 2)) ;; <UNTESTED>
   (compat--define-function 'macro name arglist docstring rest))
 
