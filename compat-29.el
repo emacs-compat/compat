@@ -485,7 +485,6 @@ The variable list SPEC is the same as in `if-let'."
 If FILENAME is at the root of the filesystem, return nil.
 If FILENAME is relative, it is interpreted to be relative
 to `default-directory', and the result will also be relative."
-to `default-directory', and the result will also be relative."
   (let* ((expanded-filename (expand-file-name filename))
          (parent (file-name-directory (directory-file-name expanded-filename))))
     (cond
