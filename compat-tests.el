@@ -331,13 +331,13 @@
 
 (ert-deftest assoc ()
   ;; Fallback behaviour:
-  (should-equal nil (compat-call assoc 1 nil))               ;empty list
+  (should-not (compat-call assoc 1 nil))               ;empty list
   (should-equal '(1) (compat-call assoc 1 '((1))))            ;single element list
-  (should-equal nil (compat-call assoc 1 '(1)))
+  (should-not (compat-call assoc 1 '(1)))
   (should-equal '(2) (compat-call assoc 2 '((1) (2) (3))))    ;multiple element list
-  (should-equal nil (compat-call assoc 2 '(1 2 3)))
+  (should-not (compat-call assoc 2 '(1 2 3)))
   (should-equal '(2) (compat-call assoc 2 '(1 (2) 3)))
-  (should-equal nil (compat-call assoc 2 '((1) 2 (3))))
+  (should-not (compat-call assoc 2 '((1) 2 (3))))
   (should-equal '(1) (compat-call assoc 1 '((3) (2) (1))))
   (should-equal '("a") (compat-call assoc "a" '(("a") ("b") ("c"))))  ;non-primitive elements
   (should-equal '("a" 0) (compat-call assoc "a" '(("c" . "a") "b" ("a" 0))))
@@ -395,9 +395,9 @@
     (should-equal one (provided-mode-derived-p one one))
     (should-equal one (provided-mode-derived-p two one))
     (should-equal one (provided-mode-derived-p three one))
-    (should-equal nil (provided-mode-derived-p one eins))
-    (should-equal nil (provided-mode-derived-p two eins))
-    (should-equal nil (provided-mode-derived-p two one.5))
+    (should-not (provided-mode-derived-p one eins))
+    (should-not (provided-mode-derived-p two eins))
+    (should-not (provided-mode-derived-p two one.5))
     (should-equal one (provided-mode-derived-p two one.5 one))
     (should-equal two (provided-mode-derived-p two one.5 two))
     (should-equal one (provided-mode-derived-p three one.5 one))
@@ -425,14 +425,14 @@
 
 (ert-deftest cXXXr ()
   (let ((xxx '(((a . b) . (c . d)) . ((e . f) . (g . h)))))
-    (should-equal nil (caaar ()))
-    (should-equal nil (caadr ()))
-    (should-equal nil (cadar ()))
-    (should-equal nil (caddr ()))
-    (should-equal nil (cdaar ()))
-    (should-equal nil (cdadr ()))
-    (should-equal nil (cddar ()))
-    (should-equal nil (cdddr ()))
+    (should-not (caaar ()))
+    (should-not (caadr ()))
+    (should-not (cadar ()))
+    (should-not (caddr ()))
+    (should-not (cdaar ()))
+    (should-not (cdadr ()))
+    (should-not (cddar ()))
+    (should-not (cdddr ()))
     (should-equal 'a (caaar xxx))
     (should-equal 'e (caadr xxx))
     (should-equal 'c (cadar xxx))
@@ -446,21 +446,21 @@
   (let ((xxxx
          '((((a . b) . (c . d)) . ((e . f) . (g . h))) .
            (((i . j) . (k . l)) . ((m . j) . (o . p))))))
-    (should-equal nil (caaaar ()))
-    (should-equal nil (caaadr ()))
-    (should-equal nil (caadar ()))
-    (should-equal nil (caaddr ()))
-    (should-equal nil (cadaar ()))
-    (should-equal nil (cadadr ()))
-    (should-equal nil (caddar ()))
-    (should-equal nil (cadddr ()))
-    (should-equal nil (cdaaar ()))
-    (should-equal nil (cdaadr ()))
-    (should-equal nil (cdadar ()))
-    (should-equal nil (cdaddr ()))
-    (should-equal nil (cddaar ()))
-    (should-equal nil (cddadr ()))
-    (should-equal nil (cdddar ()))
+    (should-not (caaaar ()))
+    (should-not (caaadr ()))
+    (should-not (caadar ()))
+    (should-not (caaddr ()))
+    (should-not (cadaar ()))
+    (should-not (cadadr ()))
+    (should-not (caddar ()))
+    (should-not (cadddr ()))
+    (should-not (cdaaar ()))
+    (should-not (cdaadr ()))
+    (should-not (cdadar ()))
+    (should-not (cdaddr ()))
+    (should-not (cddaar ()))
+    (should-not (cddadr ()))
+    (should-not (cdddar ()))
     (should-equal 'a (caaaar xxxx))
     (should-equal 'i (caaadr xxxx))
     (should-equal 'e (caadar xxxx))
@@ -1221,15 +1221,15 @@
 
 (ert-deftest alist-get ()
   ;; Fallback behaviour:
-  (should-equal nil (alist-get 1 nil))                      ;empty list
+  (should-not (alist-get 1 nil))                      ;empty list
   (should-equal 'a (alist-get 1 '((1 . a))))                  ;single element list
-  (should-equal nil (alist-get 1 '(1)))
+  (should-not (alist-get 1 '(1)))
   (should-equal 'b (alist-get 2 '((1 . a) (2 . b) (3 . c))))  ;multiple element list
-  (should-equal nil (alist-get 2 '(1 2 3)))
+  (should-not (alist-get 2 '(1 2 3)))
   (should-equal 'b (alist-get 2 '(1 (2 . b) 3)))
-  (should-equal nil (alist-get 2 '((1 . a) 2 (3 . c))))
+  (should-not (alist-get 2 '((1 . a) 2 (3 . c))))
   (should-equal 'a (alist-get 1 '((3 . c) (2 . b) (1 . a))))
-  (should-equal nil (alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3))))  ;non-primitive elements
+  (should-not (alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3))))  ;non-primitive elements
 
   ;; With testfn:
   (should-equal 1 (compat-call alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal))
