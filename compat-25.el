@@ -222,7 +222,6 @@ threading."
 
 ;;;; Defined in macroexp.el
 
-(declare-function macrop nil (object))
 (compat-defun macroexpand-1 (form &optional environment) ;; <OK>
   "Perform (at most) one step of macro expansion."
   :feature macroexp

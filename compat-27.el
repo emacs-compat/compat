@@ -688,10 +688,6 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in dired.el
 
-(declare-function
- dired-get-marked-files "dired.el"
- (&optional localp arg filter distinguish-one-marked error))
-
 (compat-defun dired-get-marked-files ;; <UNTESTED>
     (&optional localp arg filter distinguish-one-marked error)
   "Return the marked files’ names as list of strings."

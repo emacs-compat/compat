@@ -65,7 +65,6 @@ from the absolute start of the buffer, disregarding the narrowing."
 
 ;;;; Defined in subr.el
 
-(declare-function alist-get nil (key alist &optional default remove))
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <OK>
   "Handle TESTFN manually."
   :explicit t
@@ -325,23 +324,6 @@ are non-nil, then the result is non-nil."
 
 ;;;; Defined in files.el
 
-(declare-function temporary-file-directory nil)
-
-(compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <UNTESTED>
-  "Create a temporary file as close as possible to `default-directory'.
-If PREFIX is a relative file name, and `default-directory' is a
-remote file name or located on a mounted file systems, the
-temporary file is created in the directory returned by the
-function `temporary-file-directory'.  Otherwise, the function
-`make-temp-file' is used.  PREFIX, DIR-FLAG and SUFFIX have the
-same meaning as in `make-temp-file'."
-  (let ((handler (find-file-name-handler
-                  default-directory 'make-nearby-temp-file)))
-    (if (and handler (not (file-name-absolute-p default-directory)))
-        (funcall handler 'make-nearby-temp-file prefix dir-flag suffix)
-      (let ((temporary-file-directory (temporary-file-directory)))
-        (make-temp-file prefix dir-flag suffix)))))
-
 (compat-defvar mounted-file-systems
     (eval-when-compile
       (if (memq system-type '(windows-nt cygwin))
@@ -393,6 +375,21 @@ the variable `temporary-file-directory' is returned."
       (if (string-match mounted-file-systems default-directory)
           default-directory
         temporary-file-directory))))
+
+(compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <UNTESTED>
+  "Create a temporary file as close as possible to `default-directory'.
+If PREFIX is a relative file name, and `default-directory' is a
+remote file name or located on a mounted file systems, the
+temporary file is created in the directory returned by the
+function `temporary-file-directory'.  Otherwise, the function
+`make-temp-file' is used.  PREFIX, DIR-FLAG and SUFFIX have the
+same meaning as in `make-temp-file'."
+  (let ((handler (find-file-name-handler
+                  default-directory 'make-nearby-temp-file)))
+    (if (and handler (not (file-name-absolute-p default-directory)))
+        (funcall handler 'make-nearby-temp-file prefix dir-flag suffix)
+      (let ((temporary-file-directory (temporary-file-directory)))
+        (make-temp-file prefix dir-flag suffix)))))
 
 (compat-defun file-attribute-type (attributes) ;; <OK>
   "The type field in ATTRIBUTES returned by `file-attributes'.
