@@ -52,6 +52,49 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest get-display-property ()
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '(height 2.0)))
+    (should-equal (get-display-property 2 'height) 2.0))
+  (with-temp-buffer
+    (insert (propertize "foo" 'face 'bold 'display '((height 2.0)
+                                                     (space-width 2.0))))
+    (should-equal (get-display-property 2 'height) 2.0)
+    (should-equal (get-display-property 2 'space-width) 2.0))
+  (with-temp-buffer
+    (insert (propertize "foo bar" 'face 'bold
+                        'display '[(height 2.0)
+                                   (space-width 20)]))
+    (should-equal (get-display-property 2 'height) 2.0)
+    (should-equal (get-display-property 2 'space-width) 20)))
+
+(ert-deftest add-display-text-property ()
+  (with-temp-buffer
+    (insert "Foo bar zot gazonk")
+    (add-display-text-property 4 8 'height 2.0)
+    (add-display-text-property 2 12 'raise 0.5)
+    (should-equal (get-text-property 2 'display) '(raise 0.5))
+    (should-equal (get-text-property 5 'display)
+                   '((raise 0.5) (height 2.0)))
+    (should-equal (get-text-property 9 'display) '(raise 0.5)))
+  (with-temp-buffer
+    (insert "Foo bar zot gazonk")
+    (put-text-property 4 8 'display [(height 2.0)])
+    (add-display-text-property 2 12 'raise 0.5)
+    (should-equal (get-text-property 2 'display) '(raise 0.5))
+    (should-equal (get-text-property 5 'display)
+                   [(raise 0.5) (height 2.0)])
+    (should-equal (get-text-property 9 'display) '(raise 0.5)))
+  (with-temp-buffer
+    (should-equal (let ((str "some useless string"))
+                     (add-display-text-property 4 8 'height 2.0 str)
+                     (add-display-text-property 2 12 'raise 0.5 str)
+                     str)
+                   #("some useless string"
+                     2 4 (display (raise 0.5))
+                     4 8 (display ((raise 0.5) (height 2.0)))
+                     8 12 (display (raise 0.5))))))
+
 (ert-deftest line-number-at-pos ()
   (with-temp-buffer
     (insert "\n\n\n")

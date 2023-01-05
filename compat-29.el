@@ -421,7 +421,7 @@ be marked unmodified, effectively ignoring those changes."
                         (equal ,hash (buffer-hash)))
                (restore-buffer-modified-p nil))))))))
 
-(compat-defun add-display-text-property (start end prop value ;; <UNTESTED>
+(compat-defun add-display-text-property (start end prop value ;; <OK>
                                                &optional object)
   "Add display property PROP with VALUE to the text from START to END.
 If any text in the region has a non-nil `display' property, those
@@ -439,7 +439,8 @@ this defaults to the current buffer."
                                                    (min end (point-max)))))
       (if (not (setq disp (get-text-property sub-start 'display object)))
           ;; No old properties in this range.
-          (put-text-property sub-start sub-end 'display (list prop value))
+          (put-text-property sub-start sub-end 'display (list prop value)
+                             object)
         ;; We have old properties.
         (let ((vector nil))
           ;; Make disp into a list.
@@ -447,19 +448,19 @@ this defaults to the current buffer."
                 (cond
                  ((vectorp disp)
                   (setq vector t)
-                  (append disp nil))
+                  (seq-into disp 'list))
                  ((not (consp (car disp)))
                   (list disp))
                  (t
                   disp)))
           ;; Remove any old instances.
-          (let ((old (assoc prop disp)))
-            (when old (setq disp (delete old disp))))
+          (when-let ((old (assoc prop disp)))
+            (setq disp (delete old disp)))
           (setq disp (cons (list prop value) disp))
           (when vector
-            (setq disp (vconcat disp)))
+            (setq disp (seq-into disp 'vector)))
           ;; Finally update the range.
-          (put-text-property sub-start sub-end 'display disp)))
+          (put-text-property sub-start sub-end 'display disp object)))
       (setq sub-start sub-end))))
 
 (compat-defmacro while-let (spec &rest body) ;; <UNTESTED>
