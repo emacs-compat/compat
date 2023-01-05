@@ -53,6 +53,25 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(defvar compat-test-map-1
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-x C-f") #'find-file)
+    (define-key map (kbd "SPC") #'minibuffer-complete-word)
+    (define-key map (kbd "C-c") mode-specific-map)
+    map))
+(defvar-keymap compat-test-map-2
+  "C-x C-f" #'find-file
+  "SPC" #'minibuffer-complete-word
+  "C-c" mode-specific-map)
+(defvar compat-test-map-3
+  (define-keymap
+    "C-x C-f" #'find-file
+    "SPC" #'minibuffer-complete-word
+    "C-c" mode-specific-map))
+(ert-deftest defvar-keymap ()
+  (should (equal compat-test-map-1 compat-test-map-2))
+  (should (equal compat-test-map-1 compat-test-map-3)))
+
 (defun compat-function-put-test ())
 (ert-deftest function-put ()
   (function-put #'compat-function-put-test 'compat-test 42)

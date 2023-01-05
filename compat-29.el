@@ -900,7 +900,7 @@ about this.
 NOTE: The compatibility version is not a command."
   (keymap-lookup (current-global-map) keys accept-default))
 
-(compat-defun define-keymap (&rest definitions) ;; <UNTESTED>
+(compat-defun define-keymap (&rest definitions) ;; <OK>
   "Create a new keymap and define KEY/DEFINITION pairs as key bindings.
 The new keymap is returned.
 
@@ -923,7 +923,7 @@ pairs.  Available keywords are:
 :name      If non-nil, this should be a string to use as the menu for
              the keymap in case you use it as a menu with `x-popup-menu'.
 
-:explicit    If non-nil, this should be a symbol to be used as a prefix
+:prefix    If non-nil, this should be a symbol to be used as a prefix
              command (see `define-prefix-command').  If this is the case,
              this symbol is returned instead of the map itself.
 
@@ -962,7 +962,8 @@ should be a MENU form as accepted by `easy-menu-define'.
                    (keymap keymap)
                    (prefix (define-prefix-command prefix nil name))
                    (full (make-keymap name))
-                   (t (make-sparse-keymap name)))))
+                   (t (make-sparse-keymap name))))
+          seen-keys)
       (when suppress
         (suppress-keymap keymap (eq suppress 'nodigits)))
       (when parent
@@ -976,10 +977,13 @@ should be a MENU form as accepted by `easy-menu-define'.
           (let ((def (pop definitions)))
             (if (eq key :menu)
                 (easy-menu-define nil keymap "" def)
+              (if (member key seen-keys)
+                  (error "Duplicate definition for key: %S %s" key keymap)
+                (push key seen-keys))
               (keymap-set keymap key def)))))
       keymap)))
 
-(compat-defmacro defvar-keymap (variable-name &rest defs) ;; <UNTESTED>
+(compat-defmacro defvar-keymap (variable-name &rest defs) ;; <OK>
   "Define VARIABLE-NAME as a variable with a keymap definition.
 See `define-keymap' for an explanation of the keywords and KEY/DEFINITION.
 
@@ -987,25 +991,77 @@ In addition to the keywords accepted by `define-keymap', this
 macro also accepts a `:doc' keyword, which (if present) is used
 as the variable documentation string.
 
-\(fn VARIABLE-NAME &key DOC FULL PARENT SUPPRESS NAME PREFIX KEYMAP &rest [KEY DEFINITION]...)"
+The `:repeat' keyword can also be specified; it controls the
+`repeat-mode' behavior of the bindings in the keymap.  When it is
+non-nil, all commands in the map will have the `repeat-map'
+symbol property.
+
+More control is available over which commands are repeatable; the
+value can also be a property list with properties `:enter' and
+`:exit', for example:
+
+     :repeat (:enter (commands ...) :exit (commands ...))
+
+`:enter' specifies the list of additional commands that only
+enter `repeat-mode'.  When the list is empty, then by default all
+commands in the map enter `repeat-mode'.  This is useful when
+there is a command that has the `repeat-map' symbol property, but
+doesn't exist in this specific map.  `:exit' is a list of
+commands that exit `repeat-mode'.  When the list is empty, no
+commands in the map exit `repeat-mode'.  This is useful when a
+command exists in this specific map, but it doesn't have the
+`repeat-map' symbol property on its symbol.
+
+\(fn VARIABLE-NAME &key DOC FULL PARENT SUPPRESS NAME PREFIX KEYMAP REPEAT &rest [KEY DEFINITION]...)"
   (declare (indent 1))
   (let ((opts nil)
-        doc)
+        doc repeat props)
     (while (and defs
                 (keywordp (car defs))
                 (not (eq (car defs) :menu)))
       (let ((keyword (pop defs)))
         (unless defs
           (error "Uneven number of keywords"))
-        (if (eq keyword :doc)
-            (setq doc (pop defs))
-          (push keyword opts)
-          (push (pop defs) opts))))
+        (cond
+         ((eq keyword :doc) (setq doc (pop defs)))
+         ((eq keyword :repeat) (setq repeat (pop defs)))
+         (t (push keyword opts)
+            (push (pop defs) opts)))))
     (unless (zerop (% (length defs) 2))
       (error "Uneven number of key/definition pairs: %s" defs))
-    `(defvar ,variable-name
-       (define-keymap ,@(nreverse opts) ,@defs)
-       ,@(and doc (list doc)))))
+
+    (let ((defs defs)
+          key seen-keys)
+      (while defs
+        (setq key (pop defs))
+        (pop defs)
+        (when (not (eq key :menu))
+          (if (member key seen-keys)
+              (error "Duplicate definition for key '%s' in keymap '%s'"
+                     key variable-name)
+            (push key seen-keys)))))
+
+    (when repeat
+      (let ((defs defs)
+            def)
+        (dolist (def (plist-get repeat :enter))
+          (push `(put ',def 'repeat-map ',variable-name) props))
+        (while defs
+          (pop defs)
+          (setq def (pop defs))
+          (when (and (memq (car def) '(function quote))
+                     (not (memq (cadr def) (plist-get repeat :exit))))
+            (push `(put ,def 'repeat-map ',variable-name) props)))))
+
+    (let ((defvar-form
+           `(defvar ,variable-name
+              (define-keymap ,@(nreverse opts) ,@defs)
+              ,@(and doc (list doc)))))
+      (if props
+          `(progn
+             ,defvar-form
+             ,@(nreverse props))
+        defvar-form))))
 
 (provide 'compat-29)
 ;;; compat-29.el ends here
