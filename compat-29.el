@@ -273,7 +273,7 @@ CONDITION is either:
   * `major-mode': the buffer matches if the buffer's major mode
     is eq to the cons-cell's cdr.  Prefer using `derived-mode'
     instead when both can work.
-  * `not': the cdr is interpreted as a negation of a condition.
+  * `not': the cadr is interpreted as a negation of a condition.
   * `and': the cdr is a list of recursive conditions, that all have
     to be met.
   * `or': the cdr is a list of recursive condition, of which at
@@ -302,7 +302,7 @@ CONDITION is either:
                        (buffer-local-value 'major-mode buffer)
                        (cdr condition)))
                      ((eq (car-safe condition) 'not)
-                      (not (funcall match (cdr condition))))
+                      (not (funcall match (cadr condition))))
                      ((eq (car-safe condition) 'or)
                       (funcall match (cdr condition)))
                      ((eq (car-safe condition) 'and)
