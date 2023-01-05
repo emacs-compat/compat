@@ -41,7 +41,6 @@
 (require 'subr-x)
 (require 'time-date)
 (require 'text-property-search nil t)
-(setq ert-quiet t)
 
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
