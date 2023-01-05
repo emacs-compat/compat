@@ -21,8 +21,8 @@
 ;;
 ;; Note that not all functions have tests yet.  Grep the Compat code for
 ;; <UNTESTED> labels.  If you intend to use a function, which doesn't have
-;; tests yet, please contribute tests here.  FUNCTIONS WITHOUT TESTS SHOULD
-;; BE CONSIDERED BROKEN.
+;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
+;; FUNCTIONS WITHOUT TESTS.
 
 ;; The tests are written in a simple, explicit style.  Please inspect the
 ;; tests in order to find out the supported calling conventions.  In
