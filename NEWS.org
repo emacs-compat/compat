@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Release of "Compat" Version 29.1.0.0
+* Release of "Compat" Version 29.1.0.1
 
 - Add multiple new tests for existing APIs.
 - Fix bugs in compatibility functions: ~setq-local~, ~proper-list-p, prop-match-p~,
