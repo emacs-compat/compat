@@ -85,23 +85,26 @@ issues are inherited."
 
 ;;;; Defined in fileio.c
 
-(compat-defun file-name-concat (directory &rest components) ;; <UNTESTED>
+(compat-defun file-name-concat (directory &rest components) ;; <OK>
   "Append COMPONENTS to DIRECTORY and return the resulting string.
 Elements in COMPONENTS must be a string or nil.
 DIRECTORY or the non-final elements in COMPONENTS may or may not end
 with a slash -- if they don’t end with a slash, a slash will be
 inserted before contatenating."
-  (let ((seperator (eval-when-compile
+  (let ((separator (eval-when-compile
                      (if (memq system-type '(ms-dos windows-nt cygwin))
                          "\\" "/")))
-        (last (if components (car (last components)) directory)))
-    (mapconcat (lambda (part)
-                 (if (eq part last)	;the last component is not modified
-                     last
-                   (replace-regexp-in-string
-                    (concat seperator "+\\'") "" part)))
-               (cons directory components)
-               seperator)))
+        (components (delq nil
+                          (mapcar (lambda (x) (and (not (equal "" x)) x))
+                                  (cons directory components))))
+        (result ""))
+    (while components
+      (let ((c (pop components)))
+        (setq result (concat result c
+                             (and components
+                                  (not (string-suffix-p separator c))
+                                  separator)))))
+    result))
 
 ;;;; Defined in alloc.c
 

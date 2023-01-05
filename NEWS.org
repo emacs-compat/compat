@@ -3,9 +3,10 @@
 * Development
 
 - Add multiple new tests for existing APIs.
-- Bug fix for the ~setq-local~ compatibility macro
-- Bug fix for the ~proper-list-p~ compatibility function
-- Bug fix for the ~prop-match-p~ compatibility function
+- Fix the ~setq-local~ compatibility macro.
+- Fix the ~proper-list-p~ compatibility function.
+- Fix the ~prop-match-p~ compatibility function.
+- Fix the ~file-name-concat~ compatibility function.
 - Add new Emacs 29 APIs. Most of these are still untested and may change. If you
   intend to use an API please be extra careful and if possible contribute test
   cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
@@ -14,15 +15,15 @@
   functions. Since Compat avoids overwriting already existing functions, we must
   define separate compatibility function definitions for functions which changed
   their calling convention. These compatibility definitions can be looked up
-  using ~compat-function~ and called with ~compat-call~. For example ~(assoc KEY
-  ALIST &optional TESTFN)~ can be called with a ~TESTFN~ since Emacs 29. In Emacs
-  28 and older the calling convention was ~(assoc KEY ALIST)~. In order to use the
-  new calling convention you can use ~(compat-call assoc KEY ALIST)~.
+  using ~compat-function~ and called with ~compat-call~. For example ~assoc~ can be
+  called with a ~TESTFN~ since Emacs 29. In Emacs 28 and older the calling
+  convention was ~(assoc KEY ALIST)~. In order to use the new calling convention
+  you can use ~(compat-call assoc KEY ALIST TESTFN)~.
 - Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
   ~compat-call~ or ~compat-function~ macros.
-- Deprecate ~compat-help.el~ and ~compat-font-lock.el~
-- Development moved to GitHub
-- BREAKING: Drop broken function ~func-arity~
+- Deprecate ~compat-help.el~ and ~compat-font-lock.el.~
+- Development moved to GitHub.
+- BREAKING: Drop broken function ~func-arity~.
 - BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now.
 
 * Release of "Compat" Version 28.1.2.2
