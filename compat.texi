@@ -468,7 +468,7 @@ The @code{define-inline} functionality.
 The functions @code{string-collate-lessp} and
 @code{string-collate-equalp}.
 @item
-The function @code{funcall-interactivly}.
+The function @code{funcall-interactively}.
 @item
 The function @code{buffer-substring-with-bidi-context}.
 @item
@@ -2031,7 +2031,7 @@ The function @code{dns-query-asynchronous}.
 @item
 The function @code{get-locale-names}.
 @item
-The function @code{json-avaliable-p}.
+The function @code{json-available-p}.
 @item
 The function @code{mail-header-parse-addresses-lax}.
 @item
