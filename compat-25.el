@@ -76,7 +76,7 @@ Case is significant.
 Symbols are also allowed; their print names are used instead."
   (string-lessp string2 string1))
 
-(compat-defmacro with-file-modes (modes &rest body) ;; <UNTESTED>
+(compat-defmacro with-file-modes (modes &rest body) ;; <OK>
   "Execute BODY with default file permissions temporarily set to MODES.
 MODES is as for `set-default-file-modes'."
   (declare (indent 1) (debug t))

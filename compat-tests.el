@@ -649,6 +649,12 @@
   (should-equal "1 k" (compat-call file-size-human-readable 1000 'si " "))
   (should-equal "1 kA" (compat-call file-size-human-readable 1000 'si " " "A")))
 
+(ert-deftest with-file-modes ()
+  (let ((old (default-file-modes)))
+    (with-file-modes (1+ old)
+      (should-equal (default-file-modes) (1+ old)))
+    (should-equal (default-file-modes) old)))
+
 (ert-deftest file-modes-number-to-symbolic ()
   (should-equal "-rwx------" (file-modes-number-to-symbolic #o700))
   (should-equal "-rwxrwx---" (file-modes-number-to-symbolic #o770))
