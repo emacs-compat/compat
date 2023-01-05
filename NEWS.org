@@ -5,9 +5,9 @@
 - Add multiple new tests for existing APIs.
 - Fix bugs in compatibility functions: ~setq-local~, ~proper-list-p, prop-match-p,
   ~file-name-concat~, ~replace-regexp-in-region~, ~replace-string-in-region~.
-- Add new Emacs 29 APIs. Most of these are still untested and may change. If you
-  intend to use an API please be extra careful and if possible contribute test
-  cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
+- Add new Emacs 29 APIs. Some of them are still untested and may change. If you
+  intend to use an Emacs 29 API please be careful and if possible contribute
+  test cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
   code. Over time tests for all functions will be added gradually.
 - Add the macros ~compat-call~ and ~compat-function~ to call compatibility
   functions. Since Compat avoids overwriting already existing functions, we must
