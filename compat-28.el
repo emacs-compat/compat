@@ -311,7 +311,7 @@ Point in BUFFER will be placed after the inserted text."
     (with-current-buffer buffer
       (insert-buffer-substring current start end))))
 
-(compat-defun replace-string-in-region (string replacement &optional start end) ;; <UNTESTED>
+(compat-defun replace-string-in-region (string replacement &optional start end) ;; <OK>
   "Replace STRING with REPLACEMENT in the region from START to END.
 The number of replaced occurrences are returned, or nil if STRING
 doesn't exist in the region.
@@ -328,17 +328,19 @@ Comparisons and replacements are done with fixed case."
         (error "End after end of buffer"))
     (setq end (point-max)))
   (save-excursion
-    (let ((matches 0)
-          (case-fold-search nil))
-      (goto-char start)
-      (while (search-forward string end t)
-        (delete-region (match-beginning 0) (match-end 0))
-        (insert replacement)
-        (setq matches (1+ matches)))
-      (and (not (zerop matches))
-           matches))))
+    (goto-char start)
+    (save-restriction
+      (narrow-to-region start end)
+      (let ((matches 0)
+            (case-fold-search nil))
+        (while (search-forward string nil t)
+          (delete-region (match-beginning 0) (match-end 0))
+          (insert replacement)
+          (setq matches (1+ matches)))
+        (and (not (zerop matches))
+             matches)))))
 
-(compat-defun replace-regexp-in-region (regexp replacement &optional start end) ;; <UNTESTED>
+(compat-defun replace-regexp-in-region (regexp replacement &optional start end) ;; <OK>
   "Replace REGEXP with REPLACEMENT in the region from START to END.
 The number of replaced occurrences are returned, or nil if REGEXP
 doesn't exist in the region.
@@ -363,14 +365,16 @@ REPLACEMENT can use the following special elements:
         (error "End after end of buffer"))
     (setq end (point-max)))
   (save-excursion
-    (let ((matches 0)
-          (case-fold-search nil))
-      (goto-char start)
-      (while (re-search-forward regexp end t)
-        (replace-match replacement t)
-        (setq matches (1+ matches)))
-      (and (not (zerop matches))
-           matches))))
+    (goto-char start)
+    (save-restriction
+      (narrow-to-region start end)
+      (let ((matches 0)
+            (case-fold-search nil))
+          (while (re-search-forward regexp nil t)
+          (replace-match replacement t)
+          (setq matches (1+ matches)))
+        (and (not (zerop matches))
+             matches)))))
 
 (compat-defun buffer-local-boundp (symbol buffer) ;; <OK>
   "Return non-nil if SYMBOL is bound in BUFFER.

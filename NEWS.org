@@ -3,10 +3,8 @@
 * Development
 
 - Add multiple new tests for existing APIs.
-- Fix the ~setq-local~ compatibility macro.
-- Fix the ~proper-list-p~ compatibility function.
-- Fix the ~prop-match-p~ compatibility function.
-- Fix the ~file-name-concat~ compatibility function.
+- Fix bugs in compatibility functions: ~setq-local~, ~proper-list-p, prop-match-p,
+  ~file-name-concat~, ~replace-regexp-in-region~, ~replace-string-in-region~.
 - Add new Emacs 29 APIs. Most of these are still untested and may change. If you
   intend to use an API please be extra careful and if possible contribute test
   cases. All untested functions are marked as ~<UNTESTED>~ in the Compat

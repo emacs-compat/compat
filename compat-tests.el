@@ -802,6 +802,80 @@
   (should-equal '[1 2 3] (compat-call sort '[1 2 3] #'<))
   (should-equal '[1 2 3] (compat-call sort '[3 2 1] #'<)))
 
+(ert-deftest replace-string-in-region ()
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should (= (replace-string-in-region "foo" "new" (point-min) (point-max))
+               2))
+    (should (equal (buffer-string) "new bar zot newbar")))
+
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should (= (replace-string-in-region "foo" "new" (point-min) 14)
+               1))
+    (should (equal (buffer-string) "new bar zot foobar")))
+
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should-error (replace-string-in-region "foo" "new" (point-min) 30)))
+
+  (with-temp-buffer
+    (insert "Foo bar zot foobar")
+    (should (= (replace-string-in-region "Foo" "new" (point-min))
+               1))
+    (should (equal (buffer-string) "new bar zot foobar")))
+
+  (with-temp-buffer
+    (insert "foo bar baz")
+    (should (= (replace-string-in-region "ba" "quux corge grault" (point-min))
+               2))
+    (should (equal (buffer-string)
+                    "foo quux corge graultr quux corge graultz")))
+
+  (with-temp-buffer
+    (insert "foo bar bar")
+    (should (= (replace-string-in-region " bar" "" (point-min) 8)
+               1))
+    (should (equal (buffer-string)
+                    "foo bar"))))
+
+(ert-deftest replace-regexp-in-region ()
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should (= (replace-regexp-in-region "fo+" "new" (point-min) (point-max))
+               2))
+    (should (equal (buffer-string) "new bar zot newbar")))
+
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should (= (replace-regexp-in-region "fo+" "new" (point-min) 14)
+               1))
+    (should (equal (buffer-string) "new bar zot foobar")))
+
+  (with-temp-buffer
+    (insert "foo bar zot foobar")
+    (should-error (replace-regexp-in-region "fo+" "new" (point-min) 30)))
+
+  (with-temp-buffer
+    (insert "Foo bar zot foobar")
+    (should (= (replace-regexp-in-region "Fo+" "new" (point-min))
+               1))
+    (should (equal (buffer-string) "new bar zot foobar")))
+
+  (with-temp-buffer
+    (insert "foo bar baz")
+    (should (= (replace-regexp-in-region "ba." "quux corge grault" (point-min))
+               2))
+    (should (equal (buffer-string)
+                    "foo quux corge grault quux corge grault")))
+
+  (with-temp-buffer
+    (insert "foo bar bar")
+    (should (= (replace-regexp-in-region " bar" "" (point-min) 8)
+               1))
+    (should (equal (buffer-string)
+                    "foo bar"))))
+
 (ert-deftest string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
   (should-equal '("a" "b" "c") (string-split "a b c")))
