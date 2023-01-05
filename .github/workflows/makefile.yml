@@ -4,9 +4,13 @@ on:
   push:
     paths-ignore:
       - '**.md'
+      - '**.org'
+      - '**.texi'
   pull_request:
     paths-ignore:
       - '**.md'
+      - '**.org'
+      - '**.texi'
 
 jobs:
   test:
