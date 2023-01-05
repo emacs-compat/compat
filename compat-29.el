@@ -448,7 +448,7 @@ this defaults to the current buffer."
                 (cond
                  ((vectorp disp)
                   (setq vector t)
-                  (seq-into disp 'list))
+                  (append disp nil))
                  ((not (consp (car disp)))
                   (list disp))
                  (t
@@ -458,7 +458,7 @@ this defaults to the current buffer."
             (setq disp (delete old disp)))
           (setq disp (cons (list prop value) disp))
           (when vector
-            (setq disp (seq-into disp 'vector)))
+            (setq disp (vconcat disp)))
           ;; Finally update the range.
           (put-text-property sub-start sub-end 'display disp object)))
       (setq sub-start sub-end))))
