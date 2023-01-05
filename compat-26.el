@@ -49,7 +49,7 @@ Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
   (apply #'nconc (mapcar func sequence)))
 
-(compat-defun line-number-at-pos (&optional position absolute) ;; <UNTESTED>
+(compat-defun line-number-at-pos (&optional position absolute) ;; <OK>
   "Handle optional argument ABSOLUTE:
 
 If the buffer is narrowed, the return value by default counts the lines

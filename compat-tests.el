@@ -53,6 +53,15 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest line-number-at-pos ()
+  (with-temp-buffer
+    (insert "\n\n\n")
+    (narrow-to-region (1+ (point-min)) (point-max))
+    (should-equal 1 (compat-call line-number-at-pos (point-min)))
+    (should-equal 2 (compat-call line-number-at-pos (1+ (point-min))))
+    (should-equal 2 (compat-call line-number-at-pos (point-min) 'abs))
+    (should-equal 3 (compat-call line-number-at-pos (1+ (point-min)) 'abs))))
+
 (defvar compat-test-map-1
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x C-f") #'find-file)
