@@ -18,7 +18,8 @@
 ;;; Commentary:
 ;;; Code:
 
-(warn "compat-24 has been deprecated")
+;; Use message instead of warn since it is less aggressive.
+(message "compat-24 has been deprecated")
 
 (provide 'compat-24)
 ;;; compat-24.el ends here
