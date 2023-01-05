@@ -47,10 +47,10 @@
   `(should (equal ,a ,b)))
 
 (ert-deftest compat-function ()
-  (let (list)
-    (should (compat-function plist-put))
-    (should (symbolp (compat-function plist-put)))
-    (setq list (compat-call plist-put list "first" 1 #'string=))
+  (let ((sym (compat-function plist-put)) list)
+    (should sym)
+    (should (symbolp sym))
+    (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
 (defun compat-function-put-test ())
