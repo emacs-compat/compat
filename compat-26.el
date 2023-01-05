@@ -69,7 +69,18 @@ from the absolute start of the buffer, disregarding the narrowing."
   "Handle TESTFN manually."
   :explicit t
   (if testfn
-      (compat--alist-get-full-elisp key alist default remove testfn)
+      (let (entry)
+        (cond
+         ((eq testfn 'eq)
+          (setq entry (assq key alist)))
+         ((eq testfn 'equal)
+          (setq entry (assoc key alist)))
+         ((catch 'found
+            (dolist (ent alist)
+              (when (and (consp ent) (funcall testfn (car ent) key))
+                (throw 'found (setq entry ent))))
+            default)))
+        (if entry (cdr entry) default))
     (alist-get key alist default remove)))
 
 (gv-define-expander compat--alist-get
