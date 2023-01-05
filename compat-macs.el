@@ -238,6 +238,18 @@ attribute, is greater than the current Emacs version."
   (declare (debug compat-defun) (doc-string 3) (indent 2)) ;; <UNTESTED>
   (compat--define-function 'macro name arglist docstring rest))
 
+(defmacro compat-defalias (name def)
+  "Declare compatibility alias NAME with DEF."
+  (compat--generate
+           name
+           (lambda (realname version)
+             `(defalias ',realname ',def))
+           (lambda (realname _version)
+             `(defalias ',name ',realname))
+           (lambda ()
+             `(not (fboundp ',name)))
+           nil))
+
 (defmacro compat-defvar (name initval docstring &rest attr)
   "Declare compatibility variable NAME with initial value INITVAL.
 The obligatory documentation string DOCSTRING must be given.

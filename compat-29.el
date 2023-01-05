@@ -234,6 +234,8 @@ binding KEY to DEF is added at the front of KEYMAP."
 
 ;;;; Defined in subr.el
 
+(compat-defalias string-split split-string) ;; <OK>
+
 (compat-defun function-alias-p (func &optional noerror) ;; <UNTESTED>
   "Return nil if FUNC is not a function alias.
 If FUNC is a function alias, return the function alias chain.

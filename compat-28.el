@@ -108,17 +108,7 @@ inserted before contatenating."
 
 ;;;; Defined in alloc.c
 
-(compat-defun garbage-collect-maybe (_factor) ;; <OK>
-  "Call ‘garbage-collect’ if enough allocation happened.
-FACTOR determines what \"enough\" means here: If FACTOR is a
-positive number N, it means to run GC if more than 1/Nth of the
-allocations needed to trigger automatic allocation took place.
-Therefore, as N gets higher, this is more likely to perform a GC.
-Returns non-nil if GC happened, and nil otherwise.
-
-NOTE: For releases of Emacs before version 28, this function will do nothing."
-  ;; Do nothing
-  nil)
+(compat-defalias garbage-collect-maybe ignore) ;; <OK>
 
 ;;;; Defined in filelock.c
 
@@ -425,9 +415,7 @@ not a list, return a one-element list containing OBJECT."
       object
     (list object)))
 
-(compat-defun subr-primitive-p (object) ;; <OK>
-  "Return t if OBJECT is a built-in primitive function."
-  (subrp object))
+(compat-defalias subr-primitive-p subrp) ;; <OK>
 
 ;;;; Defined in subr-x.el
 

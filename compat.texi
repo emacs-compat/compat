@@ -2201,6 +2201,13 @@ differences, like @code{char-equal} when @code{case-fold-search} is
 @xref{Text Comparison,,,elisp}.
 @end defun
 
+@defun string-split STRING &optional SEPARATORS OMIT-NULLS TRIM
+@code{string-split} is an alias for the function @code{split-string}.
+The name follows the convention of other string functions.
+
+@xref{Creating Strings,,,elisp}.
+@end defun
+
 @c copied from lispref/buffers.texi
 @defun buffer-match-p condition buffer-or-name &optional arg
 This function checks if a buffer designated by @code{buffer-or-name}

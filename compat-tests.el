@@ -773,6 +773,10 @@
   (should-equal '[1 2 3] (compat-call sort '[1 2 3] #'<))
   (should-equal '[1 2 3] (compat-call sort '[3 2 1] #'<)))
 
+(ert-deftest string-split ()
+  (should-equal '("a" "b" "c") (split-string "a b c"))
+  (should-equal '("a" "b" "c") (string-split "a b c")))
+
 (ert-deftest string-equal-ignore-case ()
   (should (string-equal-ignore-case "abc" "abc"))
   (should (string-equal-ignore-case "abc" "ABC"))

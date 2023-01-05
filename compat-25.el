@@ -57,13 +57,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in editfns.c
 
-(compat-defun format-message (string &rest objects) ;; <OK>
-  "Format a string out of a format-string and arguments.
-The first argument is a format control string.
-The other arguments are substituted into it to make the result, a string.
-
-This implementation is equivalent to `format'."
-  (apply #'format string objects))
+(compat-defalias format-message format) ;; <OK>
 
 ;;;; Defined in fileio.c
 
@@ -249,12 +243,7 @@ threading."
 
 ;;;; Defined in byte-run.el
 
-(compat-defun function-put (func prop value) ;; <OK>
-  "Set FUNCTION's property PROP to VALUE.
-The namespace for PROP is shared with symbols.
-So far, FUNCTION can only be a symbol, not a lambda expression."
-  :version "24.4"
-  (put func prop value))
+(compat-defalias function-put put) ;; <OK>
 
 ;;;; Defined in files.el
 
