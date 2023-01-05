@@ -1,4 +1,4 @@
-;;; compat-macs.el --- Compatibility Macros           -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; compat-macs.el --- Compatibility Macros -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
@@ -33,241 +33,196 @@
   (setq compat--current-version version)
   nil)
 
-(defun compat--with-feature (feature &rest body)
-  "Protect BODY with `with-eval-after-load' if FEATURE is non-nil."
-  (declare (indent 1))
-  (if feature
-      `(with-eval-after-load ',feature ,@body)
-    (macroexp-progn body)))
-
-(defun compat--generate (name def-fn install-fn check-fn attr)
-  "Function used to generate compatibility code.
-The function must take six arguments: NAME, DEF-FN, INSTALL-FN,
-CHECK-FN and ATTR.  The resulting body is constructed by invoking
-the functions DEF-FN (passed the \"realname\" and the version
-number, returning the compatibility definition), the
-INSTALL-FN (passed the \"realname\" and returning the
-installation code), CHECK-FN (passed the \"realname\" and
-returning a check to see if the compatibility definition should
-be installed).  ATTR is a plist used to modify the generated
-code.  The following attributes are handled, all others are
-ignored:
-
-- :min-version :: Do not install the compatibility definition
-  if Emacs version older than indicated.
-
-- :max-version :: Do not install the compatibility definition
-  if Emacs version newer or equal than indicated.
-
-- :feature :: The library the code is supposed to be loaded
-  with (via `eval-after-load').
-
-- :cond :: Only install the compatibility code, iff the value
-  evaluates to non-nil.
-
-  For prefixed functions, this can be interpreted as a test to
-  `defalias' an existing definition or not.
-
-- :realname :: Manual specification of a \"realname\" to use for
-  the compatibility definition (symbol).
-
-- :explicit :: Add a `compat-' prefix to the name, and define the
-  compatibility code unconditionally."
-  (let* ((min-version (plist-get attr :min-version))
-         (max-version (plist-get attr :max-version))
-         (feature (plist-get attr :feature))
-         (cond (plist-get attr :cond))
-         (check))
-    (unless compat--current-version
-      (error "No compat version declared"))
-    (when (and (plist-get attr :realname)
-               (string= name (plist-get attr :realname)))
-      (error "%S: Name is equal to realname" name))
-    ;; subr-x is available at compile time.
-    (when (eq feature 'subr-x)
-      (error "Feature subr-x is forbidden"))
-    (when feature
-      (unless (require feature nil t)
-        (setq feature nil)))
-    (setq check
-          (cond
-           ((or (and min-version
-                     (version< emacs-version min-version))
-                (and max-version
-                     (version<= max-version emacs-version)))
-            nil)
-           ((plist-get attr :explicit)
-            t)
-           ((and (version<= compat--current-version emacs-version) (not cond))
-            nil)
-           ((and (if cond (eval cond t) t)
-                 (funcall check-fn)))))
-    (cond
-     ((and (plist-get attr :explicit)
-           (let ((actual-name (intern (substring (symbol-name name)
-                                                 (length "compat-")))))
-             ;; NOTE: For prefixed/explicit functions check the Emacs version,
-             ;; since the fboundp check cannot be used! We want to redefine
-             ;; existing functions.
-             (when (and (version<= compat--current-version emacs-version)
-                        (fboundp actual-name)
-                        check)
-               (compat--with-feature feature
-                 (funcall install-fn actual-name))))))
-     ((let ((realname (plist-get attr :realname)))
-        (when realname
-          `(progn
-             ,(funcall def-fn realname)
-             ,(when check
-                (compat--with-feature feature
-                  (funcall install-fn realname)))))))
-     (check
-      (compat--with-feature feature
-        (funcall def-fn name))))))
-
-(defun compat--define-function (type name arglist docstring rest)
-  "Generate compatibility code for a function NAME.
-TYPE is one of `func', for functions and `macro' for macros, and
-`advice' ARGLIST is passed on directly to the definition, and
-DOCSTRING is prepended with a compatibility note.  REST contains
-the remaining definition, that may begin with a property list of
-attributes (see `compat--generate')."
-  (let ((oldname name) (body rest))
-    (while (keywordp (car body))
-      (setq body (cddr body)))
-    ;; It might be possible to set these properties otherwise.  That
-    ;; should be looked into and implemented if it is the case.
-    (when (and (listp (car-safe body)) (eq (caar body) 'declare))
-      (when (version<= emacs-version "25")
-        (delq (assq 'side-effect-free (car body)) (car body))
-        (delq (assq 'pure (car body)) (car body))))
-    ;; Ensure that :realname is not the same as compat--<name>,
-    ;; since this is the compat-call/compat-function naming convention.
-    (when (and (plist-get rest :realname)
-               (string= (plist-get rest :realname) (format "compat--%s" name)))
-      (error "%s: :realname must not be the same as compat--<name>" name))
-    ;; Check if we want an explicitly prefixed function
-    (when (plist-get rest :explicit)
-      (setq name (intern (format "compat-%s" name))))
-    (compat--generate
-     name
-     (lambda (realname)
-       `(progn
-          (,(cond
-             ((eq type 'function) 'defun)
-             ((eq type 'macro) 'defmacro)
-             ((error "Unknown type")))
-           ,(if (plist-get rest :explicit)
-                (intern (format "compat--%s" oldname))
-              realname)
-           ,arglist
-           ;; Prepend compatibility notice to the actual
-           ;; documentation string.
-           ,(with-temp-buffer
-              (insert
-               (format
-                "[Compatibility %s for `%S', defined in Emacs %s.  \
+(defun compat--format-docstring (type name docstring)
+  "Format DOCSTRING for NAME of TYPE.
+Prepend compatibility notice to the actual documentation string."
+  (with-temp-buffer
+    (insert
+     (format
+      "[Compatibility %s for `%S', defined in Emacs %s.  \
 If this is not documented on yourself system, you can check \
-`(compat) Emacs %s' for more details.]\n\n"
-                type oldname compat--current-version compat--current-version
-                docstring))
-              (let ((fill-column 80))
-                (fill-region (point-min) (point-max)))
-              (buffer-string))
-           ,@body)
-          ,@(and (plist-get rest :explicit)
-                 (not (string= realname name))
-                 `((defalias ',realname #',(intern (format "compat--%s" oldname)))))))
-     (lambda (realname)
-       `(progn
-          ;; Functions and macros are installed by aliasing the name of the
-          ;; compatible function to the name of the compatibility function.
-          ,@(when (and (plist-get rest :realname)
-                       (not (string= (plist-get rest :realname) name))
-                       (not (string= (plist-get rest :realname) realname)))
-              `((defalias ',(plist-get rest :realname) #',realname)))
-          ,@(unless (and (plist-get rest :explicit) (string= realname oldname))
-              `((defalias ',name #',realname)))))
-     (lambda ()
-       `(not (fboundp ',name)))
-     rest)))
+`(compat) Emacs %s' for more details.]\n\n%s"
+      type name
+      compat--current-version compat--current-version
+      docstring))
+    (let ((fill-column 80))
+      (fill-region (point-min) (point-max)))
+    (buffer-string)))
+
+(defun compat--check-attributes (attrs allowed)
+  "Check ATTRS for ALLOWED keys and return rest."
+  (while (keywordp (car attrs))
+    (unless (memq (car attrs) allowed)
+      (error "Invalid attribute %s" (car attrs)))
+    (unless (cdr attrs)
+      (error "Odd number of element in attribute list"))
+    (setq attrs (cddr attrs)))
+  attrs)
+
+(defun compat--condition-satisfied (attrs)
+  "Check that version constraints specified by ATTRS are satisfied."
+  (let ((min-version (plist-get attrs :min-version))
+        (max-version (plist-get attrs :max-version))
+        (cond (plist-get attrs :cond))
+        (realname (plist-get attrs :realname)))
+    (and
+     ;; Min/max version bounds must be satisfied.
+     (or (not min-version) (version<= min-version emacs-version))
+     (or (not max-version) (version< emacs-version max-version))
+     ;; If a condition is specified, it must be satisfied.
+     (or (not cond) (eval cond t))
+     ;; :realname specified or version constraint satisfied.
+     (or realname (version< emacs-version compat--current-version)))))
+
+(defun compat--guarded-definition (attrs args fun)
+  "Guard compatibility definition generation.
+The version constraints specified by ATTRS are checked.
+ARGS is a list of keywords which are looked up and passed to FUN."
+  (declare (indent 2))
+  (let* ((body (compat--check-attributes
+                attrs `(,@args :min-version :max-version :cond :feature)))
+         (feature (plist-get attrs :feature))
+         (attrs `(:body ,body ,@attrs)))
+    ;; Require feature at compile time
+    (when feature
+      (when (eq feature 'subr-x)
+        (error "Feature subr-x must not be specified"))
+      ;; If the feature does not exist, treat it as nil.  The function will then
+      ;; be defined on the toplevel and not in a `with-eval-after-load' block.
+      (setq feature (require feature nil t)))
+    (when (compat--condition-satisfied attrs)
+      (setq body (apply fun (mapcar (lambda (x) (plist-get attrs x)) args)))
+      (when body
+        (if feature
+            `(with-eval-after-load ',feature ,@body)
+          (macroexp-progn body))))))
+
+(defun compat--function-definition (type name arglist docstring rest)
+  "Define function NAME of TYPE with ARGLIST and DOCSTRING.
+REST are attributes and the function BODY."
+  (compat--guarded-definition rest '(:explicit :realname :body)
+    (lambda (explicit realname body)
+      ;; Remove unsupported declares.  It might be possible to set these
+      ;; properties otherwise.  That should be looked into and implemented
+      ;; if it is the case.
+      (when (and (listp (car-safe body)) (eq (caar body) 'declare))
+        (when (version<= emacs-version "25")
+          (delq (assq 'side-effect-free (car body)) (car body))
+          (delq (assq 'pure (car body)) (car body))))
+      ;; Ensure that :realname is not the same as compat--<name>,
+      ;; since this is the compat-call/compat-function naming convention.
+      (when (and realname
+                 (or (string= realname explicit)
+                     (not (string-prefix-p
+                           "compat--" (symbol-name realname)))))
+        (error "%s: Invalid :realname name" realname))
+      (let ((def-name ;; Name of the definition. May be nil -> no definition.
+             (if (not (fboundp name)) ;; If not bound, `name' should be bound.
+                 name
+               ;; Use `:explicit' name if the function is already defined,
+               ;; and if version constraint is satisfied.
+               (and explicit
+                    (version< emacs-version compat--current-version)
+                    (intern (format "compat--%s" name))))))
+        `(,@(when def-name
+              `((,(if (eq type 'macro) 'defmacro 'defun)
+                 ,def-name ,arglist
+                 ,(compat--format-docstring type name docstring)
+                 ,@body)))
+          ,@(when realname
+              `((defalias ',realname #',(or def-name name)))))))))
+
+(defmacro compat-defalias (name def &rest attrs)
+  "Define compatibility alias NAME as DEF.
+ATTRS is a plist of attributes, which specify the conditions
+under which the definition is generated.
+
+- :min-version :: Only install the definition if the Emacs
+  version is greater or equal than the given version.
+
+- :max-version :: Only install the definition if the Emacs
+  version is smaller than the given version.
+
+- :feature :: Wrap the definition with `with-eval-after-load'.
+
+- :cond :: Only install the definition if :cond evaluates to
+  non-nil."
+  (compat--guarded-definition attrs ()
+    (lambda ()
+      (unless (fboundp name)
+        `((defalias ',name ',def))))))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
-  "Define NAME with arguments ARGLIST as a compatibility function.
-The function must be documented in DOCSTRING.  REST may begin
-with a plist, that is interpreted by the macro but not passed on
-to the actual function.  See `compat--generate' for a
-listing of attributes."
+  "Define compatibility function NAME with arguments ARGLIST.
+The function must be documented in DOCSTRING.  REST is an
+attribute plist followed by the function body.  The attributes
+specify the conditions under which the compatiblity function is
+defined.
+
+- :realname :: Additionally install the definition under the
+  given name.
+
+- :explicit :: Make the definition available such that it can be
+  called explicitly via `compat-call'.
+
+- :min-version :: Install the definition if the Emacs version is
+  greater or equal than the given version.
+
+- :max-version :: Install the definition if the Emacs version is
+  smaller than the given version.
+
+- :feature :: Wrap the definition with `with-eval-after-load'.
+
+- :cond :: Install the definition if :cond evaluates to non-nil."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
                            def-body))
            (doc-string 3) (indent 2))
-  (compat--define-function 'function name arglist docstring rest))
+  (compat--function-definition 'function name arglist docstring rest))
 
 (defmacro compat-defmacro (name arglist docstring &rest rest)
-  "Define NAME with arguments ARGLIST as a compatibility macro.
-The macro must be documented in DOCSTRING.  REST may begin
-with a plist, that is interpreted by this macro but not passed on
-to the actual macro.  See `compat--generate' for a
-listing of attributes."
-  (declare (debug compat-defun) (doc-string 3) (indent 2)) ;; <UNTESTED>
-  (compat--define-function 'macro name arglist docstring rest))
+  "Define compatibility macro NAME with arguments ARGLIST.
+The macro must be documented in DOCSTRING.  REST is an attribute
+plist followed by the macro body.  See `compat-defun' for
+details."
+  (declare (debug compat-defun) (doc-string 3) (indent 2))
+  (compat--function-definition 'macro name arglist docstring rest))
 
-(defmacro compat-defalias (name def)
-  "Declare compatibility alias NAME with DEF."
-  (compat--generate
-           name
-           (lambda (realname)
-             `(defalias ',realname ',def))
-           (lambda (realname)
-             `(defalias ',name ',realname))
-           (lambda ()
-             `(not (fboundp ',name)))
-           nil))
+(defmacro compat-defvar (name initval docstring &rest attrs)
+  "Define compatibility variable NAME with initial value INITVAL.
+The variable must be documented in DOCSTRING.  ATTRS is a plist
+of attributes, which specify the conditions under which the
+definition is generated.
 
-(defmacro compat-defvar (name initval docstring &rest attr)
-  "Declare compatibility variable NAME with initial value INITVAL.
-The obligatory documentation string DOCSTRING must be given.
+- :constant :: Define a constant if non-nil.
 
-The remaining arguments ATTR form a plist, modifying the
-behaviour of this macro.  See `compat--generate' for a
-listing of attributes.  Furthermore, `compat-defvar' also handles
-the attribute `:local' that either makes the variable permanent
-local with a value of `permanent' or just buffer local with any
-non-nil value."
+- :local :: Make the variable permanently local if the value is
+  `permanent'.  For other non-nil values make the variable
+  buffer-local.
+
+- :min-version :: Install the definition if the Emacs version is
+  greater or equal than the given version.
+
+- :max-version :: Install the definition if the Emacs version is
+  smaller than the given version.
+
+- :feature :: Wrap the definition with `with-eval-after-load'.
+
+- :cond :: Install the definition if :cond evaluates to non-nil."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (when (or (plist-get attr :explicit) (plist-get attr :realname))
-    (error ":explicit cannot be specified for compatibility variables"))
-  (compat--generate
-           name
-           (lambda (realname)
-             (let ((localp (plist-get attr :local)))
-               `(progn
-                  (,(if (plist-get attr :constant) 'defconst 'defvar)
-                   ,realname ,initval
-                   ;; Prepend compatibility notice to the actual
-                   ;; documentation string.
-                   ,(with-temp-buffer
-                      (insert
-                       (format
-                        "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                        name compat--current-version docstring))
-                      (let ((fill-column 80))
-                        (fill-region (point-min) (point-max)))
-                      (buffer-string)))
-                  ;; Make variable as local if necessary
-                  ,(cond
-                    ((eq localp 'permanent)
-                     `(put ',realname 'permanent-local t))
-                    (localp
-                     `(make-variable-buffer-local ',realname))))))
-           (lambda (realname)
-             `(defvaralias ',name ',realname))
-           (lambda ()
-             `(not (boundp ',name)))
-           attr))
+  (compat--guarded-definition attrs '(:local :constant)
+    (lambda (local constant)
+      (unless (boundp name)
+        `((,(if constant 'defconst 'defvar)
+           ,name ,initval
+           ,(compat--format-docstring 'variable name docstring))
+          ,@(cond
+             ((eq local 'permanent)
+              `((put ',name 'permanent-local t)))
+             (local
+              `((make-variable-buffer-local ',name)))))))))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here

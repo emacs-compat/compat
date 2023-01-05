@@ -2,6 +2,9 @@
 
 * Development of "Compat" Version 29.1.1.0
 
+- The macros in ~compat-macs.el~ have been rewritten and greatly simplified. This
+  change makes it possible to further refine the criteria under which
+  compatibility aliases, functions, macros and variables are installed.
 - Remove deprecated, prefixed compatibility functions.
 - Remove deprecated features ~compat-help~, ~compat-font-lock~ and ~compat-24~.
 
