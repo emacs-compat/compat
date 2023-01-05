@@ -1,4 +1,4 @@
-;;; compat-24.el --- Obsolete package  -*- lexical-binding: t; -*-
+;;; compat-24.el --- Obsolete package -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Copyright (C) 2021-2023  Free Software Foundation, Inc.
 
