@@ -525,7 +525,7 @@ the symbol of the calling function, for example."
 
 ;;;; Defined in keymap.el
 
-(compat-defun key-valid-p (keys) ;; <UNTESTED>
+(compat-defun key-valid-p (keys) ;; <OK>
   "Say whether KEYS is a valid key.
 A key is a string consisting of one or more key strokes.
 The key strokes are separated by single space characters.
