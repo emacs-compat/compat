@@ -39,7 +39,7 @@ is nil)."
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :max-version "25.3"
+  :max-version "25.99"
   ;; On Emacs older than 26.1 we have to use the Tortoise and Hare algorithm
   (when (listp object)
     (catch 'cycle
@@ -717,7 +717,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
-  :max-version "25.3"
+  :max-version "25.99"
   :feature text-property-search
   (vector
    'prop-match
@@ -737,7 +737,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
-  :max-version "25.3"
+  :max-version "25.99"
   :feature text-property-search
   (and (vectorp match) ;; Vector
        (> (length match) 0)
