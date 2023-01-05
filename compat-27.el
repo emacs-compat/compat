@@ -32,15 +32,15 @@
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :min-version "26.1"
+  :min-version "26"
   (and (listp object) (ignore-errors (length object))))
 
 (compat-defun proper-list-p (object) ;; <OK>
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :max-version "26.1"
-  ;; On Emacs older than 25.3 we have to use the Tortoise and Hare algorithm
+  :max-version "25.3"
+  ;; On Emacs older than 26.1 we have to use the Tortoise and Hare algorithm
   (when (listp object)
     (catch 'cycle
       (let ((hare object) (tortoise object)
@@ -717,7 +717,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
-  :max-version "26.1"
+  :max-version "25.3"
   :feature text-property-search
   (vector
    'prop-match
@@ -727,7 +727,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
-  :min-version "26.1"
+  :min-version "26"
   :feature text-property-search
   (record
    'prop-match
@@ -737,7 +737,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
-  :max-version "26.1"
+  :max-version "25.3"
   :feature text-property-search
   (and (vectorp match) ;; Vector
        (> (length match) 0)
@@ -745,7 +745,7 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
-  :min-version "26.1"
+  :min-version "26"
   :feature text-property-search
   (eq (type-of match) 'prop-match)) ;; Record
 
