@@ -136,14 +136,15 @@ the noerror flag should be specified.
 @end example
 
 This will load all implicit and explicit Compat definitions. Functions
-and macros where the calling convention has changed can be accessed
-explicitly via @code{compat-function} and @code{compat-call}. We
-call these definitions ``Explicit Definitions''. In contrast,
-``Implicit Definitions'' can be called as usual.
+and macros where the calling convention or behavior has changed can be
+accessed explicitly via @code{compat-function} and
+@code{compat-call}.  We call these definitions ``Explicit
+Definitions''.  In contrast, ``Implicit Definitions'' can be called as
+usual.
 
 @example
-(compat-call sort SEQUENCE PREDICATE) ;; Explicit
-(mapcan FUNCTION SEQUENCE)               ;; Implicit
+(compat-call assoc KEY ALIST TESTFN) ;; Explicit
+(mapcan FUNCTION SEQUENCE)           ;; Implicit
 @end example
 
 @defmac compat-call FUN &rest ARGS
@@ -192,7 +193,7 @@ To support these cases, the function or macro would have to be
 advised. As this is regarded as invasive and adds significant
 overhead, even when the new feature is not used, this approach is not
 used. As a compromise, compatibility functions and macros with a
-changed calling convention can be accessed via the
+changed calling convention or behavior can be accessed via the
 @code{compat-function} and @code{compat-call} macros.
 
 @item
@@ -425,7 +426,7 @@ arguments, @var{objects}.
 
 @subsection Explicit Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
+since their calling convention or behavior changed:
 
 @defun compat-call@ sort sequence predicate
 This function sorts @var{sequence} stably.  Note that this function
@@ -730,7 +731,7 @@ size, modes, inode-number and device-number.
 
 @subsection Explicit Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
+since their calling convention or behavior changed:
 
 @defun compat-call@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
@@ -1176,7 +1177,7 @@ function signals an error.
 
 @subsection Explicit Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
+since their calling convention or behavior changed:
 
 @c based on lispref/windows.texi
 @defun compat-call@ recenter &optional count redisplay
@@ -1910,7 +1911,7 @@ assume that there is a user named @samp{rms} but no user named
 
 @subsection Explicit Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
+since their calling convention or behavior changed:
 
 @c copied from lispref/files.texi
 @defun compat-call@ unlock-buffer
@@ -2623,7 +2624,7 @@ This is comparable to @code{and-let*}.
 
 @subsection Explicit Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention changed:
+since their calling convention or behavior changed:
 
 @c copied from lispref/keymaps.texi
 @defun compat-call@ define-key

@@ -27,7 +27,7 @@
 ;; The tests are written in a simple, explicit style.  Please inspect the
 ;; tests in order to find out the supported calling conventions.  In
 ;; particular, note the use of `compat-call' to call functions, where the
-;; calling convention changed between Emacs versions.
+;; calling convention or behavior changed between Emacs versions.
 
 ;; The functions tested here are guaranteed to work on the Emacs versions
 ;; tested by continuous integration.  This includes 24.4, 24.5, 25.1, 25.2,
