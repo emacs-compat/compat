@@ -135,12 +135,14 @@ the noerror flag should be specified.
 (require 'compat nil 'noerror)
 @end example
 
-This will load all implicit and explicit Compat definitions. Functions
-and macros where the calling convention or behavior has changed can be
-accessed explicitly via @code{compat-function} and
-@code{compat-call}.  We call these definitions ``Explicit
-Definitions''.  In contrast, ``Implicit Definitions'' can be called as
-usual.
+This will load all implicit and explicit Compat definitions.  Note
+that if Compat is installed on a recent version of Emacs, all of the
+definitions are disabled at compile time, such that no negative
+performance impact is incurred.  Functions and macros where the
+calling convention or behavior has changed can be accessed explicitly
+via @code{compat-function} and @code{compat-call}.  We call these
+definitions ``Explicit Definitions''.  In contrast, ``Implicit
+Definitions'' can be called as usual.
 
 @example
 (compat-call assoc KEY ALIST TESTFN) ;; Explicit
