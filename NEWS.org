@@ -23,9 +23,14 @@
   ~compat-call~ or ~compat-function~ macros.
 - Deprecate ~compat-help.el~ and ~compat-font-lock.el.~
 - Development moved to GitHub.
-- BREAKING: Drop broken function ~func-arity~.
-- BREAKING: Drop broken function ~directory-files-recursively~.
-- BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now.
+- BREAKING: Drop broken function ~func-arity~. Using ~func-arity~ is generally
+  discouraged and the function is hard to implement properly due to all the
+  various function types. There it is unlikely that the function will get
+  reintroduced in Compat.
+- BREAKING: Drop broken function ~directory-files-recursively~. In case you need
+  this function, a patch including tests is welcome.
+- BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now. In case you
+  still need Emacs 24.3 support, you can rely on Compat 28.1.2.2.
 
 * Release of "Compat" Version 28.1.2.2
 
