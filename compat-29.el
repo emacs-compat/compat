@@ -483,6 +483,33 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in files.el
 
+(compat-defun file-name-split (filename) ;; <OK>
+  "Return a list of all the components of FILENAME.
+On most systems, this will be true:
+
+  (equal (string-join (file-name-split filename) \"/\") filename)"
+  (let ((components nil))
+    ;; If this is a directory file name, then we have a null file name
+    ;; at the end.
+    (when (directory-name-p filename)
+      (push "" components)
+      (setq filename (directory-file-name filename)))
+    ;; Loop, chopping off components.
+    (while (length> filename 0)
+      (push (file-name-nondirectory filename) components)
+      (let ((dir (file-name-directory filename)))
+        (setq filename (and dir (directory-file-name dir)))
+        ;; If there's nothing left to peel off, we're at the root and
+        ;; we can stop.
+        (when (and dir (equal dir filename))
+          (push (if (equal dir "") ""
+                  ;; On Windows, the first component might be "c:" or
+                  ;; the like.
+                  (substring dir 0 -1))
+                components)
+          (setq filename nil))))
+    components))
+
 (compat-defun file-attribute-file-identifier (attributes) ;; <OK>
   "The inode and device numbers in ATTRIBUTES returned by `file-attributes'.
 The value is a list of the form (INODENUM DEVICE), where DEVICE could be

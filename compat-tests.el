@@ -731,6 +731,13 @@
   (should-equal (file-name-concat "" "bar") "bar")
   (should-equal (file-name-concat "" "") ""))
 
+(ert-deftest file-name-split ()
+  (should-equal (file-name-split "foo/bar") '("foo" "bar"))
+  (should-equal (file-name-split "/foo/bar") '("" "foo" "bar"))
+  (should-equal (file-name-split "/foo/bar/zot") '("" "foo" "bar" "zot"))
+  (should-equal (file-name-split "/foo/bar/") '("" "foo" "bar" ""))
+  (should-equal (file-name-split "foo/bar/") '("foo" "bar" "")))
+
 (ert-deftest file-name-with-extension ()
   (should-equal "file.ext" (file-name-with-extension "file" "ext"))
   (should-equal "file.ext" (file-name-with-extension "file" ".ext"))
