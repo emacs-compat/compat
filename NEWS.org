@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.0.0
 
 - Add multiple new tests for existing APIs.
 - Fix bugs in compatibility functions: ~setq-local~, ~proper-list-p, prop-match-p~,
@@ -29,6 +29,8 @@
   this function, a patch including tests is welcome.
 - BREAKING: Drop support for Emacs 24.3. Emacs 24.4 is required now. In case you
   still need Emacs 24.3 support, you can rely on Compat 28.1.2.2.
+
+(Release <2023-01-05 Thu>)
 
 * Release of "Compat" Version 28.1.2.2
 
