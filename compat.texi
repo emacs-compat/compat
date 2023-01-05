@@ -424,6 +424,8 @@ implemented in 25.1:
 
 @itemize
 @item
+The function @code{directory-files-recursively}.
+@item
 New @code{pcase} patterns.
 @item
 The hook @code{prefix-command-echo-keystrokes-functions} and
@@ -823,6 +825,8 @@ Compat does not provide support for the following Lisp features
 implemented in 26.1:
 
 @itemize
+@item
+The function @code{func-arity}.
 @item
 The function @code{secure-hash-algorithms}.
 @item
