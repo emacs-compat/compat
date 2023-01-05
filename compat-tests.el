@@ -615,6 +615,7 @@
 (ert-deftest file-attribute-getters ()
   (let ((attrs '(type link-number user-id group-id access-time modification-time
                  status-change-time size modes unspecified inode-number device-number)))
+    (should-equal (file-attribute-file-identifier attrs) '(inode-number device-number))
     (should-equal (file-attribute-type attrs) 'type)
     (should-equal (file-attribute-link-number attrs) 'link-number)
     (should-equal (file-attribute-user-id attrs) 'user-id)

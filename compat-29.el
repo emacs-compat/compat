@@ -483,6 +483,13 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in files.el
 
+(compat-defun file-attribute-file-identifier (attributes) ;; <OK>
+  "The inode and device numbers in ATTRIBUTES returned by `file-attributes'.
+The value is a list of the form (INODENUM DEVICE), where DEVICE could be
+either a single number or a cons cell of two numbers.
+This tuple of numbers uniquely identifies the file."
+  (nthcdr 10 attributes))
+
 (compat-defun file-name-parent-directory (filename) ;; <UNTESTED>
   "Return the directory name of the parent directory of FILENAME.
 If FILENAME is at the root of the filesystem, return nil.
