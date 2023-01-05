@@ -162,14 +162,13 @@ attributes (see `compat--generate')."
            ;; Prepend compatibility notice to the actual
            ;; documentation string.
            ,(with-temp-buffer
-              (insert docstring)
-              (newline 2)
               (insert
                (format
                 "[Compatibility %s for `%S', defined in Emacs %s.  \
 If this is not documented on yourself system, you can check \
-`(compat) Emacs %s' for more details.]"
-                type oldname compat--current-version compat--current-version))
+`(compat) Emacs %s' for more details.]\n\n"
+                type oldname compat--current-version compat--current-version
+                docstring))
               (let ((fill-column 80))
                 (fill-region (point-min) (point-max)))
               (buffer-string))
@@ -257,9 +256,14 @@ non-nil value."
                    ,realname ,initval
                    ;; Prepend compatibility notice to the actual
                    ;; documentation string.
-                   ,(format
-                     "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                     name compat--current-version docstring))
+                   ,(with-temp-buffer
+                      (insert
+                       (format
+                        "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
+                        name compat--current-version docstring))
+                      (let ((fill-column 80))
+                        (fill-region (point-min) (point-max)))
+                      (buffer-string)))
                   ;; Make variable as local if necessary
                   ,(cond
                     ((eq localp 'permanent)
