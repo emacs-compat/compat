@@ -811,7 +811,6 @@ directory or directories specified."
 For computational purposes, years are 365 days long and months
 are 30 days long."
   :feature time-date
-  :version "28"
   ;; Inlining the definitions from compat-27
   (+ (if (consp (nth 0 time))
          ;; Fractional second.
