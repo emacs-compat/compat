@@ -1430,8 +1430,6 @@ Support for @code{condition-case} to handle t.
 @item
 The functions @code{major-mode-suspend} and @code{major-mode-restore}.
 @item
-The function @code{provided-mode-derived-p}.
-@item
 The function @code{file-system-info}.
 @item
 The more consistent treatment of NaN values.
