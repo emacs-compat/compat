@@ -517,7 +517,7 @@ either a single number or a cons cell of two numbers.
 This tuple of numbers uniquely identifies the file."
   (nthcdr 10 attributes))
 
-(compat-defun file-name-parent-directory (filename) ;; <UNTESTED>
+(compat-defun file-name-parent-directory (filename) ;; <OK>
   "Return the directory name of the parent directory of FILENAME.
 If FILENAME is at the root of the filesystem, return nil.
 If FILENAME is relative, it is interpreted to be relative

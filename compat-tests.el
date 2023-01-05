@@ -731,6 +731,12 @@
   (should-equal (file-name-concat "" "bar") "bar")
   (should-equal (file-name-concat "" "") ""))
 
+(ert-deftest file-name-parent-directory ()
+  (should-equal (file-name-parent-directory "/foo/bar") "/foo/")
+  (should-equal (file-name-parent-directory "/foo/") "/")
+  (should-equal (file-name-parent-directory "foo/bar") "foo/")
+  (should-equal (file-name-parent-directory "foo") "./"))
+
 (ert-deftest file-name-split ()
   (should-equal (file-name-split "foo/bar") '("foo" "bar"))
   (should-equal (file-name-split "/foo/bar") '("" "foo" "bar"))
