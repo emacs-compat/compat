@@ -98,9 +98,10 @@ or support old versions of Emacs.
 Version 24.4 is chosen as the oldest version we can support, since
 Elisp has seen significant semantic changes at that version.  On the
 library level subr-x was introduced in 24.4.  Most popular Emacs
-packages which could potentially benefit from Compat already require
-24.4 or even newer versions of Emacs.  The long time release of CentOS
-7, which still distributes Emacs 24.3 reaches end of life soon (2024).
+packages and new developments which could potentially benefit from
+Compat already require 24.4 or even newer versions of Emacs.  The long
+time support release CentOS 7, which still distributes Emacs 24.3,
+reaches end of life soon in the beginning of 2024.
 
 Note that Compat provides functions with extended functionality for
 commands that are already defined (@code{sort}, @code{assoc},
