@@ -29,7 +29,7 @@
 
 ;;;; Defined in xdisp.c
 
-(compat-defun get-display-property (position prop &optional object properties) ;; <UNTESTED>
+(compat-defun get-display-property (position prop &optional object properties) ;; <OK>
   "Get the value of the `display' property PROP at POSITION.
 If OBJECT, this should be a buffer or string where the property is
 fetched from.  If omitted, OBJECT defaults to the current buffer.
