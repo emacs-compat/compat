@@ -591,9 +591,7 @@ Errors if the FILENAME or EXTENSION are empty, or if the given
 FILENAME has the format of a directory.
 
 See also `file-name-sans-extension'."
-  (let ((extn (if (string-prefix-p "." extension)
-                  (substring extension 1)
-                extension)))
+  (let ((extn (string-remove-prefix "." extension)))
     (cond
      ((string= filename "")
       (error "Empty filename"))
