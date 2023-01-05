@@ -867,19 +867,22 @@
                1))
     (should (equal (buffer-string) "new bar zot foobar")))
 
-  (with-temp-buffer
-    (insert "foo bar baz")
-    (should (= (replace-string-in-region "ba" "quux corge grault" (point-min))
-               2))
-    (should (equal (buffer-string)
-                    "foo quux corge graultr quux corge graultz")))
+  ;; There was a bug in the Emacs 28 implementation
+  ;; Fixed in Emacs d8f392bccd46cdb238ec96964f220ffb9d81cc44
+  (unless (= emacs-major-version 28)
+    (with-temp-buffer
+      (insert "foo bar baz")
+      (should (= (replace-string-in-region "ba" "quux corge grault" (point-min))
+                 2))
+      (should (equal (buffer-string)
+                     "foo quux corge graultr quux corge graultz")))
 
-  (with-temp-buffer
-    (insert "foo bar bar")
-    (should (= (replace-string-in-region " bar" "" (point-min) 8)
-               1))
-    (should (equal (buffer-string)
-                    "foo bar"))))
+    (with-temp-buffer
+      (insert "foo bar bar")
+      (should (= (replace-string-in-region " bar" "" (point-min) 8)
+                 1))
+      (should (equal (buffer-string)
+                     "foo bar")))))
 
 (ert-deftest replace-regexp-in-region ()
   (with-temp-buffer
@@ -904,19 +907,22 @@
                1))
     (should (equal (buffer-string) "new bar zot foobar")))
 
-  (with-temp-buffer
-    (insert "foo bar baz")
-    (should (= (replace-regexp-in-region "ba." "quux corge grault" (point-min))
-               2))
-    (should (equal (buffer-string)
-                    "foo quux corge grault quux corge grault")))
+  ;; There was a bug in the Emacs 28 implementation
+  ;; Fixed in Emacs d8f392bccd46cdb238ec96964f220ffb9d81cc44
+  (unless (= emacs-major-version 28)
+    (with-temp-buffer
+      (insert "foo bar baz")
+      (should (= (replace-regexp-in-region "ba." "quux corge grault" (point-min))
+                 2))
+      (should (equal (buffer-string)
+                     "foo quux corge grault quux corge grault")))
 
-  (with-temp-buffer
-    (insert "foo bar bar")
-    (should (= (replace-regexp-in-region " bar" "" (point-min) 8)
-               1))
-    (should (equal (buffer-string)
-                    "foo bar"))))
+    (with-temp-buffer
+      (insert "foo bar bar")
+      (should (= (replace-regexp-in-region " bar" "" (point-min) 8)
+                 1))
+      (should (equal (buffer-string)
+                     "foo bar")))))
 
 (ert-deftest string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))

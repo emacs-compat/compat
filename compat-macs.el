@@ -98,6 +98,8 @@ ignored:
             nil)
            ((plist-get attr :explicit)
             t)
+           ((and (version<= compat--current-version emacs-version) (not cond))
+            nil)
            ((and (if cond (eval cond t) t)
                  (funcall check-fn)))))
     (cond
