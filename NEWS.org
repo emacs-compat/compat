@@ -3,6 +3,7 @@
 * Development of "Compat" Version 29.1.1.0
 
 - Remove deprecated, prefixed compatibility functions.
+- Remove deprecated features ~compat-help~, ~compat-font-lock~ and ~compat-24~.
 
 * Release of "Compat" Version 29.1.0.1
 
