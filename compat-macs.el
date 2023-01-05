@@ -53,11 +53,11 @@ be installed).  ATTR is a plist used to modify the generated
 code.  The following attributes are handled, all others are
 ignored:
 
-- :min-version :: Prevent the compatibility definition from begin
-  installed in versions older than indicated (string).
+- :min-version :: Do not install the compatibility definition
+  if Emacs version older than indicated.
 
-- :max-version :: Prevent the compatibility definition from begin
-  installed in versions newer than indicated (string).
+- :max-version :: Do not install the compatibility definition
+  if Emacs version newer or equal than indicated.
 
 - :feature :: The library the code is supposed to be loaded
   with (via `eval-after-load').
@@ -94,7 +94,7 @@ ignored:
            ((or (and min-version
                      (version< emacs-version min-version))
                 (and max-version
-                     (version< max-version emacs-version)))
+                     (version<= max-version emacs-version)))
             nil)
            ((plist-get attr :explicit)
             t)
