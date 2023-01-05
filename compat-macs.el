@@ -77,8 +77,9 @@ ignored:
          (max-version (plist-get attr :max-version))
          (feature (plist-get attr :feature))
          (cond (plist-get attr :cond))
-         (version compat--current-version)
          (check))
+    (unless compat--current-version
+      (error "No compat version declared"))
     (when (and (plist-get attr :realname)
                (string= name (plist-get attr :realname)))
       (error "%S: Name is equal to realname" name))
@@ -103,21 +104,24 @@ ignored:
      ((and (plist-get attr :explicit)
            (let ((actual-name (intern (substring (symbol-name name)
                                                  (length "compat-")))))
-             (when (and (version<= version emacs-version)
+             ;; NOTE: For prefixed/explicit functions check the Emacs version,
+             ;; since the fboundp check cannot be used! We want to redefine
+             ;; existing functions.
+             (when (and (version<= compat--current-version emacs-version)
                         (fboundp actual-name)
                         check)
                (compat--with-feature feature
-                 (funcall install-fn actual-name version))))))
+                 (funcall install-fn actual-name))))))
      ((let ((realname (plist-get attr :realname)))
         (when realname
           `(progn
-             ,(funcall def-fn realname version)
+             ,(funcall def-fn realname)
              ,(when check
                 (compat--with-feature feature
-                  (funcall install-fn realname version)))))))
+                  (funcall install-fn realname)))))))
      (check
       (compat--with-feature feature
-        (funcall def-fn name version))))))
+        (funcall def-fn name))))))
 
 (defun compat--define-function (type name arglist docstring rest)
   "Generate compatibility code for a function NAME.
@@ -145,7 +149,7 @@ attributes (see `compat--generate')."
       (setq name (intern (format "compat-%s" name))))
     (compat--generate
      name
-     (lambda (realname version)
+     (lambda (realname)
        `(progn
           (,(cond
              ((eq type 'function) 'defun)
@@ -161,17 +165,11 @@ attributes (see `compat--generate')."
               (insert docstring)
               (newline 2)
               (insert
-               "[Compatibility "
-               (if version
-                   (format
-                    "%s for `%S', defined in Emacs %s.  \
+               (format
+                "[Compatibility %s for `%S', defined in Emacs %s.  \
 If this is not documented on yourself system, you can check \
-`(compat) Emacs %s' for more details."
-                    type oldname version version)
-                 (format
-                  "code %s for `%S'"
-                  type oldname))
-               "]")
+`(compat) Emacs %s' for more details.]"
+                type oldname compat--current-version compat--current-version))
               (let ((fill-column 80))
                 (fill-region (point-min) (point-max)))
               (buffer-string))
@@ -184,7 +182,7 @@ If this is not documented on yourself system, you can check \
                         "Use `compat-call' or `compat-function' instead"
                         "29.1.0.0"))
                    `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
-     (lambda (realname _version)
+     (lambda (realname)
        `(progn
           ;; Functions and macros are installed by aliasing the name of the
           ;; compatible function to the name of the compatibility function.
@@ -228,9 +226,9 @@ listing of attributes."
   "Declare compatibility alias NAME with DEF."
   (compat--generate
            name
-           (lambda (realname version)
+           (lambda (realname)
              `(defalias ',realname ',def))
-           (lambda (realname _version)
+           (lambda (realname)
              `(defalias ',name ',realname))
            (lambda ()
              `(not (fboundp ',name)))
@@ -252,27 +250,23 @@ non-nil value."
     (error ":explicit cannot be specified for compatibility variables"))
   (compat--generate
            name
-           (lambda (realname version)
+           (lambda (realname)
              (let ((localp (plist-get attr :local)))
                `(progn
                   (,(if (plist-get attr :constant) 'defconst 'defvar)
                    ,realname ,initval
                    ;; Prepend compatibility notice to the actual
                    ;; documentation string.
-                   ,(if version
-                        (format
-                         "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
-                         name version docstring)
-                      (format
-                       "[Compatibility variable for `%S']\n\n%s"
-                       name docstring)))
+                   ,(format
+                     "[Compatibility variable for `%S', defined in Emacs %s]\n\n%s"
+                     name compat--current-version docstring))
                   ;; Make variable as local if necessary
                   ,(cond
                     ((eq localp 'permanent)
                      `(put ',realname 'permanent-local t))
                     (localp
                      `(make-variable-buffer-local ',realname))))))
-           (lambda (realname _version)
+           (lambda (realname)
              `(defvaralias ',name ',realname))
            (lambda ()
              `(not (boundp ',name)))
