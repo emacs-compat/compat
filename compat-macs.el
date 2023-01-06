@@ -124,25 +124,23 @@ REST are attributes and the function BODY."
                 (and explicit
                      (version< emacs-version compat--current-version)
                      (intern (format "compat--%s" name)))))
-             (def (and defname
-                       `(,(if (eq type 'macro) 'defmacro 'defun)
-                         ,defname ,arglist
-                         ,(compat--format-docstring type name docstring)
-                         ,@body))))
+             (def `(,(if (eq type 'macro) 'defmacro 'defun)
+                    ,defname ,arglist
+                    ,(compat--format-docstring type name docstring)
+                    ,@body)))
         ;; An additional fboundp check is performed at runtime to make
         ;; sure that we never redefine an existing definition if Compat
         ;; is loaded on a newer Emacs version.
-        `(,@(when def
-              (if (eq defname name)
-                  ;; Declare the function in a non-existing compat-declare
-                  ;; feature, such that the byte compiler does not complain
-                  ;; about possibly missing functions at runtime. The warnings
-                  ;; are generated due to the unless fboundp check.
-                  `((declare-function ,name "ext:compat-declare")
-                    (unless (fboundp ',name) ,def))
-                (list def)))
+        `(,@(if (eq defname name)
+                ;; Declare the function in a non-existing compat-declare
+                ;; feature, such that the byte compiler does not complain
+                ;; about possibly missing functions at runtime. The warnings
+                ;; are generated due to the unless fboundp check.
+                `((declare-function ,name "ext:compat-declare")
+                  (unless (fboundp ',name) ,def))
+              (and defname (list def)))
           ,@(when realname
-              `((defalias ',realname #',(or defname name)))))))))
+              `((defalias ',realname ',(or defname name)))))))))
 
 (defmacro compat-defalias (name def &rest attrs)
   "Define compatibility alias NAME as DEF.
