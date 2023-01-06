@@ -159,6 +159,7 @@ under which the definition is generated.
 
 - :cond :: Only install the definition if :cond evaluates to
   non-nil."
+  (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guarded-definition attrs ()
     (lambda ()
       ;; The fboundp check is performed at runtime to make sure that we never
