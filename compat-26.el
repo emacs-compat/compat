@@ -83,7 +83,7 @@ from the absolute start of the buffer, disregarding the narrowing."
     (alist-get key alist default remove)))
 
 ;; NOTE: Define gv expander only if `compat--alist-get' is defined.
-(when (version< emacs-version "26.1")
+(when (eval-when-compile (version< emacs-version "26.1"))
   (gv-define-expander compat--alist-get
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key
