@@ -31,7 +31,9 @@
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
   (setq compat--current-version version)
-  nil)
+  `(unless (equal emacs-version ,emacs-version)
+     (error ,(format "Compat was compiled with Emacs %s, you are running %%s" emacs-version)
+            emacs-version)))
 
 (defun compat--format-docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.

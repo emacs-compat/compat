@@ -7,6 +7,8 @@
   compatibility aliases, functions, macros and variables are installed.
 - Remove deprecated, prefixed compatibility functions.
 - Remove deprecated features ~compat-help~, ~compat-font-lock~ and ~compat-24~.
+- Compat will check that the Emacs version which was used to compile Compat
+  equals the Emacs version at runtime.
 
 * Release of "Compat" Version 29.1.0.1
 
