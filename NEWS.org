@@ -10,6 +10,8 @@
 - Compat uses runtime checks (boundp, fboundp) to ensure that existing
   definitions are never overridden, when Compat is loaded on a newer Emacs than
   it was compiled on.
+- Compat compiles without byte compilation warnings on all supported Emacs
+  versions. Warnings are treated as errors in the test suite.
 
 * Release of "Compat" Version 29.1.0.1
 
