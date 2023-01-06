@@ -31,9 +31,7 @@
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
   (setq compat--current-version version)
-  `(unless (equal emacs-version ,emacs-version)
-     (error ,(format "Compat was compiled with Emacs %s, you are running %%s" emacs-version)
-            emacs-version)))
+  nil)
 
 (defun compat--format-docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.
@@ -118,21 +116,28 @@ REST are attributes and the function BODY."
                      (not (string-prefix-p
                            "compat--" (symbol-name realname)))))
         (error "%s: Invalid :realname name" realname))
-      (let ((def-name ;; Name of the definition. May be nil -> no definition.
-             (if (not (fboundp name)) ;; If not bound, `name' should be bound.
-                 name
-               ;; Use `:explicit' name if the function is already defined,
-               ;; and if version constraint is satisfied.
-               (and explicit
-                    (version< emacs-version compat--current-version)
-                    (intern (format "compat--%s" name))))))
-        `(,@(when def-name
-              `((,(if (eq type 'macro) 'defmacro 'defun)
-                 ,def-name ,arglist
-                 ,(compat--format-docstring type name docstring)
-                 ,@body)))
+      (let* ((defname ;; Name of the definition. May be nil -> no definition.
+              (if (not (fboundp name)) ;; If not bound, `name' should be bound.
+                  name
+                ;; Use `:explicit' name if the function is already defined,
+                ;; and if version constraint is satisfied.
+                (and explicit
+                     (version< emacs-version compat--current-version)
+                     (intern (format "compat--%s" name)))))
+             (def (and defname
+                       `(,(if (eq type 'macro) 'defmacro 'defun)
+                         ,defname ,arglist
+                         ,(compat--format-docstring type name docstring)
+                         ,@body))))
+        ;; An additional fboundp check is performed at runtime to make
+        ;; sure that we never redefine an existing definition if Compat
+        ;; is loaded on a newer Emacs version.
+        `(,@(when def
+              (if (eq defname name)
+                  `((unless (fboundp ',name) ,def))
+                (list def)))
           ,@(when realname
-              `((defalias ',realname #',(or def-name name)))))))))
+              `((defalias ',realname #',(or defname name)))))))))
 
 (defmacro compat-defalias (name def &rest attrs)
   "Define compatibility alias NAME as DEF.
@@ -151,8 +156,11 @@ under which the definition is generated.
   non-nil."
   (compat--guarded-definition attrs ()
     (lambda ()
-      (unless (fboundp name)
-        `((defalias ',name ',def))))))
+      ;; The fboundp check is performed at runtime to make sure that we never
+      ;; redefine an existing definition if Compat is loaded on a newer Emacs
+      ;; version.
+      `((unless (fboundp ',name)
+          (defalias ',name ',def))))))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define compatibility function NAME with arguments ARGLIST.
@@ -216,8 +224,11 @@ definition is generated.
            (doc-string 3) (indent 2))
   (compat--guarded-definition attrs '(:local :constant)
     (lambda (local constant)
-      (unless (boundp name)
-        `((,(if constant 'defconst 'defvar)
+      ;; The boundp check is performed at runtime to make sure that we never
+      ;; redefine an existing definition if Compat is loaded on a newer Emacs
+      ;; version.
+      `((unless (boundp ',name)
+          (,(if constant 'defconst 'defvar)
            ,name ,initval
            ,(compat--format-docstring 'variable name docstring))
           ,@(cond
