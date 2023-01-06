@@ -2,18 +2,19 @@
 
 * Development of "Compat" Version 29.1.1.0
 
-- The macros in ~compat-macs.el~ have been rewritten and greatly simplified. This
-  change makes it possible to further refine the criteria under which
-  compatibility aliases, functions, macros and variables are installed.
+- The macros in ~compat-macs.el~ have been rewritten and simplified. The
+  refactoring allows to further refine the criteria under which compatibility
+  aliases, functions, macros and variables are installed.
 - Remove deprecated, prefixed compatibility functions.
 - Remove deprecated features ~compat-help~, ~compat-font-lock~ and ~compat-24~.
-- Compat uses runtime checks (boundp, fboundp) to ensure that existing
+- Compat uses runtime checks (~boundp~, ~fboundp~) to ensure that existing
   definitions are never overridden, when Compat is loaded on a newer Emacs than
   it was compiled on.
 - Compat compiles without byte compilation warnings on all supported Emacs
   versions. Warnings are treated as errors in the test suite.
 - Compat takes great care to remove unneeded definitions at compile time. On
-  recent Emacs 29 the byte compiled files are empty and not loaded.
+  recent Emacs 29 the byte compiled files are empty and not loaded, such that
+  Compat does not any cost to the Emacs process.
 
 * Release of "Compat" Version 29.1.0.1
 
