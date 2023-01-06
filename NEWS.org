@@ -1,5 +1,7 @@
 #+title: compat.el - Changelog
 
+* Development of "Compat" Version 29.1.1.0
+
 * Release of "Compat" Version 29.1.0.1
 
 - Add multiple new tests for existing APIs.
@@ -14,7 +16,7 @@
   define separate compatibility function definitions for functions which changed
   their calling convention or behavior. These compatibility definitions can be
   looked up using ~compat-function~ and called with ~compat-call~. For example ~assoc~
-  can be called with a ~TESTFN~ since Emacs 29. In Emacs 28 and older the calling
+  can be called with a ~TESTFN~ since Emacs 26. In Emacs 25 and older the calling
   convention was ~(assoc KEY ALIST)~. In order to use the new calling convention
   you can use ~(compat-call assoc KEY ALIST TESTFN)~.
 - Deprecate all ~compat-*~ prefixed functions. Instead use the aforementioned
