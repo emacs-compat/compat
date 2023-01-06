@@ -45,6 +45,13 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(ert-deftest compat-loaded-features ()
+  (let ((version 0))
+    (while (< version 30)
+      (should-equal (> version emacs-major-version)
+                    (featurep (intern (format "compat-%s" version))))
+      (setq version (1+ version)))))
+
 (ert-deftest compat-function ()
   (let ((sym (compat-function plist-put)) list)
     (should sym)
