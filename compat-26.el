@@ -35,7 +35,6 @@ Equality is defined by the function TESTFN, defaulting to
 element and KEY.  With no optional argument, the function behaves
 just like `assoc'."
   :explicit t
-  :realname compat--internal-assoc
   (if testfn
       (catch 'found
         (dolist (ent alist)
@@ -89,7 +88,7 @@ from the absolute start of the buffer, disregarding the narrowing."
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key
         (gv-letplace (getter setter) alist
-          (macroexp-let2 nil p `(compat--internal-assoc ,k ,getter ,testfn)
+          (macroexp-let2 nil p `(compat--assoc ,k ,getter ,testfn)
             (funcall do (if (null default) `(cdr ,p)
                           `(if ,p (cdr ,p) ,default))
                      (lambda (v)
@@ -118,7 +117,6 @@ from the absolute start of the buffer, disregarding the narrowing."
   "Trim STRING of leading string matching REGEXP.
 
 REGEXP defaults to \"[ \\t\\n\\r]+\"."
-  :realname compat--internal-string-trim-left
   :explicit t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
@@ -128,7 +126,6 @@ REGEXP defaults to \"[ \\t\\n\\r]+\"."
   "Trim STRING of trailing string matching REGEXP.
 
 REGEXP defaults to  \"[ \\t\\n\\r]+\"."
-  :realname compat--internal-string-trim-right
   :explicit t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
@@ -140,11 +137,8 @@ REGEXP defaults to  \"[ \\t\\n\\r]+\"."
 
 TRIM-LEFT and TRIM-RIGHT default to \"[ \\t\\n\\r]+\"."
   :explicit t
-  ;; `string-trim-left' and `string-trim-right' were moved from subr-x
-  ;; to subr in Emacs 27, so to avoid loading subr-x we use the
-  ;; compatibility function here:
-  (compat--internal-string-trim-left
-   (compat--internal-string-trim-right
+  (compat--string-trim-left
+   (compat--string-trim-right
     string
     trim-right)
    trim-left))

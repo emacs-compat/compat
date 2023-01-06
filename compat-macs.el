@@ -63,16 +63,17 @@ If this is not documented on yourself system, you can check \
   "Check that version constraints specified by ATTRS are satisfied."
   (let ((min-version (plist-get attrs :min-version))
         (max-version (plist-get attrs :max-version))
-        (cond (plist-get attrs :cond))
-        (realname (plist-get attrs :realname)))
+        (cond (plist-get attrs :cond)))
+    ;; Min/max version bounds must be satisfied.
     (and
      ;; Min/max version bounds must be satisfied.
      (or (not min-version) (version<= min-version emacs-version))
      (or (not max-version) (version< emacs-version max-version))
      ;; If a condition is specified, it must be satisfied.
      (or (not cond) (eval cond t))
-     ;; :realname specified or version constraint satisfied.
-     (or realname (version< emacs-version compat--current-version)))))
+     ;; The current Emacs must be older than the current declared Compat
+     ;; version, see `compat-declare-version'.
+     (version< emacs-version compat--current-version))))
 
 (defun compat--guarded-definition (attrs args fun)
   "Guard compatibility definition generation.
@@ -100,8 +101,8 @@ ARGS is a list of keywords which are looked up and passed to FUN."
 (defun compat--function-definition (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guarded-definition rest '(:explicit :realname :body)
-    (lambda (explicit realname body)
+  (compat--guarded-definition rest '(:explicit :body)
+    (lambda (explicit body)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -109,21 +110,10 @@ REST are attributes and the function BODY."
         (when (version<= emacs-version "25")
           (delq (assq 'side-effect-free (car body)) (car body))
           (delq (assq 'pure (car body)) (car body))))
-      ;; Ensure that :realname is not the same as compat--<name>,
-      ;; since this is the compat-call/compat-function naming convention.
-      (when (and realname
-                 (or (string= realname explicit)
-                     (not (string-prefix-p
-                           "compat--" (symbol-name realname)))))
-        (error "%s: Invalid :realname name" realname))
-      (let* ((defname ;; Name of the definition. May be nil -> no definition.
-              (if (not (fboundp name)) ;; If not bound, `name' should be bound.
-                  name
-                ;; Use `:explicit' name if the function is already defined,
-                ;; and if version constraint is satisfied.
-                (and explicit
-                     (version< emacs-version compat--current-version)
-                     (intern (format "compat--%s" name)))))
+      ;; Use `:explicit' name if the function is already defined.
+      (let* ((defname (if (and explicit (fboundp name))
+                          (intern (format "compat--%s" name))
+                        name))
              (def `(,(if (eq type 'macro) 'defmacro 'defun)
                     ,defname ,arglist
                     ,(compat--format-docstring type name docstring)
@@ -131,16 +121,14 @@ REST are attributes and the function BODY."
         ;; An additional fboundp check is performed at runtime to make
         ;; sure that we never redefine an existing definition if Compat
         ;; is loaded on a newer Emacs version.
-        `(,@(if (eq defname name)
-                ;; Declare the function in a non-existing compat-declare
-                ;; feature, such that the byte compiler does not complain
-                ;; about possibly missing functions at runtime. The warnings
-                ;; are generated due to the unless fboundp check.
-                `((declare-function ,name "ext:compat-declare")
-                  (unless (fboundp ',name) ,def))
-              (and defname (list def)))
-          ,@(when realname
-              `((defalias ',realname ',(or defname name)))))))))
+        (if (eq defname name)
+            ;; Declare the function in a non-existing compat-declare
+            ;; feature, such that the byte compiler does not complain
+            ;; about possibly missing functions at runtime. The warnings
+            ;; are generated due to the unless fboundp check.
+            `((declare-function ,name "ext:compat-declare")
+              (unless (fboundp ',name) ,def))
+          (list def))))))
 
 (defmacro compat-defalias (name def &rest attrs)
   "Define compatibility alias NAME as DEF.
@@ -172,9 +160,6 @@ The function must be documented in DOCSTRING.  REST is an
 attribute plist followed by the function body.  The attributes
 specify the conditions under which the compatiblity function is
 defined.
-
-- :realname :: Additionally install the definition under the
-  given name.
 
 - :explicit :: Make the definition available such that it can be
   called explicitly via `compat-call'.
