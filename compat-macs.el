@@ -134,7 +134,12 @@ REST are attributes and the function BODY."
         ;; is loaded on a newer Emacs version.
         `(,@(when def
               (if (eq defname name)
-                  `((unless (fboundp ',name) ,def))
+                  ;; Declare the function in a non-existing compat-declare
+                  ;; feature, such that the byte compiler does not complain
+                  ;; about possibly missing functions at runtime. The warnings
+                  ;; are generated due to the unless fboundp check.
+                  `((declare-function ,name "ext:compat-declare")
+                    (unless (fboundp ',name) ,def))
                 (list def)))
           ,@(when realname
               `((defalias ',realname #',(or defname name)))))))))
