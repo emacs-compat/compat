@@ -456,7 +456,7 @@ return nil."
   (cond ((not cond1) cond2)
         ((not cond2) cond1)))
 
-(compat-defvar regexp-unmatchable "\\`a\\`"
+(compat-defvar regexp-unmatchable "\\`a\\`" ;; <OK>
   "Standard regexp guaranteed not to match any string at all."
   :constant t)
 

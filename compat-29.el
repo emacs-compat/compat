@@ -536,7 +536,8 @@ to `default-directory', and the result will also be relative."
      (t
       parent))))
 
-(compat-defvar file-has-changed-p--hash-table (make-hash-table :test #'equal)
+(compat-defvar file-has-changed-p--hash-table ;; <UNTESTED>
+               (make-hash-table :test #'equal)
   "Internal variable used by `file-has-changed-p'.")
 
 (compat-defun file-has-changed-p (file &optional tag) ;; <UNTESTED>
