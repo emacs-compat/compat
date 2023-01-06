@@ -104,24 +104,24 @@
     (should-equal 2 (compat-call line-number-at-pos (point-min) 'abs))
     (should-equal 3 (compat-call line-number-at-pos (1+ (point-min)) 'abs))))
 
-(defvar compat-test-map-1
+(defvar compat-tests--map-1
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x C-f") #'find-file)
     (define-key map (kbd "SPC") #'minibuffer-complete-word)
     (define-key map (kbd "C-c") mode-specific-map)
     map))
-(defvar-keymap compat-test-map-2
+(defvar-keymap compat-tests--map-2
   "C-x C-f" #'find-file
   "SPC" #'minibuffer-complete-word
   "C-c" mode-specific-map)
-(defvar compat-test-map-3
+(defvar compat-tests--map-3
   (define-keymap
     "C-x C-f" #'find-file
     "SPC" #'minibuffer-complete-word
     "C-c" mode-specific-map))
 (ert-deftest defvar-keymap ()
-  (should-equal compat-test-map-1 compat-test-map-2)
-  (should-equal compat-test-map-1 compat-test-map-3))
+  (should-equal compat-tests--map-1 compat-tests--map-2)
+  (should-equal compat-tests--map-1 compat-tests--map-3))
 
 (ert-deftest key-valid-p ()
   (should-not (key-valid-p ""))
@@ -241,10 +241,10 @@
   (should-not (key-valid-p "M-xx"))
   (should-not (key-valid-p "M-x<TAB>")))
 
-(defun compat-function-put-test ())
+(defun compat-tests--function-put ())
 (ert-deftest function-put ()
-  (function-put #'compat-function-put-test 'compat-test 42)
-  (should-equal 42 (function-get #'compat-function-put-test 'compat-test)))
+  (function-put #'compat-tests--function-put 'compat-test 42)
+  (should-equal 42 (function-get #'compat-tests--function-put 'compat-test)))
 
 (ert-deftest ignore-error ()
   (should-equal (ignore-error (end-of-file)
@@ -299,25 +299,25 @@
 (ert-deftest format-message ()
   (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
 
-(defvar test-boundp)
-(defvar test-global-boundp)
+(defvar compat-tests--boundp)
+(defvar compat-tests--global-boundp)
 (ert-deftest buffer-local-boundp ()
   (let ((buf (generate-new-buffer "boundp")))
     (with-current-buffer buf
-      (setq-local test-boundp t))
-    (setq test-global-boundp t)
-    (should (buffer-local-boundp 'test-boundp buf))
+      (setq-local compat-tests--boundp t))
+    (setq compat-tests--global-boundp t)
+    (should (buffer-local-boundp 'compat-tests--boundp buf))
     (should-not (buffer-local-boundp 'test-not-boundp buf))
-    (should (buffer-local-boundp 'test-global-boundp buf))))
+    (should (buffer-local-boundp 'compat-tests--global-boundp buf))))
 
-(defvar compat-local-a nil)
-(defvar compat-local-b nil)
-(defvar compat-local-c nil)
+(defvar compat-tests--local-a nil)
+(defvar compat-tests--local-b nil)
+(defvar compat-tests--local-c nil)
 (ert-deftest setq-local ()
-  (compat-call setq-local compat-local-a 1 compat-local-b 2 compat-local-c 3)
-  (should-equal compat-local-a 1)
-  (should-equal compat-local-b 2)
-  (should-equal compat-local-c 3))
+  (compat-call setq-local compat-tests--local-a 1 compat-tests--local-b 2 compat-tests--local-c 3)
+  (should-equal compat-tests--local-a 1)
+  (should-equal compat-tests--local-b 2)
+  (should-equal compat-tests--local-c 3))
 
 (ert-deftest gensym ()
   (should (symbolp (gensym "compat")))
