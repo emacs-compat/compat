@@ -1017,7 +1017,6 @@
   (should-equal 1 (string-distance "a" "あ")))
 
 (ert-deftest string-width ()
-  (should-equal 0 (compat-string-width ""))                         ;; Obsolete
   (should-equal 0 (compat-call string-width ""))
   (should-equal 3 (compat-call string-width "abc"))                 ;; no argument
   (should-equal 5 (compat-call string-width "abcあ"))
@@ -1033,7 +1032,6 @@
   (should-equal 0 (compat-call string-width "a	" 1 1)))
 
 (ert-deftest string-trim-left ()
-  (should-equal "a" (compat-string-trim-left " a")) ;; Obsolete
   (should-equal "a" (compat-call string-trim-left "---a" "-+")) ;; Additional regexp
   (should-equal "" (compat-call string-trim-left ""))                          ;empty string
   (should-equal "a" (compat-call string-trim-left "a"))                        ;"full" string
@@ -1056,7 +1054,6 @@
   (should-equal "a  \n" (compat-call string-trim-left "\n  \ta  \n")))
 
 (ert-deftest string-trim-right ()
-  (should-equal "a" (compat-string-trim-right "a    ")) ;; Obsolete
   (should-equal "a" (compat-call string-trim-right "a---" "-+")) ;; Additional regexp
   (should-equal "" (compat-call string-trim-right ""))                          ;empty string
   (should-equal "a" (compat-call string-trim-right "a"))                        ;"full" string
@@ -1079,7 +1076,6 @@
   (should-equal "\n  \ta" (compat-call string-trim-right "\n  \ta  \n")))
 
 (ert-deftest string-trim ()
-  (should-equal "aaa" (compat-string-trim " aaa  ")) ;; Obsolete
   (should-equal "aaa" (compat-call string-trim "--aaa__" "-+" "_+")) ;; Additional regexp
   (should-equal "" (compat-call string-trim ""))                          ;empty string
   (should-equal "a" (compat-call string-trim "a"))                        ;"full" string
@@ -1416,15 +1412,6 @@
     (should-equal alist-1 '((1 . "eins") (3 . "three")))
     (setf (compat-call alist-get "one" alist-2 nil nil #'string=) "eins")
     (should-equal (compat-call alist-get "one" alist-2 nil nil #'string=)
-                   "eins")
-
-    ;; Obsolete compat-alist-get
-    (setf (compat-alist-get 1 alist-1) "eins")
-    (should-equal (compat-alist-get 1 alist-1) "eins")
-    (setf (compat-alist-get 2 alist-1 nil 'remove) nil)
-    (should-equal alist-1 '((1 . "eins") (3 . "three")))
-    (setf (compat-alist-get "one" alist-2 nil nil #'string=) "eins")
-    (should-equal (compat-alist-get "one" alist-2 nil nil #'string=)
                    "eins")))
 
 (ert-deftest json-serialize ()

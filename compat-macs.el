@@ -176,27 +176,18 @@ If this is not documented on yourself system, you can check \
               (buffer-string))
            ,@body)
           ,@(and (plist-get rest :explicit)
-                 (if (string= realname name)
-                     `((defalias ',name ',(intern (format "compat--%s" oldname)))
-                       (make-obsolete
-                        ',name
-                        "Use `compat-call' or `compat-function' instead"
-                        "29.1.0.0"))
-                   `((defalias ',realname #',(intern (format "compat--%s" oldname))))))))
+                 (not (string= realname name))
+                 `((defalias ',realname #',(intern (format "compat--%s" oldname)))))))
      (lambda (realname)
        `(progn
           ;; Functions and macros are installed by aliasing the name of the
           ;; compatible function to the name of the compatibility function.
-          (defalias ',name #',realname)
           ,@(when (and (plist-get rest :realname)
                        (not (string= (plist-get rest :realname) name))
                        (not (string= (plist-get rest :realname) realname)))
               `((defalias ',(plist-get rest :realname) #',realname)))
-          ,@(when (and (plist-get rest :explicit) (string= realname oldname))
-              `((make-obsolete
-                 ',name
-                 "Use `compat-call' or `compat-function' instead"
-                 "29.1.0.0")))))
+          ,@(unless (and (plist-get rest :explicit) (string= realname oldname))
+              `((defalias ',name #',realname)))))
      (lambda ()
        `(not (fboundp ',name)))
      rest)))

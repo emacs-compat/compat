@@ -2,6 +2,8 @@
 
 * Development of "Compat" Version 29.1.1.0
 
+- Remove deprecated, prefixed compatibility functions.
+
 * Release of "Compat" Version 29.1.0.1
 
 - Add multiple new tests for existing APIs.
