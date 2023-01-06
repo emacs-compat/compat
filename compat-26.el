@@ -83,34 +83,36 @@ from the absolute start of the buffer, disregarding the narrowing."
         (if entry (cdr entry) default))
     (alist-get key alist default remove)))
 
-(gv-define-expander compat--alist-get
-  (lambda (do key alist &optional default remove testfn)
-    (macroexp-let2 macroexp-copyable-p k key
-      (gv-letplace (getter setter) alist
-        (macroexp-let2 nil p `(compat--internal-assoc ,k ,getter ,testfn)
-          (funcall do (if (null default) `(cdr ,p)
-                        `(if ,p (cdr ,p) ,default))
-                   (lambda (v)
-                     (macroexp-let2 nil v v
-                       (let ((set-exp
-                              `(if ,p (setcdr ,p ,v)
-                                 ,(funcall setter
-                                           `(cons (setq ,p (cons ,k ,v))
-                                                  ,getter)))))
-                         `(progn
-                            ,(cond
-                              ((null remove) set-exp)
-                              ((or (eql v default)
-                                   (and (eq (car-safe v) 'quote)
-                                        (eq (car-safe default) 'quote)
-                                        (eql (cadr v) (cadr default))))
-                               `(if ,p ,(funcall setter `(delq ,p ,getter))))
-                              (t
-                               `(cond
-                                 ((not (eql ,default ,v)) ,set-exp)
-                                 (,p ,(funcall setter
-                                               `(delq ,p ,getter))))))
-                            ,v))))))))))
+;; NOTE: Define gv expander only if `compat--alist-get' is defined.
+(when (version< emacs-version "26.1")
+  (gv-define-expander compat--alist-get
+    (lambda (do key alist &optional default remove testfn)
+      (macroexp-let2 macroexp-copyable-p k key
+        (gv-letplace (getter setter) alist
+          (macroexp-let2 nil p `(compat--internal-assoc ,k ,getter ,testfn)
+            (funcall do (if (null default) `(cdr ,p)
+                          `(if ,p (cdr ,p) ,default))
+                     (lambda (v)
+                       (macroexp-let2 nil v v
+                         (let ((set-exp
+                                `(if ,p (setcdr ,p ,v)
+                                   ,(funcall setter
+                                             `(cons (setq ,p (cons ,k ,v))
+                                                    ,getter)))))
+                           `(progn
+                              ,(cond
+                                ((null remove) set-exp)
+                                ((or (eql v default)
+                                     (and (eq (car-safe v) 'quote)
+                                          (eq (car-safe default) 'quote)
+                                          (eql (cadr v) (cadr default))))
+                                 `(if ,p ,(funcall setter `(delq ,p ,getter))))
+                                (t
+                                 `(cond
+                                   ((not (eql ,default ,v)) ,set-exp)
+                                   (,p ,(funcall setter
+                                                 `(delq ,p ,getter))))))
+                              ,v)))))))))))
 
 (compat-defun string-trim-left (string &optional regexp) ;; <OK>
   "Trim STRING of leading string matching REGEXP.
@@ -503,7 +505,9 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
   ;; :feature image
   (plist-get (cdr image) property))
 
-(unless (get 'image-property 'gv-expander)
+(unless (eval-when-compile
+          (require 'image)
+          (get 'image-property 'gv-expander))
   (gv-define-setter image-property (image property value)
     (let ((image* (make-symbol "image"))
           (property* (make-symbol "property"))
