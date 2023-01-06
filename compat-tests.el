@@ -1097,6 +1097,13 @@
   (should-equal "t\ta" (compat-call string-trim "t\ta\t\n"))
   (should-equal "a" (compat-call string-trim "\n  \ta  \n")))
 
+(defmacro compat-tests--string-to-multibyte (str)
+  ;; On Emacs 26 `string-to-multibyte' was declared obsolete.
+  ;; This obsoletion was reverted on Emacs 27.
+  (if (= emacs-major-version 26)
+      `(with-no-warnings (string-to-multibyte ,str))
+    `(string-to-multibyte ,str)))
+
 (ert-deftest string-search ()
   ;; Find needle at the beginning of a haystack:
   (should-equal 0 (string-search "a" "abb"))
@@ -1165,8 +1172,8 @@
   (should-not (string-search "\270" "aøb"))
   (should-not (string-search "ø" "\303\270"))
   (should-not (string-search "ø" (make-string 32 ?a)))
-  (should-not (string-search "ø" (string-to-multibyte (make-string 32 ?a))))
-  (should-equal 14 (string-search "o" (string-to-multibyte
+  (should-not (string-search "ø" (compat-tests--string-to-multibyte (make-string 32 ?a))))
+  (should-equal 14 (string-search "o" (compat-tests--string-to-multibyte
                                         (apply #'string (number-sequence ?a ?z)))))
   (should-equal 2 (string-search "a\U00010f98z" "a\U00010f98a\U00010f98z"))
   (should-error (string-search "a" "abc" -1) :type '(args-out-of-range -1))
@@ -1185,30 +1192,30 @@
   (should-not (string-search "ø" "foo\303\270"))
   (should-not (string-search "\303\270" "ø"))
   (should-not (string-search "\370" "ø"))
-  (should-not (string-search (string-to-multibyte "\370") "ø"))
+  (should-not (string-search (compat-tests--string-to-multibyte "\370") "ø"))
   (should-not (string-search "ø" "\370"))
-  (should-not (string-search "ø" (string-to-multibyte "\370")))
+  (should-not (string-search "ø" (compat-tests--string-to-multibyte "\370")))
   (should-not (string-search "\303\270" "\370"))
-  (should-not (string-search (string-to-multibyte "\303\270") "\370"))
-  (should-not (string-search "\303\270" (string-to-multibyte "\370")))
+  (should-not (string-search (compat-tests--string-to-multibyte "\303\270") "\370"))
+  (should-not (string-search "\303\270" (compat-tests--string-to-multibyte "\370")))
   (should-not
-                  (string-search (string-to-multibyte "\303\270")
-                                 (string-to-multibyte "\370")))
+                  (string-search (compat-tests--string-to-multibyte "\303\270")
+                                 (compat-tests--string-to-multibyte "\370")))
   (should-not (string-search "\370" "\303\270"))
-  (should-not (string-search (string-to-multibyte "\370") "\303\270"))
-  (should-not (string-search "\370" (string-to-multibyte "\303\270")))
+  (should-not (string-search (compat-tests--string-to-multibyte "\370") "\303\270"))
+  (should-not (string-search "\370" (compat-tests--string-to-multibyte "\303\270")))
   (should-not
-                 (string-search (string-to-multibyte "\370")
-                                (string-to-multibyte "\303\270")))
+                 (string-search (compat-tests--string-to-multibyte "\370")
+                                (compat-tests--string-to-multibyte "\303\270")))
   (should-equal 3 (string-search "\303\270" "foo\303\270"))
   (when (version<= "27" emacs-version)
     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1 in
     ;; emacs.git fixes the behaviour of regular expressions matching
     ;; raw bytes.  The compatibility functions should updated to
     ;; backport this behaviour.
-    (should-equal 2 (string-search (string-to-multibyte "\377") "ab\377c"))
+    (should-equal 2 (string-search (compat-tests--string-to-multibyte "\377") "ab\377c"))
     (should-equal 2
-                    (string-search (string-to-multibyte "o\303\270")
+                    (string-search (compat-tests--string-to-multibyte "o\303\270")
                                    "foo\303\270"))))
 
 (ert-deftest string-replace ()
@@ -1233,8 +1240,8 @@
     ;; expressions matching raw bytes.  The compatibility
     ;; functions should updated to backport this
     ;; behaviour.
-    (should-equal "axb" (string-replace (string-to-multibyte "\377") "x" "a\377b"))
-    (should-equal "axø" (string-replace (string-to-multibyte "\377") "x" "a\377ø")))
+    (should-equal "axb" (string-replace (compat-tests--string-to-multibyte "\377") "x" "a\377b"))
+    (should-equal "axø" (string-replace (compat-tests--string-to-multibyte "\377") "x" "a\377ø")))
   (should-equal "ANAnas" (string-replace "ana" "ANA" "ananas"))
   (should-equal "" (string-replace "a" "" ""))
   (should-equal "" (string-replace "a" "" "aaaaa"))
