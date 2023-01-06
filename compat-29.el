@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require 'compat-28)
 (eval-when-compile (load "compat-macs.el" nil t t))
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
 (compat-declare-version "29.0")

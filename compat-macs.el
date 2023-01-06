@@ -26,12 +26,14 @@
 (require 'subr-x)
 
 (defvar compat--current-version nil
-  "Default version to use when no explicit version was given.")
+  "Version of the currently defined compatibility definitions.")
 
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
   (setq compat--current-version version)
-  nil)
+  (let ((before (1- (car (version-to-list version)))))
+    (when (and (< 24 before) (< emacs-major-version before))
+      `(require ',(intern (format "compat-%d" before))))))
 
 (defun compat--format-docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.

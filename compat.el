@@ -42,7 +42,7 @@
 
 ;;; Code:
 
-(require 'compat-29)
+(when (< emacs-major-version 29) (require 'compat-29))
 
 (defmacro compat-function (fun)
   "Return compatibility function symbol for FUN.

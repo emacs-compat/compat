@@ -12,6 +12,8 @@
   it was compiled on.
 - Compat compiles without byte compilation warnings on all supported Emacs
   versions. Warnings are treated as errors in the test suite.
+- Compat takes great care to remove unneeded definitions at compile time. On
+  recent Emacs 29 the byte compiled files are empty and not loaded.
 
 * Release of "Compat" Version 29.1.0.1
 
