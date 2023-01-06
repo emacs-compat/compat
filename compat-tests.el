@@ -1009,9 +1009,8 @@
     ;; in the following commit:
     ;; https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=c44190c
     ;;
-    ;; Therefore, we must make sure, that the test
+    ;; TODO Therefore, we must make sure, that the test
     ;; doesn't fail because of this bug:
-    ;; TODO
     ;; (should (= (string-distance "" "") 0))
     )
   (should-equal 0 (string-distance "a" "a"))

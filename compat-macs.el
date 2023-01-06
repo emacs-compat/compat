@@ -71,11 +71,12 @@ If this is not documented on yourself system, you can check \
      ;; Min/max version bounds must be satisfied.
      (or (not min-version) (version<= min-version emacs-version))
      (or (not max-version) (version< emacs-version max-version))
-     ;; If a condition is specified, it must be satisfied.
-     (or (not cond) (eval cond t))
-     ;; The current Emacs must be older than the current declared Compat
-     ;; version, see `compat-declare-version'.
-     (version< emacs-version compat--current-version))))
+     ;; If a condition is specified, no version check is performed.
+     (if cond
+         (eval cond t)
+       ;; The current Emacs must be older than the current declared Compat
+       ;; version, see `compat-declare-version'.
+       (version< emacs-version compat--current-version)))))
 
 (defun compat--guarded-definition (attrs args fun)
   "Guard compatibility definition generation.
@@ -128,7 +129,7 @@ REST are attributes and the function BODY."
             ;; feature, such that the byte compiler does not complain
             ;; about possibly missing functions at runtime. The warnings
             ;; are generated due to the unless fboundp check.
-            `((declare-function ,name "ext:compat-declare")
+            `((declare-function ,name nil)
               (unless (fboundp ',name) ,def))
           (list def))))))
 
@@ -137,16 +138,15 @@ REST are attributes and the function BODY."
 ATTRS is a plist of attributes, which specify the conditions
 under which the definition is generated.
 
-- :min-version :: Only install the definition if the Emacs
-  version is greater or equal than the given version.
+- :min-version :: Install the definition if the Emacs version is
+  greater or equal than the given version.
 
-- :max-version :: Only install the definition if the Emacs
-  version is smaller than the given version.
+- :max-version :: Install the definition if the Emacs version is
+  smaller than the given version.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Only install the definition if :cond evaluates to
-  non-nil."
+- :cond :: Install the definition if :cond evaluates to non-nil."
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guarded-definition attrs ()
     (lambda ()

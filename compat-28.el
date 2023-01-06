@@ -155,6 +155,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;;;; Defined in json.c
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-serialize (object &rest args) ;; <UNTESTED>
   "Handle top-level JSON values."
   :explicit t
@@ -163,19 +164,16 @@ If COUNT is non-nil and a natural number, the function will
       (apply #'json-serialize object args)
     (substring (json-serialize (list object)) 1 -1)))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-insert (object &rest args) ;; <UNTESTED>
   "Handle top-level JSON values."
   :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
       (apply #'json-insert object args)
-    ;; `compat-json-serialize' is not sharp-quoted as the byte
-    ;; compiled doesn't always know that the function has been
-    ;; defined, but it will only be used in this function if the
-    ;; prefixed definition of `json-serialize' (see above) has also
-    ;; been defined.
-    (insert (apply 'compat-json-serialize object args))))
+    (insert (apply #'compat--json-serialize object args))))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
   "Handle top-level JSON values."
   :explicit t
@@ -187,6 +185,7 @@ If COUNT is non-nil and a natural number, the function will
     ;; is we can access the first element.
     (elt (apply #'json-parse-string (concat "[" string "]") args) 0)))
 
+;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
   "Handle top-level JSON values."
   :explicit t
