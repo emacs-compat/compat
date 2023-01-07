@@ -17,6 +17,7 @@
   Compat does not any cost to the Emacs process.
 - compat-29: Drop broken ~string-pixel-width~, ~buffer-text-pixel-size~ and
   ~string-limit~.
+- compat-28: Drop obsolete ~make-directory-autoloads~.
 
 * Release of "Compat" Version 29.1.0.1
 
