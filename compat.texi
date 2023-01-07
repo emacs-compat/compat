@@ -2146,26 +2146,6 @@ display purposes; use @code{truncate-string-to-width} or
 (@pxref{Size of Displayed Text,Size of Displayed Text,,elisp,}).
 @end defun
 
-@c copied from lispref/display.texi
-@defun buffer-text-pixel-size &optional buffer-or-name window x-limit y-limit
-This is much like @code{window-text-pixel-size}, but can be used when
-the buffer isn't shown in a window.  (@code{window-text-pixel-size} is
-faster when it is, so this function shouldn't be used in that case.)
-
-@var{buffer-or-name} must specify a live buffer or the name of a live
-buffer and defaults to the current buffer.  @var{window} must be a
-live window and defaults to the selected one; the function will
-compute the text dimensions as if @var{buffer} is displayed in
-@var{window}.  The return value is a cons of the maximum pixel-width
-of any text line and the pixel-height of all the text lines of the
-buffer specified by @var{buffer-or-name}.
-
-The optional arguments @var{x-limit} and @var{y-limit} have the same
-meaning as with @code{window-text-pixel-size}.
-
-@xref{Size of Displayed Text,,,elisp}.
-@end defun
-
 @c copied from lispref/strings.texi
 @defun string-equal-ignore-case string1 string2
 @code{string-equal-ignore-case} compares strings ignoring case
@@ -2238,14 +2218,6 @@ optional @code{buffer-list} argument.  Optional third argument
 @code{buffer-match-p} does.
 
 @xref{Buffer List,,,elisp}.
-@end defun
-
-@c copied from lispref/display.texi
-@defun string-pixel-width string
-This is a convenience function that uses @code{window-text-pixel-size}
-to compute the width of @var{string} (in pixels).
-
-@xref{Size of Displayed Text,,,elisp}.
 @end defun
 
 @c copied from lispref/display.texi
