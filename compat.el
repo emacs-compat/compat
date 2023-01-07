@@ -62,7 +62,7 @@ See `compat-function' for the compatibility function resolution."
   (let ((compat (intern (format "compat--%s" fun))))
     `(,(if (fboundp compat) compat fun) ,@args)))
 
-;;;; Conditionally defined functions
+;;;; Emacs 27 (Conditionally defined functions)
 
 ;; TODO Maybe the functions should be moved to a separate file compat-cond.el,
 ;; which will be always loaded? However this file maybe empty, so maybe the best
@@ -71,8 +71,9 @@ See `compat-function' for the compatibility function resolution."
 ;; functions are currently marked as untested.
 
 (eval-when-compile (load "compat-macs.el" nil t t))
+(compat-declare-version "27.1")
 
-;;;;; Defined in json.c as part of Emacs 27
+;;;;; Defined in json.c
 
 (declare-function json-serialize nil (object &rest args))
 (declare-function json-encode "json" (object))
