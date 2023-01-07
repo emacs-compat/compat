@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development of "Compat" Version 29.1.1.0
+* Release of "Compat" Version 29.1.1.0
 
 - The macros in ~compat-macs.el~ have been rewritten and simplified. The
   refactoring allows to further refine the criteria under which compatibility
@@ -27,6 +27,8 @@
 - compat-29: Drop broken macro ~with-buffer-unmodified-if-unchanged~, which relied
   on ~buffer-hash~ which does not exist on all supported Emacs versions.
 - compat-29: Add ~pos-bol~ and ~pos-eol~.
+
+(Release <2023-01-07 Sat>)
 
 * Release of "Compat" Version 29.1.0.1
 
