@@ -59,6 +59,13 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest with-environment-variables ()
+  (let ((A "COMPAT_TESTS__VAR") (B "/foo/bar"))
+    (should-not (getenv A))
+    (with-environment-variables ((A B))
+      (should (equal (getenv A) B)))
+    (should-not (getenv A))))
+
 (ert-deftest get-display-property ()
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '(height 2.0)))
@@ -668,6 +675,10 @@
   (should-not (directory-name-p "dir/file"))
   (should (directory-name-p "dir/subdir/"))
   (should-not (directory-name-p "dir/subdir")))
+
+(ert-deftest mounted-file-systems ()
+  (should-not (string-match-p mounted-file-systems "/etc/"))
+  (should (string-match-p mounted-file-systems "/mnt/")))
 
 (ert-deftest make-lock-file-name ()
   (should-equal (expand-file-name ".#") (make-lock-file-name ""))

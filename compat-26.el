@@ -315,7 +315,7 @@ are non-nil, then the result is non-nil."
 
 ;;;; Defined in files.el
 
-(compat-defvar mounted-file-systems ;; <UNTESTED>
+(compat-defvar mounted-file-systems ;; <OK>
     (eval-when-compile
       (if (memq system-type '(windows-nt cygwin))
           "^//[^/]+/"
