@@ -30,9 +30,9 @@
 ;; calling convention or behavior changed between Emacs versions.
 
 ;; The functions tested here are guaranteed to work on the Emacs versions
-;; tested by continuous integration.  This includes 24.4, 24.5, 25.1, 25.2,
-;; 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1 and the current Emacs master
-;; branch.
+;; tested by continuous integration. This includes 24.4, 24.5, 25.1, 25.2,
+;; 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2 and the current Emacs
+;; master branch.
 
 ;;; Code:
 
