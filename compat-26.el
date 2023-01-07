@@ -481,8 +481,7 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
 
 ;;;; Defined in rmc.el
 
-(compat-defun read-multiple-choice ;; <UNTESTED>
-    (prompt choices &optional _help-string _show-help long-form)
+(compat-defun read-multiple-choice (prompt choices) ;; <OK>
   "Ask user to select an entry from CHOICES, promting with PROMPT.
 This function allows to ask the user a multiple-choice question.
 
@@ -491,36 +490,23 @@ KEY is a character the user should type to select the entry.
 NAME is a short name for the entry to be displayed while prompting
 \(if there's no room, it might be shortened).
 
-If LONG-FORM, do a `completing-read' over the NAME elements in
-CHOICES instead.
-
 NOTE: This is a partial implementation of `read-multiple-choice', that
 among other things doesn't offer any help and ignores the
 optional DESCRIPTION field."
-  (if long-form
-      (let ((options (mapconcat #'cadr choices "/"))
-            choice)
-        (setq prompt (concat prompt " (" options "): "))
-        (setq choice (completing-read prompt (mapcar #'cadr choices) nil t))
-        (catch 'found
-          (dolist (option choices)
-            (when (string= choice (cadr option))
-              (throw 'found option)))
-          (error "Invalid choice")))
-    (let ((options
-           (mapconcat
-            (lambda (opt)
-              (format
-               "[%s] %s"
-               (key-description (string (car opt)))
-               (cadr opt)))
-            choices " "))
-          choice)
-      (setq prompt (concat prompt " (" options "): "))
-      (while (not (setq choice (assq (read-char prompt) choices)))
-        (message "Invalid choice")
-        (sit-for 1))
-      choice)))
+  (let ((options
+         (mapconcat
+          (lambda (opt)
+            (format
+             "[%s] %s"
+             (key-description (string (car opt)))
+             (cadr opt)))
+          choices " "))
+        choice)
+    (setq prompt (concat prompt " (" options "): "))
+    (while (not (setq choice (assq (read-event prompt) choices)))
+      (message "Invalid choice")
+      (sit-for 1))
+    choice))
 
 (provide 'compat-26)
 ;;; compat-26.el ends here

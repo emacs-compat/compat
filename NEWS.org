@@ -16,6 +16,7 @@
   recent Emacs 29 the byte compiled files are empty and not loaded, such that
   Compat does not any cost to the Emacs process.
 - compat-26: Fix and test ~image-property~ setter.
+- compat-26: Fix and test ~read-multiple-choice~.
 - compat-28: Fix and test ~with-existing-directory~.
 - compat-29: Drop broken functions ~string-pixel-width~ and
   ~buffer-text-pixel-size~. These functions had poor performance which lead to a
