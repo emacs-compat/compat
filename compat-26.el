@@ -469,42 +469,15 @@ inode-number and device-number."
 
 ;;;; Defined in image.el
 
-(compat-defun image-property (image property) ;; <UNTESTED>
+(compat-defun image-property (image property) ;; <OK>
   "Return the value of PROPERTY in IMAGE.
 Properties can be set with
 
   (setf (image-property IMAGE PROPERTY) VALUE)
 
 If VALUE is nil, PROPERTY is removed from IMAGE."
-  ;; :feature image
+  :feature image
   (plist-get (cdr image) property))
-
-(unless (eval-when-compile
-          (require 'image)
-          (get 'image-property 'gv-expander))
-  (gv-define-setter image-property (image property value)
-    (let ((image* (make-symbol "image"))
-          (property* (make-symbol "property"))
-          (value* (make-symbol "value")))
-      `(let ((,image* ,image)
-             (,property* ,property)
-             (,value* ,value))
-         (if
-             (null ,value*)
-             (while
-                 (cdr ,image*)
-               (if
-                   (eq
-                    (cadr ,image*)
-                    ,property*)
-                   (setcdr ,image*
-                           (cdddr ,image*))
-                 (setq ,image*
-                       (cddr ,image*))))
-           (setcdr ,image*
-                   (plist-put
-                    (cdr ,image*)
-                    ,property* ,value*)))))))
 
 ;;;; Defined in rmc.el
 

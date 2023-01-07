@@ -333,6 +333,31 @@ the number of seconds east of Greenwich."
 
 ;; TODO define gv-setters for decoded-time-*
 
+;;;; Defined in image.el
+
+(compat-defun image--set-property (image property value) ;; <OK>
+  "Set PROPERTY in IMAGE to VALUE.
+Internal use only."
+  :explicit t
+  :feature image
+  (if (null value)
+      (while (cdr image)
+        (if (eq (cadr image) property)
+            (setcdr image (cdddr image))
+          (setq image (cddr image))))
+    (setcdr image (plist-put (cdr image) property value)))
+  value)
+
+(if (eval-when-compile (version< emacs-version "26.1"))
+    (with-eval-after-load 'image
+      (gv-define-simple-setter image-property image--set-property))
+  ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
+  ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
+  ;; override the gv expander until Emacs 27.1.
+  (when (eval-when-compile (version< emacs-version "27.1"))
+    (with-eval-after-load 'image
+      (gv-define-simple-setter image-property compat--image--set-property))))
+
 ;;;; Defined in files.el
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <OK>

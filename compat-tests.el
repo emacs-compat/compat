@@ -40,6 +40,7 @@
 (require 'compat)
 (require 'subr-x)
 (require 'time-date)
+(require 'image)
 (require 'text-property-search nil t)
 
 (defmacro should-equal (a b)
@@ -59,11 +60,30 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest image-property ()
+  (let ((image (list 'image)))
+    ;; Add properties.
+    (setf (image-property image :scale) 1)
+    (should-equal image '(image :scale 1))
+    (setf (image-property image :width) 8)
+    (should-equal image '(image :scale 1 :width 8))
+    (setf (image-property image :height) 16)
+    (should-equal image '(image :scale 1 :width 8 :height 16))
+    ;; Delete properties.
+    (setf (image-property image :type) nil)
+    (should-equal image '(image :scale 1 :width 8 :height 16))
+    (setf (image-property image :scale) nil)
+    (should-equal image '(image :width 8 :height 16))
+    (setf (image-property image :height) nil)
+    (should-equal image '(image :width 8))
+    (setf (image-property image :width) nil)
+    (should-equal image '(image))))
+
 (ert-deftest with-environment-variables ()
   (let ((A "COMPAT_TESTS__VAR") (B "/foo/bar"))
     (should-not (getenv A))
     (with-environment-variables ((A B))
-      (should (equal (getenv A) B)))
+      (should-equal (getenv A) B))
     (should-not (getenv A))))
 
 (ert-deftest get-display-property ()
@@ -891,13 +911,13 @@
     (insert "foo bar zot foobar")
     (should (= (replace-string-in-region "foo" "new" (point-min) (point-max))
                2))
-    (should (equal (buffer-string) "new bar zot newbar")))
+    (should-equal (buffer-string) "new bar zot newbar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
     (should (= (replace-string-in-region "foo" "new" (point-min) 14)
                1))
-    (should (equal (buffer-string) "new bar zot foobar")))
+    (should-equal (buffer-string) "new bar zot foobar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
@@ -907,7 +927,7 @@
     (insert "Foo bar zot foobar")
     (should (= (replace-string-in-region "Foo" "new" (point-min))
                1))
-    (should (equal (buffer-string) "new bar zot foobar")))
+    (should-equal (buffer-string) "new bar zot foobar"))
 
   ;; There was a bug in the Emacs 28 implementation
   ;; Fixed in Emacs d8f392bccd46cdb238ec96964f220ffb9d81cc44
@@ -916,28 +936,28 @@
       (insert "foo bar baz")
       (should (= (replace-string-in-region "ba" "quux corge grault" (point-min))
                  2))
-      (should (equal (buffer-string)
-                     "foo quux corge graultr quux corge graultz")))
+      (should-equal (buffer-string)
+                     "foo quux corge graultr quux corge graultz"))
 
     (with-temp-buffer
       (insert "foo bar bar")
       (should (= (replace-string-in-region " bar" "" (point-min) 8)
                  1))
-      (should (equal (buffer-string)
-                     "foo bar")))))
+      (should-equal (buffer-string)
+                     "foo bar"))))
 
 (ert-deftest replace-regexp-in-region ()
   (with-temp-buffer
     (insert "foo bar zot foobar")
     (should (= (replace-regexp-in-region "fo+" "new" (point-min) (point-max))
                2))
-    (should (equal (buffer-string) "new bar zot newbar")))
+    (should-equal (buffer-string) "new bar zot newbar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
     (should (= (replace-regexp-in-region "fo+" "new" (point-min) 14)
                1))
-    (should (equal (buffer-string) "new bar zot foobar")))
+    (should-equal (buffer-string) "new bar zot foobar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
@@ -947,7 +967,7 @@
     (insert "Foo bar zot foobar")
     (should (= (replace-regexp-in-region "Fo+" "new" (point-min))
                1))
-    (should (equal (buffer-string) "new bar zot foobar")))
+    (should-equal (buffer-string) "new bar zot foobar"))
 
   ;; There was a bug in the Emacs 28 implementation
   ;; Fixed in Emacs d8f392bccd46cdb238ec96964f220ffb9d81cc44
@@ -956,15 +976,15 @@
       (insert "foo bar baz")
       (should (= (replace-regexp-in-region "ba." "quux corge grault" (point-min))
                  2))
-      (should (equal (buffer-string)
-                     "foo quux corge grault quux corge grault")))
+      (should-equal (buffer-string)
+                     "foo quux corge grault quux corge grault"))
 
     (with-temp-buffer
       (insert "foo bar bar")
       (should (= (replace-regexp-in-region " bar" "" (point-min) 8)
                  1))
-      (should (equal (buffer-string)
-                     "foo bar")))))
+      (should-equal (buffer-string)
+                     "foo bar"))))
 
 (ert-deftest string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
