@@ -88,7 +88,7 @@ Letter-case is significant, but text properties are ignored."
 
 ;;;; Defined in window.c
 
-(compat-defun recenter (&optional arg redisplay) ;; <UNTESTED>
+(compat-defun recenter (&optional arg redisplay) ;; <OK>
   "Handle optional argument REDISPLAY."
   :explicit t
   (recenter arg)

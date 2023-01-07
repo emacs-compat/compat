@@ -109,6 +109,14 @@
       (should-equal (getenv A) B))
     (should-not (getenv A))))
 
+(ert-deftest recenter ()
+  (save-window-excursion
+    (set-window-buffer nil (current-buffer))
+    (compat-call recenter nil nil)
+    (compat-call recenter nil t)
+    (compat-call recenter 1 nil)
+    (compat-call recenter 1 t)))
+
 (ert-deftest get-display-property ()
   (with-temp-buffer
     (insert (propertize "foo" 'face 'bold 'display '(height 2.0)))
