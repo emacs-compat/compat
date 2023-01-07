@@ -2021,6 +2021,18 @@ provided by Compat. Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/positions.texi
+@defun pos-bol &optional count
+Like @code{line-beginning-position}, but ignores fields (and is more
+efficient).
+@end defun
+
+@c copied from lispref/positions.texi
+@defun pos-eol &optional count
+Like @code{line-end-position}, but ignores fields (and is more
+efficient).
+@end defun
+
 @c copied from lispref/display.texi
 @defun get-display-property position prop &optional object properties
 This convenience function can be used to get a specific display

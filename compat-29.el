@@ -120,6 +120,35 @@ Unibyte strings are converted to multibyte for comparison."
           (throw 'found plist))
         (setq plist (cddr plist))))))
 
+;;;; Defined in editfns.c
+
+(compat-defun pos-bol (&optional n) ;; <OK>
+  "Return the position of the first character on the current line.
+With optional argument N, scan forward N - 1 lines first.
+If the scan reaches the end of the buffer, return that position.
+
+This function ignores text display directionality; it returns the
+position of the first character in logical order, i.e. the smallest
+character position on the logical line.  See `vertical-motion' for
+movement by screen lines.
+
+This function does not move point.  Also see `line-beginning-position'."
+  (let ((inhibit-field-text-motion t))
+    (line-beginning-position n)))
+
+(compat-defun pos-eol (&optional n) ;; <OK>
+  "Return the position of the last character on the current line.
+With argument N not nil or 1, move forward N - 1 lines first.
+If scan reaches end of buffer, return that position.
+
+This function ignores text display directionality; it returns the
+position of the last character in logical order, i.e. the largest
+character position on the line.
+
+This function does not move point.  Also see `line-end-position'."
+  (let ((inhibit-field-text-motion t))
+    (line-end-position n)))
+
 ;;;; Defined in keymap.c
 
 (compat-defun define-key (keymap key def &optional remove) ;; <UNTESTED>

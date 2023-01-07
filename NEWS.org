@@ -18,12 +18,13 @@
 - compat-26: Fix and test ~image-property~ setter.
 - compat-26: Fix and test ~read-multiple-choice~.
 - compat-28: Fix and test ~with-existing-directory~.
+- compat-28: Drop obsolete function ~make-directory-autoloads~.
 - compat-29: Drop broken functions ~string-pixel-width~ and
   ~buffer-text-pixel-size~. These functions had poor performance which lead to a
   downstream issue in the doom-modeline package. If a more efficient solution is
   possible, the function will be added back.
 - compat-29: Drop broken function ~string-limit~.
-- compat-28: Drop obsolete function ~make-directory-autoloads~.
+- compat-29: Add ~pos-bol~ and ~pos-eol~.
 
 * Release of "Compat" Version 29.1.0.1
 
