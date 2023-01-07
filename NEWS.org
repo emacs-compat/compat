@@ -15,9 +15,12 @@
 - Compat takes great care to remove unneeded definitions at compile time. On
   recent Emacs 29 the byte compiled files are empty and not loaded, such that
   Compat does not any cost to the Emacs process.
-- compat-29: Drop broken ~string-pixel-width~, ~buffer-text-pixel-size~ and
-  ~string-limit~.
-- compat-28: Drop obsolete ~make-directory-autoloads~.
+- compat-29: Drop broken functions ~string-pixel-width~ and
+  ~buffer-text-pixel-size~. These functions had poor performance which lead to a
+  downstream issue in the doom-modeline package. If a more efficient solution is
+  possible, the function will be added back.
+- compat-29: Drop broken function ~string-limit~.
+- compat-28: Drop obsolete function ~make-directory-autoloads~.
 
 * Release of "Compat" Version 29.1.0.1
 
