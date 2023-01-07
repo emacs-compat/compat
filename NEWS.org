@@ -15,6 +15,8 @@
 - Compat takes great care to remove unneeded definitions at compile time. On
   recent Emacs 29 the byte compiled files are empty and not loaded, such that
   Compat does not any cost to the Emacs process.
+- compat-29: Drop broken ~string-pixel-width~, ~buffer-text-pixel-size~ and
+  ~string-limit~.
 
 * Release of "Compat" Version 29.1.0.1
 
