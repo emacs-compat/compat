@@ -107,15 +107,7 @@ Unibyte strings are converted to multibyte for comparison."
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
 (compat-defun plist-get (plist prop &optional predicate) ;; <OK>
-  "Extract a value from a property list.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2...).
-
-This function returns the value corresponding to the given PROP, or
-nil if PROP is not one of the properties on the list.  The comparison
-with PROP is done using PREDICATE, which defaults to `eq'.
-
-This function doesn't signal an error if PLIST is invalid."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-get plist prop)
@@ -126,16 +118,7 @@ This function doesn't signal an error if PLIST is invalid."
         (setq plist (cddr plist))))))
 
 (compat-defun plist-put (plist prop val &optional predicate) ;; <OK>
-  "Change value in PLIST of PROP to VAL.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2 ...).
-
-The comparison with PROP is done using PREDICATE, which defaults to `eq'.
-
-If PROP is already a property on the list, its value is set to VAL,
-otherwise the new PROP VAL pair is added.  The new plist is returned;
-use `(setq x (plist-put x prop val))' to be sure to use the new value.
-The PLIST is modified by side effects."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-put plist prop val)
@@ -149,16 +132,7 @@ The PLIST is modified by side effects."
       (nconc plist (list prop val)))))
 
 (compat-defun plist-member (plist prop &optional predicate) ;; <OK>
-  "Return non-nil if PLIST has the property PROP.
-PLIST is a property list, which is a list of the form
-\(PROP1 VALUE1 PROP2 VALUE2 ...).
-
-The comparison with PROP is done using PREDICATE, which defaults to
-`eq'.
-
-Unlike `plist-get', this allows you to distinguish between a missing
-property and a property with the value nil.
-The value is actually the tail of PLIST whose car is PROP."
+  "Handle optional argument PREDICATE."
   :explicit t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-member plist prop)
@@ -171,45 +145,7 @@ The value is actually the tail of PLIST whose car is PROP."
 ;;;; Defined in keymap.c
 
 (compat-defun define-key (keymap key def &optional remove) ;; <UNTESTED>
-  "In KEYMAP, define key sequence KEY as DEF.
-This is a legacy function; see `keymap-set' for the recommended
-function to use instead.
-
-KEYMAP is a keymap.
-
-KEY is a string or a vector of symbols and characters, representing a
-sequence of keystrokes and events.  Non-ASCII characters with codes
-above 127 (such as ISO Latin-1) can be represented by vectors.
-Two types of vector have special meanings:
- [remap COMMAND] remaps any key binding for COMMAND.
- [t] creates a default definition, which applies to any event with no
-    other definition in KEYMAP.
-
-DEF is anything that can be a key's definition:
- nil (means key is undefined in this keymap),
- a command (a Lisp function suitable for interactive calling),
- a string (treated as a keyboard macro),
- a keymap (to define a prefix key),
- a symbol (when the key is looked up, the symbol will stand for its
-    function definition, which should at that time be one of the above,
-    or another symbol whose function definition is used, etc.),
- a cons (STRING . DEFN), meaning that DEFN is the definition
-    (DEFN should be a valid definition in its own right) and
-    STRING is the menu item name (which is used only if the containing
-    keymap has been created with a menu name, see `make-keymap'),
- or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
- or an extended menu item definition.
- (See info node `(elisp)Extended Menu Items'.)
-
-If REMOVE is non-nil, the definition will be removed.  This is almost
-the same as setting the definition to nil, but makes a difference if
-the KEYMAP has a parent, and KEY is shadowing the same binding in the
-parent.  With REMOVE, subsequent lookups will return the binding in
-the parent, and with a nil DEF, the lookups will return nil.
-
-If KEYMAP is a sparse keymap with a binding for KEY, the existing
-binding is altered.  If there is no binding for KEY, the new pair
-binding KEY to DEF is added at the front of KEYMAP."
+  "Handle optional argument REMOVE."
   :explicit t
   (if remove
       (let ((prev (lookup-key keymap key))

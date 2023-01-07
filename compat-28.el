@@ -112,8 +112,7 @@ inserted before contatenating."
 ;;;; Defined in filelock.c
 
 (compat-defun unlock-buffer () ;; <UNTESTED>
-  "Handle `file-error' conditions:
-
+  "Handle `file-error' conditions.
 Handles file system errors by calling ‘display-warning’ and
 continuing as if the error did not occur."
   :explicit t
@@ -128,8 +127,7 @@ continuing as if the error did not occur."
 ;;;; Defined in characters.c
 
 (compat-defun string-width (string &optional from to) ;; <OK>
-  "Handle optional arguments FROM and TO:
-
+  "Handle optional arguments FROM and TO.
 Optional arguments FROM and TO specify the substring of STRING to
 consider, and are interpreted as in `substring'."
   :explicit t
@@ -143,8 +141,7 @@ consider, and are interpreted as in `substring'."
 ;;;; Defined in dired.c
 
 (compat-defun directory-files (directory &optional full match nosort count) ;; <UNTESTED>
-  "Handle additional optional argument COUNT:
-
+  "Handle additional optional argument COUNT.
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
   :explicit t
@@ -157,7 +154,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-serialize (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
@@ -166,7 +163,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-insert (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (or (listp object) (vectorp object))
@@ -175,7 +172,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (string-match-p "\\`[[:space:]]*[[{]" string)
@@ -187,7 +184,7 @@ If COUNT is non-nil and a natural number, the function will
 
 ;; TODO Check interaction with conditionally defined json functions
 (compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
-  "Handle top-level JSON values."
+  "Handle top-level JSON values (RFC 8259)."
   :explicit t
   :min-version "27"
   (if (looking-at-p "[[:space:]]*[[{]")
@@ -708,8 +705,7 @@ is included in the return value."
 ;;;; Defined in windows.el
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <UNTESTED>
-  "Handle optional argument ALL-FRAMES:
-
+  "Handle optional argument ALL-FRAMES.
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."
   :explicit t
