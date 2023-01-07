@@ -380,22 +380,21 @@ Also see `local-variable-p'."
       (void-variable nil (throw 'fail nil)))
     t))
 
-(compat-defmacro with-existing-directory (&rest body) ;; <UNTESTED>
+(compat-defmacro with-existing-directory (&rest body) ;; <OK>
   "Execute BODY with `default-directory' bound to an existing directory.
 If `default-directory' is already an existing directory, it's not changed."
   (declare (indent 0) (debug t))
-  (let ((quit (make-symbol "with-existing-directory-quit")))
-    `(catch ',quit
-       (dolist (dir (list default-directory
-                          (expand-file-name "~/")
-                          (getenv "TMPDIR")
-                          "/tmp/"
-                          ;; XXX: check if "/" works on non-POSIX
-                          ;; system.
-                          "/"))
-         (when (and dir (file-exists-p dir))
-           (throw ',quit (let ((default-directory dir))
-                           ,@body)))))))
+  `(let ((default-directory
+          (or (catch 'quit
+                (dolist (dir (list default-directory
+                                   (expand-file-name "~/")
+                                   temporary-file-directory
+                                   (getenv "TMPDIR")
+                                   "/tmp/"))
+                  (when (and dir (file-exists-p dir))
+                    (throw 'quit dir))))
+              "/")))
+     ,@body))
 
 (compat-defmacro dlet (binders &rest body) ;; <UNTESTED>
   "Like `let' but using dynamic scoping."

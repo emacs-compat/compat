@@ -662,6 +662,14 @@
   (should-equal t (always 1))                    ;; single argument
   (should-equal t (always 1 2 3 4)))             ;; multiple arguments
 
+(ert-deftest with-existing-directory ()
+  (let ((dir (make-temp-name "/tmp/not-exist-")))
+    (let ((default-directory dir))
+      (should-not (file-exists-p default-directory)))
+    (with-existing-directory
+      (should-not (equal dir default-directory))
+      (should (file-exists-p default-directory)))))
+
 (ert-deftest directory-name-p ()
   (should (directory-name-p "/"))
   (should-not (directory-name-p "/file"))
