@@ -1785,12 +1785,6 @@ If non-@code{nil}, the argument @var{help-echo} will be used to set the
 @code{help-echo} text property.
 @end defun
 
-@c based on lisp/emacs-lisp/autoload.el
-@defun make-directory-autoloads dir output-file
-Parse and search the directory @var{dir} for autoload definitions, and
-write the processed results to the file @var{output-file}.
-@end defun
-
 @c based on src/xfaces.c
 @defun color-values-from-color-spec spec
 Convert the textual color specification @var{spec} to a color triple
