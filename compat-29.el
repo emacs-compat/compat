@@ -170,7 +170,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defalias string-split split-string) ;; <OK>
 
-(compat-defun function-alias-p (func &optional noerror) ;; <UNTESTED>
+(compat-defun function-alias-p (func &optional noerror) ;; <OK>
   "Return nil if FUNC is not a function alias.
 If FUNC is a function alias, return the function alias chain.
 
