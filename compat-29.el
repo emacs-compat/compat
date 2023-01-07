@@ -133,6 +133,7 @@ character position on the logical line.  See `vertical-motion' for
 movement by screen lines.
 
 This function does not move point.  Also see `line-beginning-position'."
+  (declare (side-effect-free t))
   (let ((inhibit-field-text-motion t))
     (line-beginning-position n)))
 
@@ -146,6 +147,7 @@ position of the last character in logical order, i.e. the largest
 character position on the line.
 
 This function does not move point.  Also see `line-end-position'."
+  (declare (side-effect-free t))
   (let ((inhibit-field-text-motion t))
     (line-end-position n)))
 
