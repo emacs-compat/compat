@@ -49,9 +49,8 @@ usage: (bool-vector &rest OBJECTS)"
    ((listp seq)
     (sort seq predicate))
    ((vectorp seq)
-    (let ((list (sort (append seq nil) predicate))
-          (p list)
-          (i 0))
+    (let* ((list (sort (append seq nil) predicate))
+           (p list) (i 0))
       (while p
         (aset seq i (car p))
         (setq i (1+ i) p (cdr p)))
