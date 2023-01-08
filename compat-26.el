@@ -281,19 +281,8 @@ This is like `if-let' but doesn't handle a VARLIST of the form
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
-  (declare (indent 1)
-           (debug ((&rest [&or symbolp (symbolp form) (form)])
-                   body)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var varlist)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(if (cdr var) (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (when ,(caar list) ,@body))))
+  (declare (indent 1) (debug if-let*))
+  (list 'if-let* varlist (macroexp-progn body)))
 
 (compat-defmacro and-let* (varlist &rest body) ;; <OK>
   "Bind variables according to VARLIST and conditionally evaluate BODY.

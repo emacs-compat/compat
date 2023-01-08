@@ -141,24 +141,8 @@ Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
 
 The variable list SPEC is the same as in `if-let'."
-  (declare (indent 1)
-           (debug ([&or (symbolp form)
-                        (&rest [&or symbolp (symbolp form) (form)])]
-                   body)))
-  (when (and (<= (length spec) 2)
-             (not (listp (car spec))))
-    ;; Adjust the single binding case
-    (setq spec (list spec)))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var spec)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(if (cdr var) (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(let* ,(nreverse list)
-       (if ,(caar list) ,(macroexp-progn body)))))
+  (declare (indent 1) (debug if-let))
+  (list 'if-let spec (macroexp-progn body)))
 
 ;;;; Defined in subr-x.el
 
