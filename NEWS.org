@@ -1,5 +1,9 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-25: Improve algorithmic complexity of ~sort~.
+
 * Release of "Compat" Version 29.1.1.0
 
 - The macros in ~compat-macs.el~ have been rewritten and simplified. The
