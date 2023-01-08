@@ -321,17 +321,13 @@ If all bindings are non-nil, eval BODY and repeat.
 
 The variable list SPEC is the same as in `if-let'."
   (declare (indent 1) (debug if-let))
-  (let ((empty (make-symbol "s"))
-        (last t) list)
-    (dolist (var spec)
-      (push `(,(if (cdr var) (car var) empty)
-              (and ,last ,(if (cdr var) (cadr var) (car var))))
-            list)
-      (when (or (cdr var) (consp (car var)))
-        (setq last (caar list))))
-    `(while (let* ,(nreverse list)
-              (and ,(caar list)
-                   (progn ,(macroexp-progn (or body '(t))) t))))))
+  (let ((done (gensym "done")))
+    `(catch ',done
+       (while t
+         (if-let* ,spec
+             (progn
+               ,@body)
+           (throw ',done nil))))))
 
 ;;;; Defined in files.el
 
