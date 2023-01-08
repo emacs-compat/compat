@@ -121,13 +121,12 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
    ((eq t1 t2))
    ((and (consp t1) (consp t2))
     (equal t1 t2))
-   ((let ((now (current-time)))
-      ;; Due to inaccuracies and the relatively slow evaluating of
-      ;; Emacs Lisp compared to C, we allow for slight inaccuracies
-      ;; (less than a millisecond) when comparing time values.
-      (< (abs (- (float-time (or t1 now))
-                 (float-time (or t2 now))))
-         1e-5)))))
+   (t
+    ;; Due to inaccuracies and the relatively slow evaluating of
+    ;; Emacs Lisp compared to C, we allow for slight inaccuracies
+    ;; (less than a millisecond) when comparing time values.
+    (< (abs (- (float-time t1) (float-time t2)))
+       (if (and t1 t2) 1e-6 1e-5)))))
 
 ;;;; Defined in fileio.c
 

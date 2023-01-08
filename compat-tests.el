@@ -1509,7 +1509,31 @@
   (should-equal "else"
    (if-let* (((= 5 6))) "then" "else")))
 
+(defmacro compat-tests--if (cond then &rest else)
+  (declare (indent 2))
+  (if cond then (macroexp-progn else)))
+
 (ert-deftest when-let ()
+  ;; FIXME Broken on Emacs 25
+  (compat-tests--if (= emacs-major-version 25)
+      (should-equal "second"
+                    (when-let
+                        ((x 3)
+                         (y 2)
+                         (z (+ x y))
+                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
+                         (true t))
+                      "first" "second"))
+    (should-equal "second"
+                  (when-let
+                      ((x 3)
+                       (y 2)
+                       (z (+ x y))
+                       ((= z 5))
+                       (true t))
+                    "first" "second"))
+    (should-equal "then" (when-let (((= 5 5))) "then"))
+    (should-not (when-let (((= 5 6))) t)))
   (should-equal "last"
                 (when-let (e (memq 0 '(1 2 3 0 5 6)))
                   "first" "last"))
@@ -1520,6 +1544,26 @@
                   "first" "last")))
 
 (ert-deftest if-let ()
+  ;; FIXME Broken on Emacs 25
+  (compat-tests--if (= emacs-major-version 25)
+      (should-equal "then"
+                    (if-let
+                        ((x 3)
+                         (y 2)
+                         (z (+ x y))
+                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
+                         (true t))
+                        "then" "else"))
+    (should-equal "then"
+                  (if-let
+                      ((x 3)
+                       (y 2)
+                       (z (+ x y))
+                       ((= z 5))
+                       (true t))
+                      "then" "else"))
+    (should-equal "else" (if-let (((= 5 6))) "then" "else"))
+    (should-not (if-let (((= 5 6))) t nil)))
   (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
               e))
   (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
@@ -1529,10 +1573,7 @@
                   t))
   (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
                                (e (memq 0 '(1 2 3 5 6))))
-                  t))
-  ;; TODO broken on Emacs 25
-  ;;(should-not (if-let (((= 5 6))) t nil))
-  )
+                  t)))
 
 (ert-deftest and-let* ()
   (should                               ;trivial body
@@ -1890,13 +1931,6 @@
   ;; (should (time-equal-p (current-time) nil))
   ;; (should (time-equal-p nil (current-time)))
 
-  ;; While `sleep-for' returns nil, indicating the current time, this
-  ;; behaviour seems to be undefined.  Relying on it is therefore not
-  ;; advised.
-  ;;(should-not (time-equal-p (current-time) (ignore (sleep-for 0.01))))
-  ;;(should-not (time-equal-p (current-time) (progn
-  ;;                             (sleep-for 0.01)
-  ;;                            (current-time))))
   (should (time-equal-p '(1 2 3 4) '(1 2 3 4)))
   (should-not (time-equal-p '(1 2 3 4) '(1 2 3 5)))
   (should-not (time-equal-p '(1 2 3 5) '(1 2 3 4)))
@@ -1905,7 +1939,18 @@
   (should-not (time-equal-p '(1 2 3 4) '(1 3 3 4)))
   (should-not (time-equal-p '(1 3 3 4) '(1 2 3 4)))
   (should-not (time-equal-p '(1 2 3 4) '(2 2 3 4)))
-  (should-not (time-equal-p '(2 2 3 4) '(1 2 3 4))))
+  (should-not (time-equal-p '(2 2 3 4) '(1 2 3 4)))
+
+  ;; TODO fix broken tests
+  ;; (should (time-equal-p 0 (time-since nil)))
+  ;; (should (time-equal-p (days-to-time 0) '(0 0)))
+  ;; (should (time-equal-p (days-to-time 1) '(1 20864)))
+  ;; (should (time-equal-p (days-to-time 999) '(1317 2688)))
+  ;; (should (time-equal-p (days-to-time 0.0) '(0 0 0 0)))
+  ;; (should (time-equal-p (days-to-time 0.5) '(0 43200 0 0)))
+  ;; (should (time-equal-p (days-to-time 1.0) '(1 20864 0 0)))
+  ;; (should (time-equal-p (days-to-time 999.0) '(1317 2688 0 0)))
+  )
 
 (ert-deftest decoded-time-getters ()
   (let ((time '(second minute hour day month year weekday dst zone)))
