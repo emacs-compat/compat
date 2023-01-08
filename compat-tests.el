@@ -1483,11 +1483,7 @@
   (should-equal "ccc" (string-replace "ab" "" "abcabcabc"))
   (should-equal "aaaaaa" (string-replace "a" "aa" "aaa"))
   (should-equal "defg" (string-replace "abc" "defg" "abc"))
-  (when (version<= "24.4" emacs-version)
-    ;; FIXME: Emacs 24.3 do not know of `wrong-length-argument' and
-    ;; therefore fail this test, even if the right symbol is being
-    ;; thrown.
-    (should-error (string-replace "" "x" "abc") :type 'wrong-length-argument)))
+  (should-error (string-replace "" "x" "abc") :type 'wrong-length-argument))
 
 (ert-deftest when-let* ()
   (should-equal "second"
