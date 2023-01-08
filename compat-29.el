@@ -479,6 +479,11 @@ which is
                (throw 'exit nil)))
            t))))))
 
+(compat-defun keymap--check (key) ;; <OK>
+  "Signal an error if KEY doesn't have a valid syntax."
+  (unless (key-valid-p key)
+    (error "%S is not a valid key definition; see `key-valid-p'" key)))
+
 (compat-defun key-parse (keys) ;; <OK>
   "Convert KEYS to the internal Emacs key representation.
 See `kbd' for a descripion of KEYS."
@@ -590,13 +595,9 @@ DEFINITION is anything that can be a key's definition:
  or a cons (MAP . CHAR), meaning use definition of CHAR in keymap MAP,
  or an extended menu item definition.
  (See info node `(elisp)Extended Menu Items'.)"
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
-  ;; If we're binding this key to another key, then parse that other
-  ;; key, too.
+  (keymap--check key)
   (when (stringp definition)
-    (unless (key-valid-p key)
-      (error "%S is not a valid key definition; see `key-valid-p'" key))
+    (keymap--check definition)
     (setq definition (key-parse definition)))
   (define-key keymap (key-parse key) definition))
 
@@ -609,8 +610,7 @@ makes a difference when there's a parent keymap.  When unsetting
 a key in a child map, it will still shadow the same key in the
 parent keymap.  Removing the binding will allow the key in the
 parent keymap to be used."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (compat--define-key keymap (key-parse key) nil remove))
 
 (compat-defun keymap-global-set (key command) ;; <UNTESTED>
@@ -709,11 +709,9 @@ Bindings are always added before any inherited map.
 
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (when after
-    (unless (key-valid-p key)
-      (error "%S is not a valid key definition; see `key-valid-p'" key)))
+    (keymap--check after))
   (define-key-after keymap (key-parse key) definition
     (and after (key-parse after))))
 
@@ -750,8 +748,7 @@ position as returned by `event-start' and `event-end', and the lookup
 occurs in the keymaps associated with it instead of KEY.  It can also
 be a number or marker, in which case the keymap properties at the
 specified buffer position instead of point are used."
-  (unless (key-valid-p key)
-    (error "%S is not a valid key definition; see `key-valid-p'" key))
+  (keymap--check key)
   (when (and keymap position)
     (error "Can't pass in both keymap and position"))
   (if keymap

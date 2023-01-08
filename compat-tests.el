@@ -316,6 +316,11 @@
   (should-equal (key-parse "<mouse-1>") [mouse-1])
   (should-equal (key-parse "<Scroll_Lock>") [Scroll_Lock]))
 
+(ert-deftest keymap--check ()
+  (keymap--check "X")
+  (should-error (keymap--check ""))
+  (should-error (keymap--check " X")))
+
 (ert-deftest key-valid-p ()
   (should-not (key-valid-p ""))
   (should (key-valid-p "f"))
