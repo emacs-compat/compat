@@ -49,10 +49,13 @@ usage: (bool-vector &rest OBJECTS)"
    ((listp seq)
     (sort seq predicate))
    ((vectorp seq)
-    (let ((cseq (sort (append seq nil) predicate)))
-      (dotimes (i (length cseq))
-        (setf (aref seq i) (nth i cseq)))
-      (apply #'vector cseq)))
+    (let ((list (sort (append seq nil) predicate))
+          (p list)
+          (i 0))
+      (while p
+        (aset seq i (car p))
+        (setq i (1+ i) p (cdr p)))
+      (apply #'vector list)))
    ((signal 'wrong-type-argument 'list-or-vector-p))))
 
 ;;;; Defined in editfns.c

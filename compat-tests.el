@@ -1060,10 +1060,19 @@
   (should-equal '(1 2 3 4) (flatten-tree '(((1 nil)) 2 (((3 nil nil) 4))))))
 
 (ert-deftest sort ()
+  (should-equal (list 1 2 3) (sort (list 1 2 3) #'<))
+  (should-equal (list 1 2 3) (sort (list 1 3 2) #'<))
+  (should-equal (list 1 2 3) (sort (list 3 2 1) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 1 2 3) #'<))
+  (should-equal (list 1 2 3) (compat-call sort (list 1 3 2) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 3 2 1) #'<))
-  (should-equal '[1 2 3] (compat-call sort '[1 2 3] #'<))
-  (should-equal '[1 2 3] (compat-call sort '[3 2 1] #'<)))
+  (should-equal [1 2 3] (compat-call sort [1 2 3] #'<))
+  (should-equal [1 2 3] (compat-call sort [1 3 2] #'<))
+  (should-equal [1 2 3] (compat-call sort [3 2 1] #'<))
+  ;; Test side effect
+  (let ((vec [4 5 8 3 1 2 3 2 3 4]))
+    (compat-call sort vec #'>)
+    (should-equal vec [8 5 4 4 3 3 3 2 2 1])))
 
 (ert-deftest replace-string-in-region ()
   (with-temp-buffer
