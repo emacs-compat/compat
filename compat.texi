@@ -2647,15 +2647,15 @@ The function @code{pp-emacs-lisp-code}.
 @node Development
 @chapter Development
 
-Compat is developed on GitHub and mirrored to SourceHut.
+Compat is developed on GitHub.
 
-Patches and comments can be sent to the
-@uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
-list} (@email{~pkal/compat-devel@@lists.sr.ht,
-~pkal/compat-devel@@lists.sr.ht}).  Bug reports are best sent to the
+Bug reports, patches and comments are best sent to the
 @uref{https://github.com/emacs-compat/compat/issues, issue tracker}.
 These may include issues in the compatibility code, missing
-definitions or performance issues.
+definitions or performance issues. We also provide a
+@uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
+list} (@email{~pkal/compat-devel@@lists.sr.ht,
+~pkal/compat-devel@@lists.sr.ht}).
 
 Please note that as a GNU ELPA package, Compat requires contributors to
 have signed the

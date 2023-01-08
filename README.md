@@ -30,12 +30,10 @@ contributions.
 Source code
 -----------
 
-Compat is developed on [GitHub].  The code is also mirrored on [SourceHut].
+Compat is developed on [GitHub].
 
 [GitHub]:
     https://github.com/emacs-compat/compat
-[SourceHut]:
-    https://sr.ht/~pkal/compat
 
 Bug and patches
 ---------------
