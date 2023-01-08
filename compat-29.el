@@ -572,7 +572,7 @@ See `kbd' for a descripion of KEYS."
               (setq res (vconcat res key))))))
       res)))
 
-(compat-defun keymap-set (keymap key definition) ;; <UNTESTED>
+(compat-defun keymap-set (keymap key definition) ;; <OK>
   "Set KEY to DEFINITION in KEYMAP.
 KEY is a string that satisfies `key-valid-p'.
 

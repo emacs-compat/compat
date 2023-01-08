@@ -211,19 +211,30 @@
     (define-key map (kbd "C-x C-f") #'find-file)
     (define-key map (kbd "SPC") #'minibuffer-complete-word)
     (define-key map (kbd "C-c") mode-specific-map)
+    (define-key map (kbd "s-c") [?\C-c ?\C-c])
     map))
-(defvar-keymap compat-tests--map-2
+(defvar compat-tests--map-2
+  (let ((map (make-sparse-keymap)))
+    (keymap-set map "C-x C-f" #'find-file)
+    (keymap-set map "SPC" #'minibuffer-complete-word)
+    (keymap-set map "C-c" mode-specific-map)
+    (keymap-set map "s-c" "C-c C-c")
+    map))
+(defvar-keymap compat-tests--map-3
   "C-x C-f" #'find-file
   "SPC" #'minibuffer-complete-word
-  "C-c" mode-specific-map)
-(defvar compat-tests--map-3
+  "C-c" mode-specific-map
+  "s-c" "C-c C-c")
+(defvar compat-tests--map-4
   (define-keymap
     "C-x C-f" #'find-file
     "SPC" #'minibuffer-complete-word
-    "C-c" mode-specific-map))
+    "C-c" mode-specific-map
+    "s-c" "C-c C-c"))
 (ert-deftest defvar-keymap ()
   (should-equal compat-tests--map-1 compat-tests--map-2)
-  (should-equal compat-tests--map-1 compat-tests--map-3))
+  (should-equal compat-tests--map-1 compat-tests--map-3)
+  (should-equal compat-tests--map-1 compat-tests--map-4))
 
 (ert-deftest key-parse ()
   (should-equal (key-parse "f") [?f])
