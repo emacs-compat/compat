@@ -225,6 +225,97 @@
   (should-equal compat-tests--map-1 compat-tests--map-2)
   (should-equal compat-tests--map-1 compat-tests--map-3))
 
+(ert-deftest key-parse ()
+  (should-equal (key-parse "f") [?f])
+  (should-equal (key-parse "X") [?X])
+  (should-equal (key-parse "X f") [?X ?f])
+
+  (should-equal (key-parse "<F2>") [F2])
+  (should-equal (key-parse "<f1> <f2> TAB") [f1 f2 ?\t])
+  (should-equal (key-parse "<f1> RET") [f1 ?\r])
+  (should-equal (key-parse "<f1> SPC") [f1 ?\s])
+  (should-equal (key-parse "<f1>") [f1])
+  (should-equal (key-parse "<return>") [return])
+
+  ;; ;; Modifiers:
+  (should-equal (key-parse "C-x") [?\C-x])
+  (should-equal (key-parse "C-x a") [?\C-x ?a])
+  (should-equal (key-parse "C-;") [?\C-;])
+  (should-equal (key-parse "C-a") [?\C-a])
+  (should-equal (key-parse "C-c SPC") [?\C-c ?\s])
+  (should-equal (key-parse "C-c TAB") [?\C-c ?\t])
+  (should-equal (key-parse "C-c c") [?\C-c ?c])
+  (should-equal (key-parse "C-x 4 C-f") [?\C-x ?4 ?\C-f])
+  (should-equal (key-parse "C-x C-f") [?\C-x ?\C-f])
+  (should-equal (key-parse "C-M-<down>") [C-M-down])
+  (should-equal (key-parse "C-RET") [?\C-\r])
+  (should-equal (key-parse "C-SPC") [?\C-\s])
+  (should-equal (key-parse "C-TAB") [?\C-\t])
+  (should-equal (key-parse "C-<down>") [C-down])
+  (should-equal (key-parse "C-c C-c C-c") [?\C-c ?\C-c ?\C-c])
+
+  (should-equal (key-parse "M-a") [?\M-a])
+  (should-equal (key-parse "M-<DEL>") [?\M-\d])
+  (should-equal (key-parse "C-M-a") [?\C-\M-a])
+  (should-equal (key-parse "M-ESC") [?\M-\e])
+  (should-equal (key-parse "M-RET") [?\M-\r])
+  (should-equal (key-parse "M-SPC") [?\M-\s])
+  (should-equal (key-parse "M-TAB") [?\M-\t])
+  (should-equal (key-parse "M-x a") [?\M-x ?a])
+  (should-equal (key-parse "M-<up>") [M-up])
+  (should-equal (key-parse "M-c M-c M-c") [?\M-c ?\M-c ?\M-c])
+
+  (should-equal (key-parse "s-SPC") [?\s-\s])
+  (should-equal (key-parse "s-a") [?\s-a])
+  (should-equal (key-parse "s-x a") [?\s-x ?a])
+  (should-equal (key-parse "s-c s-c s-c") [?\s-c ?\s-c ?\s-c])
+
+  (should-equal (key-parse "S-a") [?\S-a])
+  (should-equal (key-parse "S-x a") [?\S-x ?a])
+  (should-equal (key-parse "S-c S-c S-c") [?\S-c ?\S-c ?\S-c])
+
+  (should-equal (key-parse "H-<RET>") [?\H-\r])
+  (should-equal (key-parse "H-DEL") [?\H-\d])
+  (should-equal (key-parse "H-a") [?\H-a])
+  (should-equal (key-parse "H-x a") [?\H-x ?a])
+  (should-equal (key-parse "H-c H-c H-c") [?\H-\c ?\H-\c ?\H-\c])
+
+  (should-equal (key-parse "A-H-a") [?\A-\H-a])
+  (should-equal (key-parse "A-SPC") [?\A-\s])
+  (should-equal (key-parse "A-TAB") [?\A-\t])
+  (should-equal (key-parse "A-a") [?\A-a])
+  (should-equal (key-parse "A-c A-c A-c") [?\A-c ?\A-c ?\A-c])
+
+  (should-equal (key-parse "C-M-a") [?\C-\M-a])
+  (should-equal (key-parse "C-M-<up>") [C-M-up])
+
+  ;; ;; Special characters.
+  (should-equal (key-parse "DEL") [?\d])
+  (should-equal (key-parse "ESC C-a") [?\e ?\C-a])
+  (should-equal (key-parse "ESC") [?\e])
+  (should-equal (key-parse "LFD") [?\n])
+  (should-equal (key-parse "NUL") [?\0])
+  (should-equal (key-parse "RET") [?\r])
+  (should-equal (key-parse "SPC") [?\s])
+  (should-equal (key-parse "TAB") [?\t])
+
+  ;; ;; Multibyte
+  (should-equal (key-parse "ñ") [?ñ])
+  (should-equal (key-parse "ü") [?ü])
+  (should-equal (key-parse "ö") [?ö])
+  (should-equal (key-parse "ğ") [?ğ])
+  (should-equal (key-parse "ա") [?ա])
+  (should-equal (key-parse "C-ü") [?\C-ü])
+  (should-equal (key-parse "M-ü") [?\M-ü])
+  (should-equal (key-parse "H-ü") [?\H-ü])
+
+  ;; ;; Handle both new and old style key descriptions (bug#45536).
+  (should-equal (key-parse "s-<return>") [s-return])
+  (should-equal (key-parse "C-M-<return>") [C-M-return])
+
+  (should-equal (key-parse "<mouse-1>") [mouse-1])
+  (should-equal (key-parse "<Scroll_Lock>") [Scroll_Lock]))
+
 (ert-deftest key-valid-p ()
   (should-not (key-valid-p ""))
   (should (key-valid-p "f"))

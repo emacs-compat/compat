@@ -479,7 +479,7 @@ which is
                (throw 'exit nil)))
            t))))))
 
-(compat-defun key-parse (keys) ;; <UNTESTED>
+(compat-defun key-parse (keys) ;; <OK>
   "Convert KEYS to the internal Emacs key representation.
 See `kbd' for a descripion of KEYS."
   (declare (pure t) (side-effect-free t))
