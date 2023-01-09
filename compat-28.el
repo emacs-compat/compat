@@ -279,6 +279,15 @@ and BLUE, is normalized to have its value in [0,65535]."
                      (<= 0 b) (<= b 65535))
             (list r g b))))))))
 
+;;;; Defined in simple.el
+
+(compat-defun make-separator-line (&optional length) ;; <OK>
+  "Make a string appropriate for usage as a visual separator line.
+If LENGTH is nil, use the window width."
+    (concat (propertize (make-string (or length (1- (window-width))) ?-)
+                        'face 'separator-line)
+            "\n"))
+
 ;;;; Defined in subr.el
 
 ;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions

@@ -1494,6 +1494,11 @@ This function ignores any @var{arguments} and returns @code{t}.
 @xref{Calling Functions,,,elisp}.
 @end defun
 
+@defun make-separator-line &optional LENGTH
+Make a string appropriate for usage as a visual separator line.
+If LENGTH is nil, use the window width.
+@end defun
+
 @c copied from lispref/text.texi
 @defun insert-into-buffer to-buffer &optional start end
 This is like @code{insert-buffer-substring}, but works in the opposite
@@ -1992,8 +1997,6 @@ The function @code{json-available-p}.
 The function @code{mail-header-parse-addresses-lax}.
 @item
 The function @code{mail-header-parse-address-lax}.
-@item
-The function @code{make-separator-line}.
 @item
 The function @code{num-processors}.
 @item

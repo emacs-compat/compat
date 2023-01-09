@@ -60,6 +60,12 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest make-separator-line ()
+  (should-equal (length (make-separator-line 10)) 11)
+  (should (string-suffix-p "\n" (make-separator-line 10)))
+  (should (string-suffix-p "\n" (make-separator-line)))
+  (should-equal (replace-regexp-in-string "[^\n]" "" (make-separator-line)) "\n"))
+
 (ert-deftest pos-bol ()
   (with-temp-buffer
     (insert (propertize "one" 'field 1)
