@@ -1979,8 +1979,6 @@ Shorthand support.
 @item
 The function @code{custom-add-choice}.
 @item
-The function @code{decoded-time-period}.
-@item
 The function @code{dom-print}.
 @item
 The function @code{dom-remove-attribute}.
