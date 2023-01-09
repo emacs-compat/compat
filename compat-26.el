@@ -67,8 +67,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
          ((catch 'found
             (dolist (ent alist)
               (when (and (consp ent) (funcall testfn (car ent) key))
-                (throw 'found (setq entry ent))))
-            default)))
+                (throw 'found (setq entry ent)))))))
         (if entry (cdr entry) default))
     (alist-get key alist default remove)))
 

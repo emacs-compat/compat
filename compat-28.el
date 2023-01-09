@@ -27,7 +27,7 @@
 
 ;;;; Defined in fns.c
 
-;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
+;; FIXME Should handle multibyte regular expressions
 (compat-defun string-search (needle haystack &optional start-pos) ;; <OK>
   "Search for the string NEEDLE in the strign HAYSTACK.
 
@@ -290,7 +290,7 @@ If LENGTH is nil, use the window width."
 
 ;;;; Defined in subr.el
 
-;;* INCOMPLETE FEATURE: Should handle multibyte regular expressions
+;; FIXME Should handle multibyte regular expressions
 (compat-defun string-replace (fromstring tostring instring) ;; <OK>
   "Replace FROMSTRING with TOSTRING in INSTRING each time it occurs."
   (when (equal fromstring "")

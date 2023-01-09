@@ -1679,6 +1679,7 @@
 
   ;; With testfn:
   (should-equal 1 (compat-call alist-get "a" '(("a" . 1) ("b" . 2) ("c" . 3)) nil nil #'equal))
+  (should-equal 'd (compat-call alist-get "x" '(("a" . 1) ("b" . 2) ("c" . 3)) 'd nil #'equal))
   (should-equal 1 (compat-call alist-get 3 '((10 . 10) (4 . 4) (1 . 1) (9 . 9)) nil nil #'<))
   (should-equal '(a) (compat-call alist-get "b" '(("c" c) ("a" a) ("b" b)) nil nil #'string-lessp))
   (should-equal 'c (compat-call alist-get "a" '(("a" . a) ("a" . b) ("b" . c)) nil nil
