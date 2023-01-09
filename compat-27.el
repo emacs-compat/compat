@@ -509,7 +509,6 @@ The return value is a string (or nil in case we can’t find it)."
             (or (lm-header "package-version")
                 (lm-header "version")))))))))
 
-
 ;;;; Defined in dired.el
 
 (compat-defun dired-get-marked-files ;; <UNTESTED>
