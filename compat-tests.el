@@ -251,7 +251,7 @@
   ;; ;; Modifiers:
   (should-equal (key-parse "C-x") [?\C-x])
   (should-equal (key-parse "C-x a") [?\C-x ?a])
-  (should-equal (key-parse "C-;") [?\C-?\;])
+  (should-equal (key-parse "C-;") [?\C-;])
   (should-equal (key-parse "C-a") [?\C-a])
   (should-equal (key-parse "C-c SPC") [?\C-c ?\s])
   (should-equal (key-parse "C-c TAB") [?\C-c ?\t])
