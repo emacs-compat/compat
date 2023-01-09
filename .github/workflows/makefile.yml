@@ -38,6 +38,8 @@ jobs:
       with:
         version: ${{ matrix.emacs-version }}
     - name: Compile
-      run: make compile
+      run: |
+        sed -i "s/ no-byte-compile: t;//" compat-macs.el compat-tests.el
+        make compile
     - name: Run tests
       run: make test

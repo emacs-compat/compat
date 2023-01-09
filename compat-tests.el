@@ -1,4 +1,4 @@
-;;; compat-tests.el --- Tests for compat.el      -*- lexical-binding: t; -*-
+;;; compat-tests.el --- Tests for Compat -*- lexical-binding: t; no-byte-compile: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
