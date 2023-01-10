@@ -2022,6 +2022,13 @@ provided by Compat. Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/cl.texi
+@defmac with-memoization @var{place} @var{code}@dots{}
+This macro provides a simple way to do memoization.  @var{code} is
+evaluated and then stashed in @var{place}.  If @var{place}'s value is
+non-@code{nil}, return that value instead of evaluating @var{code}.
+@end defmac
+
 @c copied from lispref/positions.texi
 @defun pos-bol &optional count
 Like @code{line-beginning-position}, but ignores fields (and is more

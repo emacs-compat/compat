@@ -177,6 +177,18 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defmacro with-memoization (place &rest code) ;; <OK>
+  "Return the value of CODE and stash it in PLACE.
+If PLACE's value is non-nil, then don't bother evaluating CODE
+and return the value found in PLACE instead."
+  (declare (indent 1))
+  (gv-letplace (getter setter) place
+    `(or ,getter
+         ,(macroexp-let2 nil val (macroexp-progn code)
+            `(progn
+               ,(funcall setter val)
+               ,val)))))
+
 (compat-defalias string-split split-string) ;; <OK>
 
 (compat-defun function-alias-p (func &optional noerror) ;; <OK>
