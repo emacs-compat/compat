@@ -51,7 +51,12 @@
   "Return compatibility function symbol for FUN.
 
 If the Emacs version provides a sufficiently recent version of
-FUN, the symbol FUN is returned itself."
+FUN, the symbol FUN is returned itself. Otherwise the macro
+returns the symbol of a compatibility function which supports the
+behavior and calling convention of the current stable Emacs
+version. For example Compat 29.1 will provide compatibility
+functions which implement the behavior and calling convention of
+Emacs 29.1."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 
