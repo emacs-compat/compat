@@ -326,7 +326,7 @@ this defaults to the current buffer."
           (put-text-property sub-start sub-end 'display disp object)))
       (setq sub-start sub-end))))
 
-(compat-defmacro while-let (spec &rest body) ;; <UNTESTED>
+(compat-defmacro while-let (spec &rest body) ;; <OK>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all bindings are non-nil, eval BODY and repeat.

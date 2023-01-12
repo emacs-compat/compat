@@ -1539,6 +1539,12 @@
   (should-not (boundp 'compat-tests--dlet1))
   (should-not (boundp 'compat-tests--dlet2)))
 
+(ert-deftest while-let ()
+  (let ((first '(1 2 3 4)) (second '(a b c)) zipped)
+    (while-let ((x (pop first)) (y (pop second)))
+      (push (cons x y) zipped))
+    (should-equal '((3 . c) (2 . b) (1 . a)) zipped)))
+
 (ert-deftest when-let* ()
   (should-equal "second"
    (when-let*
