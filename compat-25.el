@@ -195,7 +195,6 @@ threading."
 
 (compat-defun macroexpand-1 (form &optional environment) ;; <OK>
   "Perform (at most) one step of macro expansion."
-  :feature macroexp
   (cond
    ((consp form)
     (let* ((head (car form))
