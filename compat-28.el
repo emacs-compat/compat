@@ -738,7 +738,7 @@ where the mouse button is clicked to find a thing nearby."
 
 ;;;; Defined in macroexp.el
 
-(compat-defun macroexp-file-name () ;; <UNTESTED>
+(compat-defun macroexp-file-name () ;; <OK>
   "Return the name of the file from which the code comes.
 Returns nil when we do not know.
 A non-nil result is expected to be reliable when called from a macro in order

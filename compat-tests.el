@@ -1970,6 +1970,15 @@
     (should-equal 'foo (compat-call lookup-key (list a-map b-map) "x"))
     (should-equal 'bar (compat-call lookup-key (list b-map a-map) "x"))))
 
+;; We need an indirection since `macroexp-file-name' is a function and not a
+;; macro. I don't understand why this wrong choice was made.
+;; `macroexp-file-name' should be a macro.
+(defmacro compat-tests--filename ()
+  (macroexp-file-name))
+
+(ert-deftest macroexp-file-name ()
+  (should-equal (file-name-nondirectory (compat-tests--filename)) "compat-tests.el"))
+
 (ert-deftest macroexpand-1 ()
   (should-equal '(if a b c) (macroexpand-1 '(if a b c)))
   (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))
