@@ -2000,8 +2000,8 @@
     (should-equal 'bar (compat-call lookup-key (list b-map a-map) "x"))))
 
 ;; We need an indirection since `macroexp-file-name' is a function and not a
-;; macro. I don't understand why this wrong choice was made.
-;; `macroexp-file-name' should be a macro.
+;; macro. `macroexp-file-name' is not a function since it is used mostly in a
+;; macro context.
 (defmacro compat-tests--filename ()
   (macroexp-file-name))
 
