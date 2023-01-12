@@ -957,5 +957,50 @@ command exists in this specific map, but it doesn't have the
              ,@(nreverse props))
         defvar-form))))
 
+;;;; Defined in button.el
+
+(compat-defun button--properties (callback data help-echo) ;; <OK>
+  "Helper function."
+  (list 'font-lock-face 'button
+        'mouse-face 'highlight
+        'help-echo help-echo
+        'button t
+        'follow-link t
+        'category t
+        'button-data data
+        'keymap button-map
+        'action callback))
+
+(defun buttonize (string callback &optional data help-echo) ;; <OK>
+  "Make STRING into a button and return it.
+When clicked, CALLBACK will be called with the DATA as the
+function argument.  If DATA isn't present (or is nil), the button
+itself will be used instead as the function argument.
+
+If HELP-ECHO, use that as the `help-echo' property.
+
+Also see `buttonize-region'."
+  (let ((string
+         (apply #'propertize string
+                (button--properties callback data help-echo))))
+    ;; Add the face to the end so that it can be overridden.
+    (add-face-text-property 0 (length string) 'button t string)
+    string))
+
+(compat-defun buttonize-region (start end callback &optional data help-echo) ;; <OK>
+  "Make the region between START and END into a button.
+When clicked, CALLBACK will be called with the DATA as the
+function argument.  If DATA isn't present (or is nil), the button
+itself will be used instead as the function argument.
+
+If HELP-ECHO, use that as the `help-echo' property.
+
+Also see `buttonize'."
+  (add-text-properties start end (button--properties callback data help-echo))
+  (add-face-text-property start end 'button t))
+
+;; Obsolete Alias since 29
+(compat-defalias button-buttonize buttonize :obsolete t)
+
 (provide 'compat-29)
 ;;; compat-29.el ends here

@@ -1770,16 +1770,6 @@ environment variable and @var{value} is that variable's value.
 @xref{System Environment,System Environment,,elisp}.
 @end defmac
 
-@c based on lisp/button.el
-@defun button-buttonize string callback &optional data help-echo
-Return a button with @var{string} as its label.  When interacted on, the
-one-argument function in @var{callback} is called and @var{data} (or
-@code{nil} is not present) will be passed as the argument.
-
-If non-@code{nil}, the argument @var{help-echo} will be used to set the
-@code{help-echo} text property.
-@end defun
-
 @c based on src/xfaces.c
 @defun color-values-from-color-spec spec
 Convert the textual color specification @var{spec} to a color triple
@@ -2039,6 +2029,25 @@ efficient).
 @defun pos-eol &optional count
 Like @code{line-end-position}, but ignores fields (and is more
 efficient).
+@end defun
+
+@c copied from lispref/display.texi
+@defun buttonize string callback &optional data help-echo
+Sometimes it's more convenient to make a string into a button without
+inserting it into a buffer immediately, for instance when creating
+data structures that may then, later, be inserted into a buffer.  This
+function makes @var{string} into such a string, and @var{callback}
+will be called when the user clicks on the button.  The optional
+@var{data} parameter will be used as the parameter when @var{callback}
+is called.  If @code{nil}, the button is used as the parameter instead.
+@end defun
+
+@defun buttonize-region start end callback &optional data help-echo
+Make the region between START and END into a button. When clicked,
+CALLBACK will be called with the DATA as the function argument. If
+DATA isn't present (or is nil), the button itself will be used instead
+as the function argument. If HELP-ECHO, use that as the help-echo
+property.
 @end defun
 
 @c copied from lispref/display.texi

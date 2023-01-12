@@ -25,12 +25,12 @@
 ;; around.
 (require 'subr-x)
 
-(defvar compat--current-version nil
+(defvar compat--version nil
   "Version of the currently defined compatibility definitions.")
 
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
-  (setq compat--current-version version)
+  (setq compat--version version)
   (let ((before (1- (car (version-to-list version)))))
     (when (and (< 24 before) (< emacs-major-version before))
       `(require ',(intern (format "compat-%d" before))))))
@@ -45,7 +45,7 @@ Prepend compatibility notice to the actual documentation string."
 If this is not documented on yourself system, you can check \
 `(compat) Emacs %s' for more details.]\n\n%s"
       type name
-      compat--current-version compat--current-version
+      compat--version compat--version
       docstring))
     (let ((fill-column 80))
       (fill-region (point-min) (point-max)))
@@ -76,7 +76,7 @@ If this is not documented on yourself system, you can check \
          (eval cond t)
        ;; The current Emacs must be older than the current declared Compat
        ;; version, see `compat-declare-version'.
-       (version< emacs-version compat--current-version)))))
+       (version< emacs-version compat--version)))))
 
 (defun compat--guarded-definition (attrs args fun)
   "Guard compatibility definition generation.
@@ -138,6 +138,8 @@ REST are attributes and the function BODY."
 ATTRS is a plist of attributes, which specify the conditions
 under which the definition is generated.
 
+- :obsolete :: Mark the alias as obsolete.
+
 - :min-version :: Install the definition if the Emacs version is
   greater or equal than the given version.
 
@@ -148,13 +150,16 @@ under which the definition is generated.
 
 - :cond :: Install the definition if :cond evaluates to non-nil."
   (declare (debug (name symbolp [&rest keywordp sexp])))
-  (compat--guarded-definition attrs ()
-    (lambda ()
+  (compat--guarded-definition attrs '(:obsolete)
+    (lambda (obsolete)
       ;; The fboundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
       `((unless (fboundp ',name)
-          (defalias ',name ',def))))))
+          ,(if obsolete
+               `(define-obsolete-function-alias
+                  ',name ',def ,compat--version)
+             `(defalias ',name ',def)))))))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define compatibility function NAME with arguments ARGLIST.
