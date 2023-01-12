@@ -971,7 +971,7 @@ command exists in this specific map, but it doesn't have the
         'keymap button-map
         'action callback))
 
-(defun buttonize (string callback &optional data help-echo) ;; <OK>
+(compat-defun buttonize (string callback &optional data help-echo) ;; <OK>
   "Make STRING into a button and return it.
 When clicked, CALLBACK will be called with the DATA as the
 function argument.  If DATA isn't present (or is nil), the button
