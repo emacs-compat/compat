@@ -1529,6 +1529,16 @@
   (should-equal "defg" (string-replace "abc" "defg" "abc"))
   (should-error (string-replace "" "x" "abc") :type 'wrong-length-argument))
 
+(ert-deftest dlet ()
+  (should-not (boundp 'compat-tests--dlet1))
+  (should-not (boundp 'compat-tests--dlet2))
+  (dlet ((compat-tests--dlet1 1)
+         (compat-tests--dlet2 2))
+    (should-equal (symbol-value 'compat-tests--dlet1) 1)
+    (should-equal (symbol-value 'compat-tests--dlet2) 2))
+  (should-not (boundp 'compat-tests--dlet1))
+  (should-not (boundp 'compat-tests--dlet2)))
+
 (ert-deftest when-let* ()
   (should-equal "second"
    (when-let*

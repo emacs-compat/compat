@@ -405,7 +405,7 @@ If `default-directory' is already an existing directory, it's not changed."
               "/")))
      ,@body))
 
-(compat-defmacro dlet (binders &rest body) ;; <UNTESTED>
+(compat-defmacro dlet (binders &rest body) ;; <OK>
   "Like `let' but using dynamic scoping."
   (declare (indent 1) (debug let))
   `(let (_)
