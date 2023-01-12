@@ -776,9 +776,8 @@ The binding is probably a symbol with a function definition.
 If optional argument ACCEPT-DEFAULT is non-nil, recognize default
 bindings; see the description of `keymap-lookup' for more details
 about this."
-  (let ((map (current-local-map)))
-    (when map
-      (keymap-lookup map keys accept-default))))
+  (when-let ((map (current-local-map)))
+    (keymap-lookup map keys accept-default)))
 
 (compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <UNTESTED>
   "Return the binding for command KEYS in current global keymap only.
