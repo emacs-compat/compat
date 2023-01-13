@@ -270,27 +270,39 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x C-f") #'find-file)
     (define-key map (kbd "SPC") #'minibuffer-complete-word)
+    (define-key map (kbd "RET") #'exit-minibuffer)
+    (define-key map [remap exit-minibuffer] #'minibuffer-force-complete-and-exit)
     (define-key map (kbd "C-c") mode-specific-map)
     (define-key map (kbd "s-c") [?\C-c ?\C-c])
+    (define-key map [t] 'compat-default-command)
     map))
 (defvar compat-tests--map-2
   (let ((map (make-sparse-keymap)))
     (keymap-set map "C-x C-f" #'find-file)
     (keymap-set map "SPC" #'minibuffer-complete-word)
+    (keymap-set map "RET" #'exit-minibuffer)
+    (keymap-set map "<remap> <exit-minibuffer>" #'minibuffer-force-complete-and-exit)
     (keymap-set map "C-c" mode-specific-map)
     (keymap-set map "s-c" "C-c C-c")
+    (keymap-set map "<t>" 'compat-default-command)
     map))
 (defvar-keymap compat-tests--map-3
   "C-x C-f" #'find-file
   "SPC" #'minibuffer-complete-word
+  "RET" #'exit-minibuffer
+  "<remap> <exit-minibuffer>" #'minibuffer-force-complete-and-exit
   "C-c" mode-specific-map
-  "s-c" "C-c C-c")
+  "s-c" "C-c C-c"
+  "<t>" 'compat-default-command)
 (defvar compat-tests--map-4
   (define-keymap
     "C-x C-f" #'find-file
     "SPC" #'minibuffer-complete-word
+    "RET" #'exit-minibuffer
+    "<remap> <exit-minibuffer>" #'minibuffer-force-complete-and-exit
     "C-c" mode-specific-map
-    "s-c" "C-c C-c"))
+    "s-c" "C-c C-c"
+    "<t>" 'compat-default-command))
 (ert-deftest defvar-keymap ()
   (should-equal compat-tests--map-1 compat-tests--map-2)
   (should-equal compat-tests--map-1 compat-tests--map-3)
@@ -509,6 +521,35 @@
   (should-not (key-valid-p "C-xx"))
   (should-not (key-valid-p "M-xx"))
   (should-not (key-valid-p "M-x<TAB>")))
+
+(ert-deftest keymap-lookup ()
+  (should-not (keymap-lookup compat-tests--map-1 "C-x b"))
+  (should-equal (keymap-lookup compat-tests--map-1 "C-x C-f") #'find-file)
+  (should-equal (keymap-lookup compat-tests--map-1 "RET") #'exit-minibuffer)
+  (should-equal (keymap-lookup compat-tests--map-1 "C-c") mode-specific-map)
+  (should-equal (keymap-lookup compat-tests--map-1 "s-c") [?\C-c ?\C-c])
+  (should-not (keymap-lookup compat-tests--map-1 "x"))
+  (should-equal (keymap-lookup compat-tests--map-1 "x" t) 'compat-default-command))
+
+(ert-deftest keymap-local-lookup ()
+  (let ((orig (current-local-map)))
+    (unwind-protect
+        (progn
+          (use-local-map compat-tests--map-1)
+          (should-not (keymap-local-lookup "C-x b"))
+          (should-equal (keymap-local-lookup "C-x C-f") #'find-file)
+          (should-equal (keymap-lookup compat-tests--map-1 "RET" nil t) #'exit-minibuffer)
+          (should-equal (keymap-local-lookup "RET") #'minibuffer-force-complete-and-exit)
+          (should-equal (keymap-local-lookup "C-c") mode-specific-map)
+          (should-equal (keymap-local-lookup "s-c") [?\C-c ?\C-c])
+          (should-not (keymap-local-lookup "x"))
+          (should-equal (keymap-local-lookup "x" t) 'compat-default-command))
+      (use-local-map orig))))
+
+(ert-deftest keymap-global-lookup ()
+  (should-equal (keymap-global-lookup "C-x b") #'switch-to-buffer)
+  (should-equal (keymap-global-lookup "C-x C-f") #'find-file)
+  (should-equal (keymap-global-lookup "C-c") #'mode-specific-command-prefix))
 
 (defun compat-tests--function-put ())
 (ert-deftest function-put ()

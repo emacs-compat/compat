@@ -726,7 +726,7 @@ a menu, so this function is not useful for non-menu keymaps."
   (define-key-after keymap (key-parse key) definition
     (and after (key-parse after))))
 
-(compat-defun keymap-lookup ;; <UNTESTED>
+(compat-defun keymap-lookup ;; <OK>
     (keymap key &optional accept-default no-remap position)
   "Return the binding for command KEY.
 KEY is a string that satisfies `key-valid-p'.
@@ -770,7 +770,7 @@ specified buffer position instead of point are used."
           value))
     (key-binding (kbd key) accept-default no-remap position)))
 
-(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <UNTESTED>
+(compat-defun keymap-local-lookup (keys &optional accept-default) ;; <OK>
   "Return the binding for command KEYS in current local keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -782,7 +782,7 @@ about this."
   (when-let ((map (current-local-map)))
     (keymap-lookup map keys accept-default)))
 
-(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <UNTESTED>
+(compat-defun keymap-global-lookup (keys &optional accept-default _message) ;; <OK>
   "Return the binding for command KEYS in current global keymap only.
 KEY is a string that satisfies `key-valid-p'.
 
