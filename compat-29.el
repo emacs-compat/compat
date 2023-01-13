@@ -638,7 +638,7 @@ that you make with this function.
 NOTE: The compatibility version is not a command."
   (keymap-set (current-global-map) key command))
 
-(compat-defun keymap-local-set (key command) ;; <UNTESTED>
+(compat-defun keymap-local-set (key command) ;; <OK>
   "Give KEY a local binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.
