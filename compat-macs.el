@@ -156,10 +156,13 @@ under which the definition is generated.
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
       `((unless (fboundp ',name)
-          ,(if obsolete
-               `(define-obsolete-function-alias
-                  ',name ',def ,compat--version)
-             `(defalias ',name ',def)))))))
+          ,(let ((doc (compat--format-docstring
+                       'function name
+                       (get name 'function-documentation))))
+             (if obsolete
+                 `(define-obsolete-function-alias
+                    ',name ',def ,compat--version ,doc)
+               `(defalias ',name ',def ,doc))))))))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define compatibility function NAME with arguments ARGLIST.
