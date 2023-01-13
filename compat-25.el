@@ -120,8 +120,7 @@ with an old syntax that accepted only one binding."
            (debug ([&or (symbolp form)
                         (&rest [&or symbolp (symbolp form) (form)])]
                    body)))
-  (when (and (<= (length spec) 2)
-             (not (listp (car spec))))
+  (when (and (<= (length spec) 2) (not (listp (car spec))))
     ;; Adjust the single binding case
     (setq spec (list spec)))
   (let ((empty (make-symbol "s"))

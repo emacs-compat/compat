@@ -333,6 +333,9 @@ If all bindings are non-nil, eval BODY and repeat.
 
 The variable list SPEC is the same as in `if-let'."
   (declare (indent 1) (debug if-let))
+  (when (and (<= (length spec) 2) (not (listp (car spec))))
+    ;; Adjust the single binding case
+    (setq spec (list spec)))
   (let ((done (gensym "done")))
     `(catch ',done
        (while t

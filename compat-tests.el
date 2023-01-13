@@ -46,6 +46,10 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+(defmacro compat-tests--if (cond then &rest else)
+  (declare (indent 2))
+  (if (eval cond t) then (macroexp-progn else)))
+
 (ert-deftest compat-loaded-features ()
   (let ((version 0))
     (while (< version 30)
@@ -1563,6 +1567,12 @@
   (should-not (boundp 'compat-tests--dlet2)))
 
 (ert-deftest while-let ()
+  ;; FIXME: Reenable this test on Emacs 29 and 30 (bug#60758)
+  (compat-tests--if (< emacs-major-version 29)
+    (let ((list '(1 2 3 4)) rev)
+      (while-let (x (pop list))
+        (push x rev))
+      (should-equal '(4 3 2 1) rev)))
   (let ((first '(1 2 3 4)) (second '(a b c)) zipped)
     (while-let ((x (pop first)) (y (pop second)))
       (push (cons x y) zipped))
@@ -1591,10 +1601,6 @@
     "then" "else"))
   (should-equal "else"
    (if-let* (((= 5 6))) "then" "else")))
-
-(defmacro compat-tests--if (cond then &rest else)
-  (declare (indent 2))
-  (if cond then (macroexp-progn else)))
 
 (ert-deftest when-let ()
   ;; FIXME Broken on Emacs 25
