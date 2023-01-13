@@ -19,18 +19,18 @@
 
 ;; Tests for compatibility functions from compat.el.
 ;;
-;; Note that not all functions have tests yet. Grep the Compat code for
-;; <UNTESTED> labels. If you intend to use a function, which doesn't have
-;; tests yet, please contribute tests here. NO GUARANTEES ARE MADE FOR
+;; Note that not all functions have tests yet.  Grep the Compat code for
+;; <UNTESTED> labels.  If you intend to use a function, which doesn't have
+;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
 ;; FUNCTIONS WITHOUT TESTS.
 
-;; The tests are written in a simple, explicit style. Please inspect the
-;; tests in order to find out the supported calling conventions. In
+;; The tests are written in a simple, explicit style.  Please inspect the
+;; tests in order to find out the supported calling conventions.  In
 ;; particular, note the use of `compat-call' to call functions, where the
 ;; calling convention or behavior changed between Emacs versions.
 
 ;; The functions tested here are guaranteed to work on the Emacs versions
-;; tested by continuous integration. This includes 24.4, 24.5, 25.1, 25.2,
+;; tested by continuous integration.  This includes 24.4, 24.5, 25.1, 25.2,
 ;; 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2, 29.1 and the current
 ;; Emacs master branch.
 
