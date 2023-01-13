@@ -624,7 +624,7 @@ parent keymap to be used."
   (keymap--check key)
   (compat--define-key keymap (key-parse key) nil remove))
 
-(compat-defun keymap-global-set (key command) ;; <UNTESTED>
+(compat-defun keymap-global-set (key command) ;; <OK>
   "Give KEY a global binding as COMMAND.
 COMMAND is the command definition to use; usually it is
 a symbol naming an interactively-callable function.

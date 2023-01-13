@@ -561,6 +561,21 @@
       (use-local-map orig))
     (should-not (keymap-local-lookup "s-c"))))
 
+(ert-deftest keymap-global-set ()
+  (let ((orig (current-global-map)))
+    (unwind-protect
+        (progn
+          (use-global-map (make-sparse-keymap))
+          (should-not (keymap-global-lookup "s-c"))
+          (should-not (keymap-global-lookup "x"))
+          (keymap-global-set "s-c" 'test)
+          (keymap-global-set "<t>" 'default)
+          (should-equal (keymap-global-lookup "s-c") 'test)
+          (should-equal (keymap-global-lookup "x" t) 'default)
+          (should-not (keymap-global-lookup "x")))
+      (use-global-map orig))
+    (should-not (keymap-global-lookup "s-c"))))
+
 (ert-deftest keymap-global-lookup ()
   (should-equal (keymap-global-lookup "C-x b") #'switch-to-buffer)
   (should-equal (keymap-global-lookup "C-x C-f") #'find-file)
