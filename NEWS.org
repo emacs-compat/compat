@@ -1,5 +1,9 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-27: Add generalized variables for ~decoded-time-*~.
+
 * Release of "Compat" Version 29.1.1.1
 
 - Tests added (167 out of 203 definitions tested, 82%)

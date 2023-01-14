@@ -330,7 +330,16 @@ This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."
   (nth 8 time))
 
-;; TODO define gv-setters for decoded-time-*
+(when (eval-when-compile (version< emacs-version "27.1"))
+  (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v))
+  (gv-define-setter decoded-time-minute (v x)  `(setcar (nthcdr 1 ,x) ,v))
+  (gv-define-setter decoded-time-hour (v x)    `(setcar (nthcdr 2 ,x) ,v))
+  (gv-define-setter decoded-time-day (v x)     `(setcar (nthcdr 3 ,x) ,v))
+  (gv-define-setter decoded-time-month (v x)   `(setcar (nthcdr 4 ,x) ,v))
+  (gv-define-setter decoded-time-year (v x)    `(setcar (nthcdr 5 ,x) ,v))
+  (gv-define-setter decoded-time-weekday (v x) `(setcar (nthcdr 6 ,x) ,v))
+  (gv-define-setter decoded-time-dst (v x)     `(setcar (nthcdr 7 ,x) ,v))
+  (gv-define-setter decoded-time-zone (v x)    `(setcar (nthcdr 8 ,x) ,v)))
 
 ;;;; Defined in image.el
 
