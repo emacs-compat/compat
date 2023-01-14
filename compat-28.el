@@ -774,17 +774,15 @@ The previous values will be be restored upon exit."
 For computational purposes, years are 365 days long and months
 are 30 days long."
   :feature time-date
-  ;; Inlining the definitions from compat-27
-  (+ (if (consp (nth 0 time))
-         ;; Fractional second.
-         (/ (float (car (nth 0 time)))
-            (cdr (nth 0 time)))
-       (or (nth 0 time) 0))
-     (* (or (nth 1 time) 0) 60)
-     (* (or (nth 2 time) 0) 60 60)
-     (* (or (nth 3 time) 0) 60 60 24)
-     (* (or (nth 4 time) 0) 60 60 24 30)
-     (* (or (nth 5 time) 0) 60 60 24 365)))
+  (+ (if (consp (decoded-time-second time))
+         (/ (float (car (decoded-time-second time)))
+            (cdr (decoded-time-second time)))
+       (or (decoded-time-second time) 0))
+     (* (or (decoded-time-minute time) 0) 60)
+     (* (or (decoded-time-hour time) 0) 60 60)
+     (* (or (decoded-time-day time) 0) 60 60 24)
+     (* (or (decoded-time-month time) 0) 60 60 24 30)
+     (* (or (decoded-time-year time) 0) 60 60 24 365)))
 
 (provide 'compat-28)
 ;;; compat-28.el ends here
