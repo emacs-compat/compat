@@ -1,13 +1,15 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.1.1
 
-- Tests added
+- Tests added (167 out of 203 definitions tested, 82%)
 - compat-25: Improve algorithmic complexity of ~sort~.
 - compat-28: Add ~make-separator-line~.
 - compat-29: Minor fixes to ~keymap-*~ functions.
 - compat-29: Add ~with-memoization~.
 - compat-29: Add ~buttonize~ and ~buttonize-region~.
+
+(Release <2023-01-14 Sat>)
 
 * Release of "Compat" Version 29.1.1.0
 
