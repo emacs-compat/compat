@@ -1045,39 +1045,56 @@ that may be set to a pattern that actually matches something.
 
 @defun decoded-time-second time
 Return the @var{seconds} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-minute time
 Return the @var{minute} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-hour time
 Return the @var{hour} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-day time
 Return the @var{day} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-month time
 Return the @var{month} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-year time
 Return the @var{year} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-weekday time
 Return the @var{weekday} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @defun decoded-time-dst time
 Return the @var{dst} (daylight saving time indicator) field of a
-@code{decoded-time} record @var{time}.
+@code{decoded-time} record @var{time}. It can also be used as a
+@ref{generalised variable,Generalized Variables,,elisp}.
 @end defun
 
 @defun decoded-time-zone time
 Return the @var{zone} field of a @code{decoded-time} record @var{time}.
+It can also be used as a @ref{generalised variable,Generalized
+Variables,,elisp}.
 @end defun
 
 @c copied from lisp/emacs-lisp/package.el
