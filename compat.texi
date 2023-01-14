@@ -1769,6 +1769,11 @@ Return the name of the file in which the code is currently being
 evaluated, or @code{nil} if it cannot be determined.
 @end defun
 
+@c based on lisp/emacs-lisp/macroexp.el
+@defun macroexp-warn-and-return msg form &optional category compile-only arg
+Return code equivalent to @code{form} labeled with warning @code{msg}.
+@end defun
+
 @c copied from on lispref/os.texi
 @defmac with-environment-variables variables body@dots{}
 This macro sets the environment variables according to @var{variables}
@@ -1982,8 +1987,6 @@ The function @code{benchmark-call}.
 Support for the @code{natnum} defcustom type.
 @item
 The function @code{macroexp-compiling-p}.
-@item
-The function @code{macroexp-warn-and-return}.
 @item
 Additional Edebug keywords.
 @item

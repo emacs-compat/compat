@@ -738,6 +738,16 @@ where the mouse button is clicked to find a thing nearby."
 
 ;;;; Defined in macroexp.el
 
+(compat-defun macroexp-warn-and-return (msg form &optional _category _compile-only _arg) ;; <OK>
+  "Return code equivalent to FORM labeled with warning MSG.
+CATEGORY is the category of the warning, like the categories that
+can appear in `byte-compile-warnings'.
+COMPILE-ONLY non-nil means no warning should be emitted if the code
+is executed without being compiled first.
+ARG is a symbol (or a form) giving the source code position for the message.
+It should normally be a symbol with position and it defaults to FORM."
+  (macroexp--warn-and-return msg form))
+
 (compat-defun macroexp-file-name () ;; <OK>
   "Return the name of the file from which the code comes.
 Returns nil when we do not know.

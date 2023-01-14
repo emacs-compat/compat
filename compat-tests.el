@@ -2085,6 +2085,9 @@
 (ert-deftest macroexp-file-name ()
   (should-equal (file-name-nondirectory (compat-tests--filename)) "compat-tests.el"))
 
+(ert-deftest macroexp-warn-and-return ()
+  (should-equal (macroexp-warn-and-return "test warning" '(some form)) '(some form)))
+
 (ert-deftest macroexpand-1 ()
   (should-equal '(if a b c) (macroexpand-1 '(if a b c)))
   (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))
