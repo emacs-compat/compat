@@ -2568,6 +2568,14 @@
   (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))
   (should-equal '(if a (progn (unless b c))) (macroexpand-1 '(when a (unless b c)))))
 
+;; NOTE: `with-suppressed-warnings' does not work inside of `ert-deftest'?!
+(defun compat-tests--with-suppressed-warnings ()
+  (with-suppressed-warnings ((interactive-only goto-line)
+                             (obsolete encode-time-value))
+    (encode-time-value 1 2 3 4 0)
+    (goto-line 10)))
+(ert-deftest with-suppressed-warnings () #'compat-tests--with-suppressed-warnings)
+
 (ert-deftest time-equal-p ()
   (should (time-equal-p nil nil))
 

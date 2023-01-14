@@ -1163,6 +1163,21 @@ returns @code{t} if so, @code{nil} otherwise.  Small integers can be
 compared with @code{eq}.
 @end defun
 
+@c copied from lispref/compile.texi
+@defspec with-suppressed-warnings warnings body@dots{}
+In execution, this is equivalent to @code{(progn @var{body}...)}, but
+the compiler does not issue warnings for the specified conditions in
+@var{body}.  @var{warnings} is an association list of warning symbols
+and function/variable symbols they apply to.  For instance, if you
+wish to call an obsolete function called @code{foo}, but want to
+suppress the compilation warning, say:
+
+@lisp
+(with-suppressed-warnings ((obsolete foo))
+  (foo ...))
+@end lisp
+@end defspec
+
 @c copied from lispref/lists.texi
 @defun proper-list-p object
 This function returns the length of @var{object} if it is a proper list,
@@ -1626,8 +1641,6 @@ The function @code{decoded-time-set-defaults}.
 The function @code{time-convert}.
 @item
 The macro @code{benchmark-progn}.
-@item
-The macro @code{with-suppressed-warnings}.
 @item
 Support for @code{condition-case} to handle t.
 @item
