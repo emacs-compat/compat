@@ -2,6 +2,7 @@
 
 * Development
 
+- Add links from compatibility definitions to tests.
 - compat-26: Add ~buffer-hash~.
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add ~with-minibuffer-selected-window~.

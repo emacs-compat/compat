@@ -24,6 +24,15 @@
 ;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
 ;; FUNCTIONS WITHOUT TESTS.
 
+;; Functions which are tested are marked with a link to the testsuite.
+;; The links can be enabled, by executing:
+;;
+;; (add-to-list 'org-link-abbrev-alist
+;;   '("compat-tests" . "file:compat-tests.el::ert-deftest %s ()"))
+;;
+;;  You can then jump to the links with the command
+;;  `org-open-at-point-global', ideally bound to a convenient key.
+
 ;; The tests are written in a simple, explicit style.  Please inspect the
 ;; tests in order to find out the supported calling conventions.  In
 ;; particular, note the use of `compat-call' to call functions, where the
@@ -100,6 +109,14 @@
     (should-equal 'd (get-text-property 5 'button-data b))
     (should-equal 'h (get-text-property 0 'help-echo b))
     (should-equal 'h (get-text-property 5 'help-echo b))))
+
+(ert-deftest button-buttonize ()
+  (let ((b (with-no-warnings (button-buttonize "button" 'c 'd))))
+    (should-equal b "button")
+    (should-equal 'c (get-text-property 0 'action b))
+    (should-equal 'c (get-text-property 5 'action b))
+    (should-equal 'd (get-text-property 0 'button-data b))
+    (should-equal 'd (get-text-property 5 'button-data b))))
 
 (ert-deftest buttonize-region ()
   (with-temp-buffer
@@ -708,9 +725,12 @@
   (should-equal compat-tests--local-c 3))
 
 (ert-deftest gensym ()
-  (should (symbolp (gensym "compat")))
-  (should (string-prefix-p "compat" (symbol-name (gensym 'compat))))
-  (should (string-prefix-p "compat" (symbol-name (gensym "compat")))))
+  (let ((orig gensym-counter))
+    (should (integerp gensym-counter))
+    (should (symbolp (gensym "compat")))
+    (should (string-prefix-p "compat" (symbol-name (gensym 'compat))))
+    (should (string-prefix-p "compat" (symbol-name (gensym "compat"))))
+    (should-equal gensym-counter (+ orig 3))))
 
 (ert-deftest plist-get ()
   (let (list)
@@ -733,7 +753,7 @@
 (ert-deftest garbage-collect-maybe ()
   (garbage-collect-maybe 10))
 
-(ert-deftest buffer-hahs ()
+(ert-deftest buffer-hash ()
   (should-equal (sha1 "foo") "0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33")
   (should-equal (with-temp-buffer
                    (insert "foo")

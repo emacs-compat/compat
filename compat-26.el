@@ -27,7 +27,7 @@
 
 ;;;; Defined in fns.c
 
-(compat-defun buffer-hash (&optional buffer-or-name) ;; <OK>
+(compat-defun buffer-hash (&optional buffer-or-name) ;; [[compat-tests:buffer-hash]]
    "Return a hash of the contents of BUFFER-OR-NAME.
 This hash is performed on the raw internal format of the buffer,
 disregarding any coding systems.  If nil, use the current buffer.
@@ -44,7 +44,7 @@ It should not be used for anything security-related.  See
        (widen)
        (sha1 (current-buffer) (point-min) (point-max)))))
 
-(compat-defun assoc (key alist &optional testfn) ;; <OK>
+(compat-defun assoc (key alist &optional testfn) ;; [[compat-tests:assoc]]
   "Handle the optional TESTFN."
   :explicit t
   (if testfn
@@ -54,13 +54,13 @@ It should not be used for anything security-related.  See
             (throw 'found ent))))
     (assoc key alist)))
 
-(compat-defun mapcan (func sequence) ;; <OK>
+(compat-defun mapcan (func sequence) ;; [[compat-tests:mapcan]]
   "Apply FUNC to each element of SEQUENCE.
 Concatenate the results by altering them (using `nconc').
 SEQUENCE may be a list, a vector, a boolean vector, or a string."
   (apply #'nconc (mapcar func sequence)))
 
-(compat-defun line-number-at-pos (&optional position absolute) ;; <OK>
+(compat-defun line-number-at-pos (&optional position absolute) ;; [[compat-tests:line-number-at-pos]]
   "Handle optional argument ABSOLUTE."
   :explicit t
   (if absolute
@@ -71,7 +71,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 
 ;;;; Defined in subr.el
 
-(compat-defun alist-get (key alist &optional default remove testfn) ;; <OK>
+(compat-defun alist-get (key alist &optional default remove testfn) ;; [[compat-tests:alist-get]]
   "Handle optional argument TESTFN."
   :explicit t
   (if testfn
@@ -119,14 +119,14 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
                                                  `(delq ,p ,getter))))))
                               ,v)))))))))))
 
-(compat-defun string-trim-left (string &optional regexp) ;; <OK>
+(compat-defun string-trim-left (string &optional regexp) ;; [[compat-tests:string-trim-left]]
   "Handle optional argument REGEXP."
   :explicit t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
 
-(compat-defun string-trim-right (string &optional regexp) ;; <OK>
+(compat-defun string-trim-right (string &optional regexp) ;; [[compat-tests:string-trim-right]]
   "Handle optional argument REGEXP."
   :explicit t
   (let ((i (string-match-p
@@ -134,7 +134,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
             string)))
     (if i (substring string 0 i) string)))
 
-(compat-defun string-trim (string &optional trim-left trim-right) ;; <OK>
+(compat-defun string-trim (string &optional trim-left trim-right) ;; [[compat-tests:string-trim]]
   "Handle optional arguments TRIM-LEFT and TRIM-RIGHT."
   :explicit t
   (compat--string-trim-left
@@ -143,130 +143,130 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
     trim-right)
    trim-left))
 
-(compat-defun caaar (x) ;; <OK>
+(compat-defun caaar (x) ;; [[compat-tests:cXXXr]]
   "Return the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (car (car (car x))))
 
-(compat-defun caadr (x) ;; <OK>
+(compat-defun caadr (x) ;; [[compat-tests:cXXXr]]
   "Return the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (car (cdr x))))
 
-(compat-defun cadar (x) ;; <OK>
+(compat-defun cadar (x) ;; [[compat-tests:cXXXr]]
   "Return the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (cdr (car x))))
 
-(compat-defun caddr (x) ;; <OK>
+(compat-defun caddr (x) ;; [[compat-tests:cXXXr]]
   "Return the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (cdr x))))
 
-(compat-defun cdaar (x) ;; <OK>
+(compat-defun cdaar (x) ;; [[compat-tests:cXXXr]]
   "Return the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (car (car x))))
 
-(compat-defun cdadr (x) ;; <OK>
+(compat-defun cdadr (x) ;; [[compat-tests:cXXXr]]
   "Return the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (cdr x))))
 
-(compat-defun cddar (x) ;; <OK>
+(compat-defun cddar (x) ;; [[compat-tests:cXXXr]]
   "Return the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (car x))))
 
-(compat-defun cdddr (x) ;; <OK>
+(compat-defun cdddr (x) ;; [[compat-tests:cXXXr]]
   "Return the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (cdr x))))
 
-(compat-defun caaaar (x) ;; <OK>
+(compat-defun caaaar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (car (car (car (car x)))))
 
-(compat-defun caaadr (x) ;; <OK>
+(compat-defun caaadr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (car (car (cdr x)))))
 
-(compat-defun caadar (x) ;; <OK>
+(compat-defun caadar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (car (cdr (car x)))))
 
-(compat-defun caaddr (x) ;; <OK>
+(compat-defun caaddr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (car (cdr (cdr x)))))
 
-(compat-defun cadaar (x) ;; <OK>
+(compat-defun cadaar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (car (cdr (car (car x)))))
 
-(compat-defun cadadr (x) ;; <OK>
+(compat-defun cadadr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (car (cdr x)))))
 
-(compat-defun caddar (x) ;; <OK>
+(compat-defun caddar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (car (cdr (cdr (car x)))))
 
-(compat-defun cadddr (x) ;; <OK>
+(compat-defun cadddr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `car' of the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (car (cdr (cdr (cdr x)))))
 
-(compat-defun cdaaar (x) ;; <OK>
+(compat-defun cdaaar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `car' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (car (car (car x)))))
 
-(compat-defun cdaadr (x) ;; <OK>
+(compat-defun cdaadr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `car' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (car (cdr x)))))
 
-(compat-defun cdadar (x) ;; <OK>
+(compat-defun cdadar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `car' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (car (cdr (car x)))))
 
-(compat-defun cdaddr (x) ;; <OK>
+(compat-defun cdaddr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `car' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (car (cdr (cdr x)))))
 
-(compat-defun cddaar (x) ;; <OK>
+(compat-defun cddaar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `cdr' of the `car' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (car (car x)))))
 
-(compat-defun cddadr (x) ;; <OK>
+(compat-defun cddadr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `cdr' of the `car' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (car (cdr x)))))
 
-(compat-defun cdddar (x) ;; <OK>
+(compat-defun cdddar (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `cdr' of the `cdr' of the `car' of X."
   (declare (pure t))
   (cdr (cdr (cdr (car x)))))
 
-(compat-defun cddddr (x) ;; <OK>
+(compat-defun cddddr (x) ;; [[compat-tests:cXXXXr]]
   "Return the `cdr' of the `cdr' of the `cdr' of the `cdr' of X."
   (declare (pure t))
   (cdr (cdr (cdr (cdr x)))))
 
-(compat-defvar gensym-counter 0 ;; <OK>
+(compat-defvar gensym-counter 0 ;; [[compat-tests:gensym]]
   "Number used to construct the name of the next symbol created by `gensym'.")
 
-(compat-defun gensym (&optional prefix) ;; <OK>
+(compat-defun gensym (&optional prefix) ;; [[compat-tests:gensym]]
   "Return a new uninterned symbol.
 The name is made by appending `gensym-counter' to PREFIX.
 PREFIX is a string, and defaults to \"g\"."
@@ -275,7 +275,7 @@ PREFIX is a string, and defaults to \"g\"."
                      (1+ gensym-counter)))))
     (make-symbol (format "%s%d" (or prefix "g") num))))
 
-(compat-defmacro if-let* (varlist then &rest else) ;; <OK>
+(compat-defmacro if-let* (varlist then &rest else) ;; [[compat-tests:if-let*]]
   "Bind variables according to VARLIST and evaluate THEN or ELSE.
 This is like `if-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
@@ -293,14 +293,14 @@ This is like `if-let' but doesn't handle a VARLIST of the form
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let* (varlist &rest body) ;; <OK>
+(compat-defmacro when-let* (varlist &rest body) ;; [[compat-tests:when-let*]]
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 This is like `when-let' but doesn't handle a VARLIST of the form
 \(SYMBOL SOMETHING) specially."
   (declare (indent 1) (debug if-let*))
   (list 'if-let* varlist (macroexp-progn body)))
 
-(compat-defmacro and-let* (varlist &rest body) ;; <OK>
+(compat-defmacro and-let* (varlist &rest body) ;; [[compat-tests:and-let*]]
   "Bind variables according to VARLIST and conditionally evaluate BODY.
 Like `when-let*', except if BODY is empty and all the bindings
 are non-nil, then the result is non-nil."
@@ -320,7 +320,7 @@ are non-nil, then the result is non-nil."
 
 ;;;; Defined in files.el
 
-(compat-defvar mounted-file-systems ;; <OK>
+(compat-defvar mounted-file-systems ;; [[compat-tests:mounted-file-systems]]
     (eval-when-compile
       (if (memq system-type '(windows-nt cygwin))
           "^//[^/]+/"
@@ -328,7 +328,7 @@ are non-nil, then the result is non-nil."
          "^" (regexp-opt '("/afs/" "/media/" "/mnt" "/net/" "/tmp_mnt/")))))
   "File systems that ought to be mounted.")
 
-(compat-defun file-local-name (file) ;; <OK>
+(compat-defun file-local-name (file) ;; [[compat-tests:file-local-name]]
   "Return the local name component of FILE.
 This function removes from FILE the specification of the remote host
 and the method of accessing the host, leaving only the part that
@@ -337,13 +337,13 @@ The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
   (or (file-remote-p file 'localname) file))
 
-(compat-defun file-name-quoted-p (name &optional top) ;; <OK>
+(compat-defun file-name-quoted-p (name &optional top) ;; [[compat-tests:file-name-quoted-p]]
   "Handle optional argument TOP."
   :explicit t
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (file-local-name name))))
 
-(compat-defun file-name-quote (name &optional top) ;; <OK>
+(compat-defun file-name-quote (name &optional top) ;; [[compat-tests:file-name-quote]]
   "Handle optional argument TOP."
   :explicit t
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
@@ -383,68 +383,68 @@ same meaning as in `make-temp-file'."
       (let ((temporary-file-directory (temporary-file-directory)))
         (make-temp-file prefix dir-flag suffix)))))
 
-(compat-defun file-attribute-type (attributes) ;; <OK>
+(compat-defun file-attribute-type (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The type field in ATTRIBUTES returned by `file-attributes'.
 The value is either t for directory, string (name linked to) for
 symbolic link, or nil."
   (nth 0 attributes))
 
-(compat-defun file-attribute-link-number (attributes) ;; <OK>
+(compat-defun file-attribute-link-number (attributes) ;; [[compat-tests:file-attribute-getters]]
   "Return the number of links in ATTRIBUTES returned by `file-attributes'."
   (nth 1 attributes))
 
-(compat-defun file-attribute-user-id (attributes) ;; <OK>
+(compat-defun file-attribute-user-id (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The UID field in ATTRIBUTES returned by `file-attributes'.
 This is either a string or a number.  If a string value cannot be
 looked up, a numeric value, either an integer or a float, is
 returned."
   (nth 2 attributes))
 
-(compat-defun file-attribute-group-id (attributes) ;; <OK>
+(compat-defun file-attribute-group-id (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The GID field in ATTRIBUTES returned by `file-attributes'.
 This is either a string or a number.  If a string value cannot be
 looked up, a numeric value, either an integer or a float, is
 returned."
   (nth 3 attributes))
 
-(compat-defun file-attribute-access-time (attributes) ;; <OK>
+(compat-defun file-attribute-access-time (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The last access time in ATTRIBUTES returned by `file-attributes'.
 This a Lisp timestamp in the style of `current-time'."
   (nth 4 attributes))
 
-(compat-defun file-attribute-modification-time (attributes) ;; <OK>
+(compat-defun file-attribute-modification-time (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The modification time in ATTRIBUTES returned by `file-attributes'.
 This is the time of the last change to the file's contents, and
 is a Lisp timestamp in the style of `current-time'."
   (nth 5 attributes))
 
-(compat-defun file-attribute-status-change-time (attributes) ;; <OK>
+(compat-defun file-attribute-status-change-time (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The status modification time in ATTRIBUTES returned by `file-attributes'.
 This is the time of last change to the file's attributes: owner
 and group, access mode bits, etc., and is a Lisp timestamp in the
 style of `current-time'."
   (nth 6 attributes))
 
-(compat-defun file-attribute-size (attributes) ;; <OK>
+(compat-defun file-attribute-size (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The integer size (in bytes) in ATTRIBUTES returned by `file-attributes'."
   (nth 7 attributes))
 
-(compat-defun file-attribute-modes (attributes) ;; <OK>
+(compat-defun file-attribute-modes (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The file modes in ATTRIBUTES returned by `file-attributes'.
 This is a string of ten letters or dashes as in ls -l."
   (nth 8 attributes))
 
-(compat-defun file-attribute-inode-number (attributes) ;; <OK>
+(compat-defun file-attribute-inode-number (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The inode number in ATTRIBUTES returned by `file-attributes'.
 It is a nonnegative integer."
   (nth 10 attributes))
 
-(compat-defun file-attribute-device-number (attributes) ;; <OK>
+(compat-defun file-attribute-device-number (attributes) ;; [[compat-tests:file-attribute-getters]]
   "The file system device number in ATTRIBUTES returned by `file-attributes'.
 It is an integer."
   (nth 11 attributes))
 
-(compat-defun file-attribute-collect (attributes &rest attr-names) ;; <OK>
+(compat-defun file-attribute-collect (attributes &rest attr-names) ;; [[compat-tests:file-attribute-collect]]
   "Return a sublist of ATTRIBUTES returned by `file-attributes'.
 ATTR-NAMES are symbols with the selected attribute names.
 
@@ -474,7 +474,7 @@ inode-number and device-number."
 
 ;;;; Defined in image.el
 
-(compat-defun image-property (image property) ;; <OK>
+(compat-defun image-property (image property) ;; [[compat-tests:image-property]]
   "Return the value of PROPERTY in IMAGE.
 Properties can be set with
 
@@ -486,7 +486,7 @@ If VALUE is nil, PROPERTY is removed from IMAGE."
 
 ;;;; Defined in rmc.el
 
-(compat-defun read-multiple-choice (prompt choices) ;; <OK>
+(compat-defun read-multiple-choice (prompt choices) ;; [[compat-tests:read-multiple-choice]]
   "Ask user to select an entry from CHOICES, promting with PROMPT.
 This function allows to ask the user a multiple-choice question.
 
