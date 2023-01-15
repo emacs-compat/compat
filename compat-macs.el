@@ -61,32 +61,15 @@ If this is not documented on yourself system, you can check \
     (setq attrs (cddr attrs)))
   attrs)
 
-(defun compat--condition-satisfied (attrs)
-  "Check that version constraints specified by ATTRS are satisfied."
-  (let ((min-version (plist-get attrs :min-version))
-        (max-version (plist-get attrs :max-version))
-        (cond (plist-get attrs :cond)))
-    ;; Min/max version bounds must be satisfied.
-    (and
-     ;; Min/max version bounds must be satisfied.
-     (or (not min-version) (version<= min-version emacs-version))
-     (or (not max-version) (version< emacs-version max-version))
-     ;; If a condition is specified, no version check is performed.
-     (if cond
-         (eval cond t)
-       ;; The current Emacs must be older than the current declared Compat
-       ;; version, see `compat-declare-version'.
-       (version< emacs-version compat--version)))))
-
 (defun compat--guarded-definition (attrs args fun)
   "Guard compatibility definition generation.
 The version constraints specified by ATTRS are checked.
 ARGS is a list of keywords which are looked up and passed to FUN."
   (declare (indent 2))
-  (let* ((body (compat--check-attributes
-                attrs `(,@args :min-version :max-version :cond :feature)))
+  (let* ((body (compat--check-attributes attrs `(,@args :cond :feature)))
          (feature (plist-get attrs :feature))
-         (attrs `(:body ,body ,@attrs)))
+         (attrs `(:body ,body ,@attrs))
+         (cond (plist-get attrs :cond)))
     ;; Require feature at compile time
     (when feature
       (when (eq feature 'subr-x)
@@ -94,7 +77,12 @@ ARGS is a list of keywords which are looked up and passed to FUN."
       ;; If the feature does not exist, treat it as nil.  The function will then
       ;; be defined on the toplevel and not in a `with-eval-after-load' block.
       (setq feature (require feature nil t)))
-    (when (compat--condition-satisfied attrs)
+    (when (if cond
+              ;; If a condition is specified, no version check is performed.
+              (eval cond t)
+            ;; The current Emacs must be older than the current declared Compat
+            ;; version, see `compat-declare-version'.
+            (version< emacs-version compat--version))
       (setq body (apply fun (mapcar (lambda (x) (plist-get attrs x)) args)))
       (when body
         (if feature
@@ -140,12 +128,6 @@ under which the definition is generated.
 
 - :obsolete :: Mark the alias as obsolete.
 
-- :min-version :: Install the definition if the Emacs version is
-  greater or equal than the given version.
-
-- :max-version :: Install the definition if the Emacs version is
-  smaller than the given version.
-
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
 - :cond :: Install the definition if :cond evaluates to non-nil."
@@ -173,12 +155,6 @@ defined.
 
 - :explicit :: Make the definition available such that it can be
   called explicitly via `compat-call'.
-
-- :min-version :: Install the definition if the Emacs version is
-  greater or equal than the given version.
-
-- :max-version :: Install the definition if the Emacs version is
-  smaller than the given version.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
@@ -209,12 +185,6 @@ definition is generated.
 - :local :: Make the variable permanently local if the value is
   `permanent'.  For other non-nil values make the variable
   buffer-local.
-
-- :min-version :: Install the definition if the Emacs version is
-  greater or equal than the given version.
-
-- :max-version :: Install the definition if the Emacs version is
-  smaller than the given version.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 

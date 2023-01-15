@@ -156,7 +156,7 @@ If COUNT is non-nil and a natural number, the function will
 (compat-defun json-serialize (object &rest args) ;; <UNTESTED>
   "Handle top-level JSON values (RFC 8259)."
   :explicit t
-  :min-version "27"
+  :cond (= 27 emacs-major-version)
   (if (or (listp object) (vectorp object))
       (apply #'json-serialize object args)
     (substring (json-serialize (list object)) 1 -1)))
@@ -165,7 +165,7 @@ If COUNT is non-nil and a natural number, the function will
 (compat-defun json-insert (object &rest args) ;; <UNTESTED>
   "Handle top-level JSON values (RFC 8259)."
   :explicit t
-  :min-version "27"
+  :cond (= 27 emacs-major-version)
   (if (or (listp object) (vectorp object))
       (apply #'json-insert object args)
     (insert (apply #'compat--json-serialize object args))))
@@ -174,7 +174,7 @@ If COUNT is non-nil and a natural number, the function will
 (compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
   "Handle top-level JSON values (RFC 8259)."
   :explicit t
-  :min-version "27"
+  :cond (= 27 emacs-major-version)
   (if (string-match-p "\\`[[:space:]]*[[{]" string)
       (apply #'json-parse-string string args)
     ;; Wrap the string in an array, and extract the value back using
@@ -186,7 +186,7 @@ If COUNT is non-nil and a natural number, the function will
 (compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
   "Handle top-level JSON values (RFC 8259)."
   :explicit t
-  :min-version "27"
+  :cond (= 27 emacs-major-version)
   (if (looking-at-p "[[:space:]]*[[{]")
       (apply #'json-parse-buffer args)
     (catch 'escape
