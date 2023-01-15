@@ -901,9 +901,12 @@
     (should-equal 'l (cddadr xxxx))
     (should-equal 'h (cdddar xxxx))))
 
+(ert-deftest subr-native-elisp-p ()
+  (should-not (subr-native-elisp-p (symbol-function 'identity))))
+
 (ert-deftest subr-primitive-p ()
   (should (subr-primitive-p (symbol-function 'identity)))       ;function from fns.c
-  (unless (fboundp 'subr-native-elisp-p)
+  (when (< emacs-major-version 28)
     (should-not (subr-primitive-p (symbol-function 'match-string)))) ;function from subr.el
   (should-not (subr-primitive-p (symbol-function 'defun)))        ;macro from subr.el
   (should-not (subr-primitive-p nil)))

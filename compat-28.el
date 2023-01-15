@@ -424,6 +424,10 @@ not a list, return a one-element list containing OBJECT."
 
 (compat-defalias subr-primitive-p subrp) ;; <OK>
 
+;;;; Defined in data.c
+
+(compat-defalias subr-native-elisp-p ignore) ;; <OK>
+
 ;;;; Defined in subr-x.el
 
 (compat-defun string-clean-whitespace (string) ;; <OK>

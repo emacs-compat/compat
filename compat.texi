@@ -1865,8 +1865,15 @@ long.
 Return @code{t} if @var{object} is a primitive, built-in function.  On
 systems with native compilation @code{subrp} does not distinguish
 between built-in functions and functions that have been compiled.  If
-native compilation is not avaliable, this function behaves identically
+native compilation is not available, this function behaves identically
 to @code{subrp}.
+@end defun
+
+@c based on lisp/subr.el
+@defun subr-native-elisp-p object
+Return @code{t} if @var{object} if the object is native compiled lisp.
+If native compilation is not available, this function always returns
+@code{nil}.
 @end defun
 
 @c copied from lispref/files.texi

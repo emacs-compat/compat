@@ -5,6 +5,7 @@
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add generalized variables for ~decoded-time-*~.
 - compat-28: Add ~macroexp-warn-and-return~.
+- compat-28: Add ~subr-native-elisp-p~.
 
 * Release of "Compat" Version 29.1.1.1
 
