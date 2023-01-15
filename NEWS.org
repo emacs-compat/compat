@@ -2,12 +2,14 @@
 
 * Development
 
+- compat-26: Add ~buffer-hash~.
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add ~with-minibuffer-selected-window~.
 - compat-27: Add generalized variables for ~decoded-time-*~.
 - compat-28: Add ~macroexp-warn-and-return~.
 - compat-28: Add ~subr-native-elisp-p~.
 - compat-28: Add ~bounds-of-thing-at-mouse~.
+- compat-29: Add ~with-buffer-unmodified-if-unchanged~.
 
 * Release of "Compat" Version 29.1.1.1
 

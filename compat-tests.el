@@ -733,6 +733,53 @@
 (ert-deftest garbage-collect-maybe ()
   (garbage-collect-maybe 10))
 
+(ert-deftest buffer-hahs ()
+  (should-equal (sha1 "foo") "0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33")
+  (should-equal (with-temp-buffer
+                   (insert "foo")
+                   (buffer-hash))
+                 (sha1 "foo"))
+  ;; This tests whether the presence of a gap in the middle of the
+  ;; buffer is handled correctly.
+  (should-equal (with-temp-buffer
+                   (insert "foo")
+                   (goto-char 2)
+                   (insert " ")
+                   (backward-delete-char 1)
+                   (buffer-hash))
+                 (sha1 "foo")))
+
+(ert-deftest with-buffer-unmodified-if-unchanged ()
+  (with-temp-buffer
+    (with-buffer-unmodified-if-unchanged
+      (insert "t"))
+    (should (buffer-modified-p)))
+
+  (with-temp-buffer
+    (with-buffer-unmodified-if-unchanged
+      (insert "t")
+      (delete-char -1))
+    (should-not (buffer-modified-p)))
+
+  ;; Shouldn't error.
+  (should
+   (with-temp-buffer
+     (with-buffer-unmodified-if-unchanged
+       (insert "t")
+       (delete-char -1)
+       (kill-buffer))))
+
+  (with-temp-buffer
+    (let ((outer (current-buffer)))
+      (with-temp-buffer
+        (let ((inner (current-buffer)))
+          (with-buffer-unmodified-if-unchanged
+            (insert "t")
+            (delete-char -1)
+            (set-buffer outer))
+          (with-current-buffer inner
+            (should-not (buffer-modified-p))))))))
+
 (ert-deftest insert-into-buffer ()
   ;; Without optional compat--arguments
   (with-temp-buffer

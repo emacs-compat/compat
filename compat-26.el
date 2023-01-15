@@ -27,6 +27,23 @@
 
 ;;;; Defined in fns.c
 
+(compat-defun buffer-hash (&optional buffer-or-name) ;; <OK>
+   "Return a hash of the contents of BUFFER-OR-NAME.
+This hash is performed on the raw internal format of the buffer,
+disregarding any coding systems.  If nil, use the current buffer.
+
+This function is useful for comparing two buffers running in the same
+Emacs, but is not guaranteed to return the same hash between different
+Emacs versions.  It should be somewhat more efficient on larger
+buffers than `secure-hash' is, and should not allocate more memory.
+
+It should not be used for anything security-related.  See
+`secure-hash' for these applications."
+   (with-current-buffer (or buffer-or-name (current-buffer))
+     (save-restriction
+       (widen)
+       (sha1 (current-buffer) (point-min) (point-max)))))
+
 (compat-defun assoc (key alist &optional testfn) ;; <OK>
   "Handle the optional TESTFN."
   :explicit t
