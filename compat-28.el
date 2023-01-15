@@ -712,7 +712,7 @@ is included in the return value."
 
 ;;;; Defined in windows.el
 
-(compat-defun count-windows (&optional minibuf all-frames) ;; <UNTESTED>
+(compat-defun count-windows (&optional minibuf all-frames) ;; <OK>
   "Handle optional argument ALL-FRAMES.
 If ALL-FRAMES is non-nil, count the windows in all frames instead
 just the selected frame."

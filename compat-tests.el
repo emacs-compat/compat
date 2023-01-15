@@ -206,6 +206,11 @@
       (should-equal (getenv A) B))
     (should-not (getenv A))))
 
+(ert-deftest count-windows ()
+  (should (fixnump (compat-call count-windows)))
+  (should (fixnump (compat-call count-windows t)))
+  (should (fixnump (compat-call count-windows t t))))
+
 (ert-deftest recenter ()
   (save-window-excursion
     (set-window-buffer nil (current-buffer))

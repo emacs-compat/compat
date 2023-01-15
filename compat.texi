@@ -820,7 +820,7 @@ The function @code{func-arity}.
 @item
 The function @code{secure-hash-algorithms}.
 @item
-The function @code{gnutls-avalaible-p}.
+The function @code{gnutls-available-p}.
 @item
 Support for records and record functions.
 @item
