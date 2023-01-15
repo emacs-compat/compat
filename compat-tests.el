@@ -27,8 +27,13 @@
 ;; Functions which are tested are marked with a link to the testsuite.
 ;; The links can be enabled, by executing:
 ;;
-;; (add-to-list 'org-link-abbrev-alist
-;;   '("compat-tests" . "file:compat-tests.el::ert-deftest %s ()"))
+;; (require 'ol)
+;; (org-link-set-parameters
+;;  "compat-tests"
+;;  :follow
+;;  (lambda (link _)
+;;    (org-link-open-from-string
+;;     (format "[[file:compat-tests.el::ert-deftest %s ()]]" link))))
 ;;
 ;;  You can then jump to the links with the command
 ;;  `org-open-at-point-global', ideally bound to a convenient key.

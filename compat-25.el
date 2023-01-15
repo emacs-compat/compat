@@ -27,7 +27,7 @@
 
 ;;;; Defined in alloc.c
 
-(compat-defun bool-vector (&rest objects) ;; [[compat-tests:bool-vector]]
+(compat-defun bool-vector (&rest objects) ;; <compat-tests:bool-vector>
   "Return a new bool-vector with specified arguments as elements.
 Allows any number of arguments, including zero.
 usage: (bool-vector &rest OBJECTS)"
@@ -42,7 +42,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in fns.c
 
-(compat-defun sort (seq predicate) ;; [[compat-tests:sort]]
+(compat-defun sort (seq predicate) ;; <compat-tests:sort>
   "Extend `sort' to sort SEQ as a vector."
   :explicit t
   (cond
@@ -59,11 +59,11 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in editfns.c
 
-(compat-defalias format-message format) ;; [[compat-tests:format-message]]
+(compat-defalias format-message format) ;; <compat-tests:format-message>
 
 ;;;; Defined in fileio.c
 
-(compat-defun directory-name-p (name) ;; [[compat-tests:directory-name-p]]
+(compat-defun directory-name-p (name) ;; <compat-tests:directory-name-p>
   "Return non-nil if NAME ends with a directory separator character."
   (eq (eval-when-compile
         (if (memq system-type '(cygwin windows-nt ms-dos))
@@ -72,13 +72,13 @@ usage: (bool-vector &rest OBJECTS)"
 
 ;;;; Defined in subr.el
 
-(compat-defun string-greaterp (string1 string2) ;; [[compat-tests:string-greaterp]]
+(compat-defun string-greaterp (string1 string2) ;; <compat-tests:string-greaterp>
   "Return non-nil if STRING1 is greater than STRING2 in lexicographic order.
 Case is significant.
 Symbols are also allowed; their print names are used instead."
   (string-lessp string2 string1))
 
-(compat-defmacro with-file-modes (modes &rest body) ;; [[compat-tests:with-file-modes]]
+(compat-defmacro with-file-modes (modes &rest body) ;; <compat-tests:with-file-modes>
   "Execute BODY with default file permissions temporarily set to MODES.
 MODES is as for `set-default-file-modes'."
   (declare (indent 1) (debug t))
@@ -90,7 +90,7 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
-(compat-defun alist-get (key alist &optional default remove) ;; [[compat-tests:alist-get]]
+(compat-defun alist-get (key alist &optional default remove) ;; <compat-tests:alist-get>
   "Return the value associated with KEY in ALIST, using `assq'.
 If KEY is not found in ALIST, return DEFAULT.
 This is a generalized variable suitable for use with `setf'.
@@ -100,7 +100,7 @@ means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
   (let ((x (assq key alist)))
     (if x (cdr x) default)))
 
-(compat-defmacro if-let (spec then &rest else) ;; [[compat-tests:if-let]]
+(compat-defmacro if-let (spec then &rest else) ;; <compat-tests:if-let>
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
 binding value is nil.  If all are non-nil return the value of
@@ -134,7 +134,7 @@ with an old syntax that accepted only one binding."
     `(let* ,(nreverse list)
        (if ,(caar list) ,then ,@else))))
 
-(compat-defmacro when-let (spec &rest body) ;; [[compat-tests:when-let]]
+(compat-defmacro when-let (spec &rest body) ;; <compat-tests:when-let>
   "Bind variables according to SPEC and conditionally evaluate BODY.
 Evaluate each binding in turn, stopping if a binding value is nil.
 If all are non-nil, return the value of the last form in BODY.
@@ -145,7 +145,7 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in subr-x.el
 
-(compat-defmacro thread-first (&rest forms) ;; [[compat-tests:thread-first]]
+(compat-defmacro thread-first (&rest forms) ;; <compat-tests:thread-first>
   "Thread FORMS elements as the first argument of their successor.
 Example:
     (thread-first
@@ -169,7 +169,7 @@ threading."
                          (cdr form))))
     body))
 
-(compat-defmacro thread-last (&rest forms) ;; [[compat-tests:thread-last]]
+(compat-defmacro thread-last (&rest forms) ;; <compat-tests:thread-last>
   "Thread FORMS elements as the last argument of their successor.
 Example:
     (thread-last
@@ -192,7 +192,7 @@ threading."
 
 ;;;; Defined in macroexp.el
 
-(compat-defun macroexpand-1 (form &optional environment) ;; [[compat-tests:macroexpand-1]]
+(compat-defun macroexpand-1 (form &optional environment) ;; <compat-tests:macroexpand-1>
   "Perform (at most) one step of macro expansion."
   (cond
    ((consp form)
@@ -218,7 +218,7 @@ threading."
 
 ;;;; Defined in byte-run.el
 
-(compat-defalias function-put put) ;; [[compat-tests:function-put]]
+(compat-defalias function-put put) ;; <compat-tests:function-put>
 
 (provide 'compat-25)
 ;;; compat-25.el ends here
