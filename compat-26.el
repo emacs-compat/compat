@@ -90,7 +90,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 
 ;; NOTE: Define gv expander only if `compat--alist-get' is defined.
 (when (eval-when-compile (< emacs-major-version 26))
-  (gv-define-expander compat--alist-get
+  (gv-define-expander compat--alist-get ;; [[compat-tests:alist-get-gv]]
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key
         (gv-letplace (getter setter) alist

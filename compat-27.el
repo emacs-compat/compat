@@ -330,7 +330,7 @@ the number of seconds east of Greenwich."
   (nth 8 time))
 
 (when (eval-when-compile (< emacs-major-version 27))
-  (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v))
+  (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v)) ;; [[compat-tests:decoded-time-accessors]]
   (gv-define-setter decoded-time-minute (v x)  `(setcar (nthcdr 1 ,x) ,v))
   (gv-define-setter decoded-time-hour (v x)    `(setcar (nthcdr 2 ,x) ,v))
   (gv-define-setter decoded-time-day (v x)     `(setcar (nthcdr 3 ,x) ,v))
@@ -369,13 +369,13 @@ Internal use only."
 
 (if (eval-when-compile (< emacs-major-version 26))
     (with-eval-after-load 'image
-      (gv-define-simple-setter image-property image--set-property))
+      (gv-define-simple-setter image-property image--set-property)) ;; [[compat-tests:image-property]]
   ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
   ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
   ;; override the gv expander until Emacs 27.1.
   (when (eval-when-compile (< emacs-major-version 27))
     (with-eval-after-load 'image
-      (gv-define-simple-setter image-property compat--image--set-property))))
+      (gv-define-simple-setter image-property compat--image--set-property)))) ;; [[compat-tests:image-property]]
 
 ;;;; Defined in files.el
 
