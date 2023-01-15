@@ -2,6 +2,7 @@
 
 * Development
 
+- Add tests.
 - Add links from compatibility definitions to tests.
 - compat-26: Add ~buffer-hash~.
 - compat-27: Add ~fixnump~ and ~bignump~.
@@ -14,7 +15,7 @@
 
 * Release of "Compat" Version 29.1.1.1
 
-- Tests added (167 out of 203 definitions tested, 82%)
+- Add tests, 167 out of 203 definitions tested (82%).
 - compat-25: Improve algorithmic complexity of ~sort~.
 - compat-28: Add ~make-separator-line~.
 - compat-29: Minor fixes to ~keymap-*~ functions.
