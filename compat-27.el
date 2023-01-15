@@ -340,6 +340,18 @@ the number of seconds east of Greenwich."
   (gv-define-setter decoded-time-dst (v x)     `(setcar (nthcdr 7 ,x) ,v))
   (gv-define-setter decoded-time-zone (v x)    `(setcar (nthcdr 8 ,x) ,v)))
 
+;;;; Defined in minibuffer.el
+
+(compat-defmacro with-minibuffer-selected-window (&rest body)
+  "Execute the forms in BODY from the minibuffer in its original window.
+When used in a minibuffer window, select the window selected just before
+the minibuffer was activated, and execute the forms."
+  (declare (indent 0) (debug t))
+  `(let ((window (minibuffer-selected-window)))
+     (when window
+       (with-selected-window window
+         ,@body))))
+
 ;;;; Defined in image.el
 
 (compat-defun image--set-property (image property value) ;; <OK>

@@ -64,6 +64,21 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest with-minibuffer-selected-window ()
+  (let (ran)
+    (should-not (minibuffer-selected-window))
+    (should-not (with-minibuffer-selected-window
+                  (setq ran t)))
+    (should-not ran)
+    (unwind-protect
+        (progn
+          (advice-add #'minibuffer-selected-window :override #'selected-window)
+          (should-equal 'result (with-minibuffer-selected-window
+                                  (setq ran t)
+                                  'result))
+          (should ran))
+      (advice-remove #'minibuffer-selected-window #'selected-window))))
+
 (ert-deftest fixnump ()
   (should (fixnump 0))
   (should (fixnump most-negative-fixnum))

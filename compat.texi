@@ -859,6 +859,13 @@ The function @code{window-swap-states}.
 The following functions and macros implemented in 27.1, and are provided
 by Compat:
 
+@c based on lisp/minibuffer.el
+@defmac with-minibuffer-selected-window &rest body
+Execute the forms in @var{body} from the minibuffer in its original
+window. When used in a minibuffer window, select the window selected
+just before the minibuffer was activated, and execute the forms.
+@end defmac
+
 @c copied from lispref/numbers.texi
 @defun bignump object
 This predicate tests whether its argument is a large integer, and
