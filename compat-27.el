@@ -342,7 +342,7 @@ the number of seconds east of Greenwich."
 
 ;;;; Defined in minibuffer.el
 
-(compat-defmacro with-minibuffer-selected-window (&rest body)
+(compat-defmacro with-minibuffer-selected-window (&rest body) ;; <OK>
   "Execute the forms in BODY from the minibuffer in its original window.
 When used in a minibuffer window, select the window selected just before
 the minibuffer was activated, and execute the forms."
