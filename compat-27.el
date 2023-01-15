@@ -31,28 +31,24 @@
   "Return OBJECT's length if it is a proper list, nil otherwise.
 A proper list is neither circular nor dotted (i.e., its last cdr
 is nil)."
-  :min-version "26" ;; Errors on 26.1 and newer
-  (and (listp object) (ignore-errors (length object))))
-
-(compat-defun proper-list-p (object) ;; <OK>
-  "Return OBJECT's length if it is a proper list, nil otherwise.
-A proper list is neither circular nor dotted (i.e., its last cdr
-is nil)."
-  :max-version "26" ;; On older Emacs than 26.1 use Tortoise and Hare algorithm
-  (when (listp object)
-    (catch 'cycle
-      (let ((hare object) (tortoise object)
-            (max 2) (q 2))
-        (while (consp hare)
-          (setq hare (cdr hare))
-          (when (and (or (/= 0 (setq q (1- q)))
-                         (ignore
-                          (setq max (ash max 1)
-                                q max
-                                tortoise hare)))
-                     (eq hare tortoise))
-            (throw 'cycle nil)))
-        (and (null hare) (length object))))))
+  (if (eval-when-compile (< emacs-major-version 26))
+      ;; On older Emacs than 26.1 use Tortoise and Hare algorithm
+      (when (listp object)
+        (catch 'cycle
+          (let ((hare object) (tortoise object)
+                (max 2) (q 2))
+            (while (consp hare)
+              (setq hare (cdr hare))
+              (when (and (or (/= 0 (setq q (1- q)))
+                             (ignore
+                              (setq max (ash max 1)
+                                    q max
+                                    tortoise hare)))
+                         (eq hare tortoise))
+                (throw 'cycle nil)))
+            (and (null hare) (length object)))))
+    ;; Errors on 26.1 and newer
+    (and (listp object) (ignore-errors (length object)))))
 
 (compat-defun string-distance (string1 string2 &optional bytecompare) ;; <OK>
   "Return Levenshtein distance between STRING1 and STRING2.
@@ -333,7 +329,7 @@ This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich."
   (nth 8 time))
 
-(when (eval-when-compile (version< emacs-version "27.1"))
+(when (eval-when-compile (< emacs-major-version 27))
   (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v))
   (gv-define-setter decoded-time-minute (v x)  `(setcar (nthcdr 1 ,x) ,v))
   (gv-define-setter decoded-time-hour (v x)    `(setcar (nthcdr 2 ,x) ,v))
@@ -359,13 +355,13 @@ Internal use only."
     (setcdr image (plist-put (cdr image) property value)))
   value)
 
-(if (eval-when-compile (version< emacs-version "26.1"))
+(if (eval-when-compile (< emacs-major-version 26))
     (with-eval-after-load 'image
       (gv-define-simple-setter image-property image--set-property))
   ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
   ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
   ;; override the gv expander until Emacs 27.1.
-  (when (eval-when-compile (version< emacs-version "27.1"))
+  (when (eval-when-compile (< emacs-major-version 27))
     (with-eval-after-load 'image
       (gv-define-simple-setter image-property compat--image--set-property))))
 
@@ -554,35 +550,23 @@ The return value is a string (or nil in case we can’t find it)."
 
 (compat-defun make-prop-match (&rest attr) ;; <OK>
   "Constructor for objects of type ‘prop-match’."
-  :max-version "26"
   :feature text-property-search
-  (vector 'prop-match ;; Vector for older than 26.1
-          (plist-get attr :beginning)
-          (plist-get attr :end)
-          (plist-get attr :value)))
-
-(compat-defun make-prop-match (&rest attr) ;; <OK>
-  "Constructor for objects of type ‘prop-match’."
-  :min-version "26"
-  :feature text-property-search
-  (record 'prop-match ;; record was introduced with 26.1
-          (plist-get attr :beginning)
-          (plist-get attr :end)
-          (plist-get attr :value)))
+  ;; Vector for older than 26.1, Record on newer Emacs.
+  (funcall (eval-when-compile (if (< emacs-major-version 26) 'vector 'record))
+           'prop-match
+           (plist-get attr :beginning)
+           (plist-get attr :end)
+           (plist-get attr :value)))
 
 (compat-defun prop-match-p (match) ;; <OK>
   "Return non-nil if MATCH is a `prop-match' object."
-  :max-version "26" ;; Vector before 26.1
   :feature text-property-search
-  (and (vectorp match)
-       (> (length match) 0)
-       (eq (aref match 0) 'prop-match)))
-
-(compat-defun prop-match-p (match) ;; <OK>
-  "Return non-nil if MATCH is a `prop-match' object."
-  :min-version "26" ;; Record for 26.1 and newer
-  :feature text-property-search
-  (eq (type-of match) 'prop-match))
+  ;; Vector for older than 26.1, Record on newer Emacs.
+  (if (eval-when-compile (< emacs-major-version 26))
+      (and (vectorp match)
+           (> (length match) 0)
+           (eq (aref match 0) 'prop-match))
+    (eq (type-of match) 'prop-match)))
 
 (compat-defun prop-match-beginning (match) ;; <OK>
   "Retrieve the position where MATCH begins."

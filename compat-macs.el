@@ -110,7 +110,7 @@ REST are attributes and the function BODY."
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
       (when (and (listp (car-safe body)) (eq (caar body) 'declare))
-        (when (version<= emacs-version "25")
+        (when (<= emacs-major-version 25)
           (delq (assq 'side-effect-free (car body)) (car body))
           (delq (assq 'pure (car body)) (car body))))
       ;; Use `:explicit' name if the function is already defined.
