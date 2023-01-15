@@ -164,6 +164,9 @@ where USER is a valid login name."
 
 ;;;; Defined in subr.el
 
+(compat-defalias fixnump integerp) ;; <OK>
+(compat-defalias bignump ignore) ;; <OK>
+
 (compat-defmacro setq-local (&rest pairs) ;; <OK>
   "Handle multiple assignments."
   :explicit t

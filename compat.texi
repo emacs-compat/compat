@@ -859,6 +859,20 @@ The function @code{window-swap-states}.
 The following functions and macros implemented in 27.1, and are provided
 by Compat:
 
+@c copied from lispref/numbers.texi
+@defun bignump object
+This predicate tests whether its argument is a large integer, and
+returns @code{t} if so, @code{nil} otherwise.  Unlike small integers,
+large integers can be @code{=} or @code{eql} even if they are not @code{eq}.
+@end defun
+
+@c copied from lispref/numbers.texi
+@defun fixnump object
+This predicate tests whether its argument is a small integer, and
+returns @code{t} if so, @code{nil} otherwise.  Small integers can be
+compared with @code{eq}.
+@end defun
+
 @c copied from lispref/lists.texi
 @defun proper-list-p object
 This function returns the length of @var{object} if it is a proper list,

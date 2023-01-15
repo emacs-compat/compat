@@ -64,6 +64,18 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest fixnump ()
+  (should (fixnump 0))
+  (should (fixnump most-negative-fixnum))
+  (should (fixnump most-positive-fixnum)))
+
+(ert-deftest bignump ()
+  (should-not (bignump 0))
+  (should-not (bignump most-negative-fixnum))
+  (should-not (bignump most-positive-fixnum))
+  (should-equal (bignump (1+ most-positive-fixnum)) (> emacs-major-version 26))
+  (should-equal (bignump (1- most-negative-fixnum)) (> emacs-major-version 26)))
+
 (ert-deftest buttonize ()
   (let ((b (buttonize "button" 'c 'd 'h)))
     (should-equal b "button")
