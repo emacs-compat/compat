@@ -1784,6 +1784,14 @@ When @var{no-properties} has a non-@code{nil} value, any text properties
 that might have been present in the buffer are stripped away.
 @end defun
 
+@c based on lisp/thingatpt.el
+@defun bounds-of-thing-at-mouse event thing
+Determine start and end locations for @var{thing} at mouse click given
+by @var{event}.  Like @code{bounds-of-thing-at-point}, but tries to use
+the position in @var{event} where the mouse button is clicked to find
+the thing nearby.
+@end defun
+
 @c based on lisp/emacs-lisp/macroexp.el
 @defun macroexp-file-name
 Return the name of the file in which the code is currently being

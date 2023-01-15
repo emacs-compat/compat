@@ -740,6 +740,15 @@ where the mouse button is clicked to find a thing nearby."
     (mouse-set-point event)
     (thing-at-point thing no-properties)))
 
+(compat-defun bounds-of-thing-at-mouse (event thing) ;; <UNTESTED>
+  "Determine start and end locations for THING at mouse click given by EVENT.
+Like `bounds-of-thing-at-point', but tries to use the position in EVENT
+where the mouse button is clicked to find the thing nearby."
+  :feature thingatpt
+  (save-excursion
+    (mouse-set-point event)
+    (bounds-of-thing-at-point thing)))
+
 ;;;; Defined in macroexp.el
 
 (compat-defun macroexp-warn-and-return (msg form &optional _category _compile-only _arg) ;; <OK>
