@@ -24,8 +24,10 @@
 ;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
 ;; FUNCTIONS WITHOUT TESTS.
 
-;; Functions which are tested are marked with a link to the testsuite.
-;; The links can be enabled, by executing:
+;; Functions which are tested are marked with a link to the testsuite.  The
+;; link type `compat-tests' must be registered first by evaluating the
+;; following code.  If you intend to work on the test suite you can add
+;; this code to your init.el.
 ;;
 ;; (require 'ol)
 ;; (org-link-set-parameters
