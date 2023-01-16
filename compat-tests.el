@@ -1238,7 +1238,6 @@
     (push (concat file "~") backups)
     (make-empty-file (car backups))
     (should-equal backups (file-backup-file-names file))
-    ;; (sleep-for 1) ;; FIXME Slowing down the test suite here is not great.
     (push (concat file ".~1~") backups)
     (make-empty-file (car backups))
     (should-equal backups (sort (file-backup-file-names file) #'string<))))
@@ -1689,9 +1688,15 @@
 
 (ert-deftest string-lines ()
   (should-equal '("a" "b" "c") (string-lines "a\nb\nc"))
-  ;; TODO behavior changed on Emacs master (Emacs version 30)
-  ;; (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
+  ;; FIXME: Behavior changed on Emacs 30
+  (compat-tests--if (< emacs-major-version 29)
+      (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
+    (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n"))
+    (should-equal '("a\n" "\n" "b\n" "c\n") (string-lines "a\n\nb\nc\n" nil t))
+    (should-equal '("a\n" "b\n" "c\n") (string-lines "a\n\nb\nc\n" t t))
+    (should-equal '("a\n" "b\n" "c\n") (string-lines "a\nb\nc\n" nil t)))
   (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n" t))
+  (should-equal '("a" "b" "c") (string-lines "a\nb\n\nc\n" t))
   (should-equal '("abc" "bcd" "cde") (string-lines "abc\nbcd\ncde"))
   (should-equal '(" abc" " bcd " "cde ") (string-lines " abc\n bcd \ncde ")))
 
@@ -1712,17 +1717,11 @@
 
 (ert-deftest string-distance ()
   (should-equal 3 (string-distance "kitten" "sitting"))    ;from wikipedia
-  (if (version<= "28" emacs-version) ;trivial examples
-      (should-equal 0 (string-distance "" ""))
-    ;; Up until Emacs 28, `string-distance' had a bug
-    ;; when comparing two empty strings. This was fixed
-    ;; in the following commit:
-    ;; https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=c44190c
-    ;;
-    ;; TODO Therefore, we must make sure, that the test
-    ;; doesn't fail because of this bug:
-    ;; (should (= (string-distance "" "") 0))
-    )
+  ;; In Emacs 27, `string-distance' had a bug when comparing two empty
+  ;; strings. This was fixed in the following commit:
+  ;; https://git.savannah.gnu.org/cgit/emacs.git/commit/?id=c44190c
+  (when (/= emacs-major-version 27)
+    (should-equal 0 (string-distance "" "")))
   (should-equal 0 (string-distance "a" "a"))
   (should-equal 1 (string-distance "" "a"))
   (should-equal 1 (string-distance "b" "a"))
