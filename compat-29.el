@@ -685,7 +685,7 @@ NOTE: The compatibility version is not a command."
   (when (current-local-map)
     (keymap-unset (current-local-map) key remove)))
 
-(compat-defun keymap-substitute (keymap olddef newdef &optional oldmap prefix) ;; <UNTESTED>
+(compat-defun keymap-substitute (keymap olddef newdef &optional oldmap prefix) ;; <compat-tests:keymap-substitute>
   "Replace OLDDEF with NEWDEF for any keys in KEYMAP now defined as OLDDEF.
 In other words, OLDDEF is replaced with NEWDEF wherever it appears.
 Alternatively, if optional fourth argument OLDMAP is specified, we redefine

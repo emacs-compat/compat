@@ -426,12 +426,22 @@
 
 (ert-deftest keymap-set-after ()
   (let ((map (make-sparse-keymap)))
-    (define-key-after map "d" 'd "a")
-    (define-key-after map "a" 'a)
-    (define-key-after map "b" 'b)
-    (define-key-after map "c" 'c)
-    (define-key-after map "d" 'd "b") ;; TODO the after argument has no effect?!
+    (keymap-set-after map "d" 'd "a")
+    (keymap-set-after map "a" 'a)
+    (keymap-set-after map "b" 'b)
+    (keymap-set-after map "c" 'c)
+    (keymap-set-after map "d" 'd "b") ;; TODO the after argument has no effect?!
     (should-equal map '(keymap (?a . a) (?b . b) (?c . c) (?d . d)))))
+
+(ert-deftest keymap-substitute ()
+  (let ((map (define-keymap
+               "C-x C-f" #'find-file
+               "s-f" #'find-file
+               "C-x b" #'switch-to-buffer)))
+    (keymap-substitute map #'find-file 'ffap)
+    (should-equal (keymap-lookup map "C-x b") #'switch-to-buffer)
+    (should-equal (keymap-lookup map "C-x C-f") 'ffap)
+    (should-equal (keymap-lookup map "s-f") 'ffap)))
 
 (ert-deftest key-parse ()
   (should-equal (key-parse "f") [?f])
