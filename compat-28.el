@@ -623,14 +623,6 @@ onwards does."
     ".#" (file-name-nondirectory filename))
    (file-name-directory filename)))
 
-;;;; Defined in files-x.el
-
-(compat-defun null-device () ;; <UNTESTED>
-  "Return the best guess for the null device."
-  (if (file-remote-p default-directory)
-      "/dev/null"
-    null-device))
-
 ;;;; Defined in minibuffer.el
 
 (compat-defun format-prompt (prompt default &rest format-args) ;; <compat-tests:format-prompt>

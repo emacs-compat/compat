@@ -1804,12 +1804,6 @@ Return a string containing a lock file name for @var{filename}, obeying
 @code{lock-file-name-transforms}.
 @end defun
 
-@c based on lisp/files.el
-@defun null-device
-Return the path to the null device (usually something like
-@file{/dev/null}) on the current system.
-@end defun
-
 @c copied from lisp/calendar/time-date.el
 @defun decoded-time-period time
 Interpret @var{time} as a period and return its length in seconds.  For
@@ -1942,6 +1936,8 @@ Additional Edebug keywords.
 @item
 Shorthand support.
 @item
+The libjansson JSON APIs, e.g., @code{json-parse-string}.
+@item
 The function @code{custom-add-choice}.
 @item
 The function @code{dom-print}.
@@ -1951,8 +1947,6 @@ The function @code{dom-remove-attribute}.
 The function @code{dns-query-asynchronous}.
 @item
 The function @code{get-locale-names}.
-@item
-The function @code{json-available-p}.
 @item
 The function @code{mail-header-parse-addresses-lax}.
 @item
@@ -1969,6 +1963,8 @@ The function @code{require-theme}.
 The function @code{syntax-class-to-char}.
 @item
 The function @code{path-separator}.
+@item
+The function @code{null-device}.
 @item
 Any @code{multisession} functionality.
 @end itemize
