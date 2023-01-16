@@ -57,6 +57,21 @@
 (require 'image)
 (require 'text-property-search nil t)
 
+;; Setup tramp mock
+(require 'tramp)
+(add-to-list
+ 'tramp-methods
+ '("mock"
+   (tramp-login-program      "sh")
+   (tramp-login-args         (("-i")))
+   (tramp-direct-async       ("-c"))
+   (tramp-remote-shell       "/bin/sh")
+   (tramp-remote-shell-args  ("-c"))
+   (tramp-connection-timeout 10)))
+(add-to-list
+ 'tramp-default-host-alist
+ `("\\`mock\\'" nil ,(system-name)))
+
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
@@ -1243,7 +1258,6 @@
     (should-equal backups (sort (file-backup-file-names file) #'string<))))
 
 (ert-deftest make-nearby-temp-file ()
-  ;; TODO Test tramp remote directory.
   (let ((file1 (make-nearby-temp-file "compat-tests"))
         (file2 (make-nearby-temp-file "compat-tests" nil "suffix"))
         (dir (make-nearby-temp-file "compat-tests" t)))
@@ -1256,21 +1270,26 @@
     (should-equal (file-name-directory dir) temporary-file-directory)
     (delete-file file1)
     (delete-file file2)
-    (delete-directory dir)))
+    (delete-directory dir))
+  ;; Tramp test (mock protocol)
+  (let* ((default-directory "/mock::/")
+         (file (make-nearby-temp-file "compat-tests")))
+    (should (string-match-p "\\`/mock:.*:/tmp/compat-tests" file))
+    (delete-file file)))
 
 (ert-deftest executable-find ()
   (should (member (executable-find "sh") '("/usr/bin/sh" "/bin/sh")))
   (should (member (executable-find "ls") '("/usr/bin/ls" "/bin/ls")))
-  ;; TODO Test tramp remote directory.
-  (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
+  ;; Tramp test (mock protocol)
+  (let ((default-directory "/mock::/"))
     (should (member (compat-call executable-find "sh" t) '("/usr/bin/sh" "/bin/sh")))
     (should (member (compat-call executable-find "ls" t) '("/usr/bin/ls" "/bin/ls")))))
 
 (ert-deftest exec-path ()
   (should-equal (exec-path) exec-path)
-  ;; TODO Test tramp remote directory.
-  (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
-    (should (file-directory-p (car (exec-path))))))
+  ;; Tramp test (mock protocol)
+  (let ((default-directory "/mock::/"))
+    (should (member "/bin" (exec-path)))))
 
 (ert-deftest with-existing-directory ()
   (let ((dir (make-temp-name "/tmp/not-exist-")))
@@ -1284,12 +1303,9 @@
   (should-equal (temporary-file-directory) temporary-file-directory)
   (let ((default-directory "/mnt"))
     (should-equal (temporary-file-directory) default-directory))
-  ;; TODO Implement Tramp test
-  ;;(let ((default-directory "/sudo:/"))
-  ;;  (should-equal (temporary-file-directory) temporary-file-directory))
-  ;;(let ((default-directory "/ssh:does-not-exist:/"))
-  ;;  (should-equal (temporary-file-directory) "/ssh:does-not-exist:/tmp/"))
-  )
+  ;; Tramp test (mock protocol)
+  (let ((default-directory "/mock::/"))
+    (should (string-match-p "\\`/mock:.*:/tmp/?\\'" (temporary-file-directory)))))
 
 (ert-deftest directory-files ()
   (should-not (compat-call directory-files "." nil nil nil 0))
@@ -1444,10 +1460,11 @@
   (should-equal "" (file-local-name ""))
   (should-equal "foo" (file-local-name "foo"))
   (should-equal "/bar/foo" (file-local-name "/bar/foo"))
-  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; NOTE: These tests fails prior to Emacs 26, because /ssh:foo was a valid
   ;; TRAMP path back then.
-  ;; (should-equal "/ssh:foo" (file-local-name "/ssh:foo"))
-  ;; (should-equal "/ssh:/bar/foo" (file-local-name "/ssh:/bar/foo"))
+  (when (>= emacs-major-version 26)
+    (should-equal "/ssh:foo" (file-local-name "/ssh:foo"))
+    (should-equal "/ssh:/bar/foo" (file-local-name "/ssh:/bar/foo")))
   (should-equal "foo" (file-local-name "/ssh::foo"))
   (should-equal "/bar/foo" (file-local-name "/ssh::/bar/foo"))
   (should-equal ":foo" (file-local-name "/ssh:::foo"))
@@ -1461,11 +1478,10 @@
   (should-not (compat-call file-name-quoted-p "/ssh::"))
   (should-not (compat-call file-name-quoted-p "/ssh::a"))
   (should (compat-call file-name-quoted-p "/ssh::/:a"))
-  ;; These tests fails prior to Emacs 26, because /ssh:foo was a valid
+  ;; NOTE: These tests fails prior to Emacs 26, because /ssh:foo was a valid
   ;; TRAMP path back then.
-  ;;
-  ;; (should-not (compat-call file-name-quoted-p "/ssh:/:a")))
-  )
+  (when (>= emacs-major-version 26)
+    (should-not (compat-call file-name-quoted-p "/ssh:/:a"))))
 
 (ert-deftest file-name-quote ()
   (should-equal "/:" (compat-call file-name-quote ""))

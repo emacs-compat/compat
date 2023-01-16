@@ -360,13 +360,16 @@ mounted file system (see `mounted-file-systems'), the function
 returns `default-directory'.
 For a non-remote and non-mounted `default-directory', the value of
 the variable `temporary-file-directory' is returned."
+  ;; NOTE: The handler may fail with an error, since the
+  ;; `temporary-file-directory' handler was introduced in Emacs 26.
   (let ((handler (find-file-name-handler
                   default-directory 'temporary-file-directory)))
-    (if handler
-        (funcall handler 'temporary-file-directory)
-      (if (string-match mounted-file-systems default-directory)
-          default-directory
-        temporary-file-directory))))
+    (or (and handler (ignore-errors (funcall handler 'temporary-file-directory)))
+        (if-let ((remote (file-remote-p default-directory)))
+            (concat remote "/tmp/") ;; FIXME: Guess /tmp on remote host
+          (if (string-match mounted-file-systems default-directory)
+              default-directory
+            temporary-file-directory)))))
 
 (compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <compat-tests:make-nearby-temp-file>
   "Create a temporary file as close as possible to `default-directory'.
@@ -376,12 +379,15 @@ temporary file is created in the directory returned by the
 function `temporary-file-directory'.  Otherwise, the function
 `make-temp-file' is used.  PREFIX, DIR-FLAG and SUFFIX have the
 same meaning as in `make-temp-file'."
-  (let ((handler (find-file-name-handler
-                  default-directory 'make-nearby-temp-file)))
-    (if (and handler (not (file-name-absolute-p default-directory)))
-        (funcall handler 'make-nearby-temp-file prefix dir-flag suffix)
-      (let ((temporary-file-directory (temporary-file-directory)))
-        (make-temp-file prefix dir-flag suffix)))))
+  ;; NOTE: The handler may fail with an error, since the
+  ;; `make-nearby-temp-file' handler was introduced in Emacs 26.
+  (let ((handler (and (not (file-name-absolute-p default-directory))
+                      (find-file-name-handler
+                       default-directory 'make-nearby-temp-file))))
+    (or (and handler (ignore-errors (funcall handler 'make-nearby-temp-file
+                                             prefix dir-flag suffix)))
+        (let ((temporary-file-directory (temporary-file-directory)))
+          (make-temp-file prefix dir-flag suffix)))))
 
 (compat-defun file-attribute-type (attributes) ;; <compat-tests:file-attribute-getters>
   "The type field in ATTRIBUTES returned by `file-attributes'.

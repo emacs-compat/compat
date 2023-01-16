@@ -419,31 +419,13 @@ The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
 If `default-directory' is a local directory, this function returns
 the value of the variable `exec-path'."
-  (cond
-   ((let ((handler (find-file-name-handler default-directory 'exec-path)))
-      ;; FIXME: The handler was added in 27.1, and this compatibility
-      ;; function only applies to versions of Emacs before that.
-      (when handler
-        (condition-case nil
-            (funcall handler 'exec-path)
-          (error nil)))))
-   ((file-remote-p default-directory)
-    ;; TODO: This is not completely portable, even if "sh" and
-    ;; "getconf" should be provided on every POSIX system, the chance
-    ;; of this not working are greater than zero.
-    ;;
-    ;; FIXME: This invokes a shell process every time exec-path is
-    ;; called.  It should instead be cached on a host-local basis.
-    (with-temp-buffer
-      (if (condition-case nil
-              (zerop (process-file "sh" nil t nil "-c" "getconf PATH"))
-            (file-missing t))
-          (list "/bin" "/usr/bin")
-        (let (path)
-          (while (re-search-forward "\\([^:]+?\\)[\n:]" nil t)
-            (push (match-string 1) path))
-          (nreverse path)))))
-   (exec-path)))
+  (let ((handler (find-file-name-handler default-directory 'exec-path)))
+    ;; NOTE: The handler may fail since it was added in 27.1.
+    (or (and handler (ignore-errors (funcall handler 'exec-path)))
+        (if (file-remote-p default-directory)
+            ;; FIXME: Just return some standard path on remote
+            '("/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin")
+          exec-path))))
 
 (compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
   "Search for COMMAND in `exec-path' and return the absolute file name.
