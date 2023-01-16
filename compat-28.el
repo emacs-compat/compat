@@ -140,7 +140,7 @@ consider, and are interpreted as in `substring'."
 
 ;;;; Defined in dired.c
 
-(compat-defun directory-files (directory &optional full match nosort count) ;; <UNTESTED>
+(compat-defun directory-files (directory &optional full match nosort count) ;; <compat-tests:directory-files>
   "Handle additional optional argument COUNT.
 If COUNT is non-nil and a natural number, the function will
  return COUNT number of file names (if so many are present)."
