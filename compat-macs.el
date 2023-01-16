@@ -130,7 +130,9 @@ under which the definition is generated.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Install the definition if :cond evaluates to non-nil."
+- :cond :: Do not install the definition depending on the
+  version.  Instead install the definition if :cond evaluates to
+  non-nil."
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guarded-definition attrs '(:obsolete)
     (lambda (obsolete)
@@ -158,7 +160,9 @@ defined.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Install the definition if :cond evaluates to non-nil."
+- :cond :: Do not install the definition depending on the
+  version.  Instead install the definition if :cond evaluates to
+  non-nil."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
@@ -188,7 +192,9 @@ definition is generated.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Install the definition if :cond evaluates to non-nil."
+- :cond :: Do not install the definition depending on the
+  version.  Instead install the definition if :cond evaluates to
+  non-nil."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
   (compat--guarded-definition attrs '(:local :constant)
