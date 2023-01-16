@@ -189,7 +189,7 @@ signalled.  If NOERROR, the non-loop parts of the chain is returned."
          (push func chain))
        chain))))
 
-(compat-defun buffer-match-p (condition buffer-or-name &optional arg) ;; <UNTESTED>
+(compat-defun buffer-match-p (condition buffer-or-name &optional arg) ;; <compat-tests:buffer-match-p>
   "Return non-nil if BUFFER-OR-NAME matches CONDITION.
 CONDITION is either:
 - the symbol t, to always match,
@@ -245,7 +245,7 @@ CONDITION is either:
                 (throw 'match t)))))))
     (funcall match (list condition))))
 
-(compat-defun match-buffers (condition &optional buffers arg) ;; <UNTESTED>
+(compat-defun match-buffers (condition &optional buffers arg) ;; <compat-tests:match-buffers>
   "Return a list of buffers that match CONDITION.
 See `buffer-match' for details on CONDITION.  By default all
 buffers are checked, this can be restricted by passing an
