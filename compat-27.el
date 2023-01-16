@@ -493,6 +493,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 ;;;; Defined in package.el
 
 (declare-function lm-header "lisp-mnt")
+(declare-function macroexp-file-name nil)
 
 (compat-defun package-get-version () ;; <compat-tests:package-get-version>
   "Return the version number of the package in which this is used.
