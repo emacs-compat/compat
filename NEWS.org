@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development
+* Development of "Compat" Version 29.1.2.0
 
 - Add tests.
 - Add links from compatibility definitions to tests.
