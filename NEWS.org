@@ -6,7 +6,6 @@
 - Add links from compatibility definitions to tests.
 - BREAKING: Drop JSON parsing support (libjansson API).
 - BREAKING: Drop ~null-device~.
-- compat-29: Fix and test ~define-key~ with REMOVE argument.
 - compat-26: Add ~buffer-hash~.
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add ~with-minibuffer-selected-window~.
@@ -15,6 +14,7 @@
 - compat-28: Add ~subr-native-elisp-p~.
 - compat-28: Add ~bounds-of-thing-at-mouse~.
 - compat-29: Add ~with-buffer-unmodified-if-unchanged~.
+- compat-29: Fix and test ~define-key~ with REMOVE argument.
 
 * Release of "Compat" Version 29.1.1.1
 
@@ -64,8 +64,8 @@
   ~file-name-concat~, ~replace-regexp-in-region~, ~replace-string-in-region~.
 - Add new Emacs 29 APIs. Some of them are still untested and may change. If you
   intend to use an Emacs 29 API please be careful and if possible contribute
-  test cases. All untested functions are marked as ~<UNTESTED>~ in the Compat
-  code. Over time tests for all functions will be added gradually.
+  test cases. All untested functions are marked in the Compat code. Over time
+  tests for all functions will be added gradually.
 - Add the macros ~compat-call~ and ~compat-function~ to call compatibility
   functions. Since Compat avoids overwriting already existing functions, we must
   define separate compatibility function definitions for functions which changed
