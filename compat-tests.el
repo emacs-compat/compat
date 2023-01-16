@@ -1238,10 +1238,10 @@
     (push (concat file "~") backups)
     (make-empty-file (car backups))
     (should-equal backups (file-backup-file-names file))
-    (sleep-for 1) ;; FIXME Slowing down the test suite here is not great.
+    ;; (sleep-for 1) ;; FIXME Slowing down the test suite here is not great.
     (push (concat file ".~1~") backups)
     (make-empty-file (car backups))
-    (should-equal backups (file-backup-file-names file))))
+    (should-equal backups (sort (file-backup-file-names file) #'string<))))
 
 (ert-deftest make-nearby-temp-file ()
   ;; TODO Test tramp remote directory.
