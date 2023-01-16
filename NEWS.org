@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development of "Compat" Version 29.1.2.0
+* Release of "Compat" Version 29.1.2.0
 
 - All compatibility functions are covered by tests!
 - Add links from compatibility definitions to tests.
@@ -16,6 +16,8 @@
 - compat-28: Add ~bounds-of-thing-at-mouse~.
 - compat-29: Add ~with-buffer-unmodified-if-unchanged~.
 - compat-29: Fix and test ~define-key~ with REMOVE argument.
+
+(Release <2023-01-16 Mon>)
 
 * Release of "Compat" Version 29.1.1.1
 
