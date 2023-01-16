@@ -150,59 +150,6 @@ If COUNT is non-nil and a natural number, the function will
       (setf (nthcdr count files) nil))
     files))
 
-;;;; Defined in json.c
-
-;; TODO Check interaction with conditionally defined json functions
-(compat-defun json-serialize (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values (RFC 8259)."
-  :explicit t
-  :cond (= 27 emacs-major-version)
-  (if (or (listp object) (vectorp object))
-      (apply #'json-serialize object args)
-    (substring (json-serialize (list object)) 1 -1)))
-
-;; TODO Check interaction with conditionally defined json functions
-(compat-defun json-insert (object &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values (RFC 8259)."
-  :explicit t
-  :cond (= 27 emacs-major-version)
-  (if (or (listp object) (vectorp object))
-      (apply #'json-insert object args)
-    (insert (apply #'compat--json-serialize object args))))
-
-;; TODO Check interaction with conditionally defined json functions
-(compat-defun json-parse-string (string &rest args) ;; <UNTESTED>
-  "Handle top-level JSON values (RFC 8259)."
-  :explicit t
-  :cond (= 27 emacs-major-version)
-  (if (string-match-p "\\`[[:space:]]*[[{]" string)
-      (apply #'json-parse-string string args)
-    ;; Wrap the string in an array, and extract the value back using
-    ;; `elt', to ensure that no matter what the value of `:array-type'
-    ;; is we can access the first element.
-    (elt (apply #'json-parse-string (concat "[" string "]") args) 0)))
-
-;; TODO Check interaction with conditionally defined json functions
-(compat-defun json-parse-buffer (&rest args) ;; <UNTESTED>
-  "Handle top-level JSON values (RFC 8259)."
-  :explicit t
-  :cond (= 27 emacs-major-version)
-  (if (looking-at-p "[[:space:]]*[[{]")
-      (apply #'json-parse-buffer args)
-    (catch 'escape
-      (atomic-change-group
-        (with-syntax-table
-            (let ((st (make-syntax-table)))
-              (modify-syntax-entry ?\" "\"" st)
-              (modify-syntax-entry ?. "_" st)
-              st)
-          (let ((inhibit-read-only t))
-            (save-excursion
-            (insert "[")
-            (forward-sexp 1)
-            (insert "]"))))
-        (throw 'escape (elt (apply #'json-parse-buffer args) 0))))))
-
 ;;;; xfaces.c
 
 (compat-defun color-values-from-color-spec (spec) ;; <compat-tests:color-values-from-color-spec>
