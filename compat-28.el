@@ -625,12 +625,9 @@ onwards does."
 
 ;;;; Defined in files-x.el
 
-(declare-function tramp-tramp-file-p "tramp" (name))
-
 (compat-defun null-device () ;; <UNTESTED>
   "Return the best guess for the null device."
-  (require 'tramp)
-  (if (tramp-tramp-file-p default-directory)
+  (if (file-remote-p default-directory)
       "/dev/null"
     null-device))
 
