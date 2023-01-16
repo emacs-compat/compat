@@ -1860,21 +1860,6 @@ assume that there is a user named @samp{rms} but no user named
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior changed:
 
-@c copied from lispref/files.texi
-@defun compat-call@ unlock-buffer
-This function unlocks the file being visited in the current buffer,
-if the buffer is modified.  If the buffer is not modified, then
-the file should not be locked, so this function does nothing.  It also
-does nothing if the current buffer is not visiting a file, or is not locked.
-This function handles file system errors by calling @code{display-warning}
-and otherwise ignores the error.
-
-@xref{File Locks,,,elisp}.
-
-This compatibility versions catches the @code{file-error} condition,
-issuing a warning instead of propagating on the error.
-@end defun
-
 @defun compat-call@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
 if it were displayed in the current buffer and the selected window.

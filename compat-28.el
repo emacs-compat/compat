@@ -109,21 +109,6 @@ inserted before contatenating."
 
 (compat-defalias garbage-collect-maybe ignore) ;; <compat-tests:garbage-collect-maybe>
 
-;;;; Defined in filelock.c
-
-(compat-defun unlock-buffer () ;; <UNTESTED>
-  "Handle `file-error' conditions.
-Handles file system errors by calling ‘display-warning’ and
-continuing as if the error did not occur."
-  :explicit t
-  (condition-case error
-      (unlock-buffer)
-    (file-error
-     (display-warning
-      '(unlock-file)
-      (message "%s, ignored" (error-message-string error))
-      :warning))))
-
 ;;;; Defined in characters.c
 
 (compat-defun string-width (string &optional from to) ;; <compat-tests:string-width>
