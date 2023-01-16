@@ -4,9 +4,9 @@
 
 - All compatibility functions are covered by tests!
 - Add links from compatibility definitions to tests.
-- BREAKING: Drop JSON parsing support (libjansson API).
-- BREAKING: Drop ~null-device~.
-- BREAKING: Drop ~unlock-buffer~.
+- BREAKING: Drop JSON parsing support (libjansson API, unused downstream).
+- BREAKING: Drop ~null-device~ (unused downstream).
+- BREAKING: Drop ~unlock-buffer~ (unused downstream).
 - compat-26: Add ~buffer-hash~.
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add ~with-minibuffer-selected-window~.
