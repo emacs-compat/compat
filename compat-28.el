@@ -546,7 +546,7 @@ See also `file-name-sans-extension'."
      (t
       (concat (file-name-sans-extension filename) "." extn)))))
 
-(compat-defun directory-empty-p (dir) ;; <UNTESTED>
+(compat-defun directory-empty-p (dir) ;; <compat-tests:directory-empty-p>
   "Return t if DIR names an existing directory containing no other files.
 Return nil if DIR does not name a directory, or if there was
 trouble determining whether DIR is a directory or empty.

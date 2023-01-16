@@ -1131,6 +1131,15 @@
   (should (directory-name-p "dir/subdir/"))
   (should-not (directory-name-p "dir/subdir")))
 
+(ert-deftest directory-empty-p ()
+  (let ((name (make-temp-name "compat-tests")))
+    (make-directory name)
+    (should (directory-empty-p name))
+    (make-empty-file (file-name-concat name "file"))
+    (should-not (directory-empty-p name))
+    (delete-file (file-name-concat name "file"))
+    (delete-directory name)))
+
 (ert-deftest make-empty-file ()
   (let ((name (make-temp-name "compat-tests")))
     (should-not (file-exists-p name))
