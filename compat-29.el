@@ -151,30 +151,6 @@ This function does not move point.  Also see `line-end-position'."
   (let ((inhibit-field-text-motion t))
     (line-end-position n)))
 
-;;;; Defined in keymap.c
-
-(compat-defun define-key (keymap key def &optional remove) ;; <UNTESTED>
-  "Handle optional argument REMOVE."
-  :explicit t
-  (if remove
-      (let ((prev (lookup-key keymap key))
-            (parent (memq 'key (cdr keymap)))
-            fresh entry)
-        (when prev
-          ;; IMPROVEME: Kind of a hack to avoid relying on the specific
-          ;; behaviour of how `define-key' changes KEY before inserting
-          ;; it into the map.
-          (define-key keymap key (setq fresh (make-symbol "fresh")))
-          (setq entry (rassq fresh (cdr keymap)))
-          (if (> (length (memq entry (cdr keymap)))
-                 (length parent))
-              ;; Ensure that we only remove an element in the current
-              ;; keymap and not a parent, by ensuring that `entry' is
-              ;; located before `parent'.
-              (ignore (setcdr keymap (delq entry (cdr keymap))))
-            (define-key keymap key prev))))
-    (define-key keymap key def)))
-
 ;;;; Defined in subr.el
 
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
@@ -646,7 +622,7 @@ DEFINITION is anything that can be a key's definition:
     (setq definition (key-parse definition)))
   (define-key keymap (key-parse key) definition))
 
-(compat-defun keymap-unset (keymap key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-unset (keymap key &optional remove) ;; <compat-tests:keymap-unset>
   "Remove key sequence KEY from KEYMAP.
 KEY is a string that satisfies `key-valid-p'.
 
@@ -688,7 +664,7 @@ NOTE: The compatibility version is not a command."
       (use-local-map (setq map (make-sparse-keymap))))
     (keymap-set map key command)))
 
-(compat-defun keymap-global-unset (key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-global-unset (key &optional remove) ;; <compat-tests:keymap-global-unset>
   "Remove global binding of KEY (if any).
 KEY is a string that satisfies `key-valid-p'.
 
@@ -698,7 +674,7 @@ instead of unsetting it.  See `keymap-unset' for details.
 NOTE: The compatibility version is not a command."
   (keymap-unset (current-global-map) key remove))
 
-(compat-defun keymap-local-unset (key &optional remove) ;; <UNTESTED>
+(compat-defun keymap-local-unset (key &optional remove) ;; <compat-tests:keymap-local-unset>
   "Remove local binding of KEY (if any).
 KEY is a string that satisfies `key-valid-p'.
 
@@ -993,6 +969,34 @@ command exists in this specific map, but it doesn't have the
              ,defvar-form
              ,@(nreverse props))
         defvar-form))))
+
+;;;; Defined in keymap.c
+
+(compat-defun define-key (keymap key def &optional remove) ;; <compat-tests:define-key>
+  "Handle optional argument REMOVE."
+  :explicit t
+  (if (not remove)
+      (define-key keymap key def)
+    ;; Canonicalize key
+    (setq key (key-parse (key-description key)))
+    (define-key keymap key nil)
+    ;; Split M-key in ESC key
+    (setq key (mapcan (lambda (k)
+                        (if (and (integerp k) (/= (logand k ?\M-\0) 0))
+                            (list ?\e (logxor k ?\M-\0))
+                          (list k)))
+                      key))
+    ;; Delete single keys directly
+    (if (length= key 1)
+        (delete key keymap)
+      ;; Lookup submap and delete key from there
+      (let ((submap (lookup-key keymap (vconcat (butlast key)))))
+        (unless (keymapp submap)
+          (error "Not a keymap for %s" key))
+        (when (symbolp submap)
+          (setq submap (symbol-function submap)))
+        (delete (last key) submap)))
+    def))
 
 ;;;; Defined in button.el
 
