@@ -66,10 +66,10 @@ If this is not documented on yourself system, you can check \
 The version constraints specified by ATTRS are checked.
 ARGS is a list of keywords which are looked up and passed to FUN."
   (declare (indent 2))
-  (let* ((body (compat--check-attributes attrs `(,@args :cond :feature)))
+  (let* ((body (compat--check-attributes attrs `(,@args :when :feature)))
          (feature (plist-get attrs :feature))
          (attrs `(:body ,body ,@attrs))
-         (cond (plist-get attrs :cond)))
+         (cond (plist-get attrs :when)))
     ;; Require feature at compile time
     (when feature
       (when (eq feature 'subr-x)
@@ -130,8 +130,8 @@ under which the definition is generated.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Do not install the definition depending on the
-  version.  Instead install the definition if :cond evaluates to
+- :when :: Do not install the definition depending on the
+  version.  Instead install the definition if :when evaluates to
   non-nil."
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guarded-definition attrs '(:obsolete)
@@ -160,8 +160,8 @@ defined.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Do not install the definition depending on the
-  version.  Instead install the definition if :cond evaluates to
+- :when :: Do not install the definition depending on the
+  version.  Instead install the definition if :when evaluates to
   non-nil."
   (declare (debug (&define name (&rest symbolp)
                            stringp
@@ -192,8 +192,8 @@ definition is generated.
 
 - :feature :: Wrap the definition with `with-eval-after-load'.
 
-- :cond :: Do not install the definition depending on the
-  version.  Instead install the definition if :cond evaluates to
+- :when :: Do not install the definition depending on the
+  version.  Instead install the definition if :when evaluates to
   non-nil."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
