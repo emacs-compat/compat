@@ -1,5 +1,9 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-27: Add ~date-ordinal-to-time~.
+
 * Release of "Compat" Version 29.1.2.0
 
 - All compatibility functions are covered by tests!

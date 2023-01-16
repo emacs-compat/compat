@@ -1079,6 +1079,15 @@ February 2020 has 29 days.
 @code{time-date} feature to be loaded.
 @end defun
 
+@defun date-ordinal-to-time year ordinal
+Convert a @var{year}/@var{ordinal} to the equivalent decoded-time
+structure. @var{ordinal} is the number of days since the start of the
+year, with January 1st being 1.
+
+@xref{Time Calculations,,,elisp}.  This function requires the
+@code{time-date} feature to be loaded.
+@end defun
+
 @defopt exec-path
 The value of this variable is a list of directories to search for
 programs to run in subprocesses.  Each element is either the name of a

@@ -538,6 +538,16 @@ The return value is a string (or nil in case we can’t find it)."
         31
       30)))
 
+(compat-defun date-ordinal-to-time (year ordinal) ;; <compat-tests:date-ordinal-to-time>
+  "Convert a YEAR/ORDINAL to the equivalent `decoded-time' structure.
+ORDINAL is the number of days since the start of the year, with
+January 1st being 1."
+  (let ((month 1))
+    (while (> ordinal (date-days-in-month year month))
+      (setq ordinal (- ordinal (date-days-in-month year month))
+            month (1+ month)))
+    (list nil nil nil ordinal month year nil nil nil)))
+
 ;;;; Defined in text-property-search.el
 
 (compat-defun make-prop-match (&rest attr) ;; <compat-tests:make-prop-match>

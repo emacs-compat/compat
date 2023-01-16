@@ -2504,6 +2504,10 @@
   (should-equal 29 (date-days-in-month 2020 2))
   (should-equal 28 (date-days-in-month 2021 2)))
 
+(ert-deftest date-ordinal-to-time ()
+  (should-equal '(nil nil nil 9 4 2020 nil nil nil) (date-ordinal-to-time 2020 100))
+  (should-equal '(nil nil nil 19 7 2021 nil nil nil) (date-ordinal-to-time 2021 200)))
+
 (ert-deftest regexp-opt ()
   ;; Ensure `regexp-opt' doesn't change the existing
   ;; behaviour:
