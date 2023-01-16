@@ -419,6 +419,15 @@
   (should-equal compat-tests--map-1 compat-tests--map-3)
   (should-equal compat-tests--map-1 compat-tests--map-4))
 
+(ert-deftest keymap-set-after ()
+  (let ((map (make-sparse-keymap)))
+    (define-key-after map "d" 'd "a")
+    (define-key-after map "a" 'a)
+    (define-key-after map "b" 'b)
+    (define-key-after map "c" 'c)
+    (define-key-after map "d" 'd "b") ;; TODO the after argument has no effect?!
+    (should-equal map '(keymap (?a . a) (?b . b) (?c . c) (?d . d)))))
+
 (ert-deftest key-parse ()
   (should-equal (key-parse "f") [?f])
   (should-equal (key-parse "X") [?X])

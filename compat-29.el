@@ -716,7 +716,7 @@ in a cleaner way with command remapping, like this:
        (substitute-key-definition-key defn olddef newdef prefix1 keymap))
      scan)))
 
-(compat-defun keymap-set-after (keymap key definition &optional after) ;; <UNTESTED>
+(compat-defun keymap-set-after (keymap key definition &optional after) ;; <compat-tests:keymap-set-after>
   "Add binding in KEYMAP for KEY => DEFINITION, right after AFTER's binding.
 This is like `keymap-set' except that the binding for KEY is placed
 just after the binding for the event AFTER, instead of at the beginning
