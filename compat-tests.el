@@ -1232,6 +1232,13 @@
   (should-equal t (always 1))                    ;; single argument
   (should-equal t (always 1 2 3 4)))             ;; multiple arguments
 
+(ert-deftest executable-find ()
+  (should (member (executable-find "sh") '("/usr/bin/sh" "/bin/sh")))
+  (should (member (executable-find "ls") '("/usr/bin/ls" "/bin/ls")))
+  ;; TODO These dummy calls are executed locally, test Tramp!
+  (should (member (compat-call executable-find "sh" t) '("/usr/bin/sh" "/bin/sh")))
+  (should (member (compat-call executable-find "ls" t) '("/usr/bin/ls" "/bin/ls"))))
+
 (ert-deftest with-existing-directory ()
   (let ((dir (make-temp-name "/tmp/not-exist-")))
     (let ((default-directory dir))
@@ -1244,7 +1251,7 @@
   (should-equal (temporary-file-directory) temporary-file-directory)
   (let ((default-directory "/mnt"))
     (should-equal (temporary-file-directory) default-directory))
-  ;; TODO how can we test tramp?
+  ;; TODO Implement Tramp test
   ;;(let ((default-directory "/sudo:/"))
   ;;  (should-equal (temporary-file-directory) temporary-file-directory))
   ;;(let ((default-directory "/ssh:does-not-exist:/"))

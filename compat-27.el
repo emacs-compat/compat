@@ -445,7 +445,7 @@ the value of the variable `exec-path'."
           (nreverse path)))))
    (exec-path)))
 
-(compat-defun executable-find (command &optional remote) ;; <UNTESTED>
+(compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
   "Search for COMMAND in `exec-path' and return the absolute file name.
 Return nil if COMMAND is not found anywhere in `exec-path'.  If
 REMOTE is non-nil, search on the remote host indicated by
