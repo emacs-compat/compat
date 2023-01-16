@@ -2506,5 +2506,10 @@
                  ))
     (should-not (string-match-p regexp-unmatchable str))))
 
+(declare-function dired-get-marked-files "dired")
+(ert-deftest dired-get-marked-files ()
+  (require 'dired)
+  (should-error (compat-call dired-get-marked-files nil nil nil nil t)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
