@@ -594,7 +594,7 @@ the leading `-' char."
        (if (zerop (logand   1 mode)) ?- ?x)
      (if (zerop (logand   1 mode)) ?T ?t))))
 
-(compat-defun file-backup-file-names (filename) ;; <UNTESTED>
+(compat-defun file-backup-file-names (filename) ;; <compat-tests:file-backup-file-names>
   "Return a list of backup files for FILENAME.
 The list will be sorted by modification time so that the most
 recent files are first."
