@@ -1232,15 +1232,33 @@
   (should-equal t (always 1))                    ;; single argument
   (should-equal t (always 1 2 3 4)))             ;; multiple arguments
 
+(ert-deftest make-nearby-temp-file ()
+  ;; TODO Test tramp remote directory.
+  (let ((file1 (make-nearby-temp-file "compat-tests"))
+        (file2 (make-nearby-temp-file "compat-tests" nil "suffix"))
+        (dir (make-nearby-temp-file "compat-tests" t)))
+    (should (string-suffix-p "suffix" file2))
+    (should (file-regular-p file1))
+    (should (file-regular-p file2))
+    (should (file-directory-p dir))
+    (should-equal (file-name-directory file1) temporary-file-directory)
+    (should-equal (file-name-directory file2) temporary-file-directory)
+    (should-equal (file-name-directory dir) temporary-file-directory)
+    (delete-file file1)
+    (delete-file file2)
+    (delete-directory dir)))
+
 (ert-deftest executable-find ()
   (should (member (executable-find "sh") '("/usr/bin/sh" "/bin/sh")))
   (should (member (executable-find "ls") '("/usr/bin/ls" "/bin/ls")))
+  ;; TODO Test tramp remote directory.
   (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
     (should (member (compat-call executable-find "sh" t) '("/usr/bin/sh" "/bin/sh")))
     (should (member (compat-call executable-find "ls" t) '("/usr/bin/ls" "/bin/ls")))))
 
 (ert-deftest exec-path ()
   (should-equal (exec-path) exec-path)
+  ;; TODO Test tramp remote directory.
   (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
     (should (file-directory-p (car (exec-path))))))
 

@@ -368,7 +368,7 @@ the variable `temporary-file-directory' is returned."
           default-directory
         temporary-file-directory))))
 
-(compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <UNTESTED>
+(compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <compat-tests:make-nearby-temp-file>
   "Create a temporary file as close as possible to `default-directory'.
 If PREFIX is a relative file name, and `default-directory' is a
 remote file name or located on a mounted file systems, the
