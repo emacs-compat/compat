@@ -2,7 +2,7 @@
 
 * Development of "Compat" Version 29.1.2.0
 
-- Add tests.
+- All compatibility functions are covered by tests!
 - Add links from compatibility definitions to tests.
 - BREAKING: Drop JSON parsing support (libjansson API).
 - BREAKING: Drop ~null-device~.

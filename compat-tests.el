@@ -19,15 +19,13 @@
 
 ;; Tests for compatibility functions from compat.el.
 ;;
-;; Note that not all functions have tests yet.  Grep the Compat code for
-;; <UNTESTED> labels.  If you intend to use a function, which doesn't have
-;; tests yet, please contribute tests here.  NO GUARANTEES ARE MADE FOR
-;; FUNCTIONS WITHOUT TESTS.
+;; Note that all functions are covered by tests. When new functions are
+;; added to Compat, they must come with test coverage!
 
-;; Functions which are tested are marked with a link to the testsuite.  The
-;; link type `compat-tests' must be registered first by evaluating the
-;; following code.  If you intend to work on the test suite you can add
-;; this code to your init.el.
+;; Functions are marked with a link to the testsuite.  The link type
+;; `compat-tests' must be registered first by evaluating the following
+;; code.  If you intend to work on the test suite you can add this code to
+;; your init.el.
 ;;
 ;; (require 'ol)
 ;; (org-link-set-parameters
