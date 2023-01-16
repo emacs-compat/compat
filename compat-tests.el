@@ -1126,6 +1126,17 @@
       (should-not (equal dir default-directory))
       (should (file-exists-p default-directory)))))
 
+(ert-deftest temporary-file-directory ()
+  (should-equal (temporary-file-directory) temporary-file-directory)
+  (let ((default-directory "/mnt"))
+    (should-equal (temporary-file-directory) default-directory))
+  ;; TODO how can we test tramp?
+  ;;(let ((default-directory "/sudo:/"))
+  ;;  (should-equal (temporary-file-directory) temporary-file-directory))
+  ;;(let ((default-directory "/ssh:does-not-exist:/"))
+  ;;  (should-equal (temporary-file-directory) "/ssh:does-not-exist:/tmp/"))
+  )
+
 (ert-deftest directory-files ()
   (should-not (compat-call directory-files "." nil nil nil 0))
   (should-equal 1 (length (compat-call directory-files "." nil nil nil 1)))

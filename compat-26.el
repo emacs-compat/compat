@@ -351,7 +351,7 @@ The returned file name can be used directly as argument of
         name
       (concat (file-remote-p name) "/:" (file-local-name name)))))
 
-(compat-defun temporary-file-directory () ;; <UNTESTED>
+(compat-defun temporary-file-directory () ;; <compat-tests:temporary-file-directory>
   "The directory for writing temporary files.
 In case of a remote `default-directory', this is a directory for
 temporary files on that remote host.  If such a directory does
