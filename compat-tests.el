@@ -1235,9 +1235,14 @@
 (ert-deftest executable-find ()
   (should (member (executable-find "sh") '("/usr/bin/sh" "/bin/sh")))
   (should (member (executable-find "ls") '("/usr/bin/ls" "/bin/ls")))
-  ;; TODO These dummy calls are executed locally, test Tramp!
-  (should (member (compat-call executable-find "sh" t) '("/usr/bin/sh" "/bin/sh")))
-  (should (member (compat-call executable-find "ls" t) '("/usr/bin/ls" "/bin/ls"))))
+  (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
+    (should (member (compat-call executable-find "sh" t) '("/usr/bin/sh" "/bin/sh")))
+    (should (member (compat-call executable-find "ls" t) '("/usr/bin/ls" "/bin/ls")))))
+
+(ert-deftest exec-path ()
+  (should-equal (exec-path) exec-path)
+  (let ((default-directory (format "/sudo:%s@localhost:/" user-login-name)))
+    (should (file-directory-p (car (exec-path))))))
 
 (ert-deftest with-existing-directory ()
   (let ((dir (make-temp-name "/tmp/not-exist-")))

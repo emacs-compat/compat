@@ -413,37 +413,31 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
-(compat-defun exec-path () ;; <UNTESTED>
+(compat-defun exec-path () ;; <compat-tests:exec-path>
   "Return list of directories to search programs to run in remote subprocesses.
 The remote host is identified by `default-directory'.  For remote
 hosts that do not support subprocesses, this returns nil.
 If `default-directory' is a local directory, this function returns
 the value of the variable `exec-path'."
-  (cond
-   ((let ((handler (find-file-name-handler default-directory 'exec-path)))
-      ;; FIXME: The handler was added in 27.1, and this compatibility
-      ;; function only applies to versions of Emacs before that.
-      (when handler
-        (condition-case nil
-            (funcall handler 'exec-path)
-          (error nil)))))
-   ((file-remote-p default-directory)
-    ;; TODO: This is not completely portable, even if "sh" and
-    ;; "getconf" should be provided on every POSIX system, the chance
-    ;; of this not working are greater than zero.
-    ;;
-    ;; FIXME: This invokes a shell process every time exec-path is
-    ;; called.  It should instead be cached on a host-local basis.
-    (with-temp-buffer
-      (if (condition-case nil
-              (zerop (process-file "sh" nil t nil "-c" "getconf PATH"))
-            (file-missing t))
-          (list "/bin" "/usr/bin")
-        (let (path)
-          (while (re-search-forward "\\([^:]+?\\)[\n:]" nil t)
-            (push (match-string 1) path))
-          (nreverse path)))))
-   (exec-path)))
+  ;; NOTE: We cannot use the 'exec-path file name handler here since it didn't
+  ;; exist before Emacs 27.1.
+  (if (file-remote-p default-directory)
+      ;; TODO: This is not completely portable, even if "sh" and
+      ;; "getconf" should be provided on every POSIX system, the chance
+      ;; of this not working are greater than zero.
+      ;;
+      ;; FIXME: This invokes a shell process every time exec-path is
+      ;; called.  It should instead be cached on a host-local basis.
+      (with-temp-buffer
+        (if (condition-case nil
+                (zerop (process-file "sh" nil t nil "-c" "getconf PATH"))
+              (file-missing t))
+            (list "/bin" "/usr/bin")
+          (let (path)
+            (while (re-search-forward "\\([^:]+?\\)[\n:]" nil t)
+              (push (match-string 1) path))
+            (nreverse path))))
+    exec-path))
 
 (compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
   "Search for COMMAND in `exec-path' and return the absolute file name.
