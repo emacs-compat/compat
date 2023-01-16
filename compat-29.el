@@ -410,11 +410,11 @@ to `default-directory', and the result will also be relative."
      (t
       parent))))
 
-(compat-defvar file-has-changed-p--hash-table ;; <UNTESTED>
+(compat-defvar file-has-changed-p--hash-table ;; <compat-tests:file-has-changed-p>
                (make-hash-table :test #'equal)
   "Internal variable used by `file-has-changed-p'.")
 
-(compat-defun file-has-changed-p (file &optional tag) ;; <UNTESTED>
+(compat-defun file-has-changed-p (file &optional tag) ;; <compat-tests:file-has-changed-p>
   "Return non-nil if FILE has changed.
 The size and modification time of FILE are compared to the size
 and modification time of the same FILE during a previous
@@ -431,8 +431,8 @@ the symbol of the calling function, for example."
                           (file-attribute-modification-time fileattr))))
          (sym (concat (symbol-name tag) "@" file))
          (cachedattr (gethash sym file-has-changed-p--hash-table)))
-     (when (not (equal attr cachedattr))
-       (puthash sym attr file-has-changed-p--hash-table))))
+    (when (not (equal attr cachedattr))
+      (puthash sym attr file-has-changed-p--hash-table))))
 
 ;;;; Defined in keymap.el
 

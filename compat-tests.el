@@ -1215,7 +1215,7 @@
   (should-not (directory-name-p "dir/subdir")))
 
 (ert-deftest directory-empty-p ()
-  (let ((name (make-temp-name "compat-tests")))
+  (let ((name (make-temp-name "/tmp/compat-tests")))
     (make-directory name)
     (should (directory-empty-p name))
     (make-empty-file (file-name-concat name "file"))
@@ -1224,7 +1224,7 @@
     (delete-directory name)))
 
 (ert-deftest make-empty-file ()
-  (let ((name (make-temp-name "compat-tests")))
+  (let ((name (make-temp-name "/tmp/compat-tests")))
     (should-not (file-exists-p name))
     (make-empty-file name)
     (should-equal 0 (file-attribute-size (file-attributes name)))
@@ -1251,6 +1251,28 @@
   (should-equal (expand-file-name "a/.#foo") (make-lock-file-name "a/foo"))
   (should-equal (expand-file-name "bar/.#b") (make-lock-file-name "bar/b"))
   (should-equal (expand-file-name "bar/.#foo") (make-lock-file-name "bar/foo")))
+
+(ert-deftest file-has-changed-p ()
+  (let ((name (make-temp-file "/tmp/compat-tests")))
+    (should (file-has-changed-p name))
+    (should-not (file-has-changed-p name))
+    (should-not (file-has-changed-p name))
+    (should (file-has-changed-p name 'tag1))
+    (should-not (file-has-changed-p name 'tag1))
+    (should-not (file-has-changed-p name 'tag1))
+    (with-temp-buffer
+      (insert "changed")
+      (write-region (point-min) (point-max) name))
+    (should (file-has-changed-p name))
+    (should-not (file-has-changed-p name))
+    (should-not (file-has-changed-p name))
+    (should (file-has-changed-p name 'tag1))
+    (should-not (file-has-changed-p name 'tag1))
+    (should-not (file-has-changed-p name 'tag1))
+    (should (file-has-changed-p name 'tag2))
+    (should-not (file-has-changed-p name 'tag2))
+    (should-not (file-has-changed-p name 'tag2))
+    (delete-file name)))
 
 (ert-deftest file-attribute-getters ()
   (let ((attrs '(type link-number user-id group-id access-time modification-time
