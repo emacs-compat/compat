@@ -1367,6 +1367,12 @@ implemented in 27.1:
 @item
 Bigint support.
 @item
+The functions @code{base64url-encode-*}.
+@item
+The function @code{decoded-time-add}.
+@item
+The function @code{decoded-time-set-defaults}.
+@item
 The function @code{time-convert}.
 @item
 All @code{iso8601-*} functions.
@@ -1922,13 +1928,13 @@ The function @code{benchmark-call}.
 @item
 Support for the @code{natnum} defcustom type.
 @item
-The function @code{macroexp-compiling-p}.
-@item
 Additional Edebug keywords.
 @item
 Shorthand support.
 @item
 The libjansson JSON APIs, e.g., @code{json-parse-string}.
+@item
+The macro @code{pcase-setq}.
 @item
 The function @code{custom-add-choice}.
 @item
@@ -1957,6 +1963,22 @@ The function @code{syntax-class-to-char}.
 The function @code{path-separator}.
 @item
 The function @code{null-device}.
+@item
+The function @code{macroexp-compiling-p}.
+@item
+The function @code{split-string-shell-command}.
+@item
+The function @code{string-limit}.
+@item
+The function @code{color-dark-p}.
+@item
+The function @code{innermost-minibuffer-p}.
+@item
+The function @code{max-mini-window-lines}.
+@item
+The function @code{lock-file} and @code{unlock-file}.
+@item
+The macro @code{with-window-non-dedicated}.
 @item
 Any @code{multisession} functionality.
 @end itemize
