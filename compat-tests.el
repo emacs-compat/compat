@@ -80,6 +80,15 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest thing-at-mouse ()
+  (save-window-excursion
+    (with-temp-buffer
+      (let ((event `(mouse-1 (,(selected-window) 1 (0 . 0) 0))))
+        (set-window-buffer nil (current-buffer))
+        (insert "http://emacs.org/")
+        (should-equal "http://emacs.org/" (thing-at-mouse event 'url))
+        (should-equal '(1 . 18) (bounds-of-thing-at-mouse event 'url))))))
+
 (ert-deftest dolist-with-progress-reporter ()
   (let (y)
     (should-equal

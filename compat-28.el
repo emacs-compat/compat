@@ -678,20 +678,20 @@ just the selected frame."
 
 ;;;; Defined in thingatpt.el
 
-(compat-defun thing-at-mouse (event thing &optional no-properties) ;; <UNTESTED>
+(compat-defun thing-at-mouse (event thing &optional no-properties) ;; <compat-tests:thing-at-mouse>
   "Return the THING at mouse click.
 Like `thing-at-point', but tries to use the event
 where the mouse button is clicked to find a thing nearby."
-  :feature thingatpt
+  ;; No :feature specified, since the function is autoloaded.
   (save-excursion
     (mouse-set-point event)
     (thing-at-point thing no-properties)))
 
-(compat-defun bounds-of-thing-at-mouse (event thing) ;; <UNTESTED>
+(compat-defun bounds-of-thing-at-mouse (event thing) ;; <compat-tests:thing-at-mouse>
   "Determine start and end locations for THING at mouse click given by EVENT.
 Like `bounds-of-thing-at-point', but tries to use the position in EVENT
 where the mouse button is clicked to find the thing nearby."
-  :feature thingatpt
+  ;; No :feature specified, since the function is autoloaded.
   (save-excursion
     (mouse-set-point event)
     (bounds-of-thing-at-point thing)))
