@@ -207,7 +207,7 @@ CONDITION can also be a list of error conditions."
   (declare (debug t) (indent 1))
   `(condition-case nil (progn ,@body) (,condition nil)))
 
-(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body) ;; <UNTESTED>
+(compat-defmacro dolist-with-progress-reporter (spec reporter-or-message &rest body) ;; <compat-tests:dolist-with-progress-reporter>
   "Loop over a list and report progress in the echo area.
 Evaluate BODY with VAR bound to each car from LIST, in turn.
 Then evaluate RESULT to get return value, default nil.
@@ -462,7 +462,7 @@ REMOTE is non-nil, search on the remote host indicated by
         (when (stringp res) (file-local-name res)))
     (executable-find command)))
 
-(compat-defun make-empty-file (filename &optional parents) ;; <UNTESTED>
+(compat-defun make-empty-file (filename &optional parents) ;; <compat-tests:make-empty-file>
   "Create an empty file FILENAME.
 Optional arg PARENTS, if non-nil then creates parent dirs as needed."
   (when (and (file-exists-p filename) (null parents))

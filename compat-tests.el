@@ -80,6 +80,18 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should (eq (compat-call plist-get list "first" #'string=) 1))))
 
+(ert-deftest dolist-with-progress-reporter ()
+  (let (y)
+    (should-equal
+     (dolist-with-progress-reporter (x '(1 2 3) y) "Reporter"
+       (push x y))
+     '(3 2 1)))
+  (let (y)
+    (should-equal
+     (dolist-with-progress-reporter (x '(1 2 3) y) (make-progress-reporter "Reporter")
+       (push x y))
+     '(3 2 1))))
+
 (ert-deftest with-minibuffer-selected-window ()
   (let (ran)
     (should-not (minibuffer-selected-window))
@@ -1118,6 +1130,14 @@
   (should-not (directory-name-p "dir/file"))
   (should (directory-name-p "dir/subdir/"))
   (should-not (directory-name-p "dir/subdir")))
+
+(ert-deftest make-empty-file ()
+  (let ((name (make-temp-name "compat-tests")))
+    (should-not (file-exists-p name))
+    (make-empty-file name)
+    (should-equal 0 (file-attribute-size (file-attributes name)))
+    (should (file-exists-p name))
+    (delete-file name)))
 
 (ert-deftest mounted-file-systems ()
   (should-not (string-match-p mounted-file-systems "/etc/"))
