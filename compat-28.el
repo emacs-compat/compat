@@ -666,7 +666,21 @@ contrast color with RGB as background and as foreground."
          (y (+ (* r 0.2126) (* g 0.7152) (* b 0.0722))))
     (< y color-luminance-dark-limit)))
 
-;;;; Defined in windows.el
+;;;; Defined in window.el
+
+(compat-defmacro with-window-non-dedicated (window &rest body)
+  "Evaluate BODY with WINDOW temporarily made non-dedicated.
+If WINDOW is nil, use the selected window.  Return the value of
+the last form in BODY."
+  (declare (indent 1) (debug t))
+  (let ((window-dedicated-sym (gensym))
+        (window-sym (gensym)))
+    `(let* ((,window-sym (window-normalize-window ,window t))
+            (,window-dedicated-sym (window-dedicated-p ,window-sym)))
+       (set-window-dedicated-p ,window-sym nil)
+       (unwind-protect
+           (progn ,@body)
+         (set-window-dedicated-p ,window-sym ,window-dedicated-sym)))))
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <compat-tests:count-windows>
   "Handle optional argument ALL-FRAMES.

@@ -1922,6 +1922,13 @@ This compatibility version handles the optional argument
 @var{all-frames}.
 @end defun
 
+@c copied from on lisp/window.el
+@defmac with-window-non-dedicated window &rest body
+Evaluate @var{body} with @var{window} temporarily made non-dedicated.
+If @var{window} is nil, use the selected window.  Return the value of
+the last form in @var{body}.
+@end defmac
+
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 28.1:

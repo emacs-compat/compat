@@ -330,6 +330,17 @@
       (should-equal (getenv A) B))
     (should-not (getenv A))))
 
+(ert-deftest with-window-non-dedicated ()
+  (unwind-protect
+      (progn
+        (should-not (window-dedicated-p))
+        (set-window-dedicated-p nil t)
+        (should (window-dedicated-p))
+        (with-window-non-dedicated nil
+          (should-not (window-dedicated-p)))
+        (should (window-dedicated-p)))
+    (set-window-dedicated-p nil nil)))
+
 (ert-deftest count-windows ()
   (should (fixnump (compat-call count-windows)))
   (should (fixnump (compat-call count-windows t)))

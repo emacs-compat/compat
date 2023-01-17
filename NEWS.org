@@ -6,6 +6,7 @@
 - compat-27: Add ~date-ordinal-to-time~.
 - compat-27: Add ~make-decoded-time~.
 - compat-28: Add ~color-dark-p~.
+- compat-28: Add ~with-window-non-dedicated~.
 
 * Release of "Compat" Version 29.1.2.0
 
