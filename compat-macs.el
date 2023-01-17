@@ -136,7 +136,7 @@ definition is generated.
   version.  Instead install the definition if :when evaluates to
   non-nil."
   (declare (debug ([&rest keywordp sexp] def-body))
-           (indent 0))
+           (indent 1))
   (compat--guard rest '(:body)
     (lambda (body)
       (if (eq cond t)
