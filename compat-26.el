@@ -116,7 +116,9 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
                                    ((not (eql ,default ,v)) ,set-exp)
                                    (,p ,(funcall setter
                                                  `(delq ,p ,getter))))))
-                              ,v)))))))))))
+                              ,v))))))))))
+    (unless (get 'alist-get 'gv-expander)
+      (put 'alist-get 'gv-expander (get 'compat--alist-get 'gv-expander))))
 
 (compat-defun string-trim-left (string &optional regexp) ;; <compat-tests:string-trim-left>
   "Handle optional argument REGEXP."

@@ -120,6 +120,24 @@ Unibyte strings are converted to multibyte for comparison."
           (throw 'found plist))
         (setq plist (cddr plist))))))
 
+;;;; Defined in gv.el
+
+(compat-guard t
+  (gv-define-expander compat--plist-get ;; <compat-tests:plist-get-gv>
+    (lambda (do plist prop &optional predicate)
+      (macroexp-let2 macroexp-copyable-p key prop
+        (gv-letplace (getter setter) plist
+          (macroexp-let2 nil p `(cdr (compat--plist-member ,getter ,key ,predicate))
+            (funcall do
+                     `(car ,p)
+                     (lambda (val)
+                       `(if ,p
+                            (setcar ,p ,val)
+                          ,(funcall setter
+                                    `(cons ,key (cons ,val ,getter)))))))))))
+  (unless (get 'plist-get 'gv-expander)
+    (put 'plist-get 'gv-expander (get 'compat--plist-get 'gv-expander))))
+
 ;;;; Defined in editfns.c
 
 (compat-defun pos-bol (&optional n) ;; <compat-tests:pos-bol>

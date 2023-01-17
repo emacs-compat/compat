@@ -2623,7 +2623,9 @@ returns @code{nil}.
 @xref{Plist Access,,,elisp}.
 
 This compatibility version handles the optional argument
-@var{predicate}.
+@var{predicate}.  This is a generalized variable (@pxref{Generalized
+Variables,,,elisp}) that can be used to change a value with
+@code{setf}.
 @end defun
 
 @c copied from lispref/lists.texi

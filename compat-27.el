@@ -334,11 +334,11 @@ Internal use only."
     (setcdr image (plist-put (cdr image) property value)))
   value)
 
-(compat-guard t
+;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
+;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
+;; override the gv expander until Emacs 27.1.
+(compat-guard (or (= emacs-major-version 26) (not (get 'image-property 'gv-expande)))
   :feature image
-  ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
-  ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
-  ;; override the gv expander until Emacs 27.1.
   (if (eval-when-compile (< emacs-major-version 26))
       (gv-define-simple-setter image-property image--set-property) ;; <compat-tests:image-property>
     (gv-define-simple-setter image-property compat--image--set-property)))
