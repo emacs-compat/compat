@@ -906,6 +906,14 @@
     (should (string-prefix-p "compat" (symbol-name (gensym "compat"))))
     (should-equal gensym-counter (+ orig 3))))
 
+(ert-deftest list-of-strings-p ()
+  (should-not (list-of-strings-p 1))
+  (should (list-of-strings-p nil))
+  (should (list-of-strings-p '("a" "b")))
+  (should-not (list-of-strings-p ["a" "b"]))
+  (should-not (list-of-strings-p '("a" nil "b")))
+  (should-not (list-of-strings-p '("a" "b" . "c"))))
+
 (ert-deftest plistp ()
   (should (plistp '(:a a :b b)))
   (should (plistp '(1 2 3 4)))

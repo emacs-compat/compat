@@ -84,6 +84,13 @@ Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
+(compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
+  "Return t if OBJECT is nil or a list of strings."
+  (declare (pure t) (side-effect-free t))
+  (while (and (consp object) (stringp (car object)))
+    (setq object (cdr object)))
+  (null object))
+
 (compat-defun plistp (object) ;; <compat-tests:plistp>
   "Non-nil if and only if OBJECT is a valid plist."
   (let ((len (proper-list-p object)))
