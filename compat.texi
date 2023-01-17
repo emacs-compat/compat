@@ -332,6 +332,11 @@ just as they are by @code{if-let*}.
 @end defmac
 
 @c based on lisp/subr-x.el
+@defun hash-table-empty hash-table
+Check whether @var{hash-table} is empty (has 0 elements).
+@end defun
+
+@c based on lisp/subr-x.el
 @defmac thread-first &rest forms
 Combine @var{forms} into a single expression by ``threading'' each
 element as the @emph{first} argument of their successor.  Elements of

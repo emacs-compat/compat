@@ -818,6 +818,12 @@
   (should-error (ignore-error foo
                   (read ""))))
 
+(ert-deftest hash-table-empty-p ()
+  (should (hash-table-empty-p (make-hash-table)))
+  (let ((ht (make-hash-table)))
+    (puthash 'k 'v ht)
+    (should-not (hash-table-empty-p ht))))
+
 (ert-deftest thread-first ()
   (should-equal (thread-first (+ 40 2)) 42)
   (should-equal (thread-first

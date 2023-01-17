@@ -2,6 +2,7 @@
 
 * Development
 
+- compat-25: Add ~hash-table-empty-p~.
 - compat-27: Add ~date-ordinal-to-time~.
 - compat-27: Add ~make-decoded-time~.
 - compat-28: Add ~color-dark-p~.

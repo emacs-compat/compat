@@ -145,6 +145,10 @@ The variable list SPEC is the same as in `if-let'."
 
 ;;;; Defined in subr-x.el
 
+(compat-defun hash-table-empty-p (hash-table) ;; <compat-tests:hash-table-empty-p>
+  "Check whether HASH-TABLE is empty (has 0 elements)."
+  (zerop (hash-table-count hash-table)))
+
 (compat-defmacro thread-first (&rest forms) ;; <compat-tests:thread-first>
   "Thread FORMS elements as the first argument of their successor.
 Example:
