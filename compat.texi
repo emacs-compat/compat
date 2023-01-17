@@ -2124,11 +2124,9 @@ positive.
 @defun compiled-function-p object
 This function returns @code{t} if @var{object} is a function object
 that is not in the form of ELisp source code but something like
-machine code or byte code instead.  More specifically it returns
-@code{t} if the function is built-in (a.k.a.@: ``primitive'',
-@pxref{What Is a Function}), or byte-compiled (@pxref{Byte
-Compilation}), or natively-compiled (@pxref{Native Compilation}), or
-a function loaded from a dynamic module (@pxref{Dynamic Modules}).
+machine code or byte code instead. More specifically it returns
+@code{t} if the function is built-in, or byte-compiled, or
+natively-compiled, or a function loaded from a dynamic module.
 @end defun
 
 @c copied from lispref/functions.texi

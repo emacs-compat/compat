@@ -44,3 +44,5 @@ jobs:
         make compile
     - name: Run tests
       run: make test
+    - name: Make info
+      run: make compat.info
