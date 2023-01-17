@@ -35,6 +35,21 @@
     (when (and (< 24 before) (< emacs-major-version before))
       `(require ',(intern (format "compat-%d" before))))))
 
+(defmacro compat-guard (&rest rest)
+  "Guard definition with a version check.
+REST is an attribute plist followed by the definition body.  The
+attributes specify the conditions under which the definition is
+generated.
+
+- :feature :: Wrap the definition with `with-eval-after-load'.
+
+- :when :: Do not install the definition depending on the
+  version.  Instead install the definition if :when evaluates to
+  non-nil."
+  (declare (debug ([&rest keywordp sexp] def-body))
+           (indent 0))
+  (compat--guard rest '(:body) #'identity))
+
 (defun compat--format-docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.
 Prepend compatibility notice to the actual documentation string."
@@ -61,7 +76,7 @@ If this is not documented on yourself system, you can check \
     (setq attrs (cddr attrs)))
   attrs)
 
-(defun compat--guarded-definition (attrs args fun)
+(defun compat--guard (attrs args fun)
   "Guard compatibility definition generation.
 The version constraints specified by ATTRS are checked.
 ARGS is a list of keywords which are looked up and passed to FUN."
@@ -87,10 +102,10 @@ ARGS is a list of keywords which are looked up and passed to FUN."
             `(with-eval-after-load ',feature ,@body)
           (macroexp-progn body))))))
 
-(defun compat--function-definition (type name arglist docstring rest)
+(defun compat--guarded-function (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guarded-definition rest '(:explicit :body)
+  (compat--guard rest '(:explicit :body)
     (lambda (explicit body)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
@@ -128,13 +143,9 @@ under which the definition is generated.
 
 - :obsolete :: Mark the alias as obsolete.
 
-- :feature :: Wrap the definition with `with-eval-after-load'.
-
-- :when :: Do not install the definition depending on the
-  version.  Instead install the definition if :when evaluates to
-  non-nil."
+- :feature and :when :: See `compat-guard'."
   (declare (debug (name symbolp [&rest keywordp sexp])))
-  (compat--guarded-definition attrs '(:obsolete)
+  (compat--guard attrs '(:obsolete)
     (lambda (obsolete)
       ;; The fboundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
@@ -152,23 +163,18 @@ under which the definition is generated.
   "Define compatibility function NAME with arguments ARGLIST.
 The function must be documented in DOCSTRING.  REST is an
 attribute plist followed by the function body.  The attributes
-specify the conditions under which the compatiblity function is
-defined.
+specify the conditions under which the definition is generated.
 
 - :explicit :: Make the definition available such that it can be
   called explicitly via `compat-call'.
 
-- :feature :: Wrap the definition with `with-eval-after-load'.
-
-- :when :: Do not install the definition depending on the
-  version.  Instead install the definition if :when evaluates to
-  non-nil."
+- :feature and :when :: See `compat-guard'."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
                            def-body))
            (doc-string 3) (indent 2))
-  (compat--function-definition 'function name arglist docstring rest))
+  (compat--guarded-function 'function name arglist docstring rest))
 
 (defmacro compat-defmacro (name arglist docstring &rest rest)
   "Define compatibility macro NAME with arguments ARGLIST.
@@ -176,7 +182,7 @@ The macro must be documented in DOCSTRING.  REST is an attribute
 plist followed by the macro body.  See `compat-defun' for
 details."
   (declare (debug compat-defun) (doc-string 3) (indent 2))
-  (compat--function-definition 'macro name arglist docstring rest))
+  (compat--guarded-function 'macro name arglist docstring rest))
 
 (defmacro compat-defvar (name initval docstring &rest attrs)
   "Define compatibility variable NAME with initial value INITVAL.
@@ -190,14 +196,10 @@ definition is generated.
   `permanent'.  For other non-nil values make the variable
   buffer-local.
 
-- :feature :: Wrap the definition with `with-eval-after-load'.
-
-- :when :: Do not install the definition depending on the
-  version.  Instead install the definition if :when evaluates to
-  non-nil."
+- :feature and :when :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat--guarded-definition attrs '(:local :constant)
+  (compat--guard attrs '(:local :constant)
     (lambda (local constant)
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs

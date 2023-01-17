@@ -88,8 +88,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
         (if entry (cdr entry) default))
     (alist-get key alist default remove)))
 
-;; NOTE: Define gv expander only if `compat--alist-get' is defined.
-(when (eval-when-compile (< emacs-major-version 26))
+(compat-guard
   (gv-define-expander compat--alist-get ;; <compat-tests:alist-get-gv>
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key

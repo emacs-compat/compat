@@ -283,7 +283,7 @@ return nil."
 
 ;;;; Defined in simple.el
 
-(when (eval-when-compile (< emacs-major-version 27))
+(compat-guard
   (cl-defstruct (decoded-time ;; <compat-tests:decoded-time>
                  (:constructor nil)
                  (:copier nil)
@@ -335,15 +335,14 @@ Internal use only."
     (setcdr image (plist-put (cdr image) property value)))
   value)
 
-(if (eval-when-compile (< emacs-major-version 26))
-    (with-eval-after-load 'image
-      (gv-define-simple-setter image-property image--set-property)) ;; <compat-tests:image-property>
+(compat-guard
+  :feature image
   ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
   ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
   ;; override the gv expander until Emacs 27.1.
-  (when (eval-when-compile (< emacs-major-version 27))
-    (with-eval-after-load 'image
-      (gv-define-simple-setter image-property compat--image--set-property)))) ;; <compat-tests:image-property>
+  (if (eval-when-compile (< emacs-major-version 26))
+      (gv-define-simple-setter image-property image--set-property) ;; <compat-tests:image-property>
+    (gv-define-simple-setter image-property compat--image--set-property)))
 
 ;;;; Defined in files.el
 
@@ -524,9 +523,7 @@ January 1st being 1."
 
 ;;;; Defined in text-property-search.el
 
-(declare-function make-prop-match nil)
-(when (eval-when-compile (< emacs-major-version 27))
-  (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
+(compat-guard (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
 
 (compat-defun text-property-search-forward ;; <compat-tests:text-property-search-forward>
     (property &optional value predicate not-current)
