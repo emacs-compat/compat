@@ -185,6 +185,12 @@ and return the value found in PLACE instead."
 
 (compat-defalias string-split split-string) ;; <compat-tests:string-split>
 
+(compat-defun compiled-function-p (object) ;; <compat-tests:compiled-function-p>
+  "Return non-nil if OBJECT is a function that has been compiled.
+Does not distinguish between functions implemented in machine code
+or byte-code."
+  (or (subrp object) (byte-code-function-p object)))
+
 (compat-defun function-alias-p (func &optional noerror) ;; <compat-tests:function-alias-p>
   "Return nil if FUNC is not a function alias.
 If FUNC is a function alias, return the function alias chain.

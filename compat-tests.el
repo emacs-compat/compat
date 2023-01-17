@@ -1157,6 +1157,11 @@
     (should-equal 'l (cddadr xxxx))
     (should-equal 'h (cdddar xxxx))))
 
+(ert-deftest compiled-function-p ()
+  (should-not (compiled-function-p '(lambda (x) x)))
+  (should (compiled-function-p (symbol-function 'assq)))
+  (should (compiled-function-p (symbol-function 'identity))))
+
 (ert-deftest subr-native-elisp-p ()
   (should-not (subr-native-elisp-p (symbol-function 'identity))))
 
