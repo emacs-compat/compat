@@ -868,6 +868,8 @@ Support for side windows and atomic windows.
 All changes related to @code{display-buffer}.
 @item
 The function @code{window-swap-states}.
+@item
+The function @code{string-version-lessp}.
 @end itemize
 
 @node Emacs 27.1
