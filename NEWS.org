@@ -11,6 +11,7 @@
 - compat-29: Add ~plist-get~ generalized variable.
 - compat-29: Add ~plistp~.
 - compat-29: Add ~list-of-strings-p~.
+- compat-29: Add ~delete-line~.
 
 * Release of "Compat" Version 29.1.2.0
 

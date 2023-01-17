@@ -2013,6 +2013,11 @@ that there will be the need for changes, so use these functions with
 care.
 
 @c based on lisp/subr.el
+@defun delete-line
+Delete the current line.
+@end defun
+
+@c based on lisp/subr.el
 @defun list-of-strings-p object
 Return @code{t} if @var{object} is @code{nil} or a list of strings.
 @end defun

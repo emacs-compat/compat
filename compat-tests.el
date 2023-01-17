@@ -906,6 +906,13 @@
     (should (string-prefix-p "compat" (symbol-name (gensym "compat"))))
     (should-equal gensym-counter (+ orig 3))))
 
+(ert-deftest delete-line ()
+  (with-temp-buffer
+    (insert "first\nsecond\nthird\n")
+    (goto-char 7)
+    (delete-line)
+    (should (equal (buffer-string) "first\nthird\n"))))
+
 (ert-deftest list-of-strings-p ()
   (should-not (list-of-strings-p 1))
   (should (list-of-strings-p nil))

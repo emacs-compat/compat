@@ -84,18 +84,6 @@ Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
-(compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
-  "Return t if OBJECT is nil or a list of strings."
-  (declare (pure t) (side-effect-free t))
-  (while (and (consp object) (stringp (car object)))
-    (setq object (cdr object)))
-  (null object))
-
-(compat-defun plistp (object) ;; <compat-tests:plistp>
-  "Non-nil if and only if OBJECT is a valid plist."
-  (let ((len (proper-list-p object)))
-    (and len (zerop (% len 2)))))
-
 (compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :explicit t
@@ -182,6 +170,22 @@ This function does not move point.  Also see `line-end-position'."
     (line-end-position n)))
 
 ;;;; Defined in subr.el
+
+(compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
+  "Return t if OBJECT is nil or a list of strings."
+  (declare (pure t) (side-effect-free t))
+  (while (and (consp object) (stringp (car object)))
+    (setq object (cdr object)))
+  (null object))
+
+(compat-defun plistp (object) ;; <compat-tests:plistp>
+  "Non-nil if and only if OBJECT is a valid plist."
+  (let ((len (proper-list-p object)))
+    (and len (zerop (% len 2)))))
+
+(compat-defun delete-line () ;; <compat-tests:delete-line>
+  "Delete the current line."
+  (delete-region (pos-bol) (pos-bol 2)))
 
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.
