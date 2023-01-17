@@ -102,7 +102,7 @@ ARGS is a list of keywords which are looked up and passed to FUN."
             `(with-eval-after-load ',feature ,@body)
           (macroexp-progn body))))))
 
-(defun compat--guarded-function (type name arglist docstring rest)
+(defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
   (compat--guard rest '(:explicit :body)
@@ -174,7 +174,7 @@ specify the conditions under which the definition is generated.
                            [&rest keywordp sexp]
                            def-body))
            (doc-string 3) (indent 2))
-  (compat--guarded-function 'function name arglist docstring rest))
+  (compat--guard-defun 'function name arglist docstring rest))
 
 (defmacro compat-defmacro (name arglist docstring &rest rest)
   "Define compatibility macro NAME with arguments ARGLIST.
@@ -182,7 +182,7 @@ The macro must be documented in DOCSTRING.  REST is an attribute
 plist followed by the macro body.  See `compat-defun' for
 details."
   (declare (debug compat-defun) (doc-string 3) (indent 2))
-  (compat--guarded-function 'macro name arglist docstring rest))
+  (compat--guard-defun 'macro name arglist docstring rest))
 
 (defmacro compat-defvar (name initval docstring &rest attrs)
   "Define compatibility variable NAME with initial value INITVAL.
