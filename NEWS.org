@@ -7,8 +7,9 @@
 - compat-27: Add ~make-decoded-time~.
 - compat-28: Add ~color-dark-p~.
 - compat-28: Add ~with-window-non-dedicated~.
-- compat-29: Add ~plist-get~ generalized variable.
 - compat-29: Add ~compiled-function-p~.
+- compat-29: Add ~plist-get~ generalized variable.
+- compat-29: Add ~plistp~.
 
 * Release of "Compat" Version 29.1.2.0
 

@@ -84,6 +84,11 @@ Unibyte strings are converted to multibyte for comparison."
   (declare (pure t) (side-effect-free t))
   (eq t (compare-strings string1 0 nil string2 0 nil t)))
 
+(compat-defun plistp (object) ;; <compat-tests:plistp>
+  "Non-nil if and only if OBJECT is a valid plist."
+  (let ((len (proper-list-p object)))
+    (and len (zerop (% len 2)))))
+
 (compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :explicit t

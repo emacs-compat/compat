@@ -906,6 +906,16 @@
     (should (string-prefix-p "compat" (symbol-name (gensym "compat"))))
     (should-equal gensym-counter (+ orig 3))))
 
+(ert-deftest plistp ()
+  (should (plistp '(:a a :b b)))
+  (should (plistp '(1 2 3 4)))
+  (should-not (plistp '(1 2 3)))
+  (should-not (plistp '(1 . 2)))
+  (should-not (plistp '(1 2 . 3)))
+  (should-not (let ((l (list 1 2 3)))
+                (setf (nthcdr 3 l) l)
+                (plistp l))))
+
 (ert-deftest plist-get ()
   (let (list)
     (setq list (compat-call plist-put list 'first 1))
