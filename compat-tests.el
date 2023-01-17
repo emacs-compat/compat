@@ -2206,7 +2206,7 @@
     (should-equal (compat-call alist-get "one" alist-2 nil nil #'string=)
                    "eins")))
 
-(ert-deftest make-prop-match ()
+(ert-deftest prop-match ()
   (should (prop-match-p (make-prop-match)))
   (should (prop-match-p (make-prop-match :end 1)))
   (should (prop-match-p (make-prop-match :beginning 1 :end 2 :value 3)))
@@ -2418,7 +2418,7 @@
   ;; (should (time-equal-p (days-to-time 999.0) '(1317 2688 0 0)))
   )
 
-(ert-deftest decoded-time-accessors ()
+(ert-deftest decoded-time ()
   (let ((time '(second minute hour day month year weekday dst zone)))
     (should-equal (decoded-time-second time) 'second)
     (should-equal (decoded-time-minute time) 'minute)
@@ -2497,6 +2497,12 @@
   (should-error (decoded-time-period '(0 0 0 a)) :type 'wrong-type-argument)
   (should-error (decoded-time-period '(0 0 0 0 a)) :type 'wrong-type-argument)
   (should-error (decoded-time-period '(0 0 0 0 0 a)) :type 'wrong-type-argument))
+
+(ert-deftest make-decoded-time ()
+  (should-equal '(s m h d M Y nil D Z)
+                (make-decoded-time :second 's :minute 'm :hour 'h
+                                   :day 'd :month 'M :year 'Y
+                                   :dst 'D :zone 'Z)))
 
 (ert-deftest date-days-in-month ()
   (should-equal 31 (date-days-in-month 2020 1))

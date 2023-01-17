@@ -23,6 +23,7 @@
 ;;; Code:
 
 (eval-when-compile (load "compat-macs.el" nil t t))
+(eval-when-compile (require 'cl-lib))
 (compat-declare-version "27.1")
 
 ;;;; Defined in fns.c
@@ -282,63 +283,30 @@ return nil."
 
 ;;;; Defined in simple.el
 
-(compat-defun decoded-time-second (time) ;; <compat-tests:decoded-time-accessors>
-  "The seconds in TIME, which is a value returned by `decode-time'.
-This is an integer between 0 and 60 (inclusive).  (60 is a leap
-second, which only some operating systems support.)"
-  (nth 0 time))
-
-(compat-defun decoded-time-minute (time) ;; <compat-tests:decoded-time-accessors>
-  "The minutes in TIME, which is a value returned by `decode-time'.
-This is an integer between 0 and 59 (inclusive)."
-  (nth 1 time))
-
-(compat-defun decoded-time-hour (time) ;; <compat-tests:decoded-time-accessors>
-  "The hours in TIME, which is a value returned by `decode-time'.
-This is an integer between 0 and 23 (inclusive)."
-  (nth 2 time))
-
-(compat-defun decoded-time-day (time) ;; <compat-tests:decoded-time-accessors>
-  "The day-of-the-month in TIME, which is a value returned by `decode-time'.
-This is an integer between 1 and 31 (inclusive)."
-  (nth 3 time))
-
-(compat-defun decoded-time-month (time) ;; <compat-tests:decoded-time-accessors>
-  "The month in TIME, which is a value returned by `decode-time'.
-This is an integer between 1 and 12 (inclusive).  January is 1."
-  (nth 4 time))
-
-(compat-defun decoded-time-year (time) ;; <compat-tests:decoded-time-accessors>
-  "The year in TIME, which is a value returned by `decode-time'.
-This is a four digit integer."
-  (nth 5 time))
-
-(compat-defun decoded-time-weekday (time) ;; <compat-tests:decoded-time-accessors>
-  "The day-of-the-week in TIME, which is a value returned by `decode-time'.
-This is a number between 0 and 6, and 0 is Sunday."
-  (nth 6 time))
-
-(compat-defun decoded-time-dst (time) ;; <compat-tests:decoded-time-accessors>
-  "The daylight saving time in TIME, which is a value returned by `decode-time'.
-This is t if daylight saving time is in effect, and nil if not."
-  (nth 7 time))
-
-(compat-defun decoded-time-zone (time) ;; <compat-tests:decoded-time-accessors>
-  "The time zone in TIME, which is a value returned by `decode-time'.
-This is an integer indicating the UTC offset in seconds, i.e.,
-the number of seconds east of Greenwich."
-  (nth 8 time))
-
 (when (eval-when-compile (< emacs-major-version 27))
-  (gv-define-setter decoded-time-second (v x)  `(setcar (nthcdr 0 ,x) ,v)) ;; <compat-tests:decoded-time-accessors>
-  (gv-define-setter decoded-time-minute (v x)  `(setcar (nthcdr 1 ,x) ,v))
-  (gv-define-setter decoded-time-hour (v x)    `(setcar (nthcdr 2 ,x) ,v))
-  (gv-define-setter decoded-time-day (v x)     `(setcar (nthcdr 3 ,x) ,v))
-  (gv-define-setter decoded-time-month (v x)   `(setcar (nthcdr 4 ,x) ,v))
-  (gv-define-setter decoded-time-year (v x)    `(setcar (nthcdr 5 ,x) ,v))
-  (gv-define-setter decoded-time-weekday (v x) `(setcar (nthcdr 6 ,x) ,v))
-  (gv-define-setter decoded-time-dst (v x)     `(setcar (nthcdr 7 ,x) ,v))
-  (gv-define-setter decoded-time-zone (v x)    `(setcar (nthcdr 8 ,x) ,v)))
+  (cl-defstruct (decoded-time ;; <compat-tests:decoded-time>
+                 (:constructor nil)
+                 (:copier nil)
+                 (:type list))
+    (second nil :documentation "\
+This is an integer or a Lisp timestamp (TICKS . HZ) representing a nonnegative
+number of seconds less than 61.  (If not less than 60, it is a leap second,
+which only some operating systems support.)")
+    (minute nil :documentation "This is an integer between 0 and 59 (inclusive).")
+    (hour nil :documentation "This is an integer between 0 and 23 (inclusive).")
+    (day nil :documentation "This is an integer between 1 and 31 (inclusive).")
+    (month nil :documentation "\
+This is an integer between 1 and 12 (inclusive).  January is 1.")
+    (year nil :documentation "This is a four digit integer.")
+    (weekday nil :documentation "\
+This is a number between 0 and 6, and 0 is Sunday.")
+    (dst -1 :documentation "\
+This is t if daylight saving time is in effect, nil if it is not
+in effect, and -1 if daylight saving information is not available.
+Also see `decoded-time-dst'.")
+    (zone nil :documentation "\
+This is an integer indicating the UTC offset in seconds, i.e.,
+the number of seconds east of Greenwich.")))
 
 ;;;; Defined in minibuffer.el
 
@@ -523,6 +491,12 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in time-date.el
 
+(compat-defun make-decoded-time ;; <compat-tests:make-decoded-time>
+              (&key second minute hour day month year (dst -1) zone)
+  "Return a `decoded-time' structure with only the keywords given filled out."
+  :feature time-date
+  (list second minute hour day month year nil dst zone))
+
 (compat-defun date-days-in-month (year month) ;; <compat-tests:date-days-in-month>
   "The number of days in MONTH in YEAR."
   :feature time-date
@@ -550,40 +524,9 @@ January 1st being 1."
 
 ;;;; Defined in text-property-search.el
 
-(compat-defun make-prop-match (&rest attr) ;; <compat-tests:make-prop-match>
-  "Constructor for objects of type ‘prop-match’."
-  :feature text-property-search
-  ;; Vector for older than 26.1, Record on newer Emacs.
-  (funcall (eval-when-compile (if (< emacs-major-version 26) 'vector 'record))
-           'prop-match
-           (plist-get attr :beginning)
-           (plist-get attr :end)
-           (plist-get attr :value)))
-
-(compat-defun prop-match-p (match) ;; <compat-tests:make-prop-match>
-  "Return non-nil if MATCH is a `prop-match' object."
-  :feature text-property-search
-  ;; Vector for older than 26.1, Record on newer Emacs.
-  (if (eval-when-compile (< emacs-major-version 26))
-      (and (vectorp match)
-           (> (length match) 0)
-           (eq (aref match 0) 'prop-match))
-    (eq (type-of match) 'prop-match)))
-
-(compat-defun prop-match-beginning (match) ;; <compat-tests:make-prop-match>
-  "Retrieve the position where MATCH begins."
-  :feature text-property-search
-  (aref match 1))
-
-(compat-defun prop-match-end (match) ;; <compat-tests:make-prop-match>
-  "Retrieve the position where MATCH ends."
-  :feature text-property-search
-  (aref match 2))
-
-(compat-defun prop-match-value (match) ;; <compat-tests:make-prop-match>
-  "Retrieve the value that MATCH holds."
-  :feature text-property-search
-  (aref match 3))
+(declare-function make-prop-match nil)
+(when (eval-when-compile (< emacs-major-version 27))
+  (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
 
 (compat-defun text-property-search-forward ;; <compat-tests:text-property-search-forward>
     (property &optional value predicate not-current)
@@ -621,7 +564,6 @@ If found, move point to the end of the region and return a
 of the match, use `prop-match-beginning' and `prop-match-end' for
 the buffer positions that limit the region, and
 `prop-match-value' for the value of PROPERTY in the region."
-  :feature text-property-search
   (let* ((match-p
           (lambda (prop-value)
             (funcall
@@ -696,7 +638,6 @@ the buffer positions that limit the region, and
 
 Like `text-property-search-forward', which see, but searches backward,
 and if a matching region is found, place point at the start of the region."
-  :feature text-property-search
   (let* ((match-p
           (lambda (prop-value)
             (funcall

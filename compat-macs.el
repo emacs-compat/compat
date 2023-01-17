@@ -74,9 +74,7 @@ ARGS is a list of keywords which are looked up and passed to FUN."
     (when feature
       (when (eq feature 'subr-x)
         (error "Feature subr-x must not be specified"))
-      ;; If the feature does not exist, treat it as nil.  The function will then
-      ;; be defined on the toplevel and not in a `with-eval-after-load' block.
-      (setq feature (require feature nil t)))
+      (require feature))
     (when (if cond
               ;; If a condition is specified, no version check is performed.
               (eval cond t)
@@ -105,7 +103,9 @@ REST are attributes and the function BODY."
       (let* ((defname (if (and explicit (fboundp name))
                           (intern (format "compat--%s" name))
                         name))
-             (def `(,(if (eq type 'macro) 'defmacro 'defun)
+             (def `(,(if (memq '&key arglist)
+                         (if (eq type 'macro) 'cl-defmacro 'cl-defun)
+                       (if (eq type 'macro) 'defmacro 'defun))
                     ,defname ,arglist
                     ,(compat--format-docstring type name docstring)
                     ,@body)))

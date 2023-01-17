@@ -3,6 +3,7 @@
 * Development
 
 - compat-27: Add ~date-ordinal-to-time~.
+- compat-27: Add ~make-decoded-time~.
 
 * Release of "Compat" Version 29.1.2.0
 
