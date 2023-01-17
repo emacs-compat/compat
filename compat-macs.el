@@ -71,15 +71,15 @@ ARGS is a list of keywords which are looked up and passed to FUN."
   (let* ((body (compat--check-attributes attrs `(,@args :when :feature)))
          (feature (plist-get attrs :feature))
          (attrs `(:body ,body ,@attrs))
-         (cond (plist-get attrs :when)))
+         (when (plist-get attrs :when)))
     ;; Require feature at compile time
     (when feature
       (when (eq feature 'subr-x)
         (error "Feature subr-x must not be specified"))
       (require feature))
-    (when (if cond
+    (when (if when
               ;; If a condition is specified, no version check is performed.
-              (eval cond t)
+              (eval when t)
             ;; The current Emacs must be older than the current declared Compat
             ;; version, see `compat-declare-version'.
             (version< emacs-version compat--version))
