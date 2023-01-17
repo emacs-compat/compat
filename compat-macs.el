@@ -37,21 +37,6 @@
     (when (and (< 24 before) (< emacs-major-version before))
       `(require ',(intern (format "compat-%d" before))))))
 
-(defmacro compat-guard (&rest rest)
-  "Guard definition with a version check.
-REST is an attribute plist followed by the definition body.  The
-attributes specify the conditions under which the definition is
-generated.
-
-- :feature :: Wrap the definition with `with-eval-after-load'.
-
-- :when :: Do not install the definition depending on the
-  version.  Instead install the definition if :when evaluates to
-  non-nil."
-  (declare (debug ([&rest keywordp sexp] def-body))
-           (indent 0))
-  (compat--guard rest '(:body) #'identity))
-
 (defun compat--format-docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.
 Prepend compatibility notice to the actual documentation string."
@@ -137,6 +122,26 @@ REST are attributes and the function BODY."
             `((declare-function ,name nil)
               (unless (fboundp ',name) ,def))
           (list def))))))
+
+(defmacro compat-guard (cond &rest rest)
+  "Guard definition with a runtime COND and a version check.
+The runtime condition must make sure that no definition is
+overriden.  REST is an attribute plist followed by the definition
+body.  The attributes specify the conditions under which the
+definition is generated.
+
+- :feature :: Wrap the definition with `with-eval-after-load'.
+
+- :when :: Do not install the definition depending on the
+  version.  Instead install the definition if :when evaluates to
+  non-nil."
+  (declare (debug ([&rest keywordp sexp] def-body))
+           (indent 0))
+  (compat--guard rest '(:body)
+    (lambda (body)
+      (if (eq cond t)
+          body
+        `((when ,cond ,@body))))))
 
 (defmacro compat-defalias (name def &rest attrs)
   "Define compatibility alias NAME as DEF.

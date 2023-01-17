@@ -282,7 +282,7 @@ return nil."
 
 ;;;; Defined in simple.el
 
-(compat-guard
+(compat-guard (not (fboundp 'decoded-time-second))
   (cl-defstruct (decoded-time ;; <compat-tests:decoded-time>
                  (:constructor nil)
                  (:copier nil)
@@ -334,7 +334,7 @@ Internal use only."
     (setcdr image (plist-put (cdr image) property value)))
   value)
 
-(compat-guard
+(compat-guard t
   :feature image
   ;; HACK: image--set-property was broken with an off-by-one error on Emacs 26.
   ;; The bug was fixed in a4ad7bed187493c1c230f223b52c71f5c34f7c89. Therefore we
@@ -522,7 +522,9 @@ January 1st being 1."
 
 ;;;; Defined in text-property-search.el
 
-(compat-guard (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
+(declare-function make-prop-match nil)
+(compat-guard (not (fboundp 'make-prop-match))
+  (cl-defstruct (prop-match) beginning end value)) ;; <compat-tests:prop-match>
 
 (compat-defun text-property-search-forward ;; <compat-tests:text-property-search-forward>
     (property &optional value predicate not-current)
