@@ -23,7 +23,6 @@
 ;;; Code:
 
 (eval-when-compile (load "compat-macs.el" nil t t))
-(eval-when-compile (require 'cl-lib))
 (compat-declare-version "27.1")
 
 ;;;; Defined in fns.c

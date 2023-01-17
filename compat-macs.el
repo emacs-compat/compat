@@ -21,9 +21,11 @@
 
 ;;; Code:
 
-;; We always require subr-x at compile since many functions have been moved
-;; around.
+;; We always require subr-x at compile time for the fboundp check
+;; since definitions have been moved around. The cl-lib macros are
+;; needed by compatibility definitions.
 (require 'subr-x)
+(require 'cl-lib)
 
 (defvar compat--version nil
   "Version of the currently defined compatibility definitions.")
