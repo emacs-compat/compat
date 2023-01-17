@@ -635,6 +635,37 @@ is included in the return value."
                   default)))
    ": "))
 
+;;;; Defined in faces.el
+
+(compat-defvar color-luminance-dark-limit 0.325 ;; <compat-tests:color-dark-p>
+  "The relative luminance below which a color is considered \"dark\".
+A \"dark\" color in this sense provides better contrast with white
+than with black; see `color-dark-p'.
+This value was determined experimentally."
+  :constant t)
+
+(compat-defun color-dark-p (rgb) ;; <compat-tests:color-dark-p>
+  "Whether RGB is more readable against white than black.
+RGB is a 3-element list (R G B), each component in the range [0,1].
+This predicate can be used both for determining a suitable (black or white)
+contrast color with RGB as background and as foreground."
+  (unless (<= 0 (apply #'min rgb) (apply #'max rgb) 1)
+    (error "RGB components %S not in [0,1]" rgb))
+  ;; Compute the relative luminance after gamma-correcting (assuming sRGB),
+  ;; and compare to a cut-off value determined experimentally.
+  ;; See https://en.wikipedia.org/wiki/Relative_luminance for details.
+  (let* ((sr (nth 0 rgb))
+         (sg (nth 1 rgb))
+         (sb (nth 2 rgb))
+         ;; Gamma-correct the RGB components to linear values.
+         ;; Use the power 2.2 as an approximation to sRGB gamma;
+         ;; it should be good enough for the purpose of this function.
+         (r (expt sr 2.2))
+         (g (expt sg 2.2))
+         (b (expt sb 2.2))
+         (y (+ (* r 0.2126) (* g 0.7152) (* b 0.0722))))
+    (< y color-luminance-dark-limit)))
+
 ;;;; Defined in windows.el
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <compat-tests:count-windows>

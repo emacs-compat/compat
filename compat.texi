@@ -1776,6 +1776,14 @@ environment variable and @var{value} is that variable's value.
 @xref{System Environment,System Environment,,elisp}.
 @end defmac
 
+@c based on lisp/faces.el
+@defun color-dark-p rgb
+Whether @var{rgb} is more readable against white than black. @var{rgb}
+is a 3-element list (R G B), each component in the range [0,1].  This
+predicate can be used both for determining a suitable (black or white)
+contrast color with RGB as background and as foreground.
+@end defun
+
 @c based on src/xfaces.c
 @defun color-values-from-color-spec spec
 Convert the textual color specification @var{spec} to a color triple
@@ -1969,8 +1977,6 @@ The function @code{macroexp-compiling-p}.
 The function @code{split-string-shell-command}.
 @item
 The function @code{string-limit}.
-@item
-The function @code{color-dark-p}.
 @item
 The function @code{innermost-minibuffer-p}.
 @item

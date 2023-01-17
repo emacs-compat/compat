@@ -2263,6 +2263,12 @@
     (goto-char (point-max))
     (should-not (text-property-search-backward 'non-existant))))
 
+(ert-deftest color-dark-p ()
+  (should (color-dark-p '(0 0 0)))
+  (should (color-dark-p '(0.5 0.5 0.5)))
+  (should-not (color-dark-p '(0.5 0.7 0.5)))
+  (should-not (color-dark-p '(1 1 1 ))))
+
 (ert-deftest color-values-from-color-spec ()
   ;; #RGB notation
   (should-equal '(0 0 0) (color-values-from-color-spec "#000"))
