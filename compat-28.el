@@ -135,6 +135,16 @@ If COUNT is non-nil and a natural number, the function will
       (setf (nthcdr count files) nil))
     files))
 
+(compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributs>
+  "Handle additional optional argument COUNT.
+If COUNT is non-nil and a natural number, the function will
+ return COUNT number of file names (if so many are present)."
+  :explicit t
+  (let ((files (directory-files-and-attributes directory full match nosort id-format)))
+    (when (natnump count)
+      (setf (nthcdr count files) nil))
+    files))
+
 ;;;; xfaces.c
 
 (compat-defun color-values-from-color-spec (spec) ;; <compat-tests:color-values-from-color-spec>

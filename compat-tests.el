@@ -1384,8 +1384,15 @@
 
 (ert-deftest directory-files ()
   (should-not (compat-call directory-files "." nil nil nil 0))
+  (should (list-of-strings-p (compat-call directory-files "." nil nil nil 1)))
   (should-equal 1 (length (compat-call directory-files "." nil nil nil 1)))
   (should-equal 2 (length (compat-call directory-files "." nil nil nil 2))))
+
+(ert-deftest directory-files-and-attributes ()
+  (should-not (compat-call directory-files-and-attributes "." nil nil nil nil 0))
+  (should (consp (car (compat-call directory-files-and-attributes "." nil nil nil nil 1))))
+  (should-equal 1 (length (compat-call directory-files-and-attributes "." nil nil nil nil 1)))
+  (should-equal 2 (length (compat-call directory-files-and-attributes "." nil nil nil nil 2))))
 
 (ert-deftest directory-name-p ()
   (should (directory-name-p "/"))
