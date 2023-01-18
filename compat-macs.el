@@ -133,11 +133,13 @@ overriden.  REST is an attribute plist followed by the definition
 body.  The attributes specify the conditions under which the
 definition is generated.
 
-- :feature :: Wrap the definition with `with-eval-after-load'.
+- :feature :: Wrap the definition with `with-eval-after-load' for
+  the given feature.
 
-- :when :: Do not install the definition depending on the
-  version.  Instead install the definition if :when evaluates to
-  non-nil."
+- :when :: Install the definition if :when evaluates to non-nil.
+  The usual version check is not performed.  If you still want to
+  check against the current Emacs version, the comparison must be
+  part of the :when expression."
   (declare (debug ([&rest keywordp sexp] def-body))
            (indent 1))
   (compat--guard rest '(:body)
@@ -151,7 +153,7 @@ definition is generated.
 ATTRS is a plist of attributes, which specify the conditions
 under which the definition is generated.
 
-- :obsolete :: Mark the alias as obsolete.
+- :obsolete :: Mark the alias as obsolete if non-nil.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (name symbolp [&rest keywordp sexp])))
@@ -173,11 +175,14 @@ The function must be documented in DOCSTRING.  REST is an
 attribute plist followed by the function body.  The attributes
 specify the conditions under which the definition is generated.
 
-- :explicit :: Make the definition available such that it can be
-  called explicitly via `compat-call'.
+- :explicit :: Make the definition available for explicit
+  invocation via `compat-call'.  :explicit should be used for
+  functions which extend already existing functions, e.g.,
+  functions which changed their calling convention or their
+  behavior.
 
-- :obsolete :: Mark the function as obsolete, can be a string
-  describing the obsoletion.
+- :obsolete :: Mark the function as obsolete if non-nil, can be a
+  string describing the obsoletion.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (&define name (&rest symbolp)
@@ -201,14 +206,14 @@ The variable must be documented in DOCSTRING.  ATTRS is a plist
 of attributes, which specify the conditions under which the
 definition is generated.
 
-- :constant :: Define a constant if non-nil.
+- :constant :: Mark the variable as constant if non-nil.
 
 - :local :: Make the variable permanently local if the value is
   `permanent'.  For other non-nil values make the variable
   buffer-local.
 
-- :obsolete :: Mark the variable as obsolete, can be a string
-  describing the obsoletion.
+- :obsolete :: Mark the variable as obsolete if non-nil, can be a
+  string describing the obsoletion.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
