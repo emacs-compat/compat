@@ -908,6 +908,24 @@
   (should-equal compat-tests--local-b 2)
   (should-equal compat-tests--local-c 3))
 
+(defvar compat-tests--global)
+(defvar compat-tests--local)
+(defvar compat-tests--unexist)
+(ert-deftest buffer-local-set-state ()
+  (setq compat-tests--global 1)
+  (with-temp-buffer
+    (setq-local compat-tests--local 2)
+    (let ((state (buffer-local-set-state compat-tests--global 10
+                                         compat-tests--local 20
+                                         compat-tests--unexist 30)))
+      (should (= compat-tests--global 10))
+      (should (= compat-tests--local 20))
+      (should (= compat-tests--unexist 30))
+      (buffer-local-restore-state state)
+      (should (= compat-tests--global 1))
+      (should (= compat-tests--local 2))
+      (should-not (boundp 'compat-tests--unexist)))))
+
 (ert-deftest gensym ()
   (let ((orig gensym-counter))
     (should (integerp gensym-counter))

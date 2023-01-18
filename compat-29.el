@@ -171,6 +171,41 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defun buffer-local-restore-state (states)
+  "Restore values of buffer-local variables recorded in STATES.
+STATES should be an object returned by `buffer-local-set-state'."
+  (dolist (state states)
+    (if (cadr state)
+        (set (car state) (caddr state))
+      (kill-local-variable (car state)))))
+
+(compat-defun buffer-local-set-state--get (pairs)
+  "Internal helper function."
+  (let ((states nil))
+    (while pairs
+      (push (list (car pairs)
+                  (and (boundp (car pairs))
+                       (local-variable-p (car pairs)))
+                  (and (boundp (car pairs))
+                       (symbol-value (car pairs))))
+            states)
+      (setq pairs (cddr pairs)))
+    (nreverse states)))
+
+(compat-defmacro buffer-local-set-state (&rest pairs)
+  "Like `setq-local', but allow restoring the previous state of locals later.
+This macro returns an object that can be passed to `buffer-local-restore-state'
+in order to restore the state of the local variables set via this macro.
+
+\(fn [VARIABLE VALUE]...)"
+  (declare (debug setq))
+  (unless (zerop (mod (length pairs) 2))
+    (error "PAIRS must have an even number of variable/value members"))
+  `(prog1
+       (buffer-local-set-state--get ',pairs)
+     (,(if (fboundp 'compat--setq-local) 'compat--setq-local 'setq-local)
+      ,@pairs)))
+
 (compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
   "Return t if OBJECT is nil or a list of strings."
   (declare (pure t) (side-effect-free t))
