@@ -92,8 +92,8 @@ ARGS is a list of keywords which are looked up and passed to FUN."
 (defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guard rest '(:explicit :body)
-    (lambda (explicit body)
+  (compat--guard rest '(:explicit :obsolete :body)
+    (lambda (explicit obsolete body)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -111,17 +111,20 @@ REST are attributes and the function BODY."
                     ,defname ,arglist
                     ,(compat--format-docstring type name docstring)
                     ,@body)))
-        ;; An additional fboundp check is performed at runtime to make
-        ;; sure that we never redefine an existing definition if Compat
-        ;; is loaded on a newer Emacs version.
-        (if (eq defname name)
-            ;; Declare the function in a non-existing compat-declare
-            ;; feature, such that the byte compiler does not complain
-            ;; about possibly missing functions at runtime. The warnings
-            ;; are generated due to the unless fboundp check.
-            `((declare-function ,name nil)
-              (unless (fboundp ',name) ,def))
-          (list def))))))
+        `(,@(if (eq defname name)
+                ;; An additional fboundp check is performed at runtime to make
+                ;; sure that we never redefine an existing definition if Compat
+                ;; is loaded on a newer Emacs version.  Declare the function,
+                ;; such that the byte compiler does not complain about possibly
+                ;; missing functions at runtime. The warnings are generated due
+                ;; to the fboundp check.
+                `((declare-function ,name nil)
+                  (unless (fboundp ',name) ,def))
+              (list def))
+          ,@(when obsolete
+              `((make-obsolete
+                 ',name ,(if (stringp obsolete) obsolete "No substitute")
+                 ,compat--version))))))))
 
 (defmacro compat-guard (cond &rest rest)
   "Guard definition with a runtime COND and a version check.
@@ -158,13 +161,11 @@ under which the definition is generated.
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
       `((unless (fboundp ',name)
-          ,(let ((doc (compat--format-docstring
-                       'function name
-                       (get name 'function-documentation))))
-             (if obsolete
-                 `(define-obsolete-function-alias
-                    ',name ',def ,compat--version ,doc)
-               `(defalias ',name ',def ,doc))))))))
+          (defalias ',name ',def
+            ,(compat--format-docstring 'function name
+                                       (get name 'function-documentation)))
+          ,@(when obsolete
+              `((make-obsolete ',name ',def ,compat--version))))))))
 
 (defmacro compat-defun (name arglist docstring &rest rest)
   "Define compatibility function NAME with arguments ARGLIST.
@@ -174,6 +175,9 @@ specify the conditions under which the definition is generated.
 
 - :explicit :: Make the definition available such that it can be
   called explicitly via `compat-call'.
+
+- :obsolete :: Mark the function as obsolete, can be a string
+  describing the obsoletion.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (&define name (&rest symbolp)
@@ -203,11 +207,14 @@ definition is generated.
   `permanent'.  For other non-nil values make the variable
   buffer-local.
 
+- :obsolete :: Mark the variable as obsolete, can be a string
+  describing the obsoletion.
+
 - :feature and :when :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat--guard attrs '(:local :constant)
-    (lambda (local constant)
+  (compat--guard attrs '(:local :constant :obsolete)
+    (lambda (local constant obsolete)
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
@@ -215,6 +222,10 @@ definition is generated.
           (,(if constant 'defconst 'defvar)
            ,name ,initval
            ,(compat--format-docstring 'variable name docstring))
+          ,@(when obsolete
+              `((make-obsolete-variable
+                 ',name ,(if (stringp obsolete) obsolete "No substitute")
+                 ,compat--version)))
           ,@(cond
              ((eq local 'permanent)
               `((put ',name 'permanent-local t)))
