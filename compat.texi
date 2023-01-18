@@ -2703,10 +2703,20 @@ The command @code{string-edit} and @code{read-string-from-buffer}.
 @item
 The function @code{readablep}.
 @item
+The macro @code{with-undo-amalgamate}.
+@item
 The macro @code{with-delayed-message} and the function
 @code{funcall-with-delayed-message}.
 @item
 The function @code{string-glyph-split}.
+@item
+The function @code{string-limit}.
+@item
+The function @code{string-pixel-width}.
+@item
+The function @code{buffer-text-pixel-size}.
+@item
+The function @code{pixel-fill-region}.
 @item
 The function @code{textsec-suspicious-p}.
 @item
