@@ -187,6 +187,23 @@ This function does not move point.  Also see `line-end-position'."
   "Delete the current line."
   (delete-region (pos-bol) (pos-bol 2)))
 
+(compat-defmacro with-narrowing (start end &rest rest)
+  "Execute BODY with restrictions set to START and END.
+
+The current restrictions, if any, are restored upon return.
+
+With the optional :locked TAG argument, inside BODY,
+`narrow-to-region' and `widen' can be used only within the START
+and END limits, unless the restrictions are unlocked by calling
+`narrowing-unlock' with TAG.  See `narrowing-lock' for a more
+detailed description.
+
+\(fn START END [:locked TAG] BODY)"
+  `(save-restriction
+     (narrow-to-region ,start ,end)
+     ;; Locking is ignored
+     ,@(if (eq (car rest) :locked) (cddr rest) rest)))
+
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.
 If PLACE's value is non-nil, then don't bother evaluating CODE

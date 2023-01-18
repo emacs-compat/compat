@@ -211,6 +211,16 @@
     (should-equal 'h (get-text-property 2 'help-echo))
     (should-equal 'h (get-text-property 6 'help-echo))))
 
+(ert-deftest with-narrowing ()
+  (with-temp-buffer
+    (insert "abc")
+    (with-narrowing 2 3 :locked 'foo
+      (should-equal "b" (buffer-string)))
+    (should-equal "abc" (buffer-string))
+    (with-narrowing 2 3
+                    (should-equal "b" (buffer-string)))
+    (should-equal "abc" (buffer-string))))
+
 (ert-deftest with-memoization ()
   (let ((x (cons nil nil)) y computed)
     (with-memoization (car x)

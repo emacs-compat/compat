@@ -12,6 +12,7 @@
 - compat-29: Add ~plistp~.
 - compat-29: Add ~list-of-strings-p~.
 - compat-29: Add ~delete-line~.
+- compat-29: Add ~with-narrowing~.
 
 * Release of "Compat" Version 29.1.2.0
 
