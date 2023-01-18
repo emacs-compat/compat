@@ -56,14 +56,23 @@ returns the symbol of a compatibility function which supports the
 behavior and calling convention of the current stable Emacs
 version.  For example Compat 29.1 will provide compatibility
 functions which implement the behavior and calling convention of
-Emacs 29.1."
+Emacs 29.1.
+
+An example is the function `plist-get' which got an additional
+predicate argument in Emacs 29.  The compatibility function,
+which supports this additional argument can be obtained
+via (compat-function plist-get) and called with the additional
+predicate argument via (compat-call plist-get plist prop
+predicate).  It is not possible to directly call (plist-get plist
+prop predicate), since the function does not yet support the
+predicate argument on older Emacs versions and the Compat library
+does not override existing functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 
 (defmacro compat-call (fun &rest args)
   "Call compatibility function or macro FUN with ARGS.
-
-See `compat-function' for the compatibility function resolution."
+See `compat-function' for details."
   (let ((compat (intern (format "compat--%s" fun))))
     `(,(if (fboundp compat) compat fun) ,@args)))
 
