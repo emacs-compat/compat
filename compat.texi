@@ -2012,6 +2012,21 @@ provided by Compat. Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lisp/simple.el
+@defun get-scratch-buffer-create
+Return the *scratch* buffer, creating a new one if needed.
+@end defun
+
+@c based on lisp/simple.el
+@defun use-region-end
+Return the end of the region if @code{use-region-p}.
+@end defun
+
+@c based on lisp/simple.el
+@defun use-region-beginning
+Return the start of the region if @code{use-region-p}.
+@end defun
+
 @c copied from lispref/modes.texi
 @findex buffer-local-restore-state
 @defmac buffer-local-set-state variable value...
@@ -2710,6 +2725,12 @@ Compat does not provide support for the following Lisp features
 implemented in 29.1:
 
 @itemize
+@item
+The function @code{imagep}.
+@item
+The function @code{function-documentation}.
+@item
+The function @code{count-sentences}.
 @item
 The command @code{string-edit} and @code{read-string-from-buffer}.
 @item

@@ -2648,5 +2648,19 @@
   (require 'dired)
   (should-error (compat-call dired-get-marked-files nil nil nil nil t)))
 
+(ert-deftest use-region ()
+  (with-temp-buffer
+    (insert "abc\ndef\n")
+    (set-mark 2)
+    (goto-char 7)
+    (transient-mark-mode)
+    (should (use-region-p))
+    (should-equal 2 (use-region-beginning))
+    (should-equal 7 (use-region-end))))
+
+(ert-deftest get-scratch-buffer-create ()
+  (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))
+  (should-equal initial-major-mode (buffer-local-value 'major-mode (get-scratch-buffer-create))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

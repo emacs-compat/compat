@@ -350,6 +350,29 @@ CONDITION."
         (push buf bufs)))
     bufs))
 
+;;;; Defined in simple.el
+
+(compat-defun use-region-beginning () ;; <compat-tests:use-region>
+  "Return the start of the region if `use-region-p'."
+  (and (use-region-p) (region-beginning)))
+
+(compat-defun use-region-end () ;; <compat-tests:use-region>
+  "Return the end of the region if `use-region-p'."
+  (and (use-region-p) (region-end)))
+
+(compat-defun get-scratch-buffer-create () ;; <compat-tests:get-scratch-buffer-create>
+  "Return the *scratch* buffer, creating a new one if needed."
+  (or (get-buffer "*scratch*")
+      (let ((scratch (get-buffer-create "*scratch*")))
+        ;; Don't touch the buffer contents or mode unless we know that
+        ;; we just created it.
+        (with-current-buffer scratch
+          (when initial-scratch-message
+            (insert (substitute-command-keys initial-scratch-message))
+            (set-buffer-modified-p nil))
+          (funcall initial-major-mode))
+        scratch)))
+
 ;;;; Defined in subr-x.el
 
 (compat-defmacro with-buffer-unmodified-if-unchanged (&rest body) ;; <compat-tests:with-buffer-unmodified-if-unchanged>
