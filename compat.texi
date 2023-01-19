@@ -394,6 +394,16 @@ performs one step of the expansion: if the result is another macro call,
 @xref{Expansion,Expansion,,elisp}.
 @end defun
 
+@c based on lisp/emacs-lisp/macroexp.el
+@defun macroexp-quote e
+Return an expression @var{e} such that @code{(eval e)} is @var{v}.
+@end defun
+
+@c based on lisp/emacs-lisp/macroexp.el
+@defun macroexp-parse body
+Parse a function @var{body} into @code{(declarations . exps)}.
+@end defun
+
 @defun bool-vector &rest objects
 This function creates and returns a bool-vector whose elements are the
 arguments, @var{objects}.
@@ -426,6 +436,10 @@ Compat does not provide support for the following Lisp features
 implemented in 25.1:
 
 @itemize
+@item
+The function @code{macroexp-macroexpand}.
+@item
+The macro @code{macroexp-let2*}.
 @item
 The function @code{directory-files-recursively}.
 @item

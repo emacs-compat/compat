@@ -2493,6 +2493,22 @@
 (ert-deftest macroexp-warn-and-return ()
   (should-equal (macroexp-warn-and-return "test warning" '(some form)) '(some form)))
 
+(ert-deftest macroexp-parse-body ()
+  (should-equal '(((declare test)) . (a b c))
+                (macroexp-parse-body '((declare test) a b c)))
+  (should-equal '(((interactive)) . (a b c))
+                (macroexp-parse-body '((interactive) a b c)))
+  (should-equal '(((interactive) (cl-declare)) . (a b c))
+                (macroexp-parse-body '((interactive) (cl-declare) a b c))))
+
+(ert-deftest macroexp-quote ()
+  (should-equal nil (macroexp-quote nil))
+  (should-equal t (macroexp-quote t))
+  (should-equal :key (macroexp-quote :key))
+  (should-equal "str" (macroexp-quote "str"))
+  (should-equal ''sym (macroexp-quote 'sym))
+  (should-equal ''(1 2 3) (macroexp-quote '(1 2 3))))
+
 (ert-deftest macroexpand-1 ()
   (should-equal '(if a b c) (macroexpand-1 '(if a b c)))
   (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))

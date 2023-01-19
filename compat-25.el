@@ -196,6 +196,29 @@ threading."
 
 ;;;; Defined in macroexp.el
 
+(compat-defun macroexp-parse-body (body) ;; <compat-tests:macroexp-parse-body>
+  "Parse a function BODY into (DECLARATIONS . EXPS)."
+  (let ((decls ()))
+    (while (and (cdr body)
+                (let ((e (car body)))
+                  (or (stringp e)
+                      (memq (car-safe e)
+                            '(:documentation declare interactive cl-declare)))))
+      (push (pop body) decls))
+    (cons (nreverse decls) body)))
+
+(compat-defun macroexp-quote (v) ;; <compat-tests:macroexp-quote>
+  "Return an expression E such that `(eval E)' is V.
+
+E is either V or (quote V) depending on whether V evaluates to
+itself or not."
+  (if (and (not (consp v))
+           (or (keywordp v)
+               (not (symbolp v))
+               (memq v '(nil t))))
+      v
+    (list 'quote v)))
+
 (compat-defun macroexpand-1 (form &optional environment) ;; <compat-tests:macroexpand-1>
   "Perform (at most) one step of macro expansion."
   (cond
