@@ -70,6 +70,11 @@ usage: (bool-vector &rest OBJECTS)"
             ?\\ ?/))
       (aref name (1- (length name)))))
 
+;;;; Defined in simple.el
+
+;; `save-excursion' behaved like `save-mark-and-excursion' before 25.1.
+(compat-defalias save-mark-and-excursion save-excursion)
+
 ;;;; Defined in subr.el
 
 (compat-defun string-greaterp (string1 string2) ;; <compat-tests:string-greaterp>

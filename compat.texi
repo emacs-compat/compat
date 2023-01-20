@@ -237,6 +237,13 @@ manage to provide for each Emacs version.
 The following functions and macros implemented in 25.1, and are provided
 by Compat:
 
+@c copied from lispref/positions.texi
+@defmac save-mark-and-excursion body@dots{}
+This macro is like @code{save-excursion}, but also saves and restores
+the mark location and @code{mark-active}.  This macro does what
+@code{save-excursion} did before Emacs 25.1.
+@end defmac
+
 @c copied from lispref/strings.texi
 @defun format-message string &rest objects
 This function acts like @code{format}, except it also converts any grave

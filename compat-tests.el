@@ -2724,5 +2724,20 @@
     (should-equal (ring-size ring) 3)
     (should-equal (ring-elements ring) '(5 4 3))))
 
+(ert-deftest save-mark-and-excursion ()
+  (with-temp-buffer
+    (insert "a\nb\nc")
+    (goto-char 1)
+    (set-mark 2)
+    (should-equal (point) 1)
+    (should-equal (mark) 2)
+    (save-mark-and-excursion
+      (goto-char 3)
+      (set-mark 4)
+      (should-equal (point) 3)
+      (should-equal (mark) 4))
+    (should-equal (point) 1)
+    (should-equal (mark) 2)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
