@@ -30,6 +30,7 @@
 - compat-27: Add ~fixnump~ and ~bignump~.
 - compat-27: Add ~with-minibuffer-selected-window~.
 - compat-27: Add generalized variables for ~decoded-time-*~.
+- compat-27: Add ~ring-resize~.
 - compat-28: Add ~macroexp-warn-and-return~.
 - compat-28: Add ~subr-native-elisp-p~.
 - compat-28: Add ~bounds-of-thing-at-mouse~.

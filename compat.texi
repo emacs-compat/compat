@@ -893,6 +893,12 @@ The function @code{string-version-lessp}.
 The following functions and macros implemented in 27.1, and are provided
 by Compat:
 
+@c copied from lispref/sequences.texi
+@defun ring-resize ring size
+Set the size of @var{ring} to @var{size}.  If the new size is smaller,
+then the oldest items in the ring are discarded.
+@end defun
+
 @c based on lisp/minibuffer.el
 @defmac with-minibuffer-selected-window &rest body
 Execute the forms in @var{body} from the minibuffer in its original
@@ -1413,8 +1419,6 @@ The functions @code{major-mode-suspend} and @code{major-mode-restore}.
 The function @code{file-system-info}.
 @item
 The more consistent treatment of NaN values.
-@item
-The function @code{ring-resize}.
 @item
 The function @code{group-name}.
 @item

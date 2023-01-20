@@ -714,5 +714,29 @@ and if a matching region is found, place point at the start of the region."
         (and (not (eq ended t))
              ended))))))
 
+;;;; Defined in ring.el
+
+(compat-defun ring-resize (ring size)
+  "Set the size of RING to SIZE.
+If the new size is smaller, then the oldest items in the ring are
+discarded."
+  :feature ring
+  (when (integerp size)
+    (let ((length (ring-length ring))
+          (new-vec (make-vector size nil)))
+      (if (= length 0)
+          (setcdr ring (cons 0 new-vec))
+        (let* ((hd (car ring))
+               (old-size (ring-size ring))
+               (old-vec (cddr ring))
+               (copy-length (min size length))
+               (copy-hd (mod (+ hd (- length copy-length)) length)))
+          (setcdr ring (cons copy-length new-vec))
+          ;; If the ring is wrapped, the existing elements must be written
+          ;; out in the right order.
+          (dotimes (j copy-length)
+            (aset new-vec j (aref old-vec (mod (+ copy-hd j) old-size))))
+          (setcar ring 0))))))
+
 (provide 'compat-27)
 ;;; compat-27.el ends here
