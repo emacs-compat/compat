@@ -153,6 +153,21 @@
        (push x y))
      '(3 2 1))))
 
+(ert-deftest minibuffer-history-value ()
+  (let ((minibuffer-history-variable 'file-name-history)
+        (file-name-history '("a" "b" "c")))
+    (should-equal (minibuffer-history-value) '("a" "b" "c")))
+  (let ((file-name-history '("x" "y" "z")))
+    (should-equal
+     (catch 'compat-tests--exit
+       (minibuffer-with-setup-hook
+           (lambda ()
+             (message "%S" minibuffer-history-variable)
+             (throw 'compat-tests--exit (minibuffer-history-value)))
+         (let ((executing-kbd-macro t))
+           (completing-read "Prompt: " #'completion-file-name-table nil nil nil 'file-name-history))))
+     '("x" "y" "z"))))
+
 (ert-deftest with-minibuffer-selected-window ()
   (let (ran)
     (should-not (minibuffer-selected-window))

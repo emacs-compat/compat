@@ -899,6 +899,14 @@ Set the size of @var{ring} to @var{size}.  If the new size is smaller,
 then the oldest items in the ring are discarded.
 @end defun
 
+@c based on lisp/simple.el
+@defun minibuffer-history-value
+Return the value of the minibuffer input history list.  If
+@var{minibuffer-history-variable} points to a buffer-local variable
+and the minibuffer is active, return the buffer-local value for the
+buffer that was current when the minibuffer was activated."
+@end defun
+
 @c based on lisp/minibuffer.el
 @defmac with-minibuffer-selected-window &rest body
 Execute the forms in @var{body} from the minibuffer in its original

@@ -307,6 +307,14 @@ Also see `decoded-time-dst'.")
 This is an integer indicating the UTC offset in seconds, i.e.,
 the number of seconds east of Greenwich.")))
 
+(compat-defun minibuffer-history-value () ;; <compat-tests:minibuffer-history-value>
+  "Return the value of the minibuffer input history list.
+If `minibuffer-history-variable' points to a buffer-local variable and
+the minibuffer is active, return the buffer-local value for the buffer
+that was current when the minibuffer was activated."
+  (buffer-local-value minibuffer-history-variable
+                      (window-buffer (minibuffer-selected-window))))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defmacro with-minibuffer-selected-window (&rest body) ;; <compat-tests:with-minibuffer-selected-window>
@@ -716,7 +724,7 @@ and if a matching region is found, place point at the start of the region."
 
 ;;;; Defined in ring.el
 
-(compat-defun ring-resize (ring size)
+(compat-defun ring-resize (ring size) ;; <compat-tests:ring-resize>
   "Set the size of RING to SIZE.
 If the new size is smaller, then the oldest items in the ring are
 discarded."
