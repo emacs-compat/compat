@@ -237,6 +237,24 @@ manage to provide for each Emacs version.
 The following functions and macros implemented in 25.1, and are provided
 by Compat:
 
+@c copied from lispref/help.texi
+@defopt text-quoting-style
+The value of this user option is a symbol that specifies the style
+Emacs should use for single quotes in the wording of help and
+messages.  If the option's value is @code{curve}, the style is
+@t{‘like this’} with curved single quotes.  If the value is
+@code{straight}, the style is @t{'like this'} with straight
+apostrophes.  If the value is @code{grave}, quotes are not translated
+and the style is @t{`like this'} with grave accent and apostrophe, the
+standard style before Emacs version 25.  The default value @code{nil}
+acts like @code{curve} if curved single quotes seem to be displayable,
+and like @code{grave} otherwise.
+
+This option is useful on platforms that have problems with curved
+quotes.  You can customize it freely according to your personal
+preference.
+@end defopt
+
 @c based on lisp/simple.el
 @defun region-bounds
 Return the boundaries of the region.  Value is a list of one or more
@@ -1468,6 +1486,14 @@ functionality.
 The following functions and macros implemented in 28.1, and are provided
 by Compat:
 
+@c copied from lispref/help.texi
+@defun text-quoting-style
+You should not read the value of the variable
+@code{text-quoting-style} directly.  Instead, use this function with
+the same name to dynamically compute the correct quoting style on the
+current terminal in the @code{nil} case described above.
+@end defun
+
 @c copied from lispref/strings.texi
 @defun string-search needle haystack &optional start-pos
 Return the position of the first instance of @var{needle} in
@@ -2059,6 +2085,12 @@ The following functions and macros implemented in 29.1 and are
 provided by Compat. Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
+
+@c copied from lispref/help.texi
+@defun substitute-quotes string
+This function works like @code{substitute-command-keys}, but only
+replaces quote characters.
+@end defun
 
 @c based on lisp/simple.el
 @defun get-scratch-buffer-create

@@ -70,6 +70,28 @@ usage: (bool-vector &rest OBJECTS)"
             ?\\ ?/))
       (aref name (1- (length name)))))
 
+;;;; Defined in doc.c
+
+(compat-defvar text-quoting-style nil ;; <compat-tests:text-quoting-style>
+  "Style to use for single quotes in help and messages.
+
+The value of this variable determines substitution of grave accents
+and apostrophes in help output (but not for display of Info
+manuals) and in functions like `message' and `format-message', but not
+in `format'.
+
+The value should be one of these symbols:
+  `curve':    quote with curved single quotes ‘like this’.
+  `straight': quote with straight apostrophes \\='like this\\='.
+  `grave':    quote with grave accent and apostrophe \\=`like this\\=';
+              i.e., do not alter the original quote marks.
+  nil:        like `curve' if curved single quotes are displayable,
+              and like `grave' otherwise.  This is the default.
+
+You should never read the value of this variable directly from a Lisp
+program.  Use the function `text-quoting-style' instead, as that will
+compute the correct value for the current terminal in the nil case.")
+
 ;;;; Defined in simple.el
 
 ;; `save-excursion' behaved like `save-mark-and-excursion' before 25.1.

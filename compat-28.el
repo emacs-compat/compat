@@ -783,5 +783,23 @@ are 30 days long."
      (* (or (decoded-time-month time) 0) 60 60 24 30)
      (* (or (decoded-time-year time) 0) 60 60 24 365)))
 
+;;;; Defined in doc.c
+
+(compat-defun text-quoting-style () ;; <compat-tests:text-quoting-style>
+  "Return the current effective text quoting style.
+If the variable `text-quoting-style' is `grave', `straight' or
+`curve', just return that value.  If it is nil (the default), return
+`grave' if curved quotes cannot be displayed (for instance, on a
+terminal with no support for these characters), otherwise return
+`quote'.  Any other value is treated as `grave'.
+
+Note that in contrast to the variable `text-quoting-style', this
+function will never return nil."
+  (cond
+   ((memq text-quoting-style '(grave straight curve))
+    text-quoting-style)
+   ((not text-quoting-style) 'grave)
+   (t 'curve)))
+
 (provide 'compat-28)
 ;;; compat-28.el ends here

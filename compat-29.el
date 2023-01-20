@@ -1124,6 +1124,20 @@ command exists in this specific map, but it doesn't have the
         (delete (last key) submap)))
     def))
 
+;;;; Defined in help.el
+
+(compat-defun substitute-quotes (string) ;; <compat-tests:substitute-quotes>
+  "Substitute quote characters for display.
+Each grave accent \\=` is replaced by left quote, and each
+apostrophe \\=' is replaced by right quote.  Left and right quote
+characters are specified by `text-quoting-style'."
+  (cond ((eq (text-quoting-style) 'curve)
+         (string-replace "`" "‘"
+                         (string-replace "'" "’" string)))
+        ((eq (text-quoting-style) 'straight)
+         (string-replace "`" "'" string))
+        (t string)))
+
 ;;;; Defined in button.el
 
 (compat-defun button--properties (callback data help-echo) ;; <compat-tests:buttonize>
