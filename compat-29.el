@@ -850,10 +850,17 @@ Bindings are always added before any inherited map.
 The order of bindings in a keymap matters only when it is used as
 a menu, so this function is not useful for non-menu keymaps."
   (keymap--check key)
-  (when after
-    (keymap--check after))
+  (when (eq after t) (setq after nil)) ; nil and t are treated the same
+  (when (stringp after)
+    (keymap--check after)
+    (setq after (key-parse after)))
+  ;; If we're binding this key to another key, then parse that other
+  ;; key, too.
+  (when (stringp definition)
+    (keymap--check definition)
+    (setq definition (key-parse definition)))
   (define-key-after keymap (key-parse key) definition
-    (and after (key-parse after))))
+    after))
 
 (compat-defun keymap-lookup ;; <compat-tests:keymap-lookup>
     (keymap key &optional accept-default no-remap position)
@@ -897,7 +904,7 @@ specified buffer position instead of point are used."
                    (symbolp value))
             (or (command-remapping value) value)
           value))
-    (key-binding (kbd key) accept-default no-remap position)))
+    (key-binding (key-parse key) accept-default no-remap position)))
 
 (compat-defun keymap-local-lookup (keys &optional accept-default) ;; <compat-tests:keymap-local-lookup>
   "Return the binding for command KEYS in current local keymap only.
