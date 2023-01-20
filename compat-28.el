@@ -678,7 +678,7 @@ contrast color with RGB as background and as foreground."
 
 ;;;; Defined in window.el
 
-(compat-defmacro with-window-non-dedicated (window &rest body)
+(compat-defmacro with-window-non-dedicated (window &rest body) ;; <compat-tests:with-window-non-dedicated>
   "Evaluate BODY with WINDOW temporarily made non-dedicated.
 If WINDOW is nil, use the selected window.  Return the value of
 the last form in BODY."

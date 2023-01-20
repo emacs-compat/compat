@@ -171,7 +171,7 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
-(compat-defun buffer-local-restore-state (states)
+(compat-defun buffer-local-restore-state (states) ;; <compat-tests:buffer-local-set-state>
   "Restore values of buffer-local variables recorded in STATES.
 STATES should be an object returned by `buffer-local-set-state'."
   (dolist (state states)
@@ -179,7 +179,7 @@ STATES should be an object returned by `buffer-local-set-state'."
         (set (car state) (caddr state))
       (kill-local-variable (car state)))))
 
-(compat-defun buffer-local-set-state--get (pairs)
+(compat-defun buffer-local-set-state--get (pairs) ;; <compat-tests:buffer-local-set-state>
   "Internal helper function."
   (let ((states nil))
     (while pairs
@@ -192,7 +192,7 @@ STATES should be an object returned by `buffer-local-set-state'."
       (setq pairs (cddr pairs)))
     (nreverse states)))
 
-(compat-defmacro buffer-local-set-state (&rest pairs)
+(compat-defmacro buffer-local-set-state (&rest pairs) ;; <compat-tests:buffer-local-set-state>
   "Like `setq-local', but allow restoring the previous state of locals later.
 This macro returns an object that can be passed to `buffer-local-restore-state'
 in order to restore the state of the local variables set via this macro.
@@ -222,7 +222,7 @@ in order to restore the state of the local variables set via this macro.
   "Delete the current line."
   (delete-region (pos-bol) (pos-bol 2)))
 
-(compat-defmacro with-narrowing (start end &rest rest)
+(compat-defmacro with-narrowing (start end &rest rest) ;; <compat-tests:with-narrowing>
   "Execute BODY with restrictions set to START and END.
 
 The current restrictions, if any, are restored upon return.
