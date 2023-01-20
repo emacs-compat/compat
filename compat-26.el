@@ -69,6 +69,19 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
         (line-number-at-pos position))
     (line-number-at-pos position)))
 
+;;;; Defined in simple.el
+
+(compat-defun region-bounds () ;; <compat-tests:region-bounds>
+  "Return the boundaries of the region.
+Value is a list of one or more cons cells of the form (START . END).
+It will have more than one cons cell when the region is non-contiguous,
+see `region-noncontiguous-p' and `extract-rectangle-bounds'."
+  (if (eval-when-compile (< emacs-major-version 25))
+      ;; FIXME: The `region-extract-function' of Emacs 24 has no support for the
+      ;; bounds argument.
+      (list (cons (region-beginning) (region-end)))
+    (funcall region-extract-function 'bounds)))
+
 ;;;; Defined in subr.el
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>

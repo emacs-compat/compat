@@ -73,7 +73,14 @@ usage: (bool-vector &rest OBJECTS)"
 ;;;; Defined in simple.el
 
 ;; `save-excursion' behaved like `save-mark-and-excursion' before 25.1.
-(compat-defalias save-mark-and-excursion save-excursion)
+(compat-defalias save-mark-and-excursion save-excursion) ;; <compat-tests:save-mark-and-excursion>
+
+(declare-function region-bounds nil) ;; Defined in compat-26.el
+(compat-defun region-noncontiguous-p () ;; <compat-tests:region-noncontiguous-p>
+  "Return non-nil if the region contains several pieces.
+An example is a rectangular region handled as a list of
+separate contiguous regions for each line."
+  (let ((bounds (region-bounds))) (and (cdr bounds) bounds)))
 
 ;;;; Defined in subr.el
 

@@ -2689,6 +2689,38 @@
     (should-equal 2 (use-region-beginning))
     (should-equal 7 (use-region-end))))
 
+(ert-deftest region-bounds ()
+  (should-error (region-bounds))
+  ;; FIXME: On Emacs 24 `region-bounds' always returns a continuous region.
+  (when (> emacs-major-version 24)
+    (let ((region-extract-function #'ignore))
+      (should-not (region-bounds)))
+    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+      (should-equal (region-bounds) '((2 . 3) (6 . 7)))))
+  (with-temp-buffer
+    (insert "abc\ndef\n")
+    (set-mark 2)
+    (goto-char 7)
+    (should-equal (region-bounds) '((2 . 7)))))
+
+(ert-deftest region-noncontiguous-p ()
+  (when (> emacs-major-version 24)
+    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+      (should (region-noncontiguous-p))))
+  (with-temp-buffer
+    (insert "abc\ndef\n")
+    (set-mark 2)
+    (goto-char 7)
+    (transient-mark-mode)
+    (should-not (region-noncontiguous-p))
+    (should-not (use-region-noncontiguous-p))
+    (should (use-region-p))
+    ;; FIXME: On Emacs 24 `region-bounds' always returns a continuous region.
+    (when (> emacs-major-version 24)
+      (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+        (should (region-noncontiguous-p))
+        (should (use-region-noncontiguous-p))))))
+
 (ert-deftest get-scratch-buffer-create ()
   (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))
   (should-equal initial-major-mode (buffer-local-value 'major-mode (get-scratch-buffer-create))))

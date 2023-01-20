@@ -352,6 +352,10 @@ CONDITION."
 
 ;;;; Defined in simple.el
 
+(compat-defun use-region-noncontiguous-p () ;; <compat-tests:region-noncontiguous-p>
+  "Return non-nil for a non-contiguous region if `use-region-p'."
+  (and (use-region-p) (region-noncontiguous-p)))
+
 (compat-defun use-region-beginning () ;; <compat-tests:use-region>
   "Return the start of the region if `use-region-p'."
   (and (use-region-p) (region-beginning)))

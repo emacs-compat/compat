@@ -237,6 +237,21 @@ manage to provide for each Emacs version.
 The following functions and macros implemented in 25.1, and are provided
 by Compat:
 
+@c based on lisp/simple.el
+@defun region-bounds
+Return the boundaries of the region.  Value is a list of one or more
+cons cells of the form @code{(start . end)}.  It will have more than
+one cons cell when the region is non-contiguous, see
+@code{region-noncontiguous-p} and @code{extract-rectangle-bounds}.
+@end defun
+
+@c based on lisp/simple.el
+@defun region-noncontiguous-p
+Return non-nil if the region contains several pieces.  An example is a
+rectangular region handled as a list of separate contiguous regions
+for each line.
+@end defun
+
 @c copied from lispref/positions.texi
 @defmac save-mark-and-excursion body@dots{}
 This macro is like @code{save-excursion}, but also saves and restores
@@ -2048,6 +2063,11 @@ care.
 @c based on lisp/simple.el
 @defun get-scratch-buffer-create
 Return the *scratch* buffer, creating a new one if needed.
+@end defun
+
+@c based on lisp/simple.el
+@defun use-region-noncontiguous-p
+Return non-nil for a non-contiguous region if @code{use-region-p}.
 @end defun
 
 @c based on lisp/simple.el
