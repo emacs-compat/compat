@@ -30,6 +30,15 @@
 (defvar compat--version nil
   "Version of the currently defined compatibility definitions.")
 
+(defmacro compat--strict (cond &rest error)
+  "Assert strict COND, otherwise fail with ERROR."
+  (when (bound-and-true-p compat-strict)
+    `(compat--assert ,cond ,@error)))
+
+(defmacro compat--assert (cond &rest error)
+  "Assert COND, otherwise fail with ERROR."
+  `(unless ,cond (error ,@error)))
+
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
   (setq compat--version version)
@@ -56,11 +65,10 @@ If this is not documented on yourself system, you can check \
 (defun compat--check-attributes (attrs preds)
   "Check ATTRS given PREDS predicate plist and return rest."
   (while (keywordp (car attrs))
-    (unless (cdr attrs)
-      (error "Odd number of element in attribute list"))
+    (compat--assert (cdr attrs) "Attribute list length is odd")
     (let ((pred (plist-get preds (car attrs))))
-      (unless (and pred (or (eq pred t) (funcall pred (cadr attrs))))
-        (error "Invalid attribute %s" (car attrs))))
+      (compat--assert (and pred (or (eq pred t) (funcall pred (cadr attrs))))
+                      "Invalid attribute %s" (car attrs)))
     (setq attrs (cddr attrs)))
   attrs)
 
@@ -77,8 +85,7 @@ a plist of predicates for arguments which are passed to FUN."
          args)
     ;; Require feature at compile time
     (when feature
-      (when (eq feature 'subr-x)
-        (error "Feature subr-x must not be specified"))
+      (compat--assert (not (eq feature 'subr-x)) "Invalid feature subr-x")
       (require feature))
     (when (if when
               ;; If a condition is specified, no version check is performed.
@@ -102,6 +109,8 @@ REST are attributes and the function BODY."
                         :obsolete ,(lambda (x) (or (booleanp x) (stringp x)))
                         :body t)
     (lambda (explicit obsolete body)
+      (compat--strict (or explicit (not (fboundp name)))
+                      "Non-explicit %s %s already defined" type name)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -167,6 +176,7 @@ under which the definition is generated.
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guard attrs '(:obsolete booleanp)
     (lambda (obsolete)
+      (compat--strict (not (fboundp name)) "%s already defined" name)
       ;; The fboundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
@@ -229,8 +239,8 @@ definition is generated.
                          :local ,(lambda (x) (memq x '(nil t permanent)))
                          :obsolete ,(lambda (x) (or (booleanp x) (stringp x))))
     (lambda (constant local obsolete)
-      (when (and constant local)
-        (error ":constant and :local cannot be specified together"))
+      (compat--strict (not (boundp name)) "%s already defined" name)
+      (compat--assert (not (and constant local)) "Both :constant and :local")
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.

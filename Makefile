@@ -29,7 +29,7 @@ $(BYTEC): compat-macs.el
 .el.elc:
 	@echo "Compiling $<"
 	@$(EMACS) -Q --batch -L . \
-		--eval '(setq byte-compile-error-on-warn (< emacs-major-version 30))' \
+		--eval '(setq compat-strict t byte-compile-error-on-warn (< emacs-major-version 30))' \
 		-f batch-byte-compile $<
 
 compat.info: compat.texi
