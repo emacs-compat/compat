@@ -43,16 +43,6 @@ It should not be used for anything security-related.  See
        (widen)
        (sha1 (current-buffer) (point-min) (point-max)))))
 
-(compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
-  "Handle the optional TESTFN."
-  :explicit t
-  (if testfn
-      (catch 'found
-        (dolist (ent alist)
-          (when (funcall testfn (car ent) key)
-            (throw 'found ent))))
-    (assoc key alist)))
-
 (compat-defun mapcan (func sequence) ;; <compat-tests:mapcan>
   "Apply FUNC to each element of SEQUENCE.
 Concatenate the results by altering them (using `nconc').
@@ -99,22 +89,24 @@ If you just want to check `major-mode', use `derived-mode-p'."
          (setq mode (if (and parentfn (symbolp parentfn)) parentfn parent)))))
   mode)
 
+(compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
+  "Handle the optional TESTFN."
+  :explicit t
+  (if testfn
+      (catch 'found
+        (dolist (ent alist)
+          (when (funcall testfn (car ent) key)
+            (throw 'found ent))))
+    (assoc key alist)))
+
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
   :explicit t
-  (if testfn
-      (let (entry)
-        (cond
-         ((eq testfn 'eq)
-          (setq entry (assq key alist)))
-         ((eq testfn 'equal)
-          (setq entry (assoc key alist)))
-         ((catch 'found
-            (dolist (ent alist)
-              (when (and (consp ent) (funcall testfn (car ent) key))
-                (throw 'found (setq entry ent)))))))
-        (if entry (cdr entry) default))
-    (alist-get key alist default remove)))
+  (ignore remove)
+  (let ((x (if (not testfn)
+               (assq key alist)
+             (compat--assoc key alist testfn))))
+    (if x (cdr x) default)))
 
 (compat-guard t
   (gv-define-expander compat--alist-get ;; <compat-tests:alist-get-gv>

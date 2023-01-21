@@ -123,16 +123,6 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
-(compat-defun alist-get (key alist &optional default remove) ;; <compat-tests:alist-get>
-  "Return the value associated with KEY in ALIST, using `assq'.
-If KEY is not found in ALIST, return DEFAULT.
-This is a generalized variable suitable for use with `setf'.
-When using it to set a value, optional argument REMOVE non-nil
-means to remove KEY from ALIST if the new value is `eql' to DEFAULT."
-  (ignore remove)
-  (let ((x (assq key alist)))
-    (if x (cdr x) default)))
-
 (compat-defmacro if-let (spec then &rest else) ;; <compat-tests:if-let>
   "Bind variables according to SPEC and evaluate THEN or ELSE.
 Evaluate each binding in turn, as in `let*', stopping if a
