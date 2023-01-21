@@ -1515,6 +1515,10 @@
     (should-equal (file-attribute-collect attrs 'group-id 'user-id) '(g u))
     (should-equal (file-attribute-collect attrs 'size 'inode-number 'type) '(S i t))))
 
+(ert-deftest file-size-human-readable-iec ()
+  (should-equal "1 KiB" (file-size-human-readable-iec 1024))
+  (should-equal "2.1 MiB" (file-size-human-readable-iec 2223456)))
+
 (ert-deftest file-size-human-readable ()
   (should-equal "1000" (compat-call file-size-human-readable 1000))
   (should-equal "1k" (compat-call file-size-human-readable 1024))
@@ -1523,7 +1527,7 @@
   (should-equal "1T" (compat-call file-size-human-readable (expt 1024 4)))
   (should-equal "1k" (compat-call file-size-human-readable 1000 'si))
   (should-equal "1KiB" (compat-call file-size-human-readable 1024 'iec))
-  (should-equal "1KiB" (compat-call file-size-human-readable 1024 'iec))
+  (should-equal "1__KiB" (compat-call file-size-human-readable 1024 'iec "__"))
   (should-equal "1 KiB" (compat-call file-size-human-readable 1024 'iec " "))
   (should-equal "1KiA" (compat-call file-size-human-readable 1024 'iec nil "A"))
   (should-equal "1 KiA" (compat-call file-size-human-readable 1024 'iec " " "A"))

@@ -1288,6 +1288,11 @@ This function returns non-@code{nil} if @var{mode} is derived from any
 of the major modes given by the symbols @var{modes}.
 @end defun
 
+@c based on lisp/files.texi
+@defun file-size-human-readable-iec size
+Human-readable string for @var{size} bytes, using IEC prefixes.
+@end defun
+
 @c based on lispref/files.texi
 @defun make-empty-file filename &optional parents
 This function creates an empty file named @var{filename}.  As

@@ -375,6 +375,10 @@ in all cases, since that is the standard symbol for byte."
               (if (string= prefixed-unit "") "" (or space ""))
               prefixed-unit))))
 
+(compat-defun file-size-human-readable-iec (size) ;; <compat-tests:file-size-human-readable-iec>
+  "Human-readable string for SIZE bytes, using IEC prefixes."
+  (compat--file-size-human-readable size 'iec " "))
+
 (compat-defun exec-path () ;; <compat-tests:exec-path>
   "Return list of directories to search programs to run in remote subprocesses.
 The remote host is identified by `default-directory'.  For remote
