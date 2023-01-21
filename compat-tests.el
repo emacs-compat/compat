@@ -1147,7 +1147,7 @@
   (should-equal '((0 . zero) a (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=))
   (should-equal '(a (0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)))
 
-(ert-deftest derived-mode-p ()
+(ert-deftest provided-derived-mode-p ()
   (let ((one (make-symbol "1"))
         (two (make-symbol "2"))
         (three (make-symbol "3"))

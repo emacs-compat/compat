@@ -799,5 +799,10 @@ function will never return nil."
    ((not text-quoting-style) 'grave)
    (t 'curve)))
 
+;;;; Defined in button.el
+
+;; Obsolete Alias since 29
+(compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
+
 (provide 'compat-28)
 ;;; compat-28.el ends here

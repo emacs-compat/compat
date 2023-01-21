@@ -276,9 +276,5 @@ itself or not."
                 form))))))))
    (t form)))
 
-;;;; Defined in byte-run.el
-
-(compat-defalias function-put put) ;; <compat-tests:function-put>
-
 (provide 'compat-25)
 ;;; compat-25.el ends here

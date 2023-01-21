@@ -1281,13 +1281,6 @@ This function returns non-@code{nil} if @var{mode} is derived from any
 of the major modes given by the symbols @var{modes}.
 @end defun
 
-@defun derived-mode-p &rest modes
-This function returns non-@code{nil} if the current major mode is
-derived from any of the major modes given by the symbols @var{modes}.
-
-@xref{Derived Modes,,,elisp}.
-@end defun
-
 @c based on lispref/files.texi
 @defun make-empty-file filename &optional parents
 This function creates an empty file named @var{filename}.  As
@@ -2011,37 +2004,6 @@ to @code{subrp}.
 Return @code{t} if @var{object} if the object is native compiled lisp.
 If native compilation is not available, this function always returns
 @code{nil}.
-@end defun
-
-@c copied from lispref/files.texi
-@defun file-name-absolute-p filename
-This function returns @code{t} if file @var{filename} is an absolute
-file name, @code{nil} otherwise.  A file name is considered to be
-absolute if its first component is @samp{~}, or is @samp{~@var{user}}
-where @var{user} is a valid login name.  In the following examples,
-assume that there is a user named @samp{rms} but no user named
-@samp{nosuchuser}.
-
-@example
-@group
-(file-name-absolute-p "~rms/foo")
-     @result{} t
-@end group
-@group
-(file-name-absolute-p "~nosuchuser/foo")
-     @result{} nil
-@end group
-@group
-(file-name-absolute-p "rms/foo")
-     @result{} nil
-@end group
-@group
-(file-name-absolute-p "/user/rms/foo")
-     @result{} t
-@end group
-@end example
-
-@xref{Absolute and Relative File Names,,,elisp}.
 @end defun
 
 @subsection Explicit Definitions

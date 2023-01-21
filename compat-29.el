@@ -1188,9 +1188,6 @@ Also see `buttonize'."
   (add-text-properties start end (button--properties callback data help-echo))
   (add-face-text-property start end 'button t))
 
-;; Obsolete Alias since 29
-(compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
-
 ;;;; Defined in rmc.el
 
 (compat-defun read-multiple-choice  ;; <compat-tests:read-multiple-choice>
