@@ -71,21 +71,16 @@ The version constraints specified by ATTRS are checked.  PREDS is
 a plist of predicates for arguments which are passed to FUN."
   (declare (indent 2))
   (let* ((body (compat--check-attributes
-                attrs `(,@preds :when t :feature symbolp)))
+                attrs `(,@preds :feature symbolp)))
          (feature (plist-get attrs :feature))
          (attrs `(:body ,body ,@attrs))
-         (when (plist-get attrs :when))
          args)
     ;; Require feature at compile time
     (when feature
       (compat--assert (not (eq feature 'subr-x)) "Invalid feature subr-x")
       (require feature))
-    (when (if when
-              ;; If a condition is specified, no version check is performed.
-              (eval when t)
-            ;; The current Emacs must be older than the current declared Compat
-            ;; version, see `compat-declare-version'.
-            (version< emacs-version compat--version))
+    ;; The current Emacs must be older than the currently declared version.
+    (when (version< emacs-version compat--version)
       (while preds
         (push (plist-get attrs (car preds)) args)
         (setq preds (cddr preds)))
@@ -145,12 +140,7 @@ body.  The attributes specify the conditions under which the
 definition is generated.
 
 - :feature :: Wrap the definition with `with-eval-after-load' for
-  the given feature.
-
-- :when :: Install the definition if :when evaluates to non-nil.
-  The usual version check is not performed.  If you still want to
-  check against the current Emacs version, the comparison must be
-  part of the :when expression."
+  the given feature."
   (declare (debug ([&rest keywordp sexp] def-body))
            (indent 1))
   (compat--guard rest '(:body t)
@@ -167,7 +157,7 @@ under which the definition is generated.
 
 - :obsolete :: Mark the alias as obsolete if t.
 
-- :feature and :when :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat--guard attrs '(:obsolete booleanp)
     (lambda (obsolete)
@@ -199,7 +189,7 @@ specify the conditions under which the definition is generated.
 - :obsolete :: Mark the function as obsolete if t, can be a
   string describing the obsoletion.
 
-- :feature and :when :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
@@ -229,7 +219,7 @@ definition is generated.
 - :obsolete :: Mark the variable as obsolete if t, can be a
   string describing the obsoletion.
 
-- :feature and :when :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
   (compat--guard attrs `(:constant booleanp
