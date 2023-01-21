@@ -6,6 +6,7 @@
 - compat-25: Add ~macroexp-parse-body~ and ~macroexp-quote~.
 - compat-25: Add ~region-noncontiguous-p~.
 - compat-25: Add ~save-mark-and-excursion~.
+- compat-26: Add ~read-answer~.
 - compat-26: Add ~region-bounds~.
 - compat-27: Add ~date-ordinal-to-time~.
 - compat-27: Add ~major-mode-suspend~ and ~major-mode-restore~.

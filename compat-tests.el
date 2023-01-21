@@ -325,6 +325,25 @@
     (setf (image-property image :width) nil)
     (should-equal image '(image))))
 
+(ert-deftest read-answer ()
+  (let ((orig-re (symbol-function #'read-event))
+        (orig-rc (symbol-function #'read-char))
+        (orig-rm (symbol-function #'read-from-minibuffer)))
+    (unwind-protect
+        (dolist (test '(("Choose "
+                         ("first" ?a "first description")
+                         ("second" ?b "second description")
+                         ("third" ?c))
+                        ("Do it? " ("yes" ?y) ("no" ?n))))
+          (dolist (choice (cdr test))
+            (fset #'read-char (lambda (&rest _) (cadr choice)))
+            (fset #'read-event (lambda (&rest _) (cadr choice)))
+            (fset #'read-from-minibuffer (lambda (&rest _) (car choice)))
+            (should-equal (car choice) (read-answer (car test) (cdr test)))))
+      (fset #'read-event orig-re)
+      (fset #'read-char orig-rc)
+      (fset #'read-from-minibuffer orig-rm))))
+
 (ert-deftest read-multiple-choice ()
   (let ((orig-re (symbol-function #'read-event))
         (orig-rc (symbol-function #'read-char))

@@ -775,5 +775,61 @@ discarded."
             (aset new-vec j (aref old-vec (mod (+ copy-hd j) old-size))))
           (setcar ring 0))))))
 
+;;;; Defined in map-ynp.el
+
+(compat-declare-version "26.2")
+
+(compat-defvar read-answer-short 'auto ;; <compat-tests:read-answer>
+  "If non-nil, the `read-answer' function accepts single-character answers.
+If t, accept short (single key-press) answers to the question.
+If nil, require long answers.  If `auto', accept short answers if
+`use-short-answers' is non-nil, or the function cell of `yes-or-no-p'
+is set to `y-or-n-p'.
+
+Note that this variable does not affect calls to the more
+commonly-used `yes-or-no-p' function; it only affects calls to
+the `read-answer' function.  To control whether `yes-or-no-p'
+requires a long or a short answer, see the `use-short-answers'
+variable.")
+
+(compat-defun read-answer (question answers) ;; <compat-tests:read-answer>
+  "Read an answer either as a complete word or its character abbreviation.
+Ask user a question and accept an answer from the list of possible answers.
+
+QUESTION should end in a space; this function adds a list of answers to it.
+
+ANSWERS is an alist with elements in the following format:
+  (LONG-ANSWER SHORT-ANSWER HELP-MESSAGE)
+where
+  LONG-ANSWER is a complete answer,
+  SHORT-ANSWER is an abbreviated one-character answer,
+  HELP-MESSAGE is a string describing the meaning of the answer.
+
+SHORT-ANSWER is not necessarily a single character answer.  It can be
+also a function key like F1, a character event such as C-M-h, or
+a control character like C-h.
+
+Example:
+  \\='((\"yes\"  ?y \"perform the action\")
+    (\"no\"   ?n \"skip to the next\")
+    (\"all\"  ?! \"accept all remaining without more questions\")
+    (\"help\" ?h \"show help\")
+    (\"quit\" ?q \"exit\"))
+
+When `read-answer-short' is non-nil, accept short answers.
+
+Return a long answer even in case of accepting short ones.
+
+When `use-dialog-box' is t, pop up a dialog window to get user input."
+  ;; NOTE: For simplicity we provide a primitive implementation based on
+  ;; `read-multiple-choice', which does neither support long answers nor the the
+  ;; gui dialog box.
+  (cadr (read-multiple-choice
+         (string-trim-right question)
+         (delq nil
+               (mapcar (lambda (x) (unless (equal "help" (car x))
+                                     (list (cadr x) (car x) (caddr x))))
+                       answers)))))
+
 (provide 'compat-27)
 ;;; compat-27.el ends here
