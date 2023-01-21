@@ -1211,5 +1211,21 @@ Also see `buttonize'."
           (when (equal answer (cadr c))
             (throw 'found c)))))))
 
+;;;; Defined in paragraphs.el
+
+(compat-defun count-sentences (start end) ;; <compat-tests:count-sentences>
+  "Count sentences in current buffer from START to END."
+  (let ((sentences 0)
+        (inhibit-field-text-motion t))
+    (save-excursion
+      (save-restriction
+        (narrow-to-region start end)
+        (goto-char (point-min))
+        (while (ignore-errors (forward-sentence))
+          (setq sentences (1+ sentences)))
+        (when (/= (skip-chars-backward " \t\n") 0)
+          (setq sentences (1- sentences)))
+        sentences))))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here

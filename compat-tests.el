@@ -2803,5 +2803,11 @@
   (should-not (readablep (list (make-marker))))
   (should-not (readablep (make-marker))))
 
+(ert-deftest count-sentences ()
+  (with-temp-buffer
+    (insert "First sentence.  Second sentence.  Third sentence.  Fourth sentence.")
+    (should-equal 4 (count-sentences (point-min) (point-max)))
+    (should-equal 2 (count-sentences 16 50))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

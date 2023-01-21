@@ -2101,6 +2101,11 @@ older than 29.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lisp/textmodes/paragraphs.el
+@defun count-sentences start end
+Count sentences in current buffer from @var{start} to @var{end}.
+@end defun
+
 @c copied from lispref/streams.texi
 @defun readablep object
 This predicate says whether @var{object} has @dfn{readable syntax},
@@ -2837,8 +2842,6 @@ implemented in 29.1:
 The function @code{imagep}.
 @item
 The function @code{function-documentation}.
-@item
-The function @code{count-sentences}.
 @item
 The command @code{string-edit} and @code{read-string-from-buffer}.
 @item

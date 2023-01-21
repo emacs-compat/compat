@@ -17,6 +17,7 @@
 - compat-28: Add ~with-window-non-dedicated~.
 - compat-29: Add ~buffer-local-set-state~ and ~buffer-local-restore-state~.
 - compat-29: Add ~compiled-function-p~.
+- compat-29: Add ~count-sentences~.
 - compat-29: Add ~delete-line~.
 - compat-29: Add ~get-scratch-buffer-create~.
 - compat-29: Add ~list-of-strings-p~.
