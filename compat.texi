@@ -161,6 +161,14 @@ This macro returns the compatibility function symbol for FUN.  See
 compatibility functions.
 @end defmac
 
+This design has been chosen since Compat does not advise or override
+existing functions.  Generally Compat is written in defensive style
+which is supposed to reduce potential breakage, and to increase the
+chances of staying binary compatible across releases.  The extensive
+test coverage ensures that we can maintain high quality, which is
+crucial for Compat which is not restricted to a namespace like usual
+libraries.
+
 If you intend to use a compatibility function in your code it is
 recommended that you take a look at the test suite
 @file{compat-tests.el}.  There you can see the supported calling
@@ -198,7 +206,7 @@ interface (M-x) is unaffected by the presence of Compat.
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
 advised. Since this is invasive and adds significant overhead, even
-when the new feature is not used, Compat does not use advices. As a
+when the new feature is not used, Compat does not use advices.  As a
 compromise, compatibility functions and macros with a changed calling
 convention or behavior can be accessed via the @code{compat-function}
 and @code{compat-call} macros.
