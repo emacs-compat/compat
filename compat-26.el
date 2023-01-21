@@ -1,4 +1,4 @@
-;;; compat-26.el --- Compatibility Layer for Emacs 26.1  -*- lexical-binding: t; -*-
+;;; compat-26.el --- Functionality added in Emacs 26.1 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
@@ -17,8 +17,7 @@
 
 ;;; Commentary:
 
-;; Find here the functionality added in Emacs 26.1, needed by older
-;; versions.
+;; Functionality added in Emacs 26.1, needed by older Emacs versions.
 
 ;;; Code:
 
