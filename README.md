@@ -51,10 +51,10 @@ As compat.el is distribed as part of [GNU ELPA], and therefore requires a
 Distribution
 ------------
 compat.el and all other source files in this directory are distributed under the
-[GNU Public License 3] like Emacs itself. The manual (`compat.texi`) is
-distributed under the [GNU Free Documentation License 1.3].
+[GNU Public License 3] like Emacs itself. The manual is distributed under the
+[GNU Free Documentation License 1.3].
 
-[GNU Public License]:
+[GNU Public License 3]:
     https://www.gnu.org/licenses/gpl-3.0.en.html
-[GNU Free Documentation License]:
+[GNU Free Documentation License 1.3]:
     https://www.gnu.org/licenses/fdl-1.3.html
