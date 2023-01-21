@@ -59,22 +59,24 @@ version.  For example Compat 29.1 will provide compatibility
 functions which implement the behavior and calling convention of
 Emacs 29.1.
 
-An example is the function `plist-get' which was extended with an
-additional predicate argument in Emacs 29.  The compatibility
-function, which supports this additional argument can be obtained
-via (compat-function plist-get) and called with the additional
-predicate argument via (compat-call plist-get plist prop
-predicate).  It is not possible to directly evaluate (plist-get
-plist prop predicate), since the original `plist-get' function
-does not yet support the predicate argument on older Emacs
-versions.  Note that Compat library never overrides existing
-functions."
+See also `compat-call' to directly call compatibility functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 
 (defmacro compat-call (fun &rest args)
   "Call compatibility function or macro FUN with ARGS.
-See `compat-function' for details."
+
+A good example function is `plist-get' which was extended with an
+additional predicate argument in Emacs 29.1.  The compatibility
+function, which supports this additional argument, can be
+obtained via (compat-function plist-get) and called
+via (compat-call plist-get plist prop predicate).  It is not
+possible to directly call (plist-get plist prop predicate) on
+Emacs older than 29.1, since the original `plist-get' function
+does not yet support the predicate argument.  Note that the
+Compat library never overrides existing functions.
+
+See also `compat-function' to lookup compatibility functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `(,(if (fboundp compat) compat fun) ,@args)))
 
