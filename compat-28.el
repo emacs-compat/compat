@@ -112,7 +112,7 @@ inserted before contatenating."
 
 (compat-defun string-width (string &optional from to) ;; <compat-tests:string-width>
   "Handle optional arguments FROM and TO."
-  :explicit t
+  :extended t
   (let* ((len (length string))
          (from (or from 0))
          (to (or to len)))
@@ -124,7 +124,7 @@ inserted before contatenating."
 
 (compat-defun directory-files (directory &optional full match nosort count) ;; <compat-tests:directory-files>
   "Handle additional optional argument COUNT."
-  :explicit t
+  :extended t
   (let ((files (directory-files directory full match nosort)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
@@ -132,7 +132,7 @@ inserted before contatenating."
 
 (compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributs>
   "Handle additional optional argument COUNT."
-  :explicit t
+  :extended t
   (let ((files (directory-files-and-attributes directory full match nosort id-format)))
     (when (natnump count)
       (setf (nthcdr count files) nil))
@@ -686,7 +686,7 @@ the last form in BODY."
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <compat-tests:count-windows>
   "Handle optional argument ALL-FRAMES."
-  :explicit t
+  :extended t
   (if all-frames
       (let ((sum 0))
         (dolist (frame (frame-list))

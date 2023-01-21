@@ -46,7 +46,7 @@
 (when (eval-when-compile (< emacs-major-version 29))
   (require 'compat-29))
 
-;;;; Macros for explicit compatibility function calls
+;;;; Macros for extended compatibility function calls
 
 (defmacro compat-function (fun)
   "Return compatibility function symbol for FUN.
@@ -59,15 +59,16 @@ version.  For example Compat 29.1 will provide compatibility
 functions which implement the behavior and calling convention of
 Emacs 29.1.
 
-An example is the function `plist-get' which got an additional
-predicate argument in Emacs 29.  The compatibility function,
-which supports this additional argument can be obtained
+An example is the function `plist-get' which was extended with an
+additional predicate argument in Emacs 29.  The compatibility
+function, which supports this additional argument can be obtained
 via (compat-function plist-get) and called with the additional
 predicate argument via (compat-call plist-get plist prop
-predicate).  It is not possible to directly call (plist-get plist
-prop predicate), since the function does not yet support the
-predicate argument on older Emacs versions and the Compat library
-does not override existing functions."
+predicate).  It is not possible to directly evaluate (plist-get
+plist prop predicate), since the original `plist-get' function
+does not yet support the predicate argument on older Emacs
+versions.  Note that Compat library never overrides existing
+functions."
   (let ((compat (intern (format "compat--%s" fun))))
     `#',(if (fboundp compat) compat fun)))
 

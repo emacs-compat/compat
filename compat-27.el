@@ -85,7 +85,7 @@ Letter-case is significant, but text properties are ignored."
 
 (compat-defun recenter (&optional arg redisplay) ;; <compat-tests:recenter>
   "Handle optional argument REDISPLAY."
-  :explicit t
+  :extended t
   (recenter arg)
   (when (and redisplay recenter-redisplay)
     (redisplay)))
@@ -94,7 +94,7 @@ Letter-case is significant, but text properties are ignored."
 
 (compat-defun lookup-key (keymap key &optional accept-default) ;; <compat-tests:lookup-key>
   "Allow for KEYMAP to be a list of keymaps."
-  :explicit t
+  :extended t
   (cond
    ((keymapp keymap)
     (lookup-key keymap key accept-default))
@@ -130,7 +130,7 @@ NOTE: This function is not as accurate as the actual `time-equal-p'."
 
 (compat-defmacro setq-local (&rest pairs) ;; <compat-tests:setq-local>
   "Handle multiple assignments."
-  :explicit t
+  :extended t
   (unless (zerop (mod (length pairs) 2))
     (error "PAIRS must have an even number of variable/value members"))
   (let (body)
@@ -211,7 +211,7 @@ return nil."
 
 (compat-defun assoc-delete-all (key alist &optional test) ;; <compat-tests:assoc-delete-all>
   "Handle optional argument TEST."
-  :explicit "26.2"
+  :extended "26.2"
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
               (funcall test (caar alist) key))
@@ -305,7 +305,7 @@ the minibuffer was activated, and execute the forms."
 
 (compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
   "Set PROPERTY in IMAGE to VALUE, internal use only."
-  :explicit "26.1"
+  :extended "26.1"
   :feature image
   (if (null value)
       (while (cdr image)
@@ -328,13 +328,13 @@ the minibuffer was activated, and execute the forms."
 
 (compat-defun file-name-quoted-p (name &optional top) ;; <compat-tests:file-name-quoted-p>
   "Handle optional argument TOP."
-  :explicit "26.1"
+  :extended "26.1"
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (string-prefix-p "/:" (file-local-name name))))
 
 (compat-defun file-name-quote (name &optional top) ;; <compat-tests:file-name-quote>
   "Handle optional argument TOP."
-  :explicit "26.1"
+  :extended "26.1"
   (let ((file-name-handler-alist (unless top file-name-handler-alist)))
     (if (string-prefix-p "/:" (file-local-name name))
         name
@@ -342,7 +342,7 @@ the minibuffer was activated, and execute the forms."
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <compat-tests:file-size-human-readable>
   "Handle the optional arguments SPACE and UNIT."
-  :explicit t
+  :extended t
   (let ((power (if (or (null flavor) (eq flavor 'iec))
                    1024.0
                  1000.0))
@@ -385,7 +385,7 @@ the value of the variable `exec-path'."
 
 (compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
   "Handle optional argument REMOTE."
-  :explicit t
+  :extended t
   (if (and remote (file-remote-p default-directory))
       (let ((res (locate-file
                   command
@@ -411,7 +411,7 @@ Optional arg PARENTS, if non-nil then creates parent dirs as needed."
 
 (compat-defun regexp-opt (strings &optional paren) ;; <compat-tests:regexp-opt>
   "Handle an empty list of STRINGS."
-  :explicit t
+  :extended t
   (if (null strings)
       (let ((re "\\`a\\`"))
         (cond ((null paren)
@@ -468,7 +468,7 @@ The return value is a string (or nil in case we can’t find it)."
     (&optional localp arg filter distinguish-one-marked error)
   "Handle optional argument ERROR."
   :feature dired
-  :explicit t
+  :extended t
   (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))
     (if (and (null result) error)
         (user-error (if (stringp error) error "No files specified"))

@@ -43,7 +43,7 @@ usage: (bool-vector &rest OBJECTS)"
 
 (compat-defun sort (seq predicate) ;; <compat-tests:sort>
   "Handle vector SEQ."
-  :explicit t
+  :extended t
   (cond
    ((listp seq)
     (sort seq predicate))

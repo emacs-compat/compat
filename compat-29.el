@@ -85,7 +85,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-get plist prop)
     (catch 'found
@@ -96,7 +96,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-put (plist prop val &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-put plist prop val)
     (catch 'found
@@ -110,7 +110,7 @@ Unibyte strings are converted to multibyte for comparison."
 
 (compat-defun plist-member (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
-  :explicit t
+  :extended t
   (if (or (null predicate) (eq predicate 'eq))
       (plist-member plist prop)
     (catch 'found
@@ -1108,7 +1108,7 @@ command exists in this specific map, but it doesn't have the
 
 (compat-defun define-key (keymap key def &optional remove) ;; <compat-tests:define-key>
   "Handle optional argument REMOVE."
-  :explicit t
+  :extended t
   (if (not remove)
       (define-key keymap key def)
     ;; Canonicalize key
@@ -1193,7 +1193,7 @@ Also see `buttonize'."
 (compat-defun read-multiple-choice  ;; <compat-tests:read-multiple-choice>
     (prompt choices &optional _help-str _show-help long-form)
     "Handle LONG-FORM argument."
-  :explicit t
+  :extended t
   (if (not long-form)
       (read-multiple-choice prompt choices)
     (let ((answer

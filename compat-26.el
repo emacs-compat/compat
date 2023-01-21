@@ -51,7 +51,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 
 (compat-defun line-number-at-pos (&optional position absolute) ;; <compat-tests:line-number-at-pos>
   "Handle optional argument ABSOLUTE."
-  :explicit t
+  :extended t
   (if absolute
       (save-restriction
         (widen)
@@ -91,7 +91,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
   "Handle the optional TESTFN."
-  :explicit t
+  :extended t
   (if testfn
       (catch 'found
         (dolist (ent alist)
@@ -101,7 +101,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
-  :explicit "25.1"
+  :extended "25.1"
   (ignore remove)
   (let ((x (if (not testfn)
                (assq key alist)
@@ -142,14 +142,14 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun string-trim-left (string &optional regexp) ;; <compat-tests:string-trim-left>
   "Handle optional argument REGEXP."
-  :explicit t
+  :extended t
   (if (string-match (concat "\\`\\(?:" (or regexp "[ \t\n\r]+") "\\)") string)
       (substring string (match-end 0))
     string))
 
 (compat-defun string-trim-right (string &optional regexp) ;; <compat-tests:string-trim-right>
   "Handle optional argument REGEXP."
-  :explicit t
+  :extended t
   (let ((i (string-match-p
             (concat "\\(?:" (or regexp "[ \t\n\r]+") "\\)\\'")
             string)))
@@ -157,7 +157,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun string-trim (string &optional trim-left trim-right) ;; <compat-tests:string-trim>
   "Handle optional arguments TRIM-LEFT and TRIM-RIGHT."
-  :explicit t
+  :extended t
   (compat--string-trim-left
    (compat--string-trim-right
     string

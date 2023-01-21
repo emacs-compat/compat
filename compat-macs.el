@@ -97,14 +97,14 @@ a plist of predicates for arguments which are passed to FUN."
 (defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guard rest `(:explicit ,(lambda (x) (or (booleanp x) (version-to-list x)))
+  (compat--guard rest `(:extended ,(lambda (x) (or (booleanp x) (version-to-list x)))
                         :obsolete ,(lambda (x) (or (booleanp x) (stringp x)))
                         :body t)
-    (lambda (explicit obsolete body)
-      (when (stringp explicit)
-        (setq explicit (version<= explicit emacs-version)))
-      (compat--strict (eq explicit (fboundp name))
-                      "Wrong :explicit flag for %s %s" type name)
+    (lambda (extended obsolete body)
+      (when (stringp extended)
+        (setq extended (version<= extended emacs-version)))
+      (compat--strict (eq extended (fboundp name))
+                      "Wrong :extended flag for %s %s" type name)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -112,8 +112,8 @@ REST are attributes and the function BODY."
         (when (<= emacs-major-version 25)
           (delq (assq 'side-effect-free (car body)) (car body))
           (delq (assq 'pure (car body)) (car body))))
-      ;; Use `:explicit' name if the function is already defined.
-      (let* ((defname (if (and explicit (fboundp name))
+      ;; Use `:extended' name if the function is already defined.
+      (let* ((defname (if (and extended (fboundp name))
                           (intern (format "compat--%s" name))
                         name))
              (def `(,(if (memq '&key arglist)
@@ -188,13 +188,13 @@ The function must be documented in DOCSTRING.  REST is an
 attribute plist followed by the function body.  The attributes
 specify the conditions under which the definition is generated.
 
-- :explicit :: Make the definition available for explicit
-  invocation via `compat-call'.  :explicit should be used for
-  functions which extend already existing functions, e.g.,
-  functions which changed their calling convention or their
-  behavior.  The value can also be a version string, which
-  specifies for which Emacs version and newer an explicit
-  definition will be created.
+- :extended :: Mark the function as extended if t.  The function
+  must be called explicitly via `compat-call'.  This attribute
+  should be used for functions which extend already existing
+  functions, e.g., functions which changed their calling
+  convention or their behavior.  The value can also be a version
+  string, which specifies the Emacs version when the original
+  version of the function was introduced.
 
 - :obsolete :: Mark the function as obsolete if t, can be a
   string describing the obsoletion.

@@ -127,10 +127,10 @@ the noerror flag should be specified.
 (require 'compat nil 'noerror)
 @end example
 
-This will load all implicit and explicit Compat definitions.  Note
-that if Compat is installed on a recent version of Emacs, all of the
-definitions are disabled at compile time, such that no negative
-performance impact is incurred.
+This will load all necessary Compat definitions.  Note that if Compat
+is installed on a recent version of Emacs, all of the definitions are
+disabled at compile time, such that no negative performance impact is
+incurred.
 
 Note that Compat provides replacement functions with extended
 functionality for functions that are already defined (@code{sort},
@@ -138,12 +138,12 @@ functionality for functions that are already defined (@code{sort},
 calling convention (additional optional arguments) or may have changed
 their behavior.  These functions must be looked up explicitly with
 @code{compat-function} or called explicitly with @code{compat-call}.
-We call them ``Explicit Definitions''.  In contrast, ``Implicit
+We call them ``Extended Definitions''.  In contrast, newly ``Added
 Definitions'' can be called as usual.
 
 @example
-(compat-call assoc KEY ALIST TESTFN) ;; Explicit
-(mapcan FUNCTION SEQUENCE)           ;; Implicit
+(compat-call assoc KEY ALIST TESTFN) ;; Call extended `assoc'
+(mapcan FUNCTION SEQUENCE)           ;; Call newly added `mapcan'
 @end example
 
 @defmac compat-call fun &rest args
@@ -263,7 +263,7 @@ manage to provide for each Emacs version.
 @node Emacs 25.1
 @section Emacs 25.1
 
-@subsection Implicit Definitions
+@subsection Added Definitions
 The following functions and macros are implemented in Emacs
 25.1. These functions are made available by Compat on Emacs versions
 older than 25.1.
@@ -481,9 +481,9 @@ arguments, @var{objects}.
 @xref{Bool-Vectors,,,elisp}.
 @end defun
 
-@subsection Explicit Definitions
+@subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior changed:
+since their calling convention or behavior was extended:
 
 @defun compat-call@ sort sequence predicate
 This function sorts @var{sequence} stably.  Note that this function
@@ -550,7 +550,7 @@ The functions @code{bufferpos-to-filepos} and
 @node Emacs 26.1
 @section Emacs 26.1
 
-@subsection Implicit Definitions
+@subsection Added Definitions
 The following functions and macros are implemented in Emacs
 26.1. These functions are made available by Compat on Emacs versions
 older than 26.1.
@@ -882,9 +882,9 @@ size, modes, inode-number and device-number.
 @end example
 @end defun
 
-@subsection Explicit Definitions
+@subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior changed:
+since their calling convention or behavior was extended:
 
 @defun compat-call@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
@@ -1007,7 +1007,7 @@ The function @code{string-version-lessp}.
 @node Emacs 27.1
 @section Emacs 27.1
 
-@subsection Implicit Definitions
+@subsection Added Definitions
 The following functions and macros are implemented in Emacs
 27.1. These functions are made available by Compat on Emacs versions
 older than 27.1.
@@ -1301,9 +1301,9 @@ This function creates an empty file named @var{filename}.  As
 function signals an error.
 @end defun
 
-@subsection Explicit Definitions
+@subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior changed:
+since their calling convention or behavior was extended:
 
 @c based on lispref/windows.texi
 @defun compat-call@ recenter &optional count redisplay
@@ -1562,7 +1562,7 @@ functionality.
 @node Emacs 28.1
 @section Emacs 28.1
 
-@subsection Implicit Definitions
+@subsection Added Definitions
 The following functions and macros are implemented in Emacs
 28.1. These functions are made available by Compat on Emacs versions
 older than 28.1.
@@ -2010,9 +2010,9 @@ If native compilation is not available, this function always returns
 @code{nil}.
 @end defun
 
-@subsection Explicit Definitions
+@subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior changed:
+since their calling convention or behavior was extended:
 
 @defun compat-call@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
@@ -2126,7 +2126,7 @@ Any @code{multisession} functionality.
 @node Emacs 29.1
 @section Emacs 29.1
 
-@subsection Implicit Definitions
+@subsection Added Definitions
 The following functions and macros are implemented in Emacs
 29.1. These functions are made available by Compat on Emacs versions
 older than 29.1.  Note that due to upstream changes, it might happen
@@ -2796,9 +2796,9 @@ Like @code{when-let}, but repeat until a binding in @var{spec} is
 This is comparable to @code{and-let*}.
 @end defmac
 
-@subsection Explicit Definitions
+@subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior changed:
+since their calling convention or behavior was extended:
 
 @c copied from lispref/keymaps.texi
 @defun compat-call@ define-key
