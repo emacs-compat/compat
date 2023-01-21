@@ -839,11 +839,6 @@
     (compat-call define-key map "\C-y" nil t)
     (should-equal map '(keymap (24 keymap) (27 keymap)))))
 
-(defun compat-tests--function-put ())
-(ert-deftest function-put ()
-  (function-put #'compat-tests--function-put 'compat-test 42)
-  (should-equal 42 (function-get #'compat-tests--function-put 'compat-test)))
-
 (ert-deftest function-alias-p ()
   (defun compat-tests--alias-fun ())
   (should-not (function-alias-p 1))
@@ -1553,21 +1548,6 @@
   (should-equal "lrwx------" (file-modes-number-to-symbolic #o120700))
   (should-equal "prwx------" (file-modes-number-to-symbolic #o10700))
   (should-equal "-rwx------" (file-modes-number-to-symbolic #o30700)))
-
-(ert-deftest file-name-absolute-p ()   ;assuming unix
-  (should (file-name-absolute-p "/"))
-  (should (file-name-absolute-p "/a"))
-  (should-not (file-name-absolute-p "a"))
-  (should-not (file-name-absolute-p "a/b"))
-  (should-not (file-name-absolute-p "a/b/"))
-  (should (file-name-absolute-p "~"))
-  (when (version< "27.1" emacs-version)
-    (should (file-name-absolute-p "~/foo"))
-    (should-not (file-name-absolute-p "~foo"))
-    (should-not (file-name-absolute-p "~foo/")))
-  (should (file-name-absolute-p "~root"))
-  (should (file-name-absolute-p "~root/"))
-  (should (file-name-absolute-p "~root/file")))
 
 (ert-deftest file-local-name ()
   (should-equal "" (file-local-name ""))
