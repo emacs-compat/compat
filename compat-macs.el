@@ -105,12 +105,14 @@ a plist of predicates for arguments which are passed to FUN."
 (defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guard rest `(:explicit booleanp
+  (compat--guard rest `(:explicit ,(lambda (x) (or (booleanp x) (version-to-list x)))
                         :obsolete ,(lambda (x) (or (booleanp x) (stringp x)))
                         :body t)
     (lambda (explicit obsolete body)
-      (compat--strict (or explicit (not (fboundp name)))
-                      "Non-explicit %s %s already defined" type name)
+      (when (stringp explicit)
+        (setq explicit (version<= explicit emacs-version)))
+      (compat--strict (eq explicit (fboundp name))
+                      "Wrong :explicit flag for %s %s" type name)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -198,7 +200,9 @@ specify the conditions under which the definition is generated.
   invocation via `compat-call'.  :explicit should be used for
   functions which extend already existing functions, e.g.,
   functions which changed their calling convention or their
-  behavior.
+  behavior.  The value can also be a version string, which
+  specifies for which Emacs version and newer an explicit
+  definition will be created.
 
 - :obsolete :: Mark the function as obsolete if t, can be a
   string describing the obsoletion.

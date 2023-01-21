@@ -1564,7 +1564,8 @@
   (should-equal ":/bar/foo" (file-local-name "/ssh:::/bar/foo")))
 
 (ert-deftest file-name-quoted-p ()
-  ;; TODO test TOP argument
+  (should-not (compat-call file-name-quoted-p "" t)) ;; top argument
+  (should (compat-call file-name-quoted-p "/:" t)) ;; top argument
   (should-not (file-name-quoted-p ""))
   (should (file-name-quoted-p "/:"))
   (should-not (file-name-quoted-p "//:"))
@@ -1578,7 +1579,8 @@
     (should-not (file-name-quoted-p "/ssh:/:a"))))
 
 (ert-deftest file-name-quote ()
-  ;; TODO test TOP argument
+  (should-equal "/:" (compat-call file-name-quote "" t)) ;; top argument
+  (should-equal "/::"(compat-call file-name-quote  ":" t)) ;; top argument
   (should-equal "/:" (file-name-quote ""))
   (should-equal "/::"(file-name-quote  ":"))
   (should-equal "/:/" (file-name-quote "/"))

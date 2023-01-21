@@ -101,7 +101,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
-  :explicit t
+  :explicit "25.1"
   (ignore remove)
   (let ((x (if (not testfn)
                (assq key alist)
@@ -357,20 +357,6 @@ identifies FILE locally on the remote system.
 The returned file name can be used directly as argument of
 `process-file', `start-file-process', or `shell-command'."
   (or (file-remote-p file 'localname) file))
-
-(compat-defun file-name-quoted-p (name &optional top) ;; <compat-tests:file-name-quoted-p>
-  "Handle optional argument TOP."
-  :explicit t
-  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (string-prefix-p "/:" (file-local-name name))))
-
-(compat-defun file-name-quote (name &optional top) ;; <compat-tests:file-name-quote>
-  "Handle optional argument TOP."
-  :explicit t
-  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (if (string-prefix-p "/:" (file-local-name name))
-        name
-      (concat (file-remote-p name) "/:" (file-local-name name)))))
 
 (compat-defun temporary-file-directory () ;; <compat-tests:temporary-file-directory>
   "The directory for writing temporary files.

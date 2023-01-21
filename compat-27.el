@@ -211,7 +211,7 @@ return nil."
 
 (compat-defun assoc-delete-all (key alist &optional test) ;; <compat-tests:assoc-delete-all>
   "Handle optional argument TEST."
-  :explicit t
+  :explicit "26.2"
   (unless test (setq test #'equal))
   (while (and (consp (car alist))
               (funcall test (caar alist) key))
@@ -306,7 +306,7 @@ the minibuffer was activated, and execute the forms."
 (compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
   "Set PROPERTY in IMAGE to VALUE.
 Internal use only."
-  :explicit t
+  :explicit "26.1"
   :feature image
   (if (null value)
       (while (cdr image)
@@ -326,6 +326,20 @@ Internal use only."
     (gv-define-simple-setter image-property compat--image--set-property)))
 
 ;;;; Defined in files.el
+
+(compat-defun file-name-quoted-p (name &optional top) ;; <compat-tests:file-name-quoted-p>
+  "Handle optional argument TOP."
+  :explicit "26.1"
+  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
+    (string-prefix-p "/:" (file-local-name name))))
+
+(compat-defun file-name-quote (name &optional top) ;; <compat-tests:file-name-quote>
+  "Handle optional argument TOP."
+  :explicit "26.1"
+  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
+    (if (string-prefix-p "/:" (file-local-name name))
+        name
+      (concat (file-remote-p name) "/:" (file-local-name name)))))
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <compat-tests:file-size-human-readable>
   "Handle the optional arguments SPACE and UNIT.
