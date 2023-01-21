@@ -39,14 +39,7 @@
   "Assert COND, otherwise fail with ERROR."
   `(unless ,cond (error ,@error)))
 
-(defmacro compat-declare-version (version)
-  "Set the Emacs version that is currently being handled to VERSION."
-  (setq compat--version version)
-  (let ((before (1- (car (version-to-list version)))))
-    (when (and (< 24 before) (< emacs-major-version before))
-      `(require ',(intern (format "compat-%d" before))))))
-
-(defun compat--format-docstring (type name docstring)
+(defun compat--docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.
 Prepend compatibility notice to the actual documentation string."
   (with-temp-buffer
@@ -97,10 +90,9 @@ a plist of predicates for arguments which are passed to FUN."
         (push (plist-get attrs (car preds)) args)
         (setq preds (cddr preds)))
       (setq body (apply fun (nreverse args)))
-      (when body
-        (if feature
-            `(with-eval-after-load ',feature ,@body)
-          (macroexp-progn body))))))
+      (if (and feature body)
+          `(with-eval-after-load ',feature ,@body)
+        (macroexp-progn body)))))
 
 (defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
@@ -128,7 +120,7 @@ REST are attributes and the function BODY."
                          (if (eq type 'macro) 'cl-defmacro 'cl-defun)
                        (if (eq type 'macro) 'defmacro 'defun))
                     ,defname ,arglist
-                    ,(compat--format-docstring type name docstring)
+                    ,(compat--docstring type name docstring)
                     ,@body)))
         `(,@(if (eq defname name)
                 ;; An additional fboundp check is performed at runtime to make
@@ -185,8 +177,8 @@ under which the definition is generated.
       ;; version.
       `((unless (fboundp ',name)
           (defalias ',name ',def
-            ,(compat--format-docstring 'function name
-                                       (get name 'function-documentation)))
+            ,(compat--docstring 'function name
+                                (get name 'function-documentation)))
           ,@(when obsolete
               `((make-obsolete ',name ',def ,compat--version))))))))
 
@@ -252,13 +244,20 @@ definition is generated.
       `((unless (boundp ',name)
           (,(if constant 'defconst 'defvar)
            ,name ,initval
-           ,(compat--format-docstring 'variable name docstring))
+           ,(compat--docstring 'variable name docstring))
           ,@(when obsolete
               `((make-obsolete-variable
                  ',name ,(if (stringp obsolete) obsolete "No substitute")
                  ,compat--version))))
         ,@(and local `((make-variable-buffer-local ',name)))
         ,@(and (eq local 'permanent) `((put ',name 'permanent-local t)))))))
+
+(defmacro compat-declare-version (version)
+  "Set the Emacs version that is currently being handled to VERSION."
+  (setq compat--version version)
+  (let ((before (1- (car (version-to-list version)))))
+    (when (and (< 24 before) (< emacs-major-version before))
+      `(require ',(intern (format "compat-%d" before))))))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
