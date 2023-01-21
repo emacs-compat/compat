@@ -163,6 +163,7 @@ definition is generated.
     (lambda (body)
       (if (eq cond t)
           body
+        (compat--strict (eval cond t) "Guard %S failed" cond)
         `((when ,cond ,@body))))))
 
 (defmacro compat-defalias (name def &rest attrs)
