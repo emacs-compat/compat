@@ -2871,11 +2871,15 @@ definitions or performance issues. We also provide a
 list} (@email{~pkal/compat-devel@@lists.sr.ht,
 ~pkal/compat-devel@@lists.sr.ht}).
 
-Please note that as a GNU ELPA package, Compat requires contributors to
-have signed the
+Please note that as a GNU ELPA package, Compat requires contributors
+to have signed the
 @uref{https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html,
-FSF copyright assignment}, before any non-trivial contribution (roughly
-15 lines of code) can be applied.
+FSF copyright assignment}, before any non-trivial contribution
+(roughly 15 lines of code) can be applied.  It is important that you
+provide tests when you contribute new functionality.  Compat has 100%
+test coverage by the test suite.  We use continuous integration to
+check if patches preserve existing functionality.
+
 
 @node Function Index
 @appendix Function Index
