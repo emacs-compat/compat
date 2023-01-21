@@ -1183,5 +1183,24 @@ Also see `buttonize'."
 ;; Obsolete Alias since 29
 (compat-defalias button-buttonize buttonize :obsolete t) ;; <compat-tests:button-buttonize>
 
+;;;; Defined in rmc.el
+
+(compat-defun read-multiple-choice  ;; <compat-tests:read-multiple-choice>
+    (prompt choices &optional _help-str _show-help long-form)
+    "Handle LONG-FORM argument."
+  :explicit t
+  (if (not long-form)
+      (read-multiple-choice prompt choices)
+    (let ((answer
+           (completing-read
+            (concat prompt " ("
+                    (mapconcat #'identity (mapcar #'cadr choices) "/")
+                    ") ")
+            (mapcar #'cadr choices) nil t)))
+      (catch 'found
+        (dolist (c choices)
+          (when (equal answer (cadr c))
+            (throw 'found c)))))))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here

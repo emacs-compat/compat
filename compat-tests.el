@@ -328,8 +328,7 @@
 (ert-deftest read-multiple-choice ()
   (let ((orig-re (symbol-function #'read-event))
         (orig-rc (symbol-function #'read-char))
-        ;;(orig-cr completing-read-function)
-        )
+        (orig-cr completing-read-function))
     (unwind-protect
         (dolist (test '(("Choose"
                          (?a "first" "first description")
@@ -339,14 +338,12 @@
           (dolist (choice (cdr test))
             (fset #'read-char (lambda (&rest _) (car choice)))
             (fset #'read-event (lambda (&rest _) (car choice)))
-            ;; TODO long form support
-            ;;(setq completing-read-function (lambda (&rest _) (cadr choice)))
-            ;;(should-equal choice (read-multiple-choice (car test) (cdr test) nil nil 'long))
+            (setq completing-read-function (lambda (&rest _) (cadr choice)))
+            (should-equal choice (compat-call read-multiple-choice (car test) (cdr test) nil nil 'long))
             (should-equal choice (read-multiple-choice (car test) (cdr test)))))
       (fset #'read-event orig-re)
       (fset #'read-char orig-rc)
-      ;;(setq completing-read-function orig-cr)
-      )))
+      (setq completing-read-function orig-cr))))
 
 (ert-deftest with-environment-variables ()
   (let ((A "COMPAT_TESTS__VAR") (B "/foo/bar"))
