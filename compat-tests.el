@@ -306,6 +306,10 @@
     (should-equal (pos-bol 0) 1)
     (should-equal (pos-eol 0) 10)))
 
+(ert-deftest imagep ()
+  (should (imagep '(image :type xbm :file "file")))
+  (should (imagep '(image :type xbm :data [1 2 3 4]))))
+
 (ert-deftest image-property ()
   (let ((image (list 'image)))
     ;; Add properties.

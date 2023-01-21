@@ -169,6 +169,14 @@ This function does not move point.  Also see `line-end-position'."
   (let ((inhibit-field-text-motion t))
     (line-end-position n)))
 
+;;;; Defined in image.c
+
+(compat-defun imagep (spec) ;; <compat-tests:imagep>
+  "Value is non-nil if SPEC is a valid image specification."
+  (and (eq (car-safe spec) 'image) (plistp (cdr spec))
+       (or (plist-get (cdr spec) :data) (plist-get (cdr spec) :file))
+       (image-type-available-p (plist-get (cdr spec) :type))))
+
 ;;;; Defined in subr.el
 
 (compat-defun buffer-local-restore-state (states) ;; <compat-tests:buffer-local-set-state>
