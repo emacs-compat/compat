@@ -2797,5 +2797,11 @@
     (should-equal (substitute-quotes "'") "'")
     (should-equal (substitute-quotes "\\`") "\\`")))
 
+(ert-deftest readablep ()
+  (should (readablep "foo"))
+  (should (readablep '("foo" 1 2.3 (a . b) [x y z] :key)))
+  (should-not (readablep (list (make-marker))))
+  (should-not (readablep (make-marker))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

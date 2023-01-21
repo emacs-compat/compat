@@ -26,6 +26,7 @@
 - compat-29: Add ~get-scratch-buffer-create~.
 - compat-29: Add ~substitute-quotes~.
 - compat-29: Add ~read-multiple-choice~ with LONG-FORM argument.
+- compat-29: Add ~readablep~.
 
 * Release of "Compat" Version 29.1.2.0
 

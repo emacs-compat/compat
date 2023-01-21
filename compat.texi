@@ -2101,6 +2101,14 @@ older than 29.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/streams.texi
+@defun readablep object
+This predicate says whether @var{object} has @dfn{readable syntax},
+i.e., it can be written out and then read back by the Emacs Lisp
+reader.  If it can't, this function returns @code{nil}; if it can,
+this function returns a printed representation (via @code{prin1}).
+@end defun
+
 @c copied from lispref/help.texi
 @defun substitute-quotes string
 This function works like @code{substitute-command-keys}, but only
@@ -2833,8 +2841,6 @@ The function @code{function-documentation}.
 The function @code{count-sentences}.
 @item
 The command @code{string-edit} and @code{read-string-from-buffer}.
-@item
-The function @code{readablep}.
 @item
 The macro @code{with-undo-amalgamate}.
 @item

@@ -171,6 +171,15 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(defun readablep (object)
+  "Say whether OBJECT has a readable syntax.
+This means that OBJECT can be printed out and then read back
+again by the Lisp reader.  This function returns nil if OBJECT is
+unreadable, and the printed representation (from `prin1') of
+OBJECT if it is readable."
+  (declare (side-effect-free error-free))
+  (ignore-errors (equal object (read (prin1-to-string object)))))
+
 (compat-defun buffer-local-restore-state (states) ;; <compat-tests:buffer-local-set-state>
   "Restore values of buffer-local variables recorded in STATES.
 STATES should be an object returned by `buffer-local-set-state'."
