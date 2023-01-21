@@ -1,11 +1,12 @@
 COMPATibility Library for Emacs
 ===============================
-Find here the source for compat.el, a forwards-compatibility library
-for (GNU) Emacs Lisp, versions 24.4 and newer.
+Find here the source for compat.el, a forwards-compatibility library for (GNU)
+Emacs Lisp, versions 24.4 and newer. The intended audience are package
+developers that are interested in using newer developments, without having to
+break compatibility.
 
-For information on how to use Compat, please consult the [manual].
-The latest state of development can be found in the [snapshot
-version].
+For information on how to use Compat, please consult the [manual]. The latest
+state of development can be found in the [snapshot version].
 
 [manual]:
     https://elpa.gnu.org/packages/doc/compat.html
@@ -26,9 +27,9 @@ repository].
 
 Bug and patches
 ---------------
-Patches, bug reports and comments can be sent via [GitHub].  These may
-include issues in the compatibility code, missing definitions or
-performance issues.  We also provide a [development mailing list].
+Patches, bug reports and comments can be sent via [GitHub]. These may include
+issues in the compatibility code, missing definitions or performance issues. We
+also provide a [development mailing list].
 
 [development mailing list]:
     https://lists.sr.ht/~pkal/compat-devel
@@ -36,9 +37,8 @@ performance issues.  We also provide a [development mailing list].
 
 Contribute
 ----------
-As compat.el is distribed as part of [GNU ELPA], and therefore
-requires a [copyright assignment] to the [FSF], for all non-trivial code
-contributions.
+As compat.el is distribed as part of [GNU ELPA], and therefore requires a
+[copyright assignment] to the [FSF], for all non-trivial code contributions.
 
 [GNU ELPA]:
     http://elpa.gnu.org/packages/compat.html
@@ -50,10 +50,9 @@ contributions.
 
 Distribution
 ------------
-compat.el and all other source files in this directory are distributed
-under the [GNU Public License], Version 3 (like Emacs itself).  The manual
-(`compat.texi`) is distributed under the [GNU Free Documentation
-License], Version 1.3.
+compat.el and all other source files in this directory are distributed under the
+[GNU Public License 3] like Emacs itself. The manual (`compat.texi`) is
+distributed under the [GNU Free Documentation License 1.3].
 
 [GNU Public License]:
     https://www.gnu.org/licenses/gpl-3.0.en.html
