@@ -4,29 +4,29 @@
 
 - compat-25: Add ~hash-table-empty-p~.
 - compat-25: Add ~macroexp-parse-body~ and ~macroexp-quote~.
-- compat-25: Add ~save-mark-and-excursion~.
 - compat-25: Add ~region-noncontiguous-p~.
+- compat-25: Add ~save-mark-and-excursion~.
 - compat-26: Add ~region-bounds~.
 - compat-27: Add ~date-ordinal-to-time~.
 - compat-27: Add ~make-decoded-time~.
-- compat-27: Add ~ring-resize~.
 - compat-27: Add ~minibuffer-history-value~.
+- compat-27: Add ~ring-resize~.
 - compat-28: Add ~color-dark-p~.
-- compat-28: Add ~with-window-non-dedicated~.
 - compat-28: Add ~directory-files-and-attributes~ with COUNT argument.
 - compat-28: Add ~text-quoting-style~.
+- compat-28: Add ~with-window-non-dedicated~.
+- compat-29: Add ~buffer-local-set-state~ and ~buffer-local-restore-state~.
 - compat-29: Add ~compiled-function-p~.
+- compat-29: Add ~delete-line~.
+- compat-29: Add ~get-scratch-buffer-create~.
+- compat-29: Add ~list-of-strings-p~.
 - compat-29: Add ~plist-get~ generalized variable.
 - compat-29: Add ~plistp~.
-- compat-29: Add ~list-of-strings-p~.
-- compat-29: Add ~delete-line~.
-- compat-29: Add ~with-narrowing~.
-- compat-29: Add ~buffer-local-set-state~ and ~buffer-local-restore-state~.
-- compat-29: Add ~use-region-beginning~, ~use-region-end~ and ~use-region-noncontiguous-p~.
-- compat-29: Add ~get-scratch-buffer-create~.
-- compat-29: Add ~substitute-quotes~.
 - compat-29: Add ~read-multiple-choice~ with LONG-FORM argument.
 - compat-29: Add ~readablep~.
+- compat-29: Add ~substitute-quotes~.
+- compat-29: Add ~use-region-beginning~, ~use-region-end~ and ~use-region-noncontiguous-p~.
+- compat-29: Add ~with-narrowing~.
 
 * Release of "Compat" Version 29.1.2.0
 
