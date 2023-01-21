@@ -355,13 +355,12 @@ This is useful for creating private files, for example.
 @end defmac
 
 @c copied from lispref/lists.texi
-@defun alist-get key alist &optional default remove testfn
+@defun alist-get key alist &optional default remove
 This function is similar to @code{assq}.  It finds the first association
 @w{@code{(@var{key} . @var{value})}} by comparing @var{key} with
 @var{alist} elements, and, if found, returns the @var{value} of that
 association.  If no association is found, the function returns
-@var{default}.  Comparison of @var{key} against @var{alist} elements
-uses the function specified by @var{testfn}, defaulting to @code{eq}.
+@var{default}.
 
 This is a generalized variable (@pxref{Generalized Variables,,,elisp})
 that can be used to change a value with @code{setf}.  When using it to
@@ -1500,14 +1499,6 @@ tagged with @code{shr-url}.
 @end lisp
 
 This will give you a list of all those URLs.
-
-@xref{elisp,,,Property Search}.
-@end defun
-
-@defun text-property-search-backward prop &optional value predicate not-current
-This is just like @code{text-property-search-forward}, but searches
-backward instead.  Point is placed at the beginning of the matched
-region instead of the end, though.
 
 @xref{elisp,,,Property Search}.
 @end defun
