@@ -506,10 +506,9 @@ as the new values of the bound variables in the recursive invocation."
                             sets))
                     (cons 'setq (apply #'nconc (nreverse sets)))))
                  (`(throw ',quit ,expr))))))
-      (let ((tco-body (funcall tco (macroexpand-all (macroexp-progn body)))))
-        (when tco-body
-          (setq body `((catch ',quit
-                         (while t (let ,rargs ,@(macroexp-unprogn tco-body))))))))
+      (when-let ((tco-body (funcall tco (macroexpand-all (macroexp-progn body)))))
+        (setq body `((catch ',quit
+                       (while t (let ,rargs ,@(macroexp-unprogn tco-body)))))))
       (let ((expand (macroexpand-all (macroexp-progn body) (list (cons name macro)))))
         (if total-tco
             `(let ,bindings ,expand)

@@ -550,7 +550,7 @@ the symbol of the calling function, for example."
                           (file-attribute-modification-time fileattr))))
          (sym (concat (symbol-name tag) "@" file))
          (cachedattr (gethash sym file-has-changed-p--hash-table)))
-    (when (not (equal attr cachedattr))
+    (unless (equal attr cachedattr)
       (puthash sym attr file-has-changed-p--hash-table))))
 
 ;;;; Defined in keymap.el
@@ -1068,7 +1068,7 @@ command exists in this specific map, but it doesn't have the
       (while defs
         (setq key (pop defs))
         (pop defs)
-        (when (not (eq key :menu))
+        (unless (eq key :menu)
           (if (member key seen-keys)
               (error "Duplicate definition for key '%s' in keymap '%s'"
                      key variable-name)

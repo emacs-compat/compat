@@ -102,8 +102,8 @@ Letter-case is significant, but text properties are ignored."
    ((listp keymap)
     (catch 'found
       (dolist (map keymap)
-        (let ((fn (lookup-key map key accept-default)))
-          (when fn (throw 'found fn))))))
+        (when-let ((fn (lookup-key map key accept-default)))
+          (throw 'found fn)))))
    ((signal 'wrong-type-argument (list 'keymapp keymap)))))
 
 ;;;; Defined in timefns.c
@@ -322,10 +322,9 @@ that was current when the minibuffer was activated."
 When used in a minibuffer window, select the window selected just before
 the minibuffer was activated, and execute the forms."
   (declare (indent 0) (debug t))
-  `(let ((window (minibuffer-selected-window)))
-     (when window
-       (with-selected-window window
-         ,@body))))
+  `(when-let ((window (minibuffer-selected-window)))
+     (with-selected-window window
+       ,@body)))
 
 ;;;; Defined in image.el
 
