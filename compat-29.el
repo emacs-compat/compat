@@ -171,7 +171,7 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
-(compat-defun readablep (object)
+(compat-defun readablep (object) ;; <compat-tests:readablep>
   "Say whether OBJECT has a readable syntax.
 This means that OBJECT can be printed out and then read back
 again by the Lisp reader.  This function returns nil if OBJECT is

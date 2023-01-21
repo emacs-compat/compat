@@ -163,15 +163,16 @@ compatibility functions.
 
 If you intend to use a compatibility function in your code it is
 recommended that you take a look at the test suite
-@file{compat-tests.el}. There you can see the supported calling
+@file{compat-tests.el}.  There you can see the supported calling
 conventions, which are guaranteed to work on the supported Emacs
-versions. We ensure this using continuous integration. All functions
-provided by Compat are covered by the test suite.
+versions. We ensure this using continuous integration.  All functions
+provided by Compat are covered by the test suite.  There is a link to
+the corresponding test on the first line of each definition.
 
 You may want to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
 mailing list to be notified when new versions are released or relevant
-changes are made. We also provide a
+changes are made.  We also provide a
 @uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
 list} (@email{~pkal/compat-devel@@lists.sr.ht,
 ~pkal/compat-devel@@lists.sr.ht}).
