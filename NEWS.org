@@ -9,11 +9,11 @@
 - compat-26: Add ~read-answer~.
 - compat-26: Add ~region-bounds~.
 - compat-27: Add ~date-ordinal-to-time~.
+- compat-27: Add ~file-size-human-readable-iec~.
 - compat-27: Add ~major-mode-suspend~ and ~major-mode-restore~.
 - compat-27: Add ~make-decoded-time~.
 - compat-27: Add ~minibuffer-history-value~.
 - compat-27: Add ~ring-resize~.
-- compat-27: Add ~file-size-human-readable-iec~.
 - compat-28: Add ~color-dark-p~.
 - compat-28: Add ~directory-files-and-attributes~ with COUNT argument.
 - compat-28: Add ~text-quoting-style~.
