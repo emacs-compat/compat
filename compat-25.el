@@ -42,7 +42,7 @@ usage: (bool-vector &rest OBJECTS)"
 ;;;; Defined in fns.c
 
 (compat-defun sort (seq predicate) ;; <compat-tests:sort>
-  "Extend `sort' to sort SEQ as a vector."
+  "Handle vector SEQ."
   :explicit t
   (cond
    ((listp seq)

@@ -111,9 +111,7 @@ inserted before contatenating."
 ;;;; Defined in characters.c
 
 (compat-defun string-width (string &optional from to) ;; <compat-tests:string-width>
-  "Handle optional arguments FROM and TO.
-Optional arguments FROM and TO specify the substring of STRING to
-consider, and are interpreted as in `substring'."
+  "Handle optional arguments FROM and TO."
   :explicit t
   (let* ((len (length string))
          (from (or from 0))
@@ -125,9 +123,7 @@ consider, and are interpreted as in `substring'."
 ;;;; Defined in dired.c
 
 (compat-defun directory-files (directory &optional full match nosort count) ;; <compat-tests:directory-files>
-  "Handle additional optional argument COUNT.
-If COUNT is non-nil and a natural number, the function will
- return COUNT number of file names (if so many are present)."
+  "Handle additional optional argument COUNT."
   :explicit t
   (let ((files (directory-files directory full match nosort)))
     (when (natnump count)
@@ -135,9 +131,7 @@ If COUNT is non-nil and a natural number, the function will
     files))
 
 (compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributs>
-  "Handle additional optional argument COUNT.
-If COUNT is non-nil and a natural number, the function will
- return COUNT number of file names (if so many are present)."
+  "Handle additional optional argument COUNT."
   :explicit t
   (let ((files (directory-files-and-attributes directory full match nosort id-format)))
     (when (natnump count)
@@ -691,9 +685,7 @@ the last form in BODY."
          (set-window-dedicated-p ,window-sym ,window-dedicated-sym)))))
 
 (compat-defun count-windows (&optional minibuf all-frames) ;; <compat-tests:count-windows>
-  "Handle optional argument ALL-FRAMES.
-If ALL-FRAMES is non-nil, count the windows in all frames instead
-just the selected frame."
+  "Handle optional argument ALL-FRAMES."
   :explicit t
   (if all-frames
       (let ((sum 0))

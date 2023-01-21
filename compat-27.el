@@ -304,8 +304,7 @@ the minibuffer was activated, and execute the forms."
 ;;;; Defined in image.el
 
 (compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
-  "Set PROPERTY in IMAGE to VALUE.
-Internal use only."
+  "Set PROPERTY in IMAGE to VALUE, internal use only."
   :explicit "26.1"
   :feature image
   (if (null value)
@@ -342,16 +341,7 @@ Internal use only."
       (concat (file-remote-p name) "/:" (file-local-name name)))))
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <compat-tests:file-size-human-readable>
-  "Handle the optional arguments SPACE and UNIT.
-
-Optional third argument SPACE is a string put between the number and unit.
-It defaults to the empty string.  We recommend a single space or
-non-breaking space, unless other constraints prohibit a space in that
-position.
-
-Optional fourth argument UNIT is the unit to use.  It defaults to \"B\"
-when FLAVOR is `iec' and the empty string otherwise.  We recommend \"B\"
-in all cases, since that is the standard symbol for byte."
+  "Handle the optional arguments SPACE and UNIT."
   :explicit t
   (let ((power (if (or (null flavor) (eq flavor 'iec))
                    1024.0
@@ -394,10 +384,7 @@ the value of the variable `exec-path'."
           exec-path))))
 
 (compat-defun executable-find (command &optional remote) ;; <compat-tests:executable-find>
-  "Search for COMMAND in `exec-path' and return the absolute file name.
-Return nil if COMMAND is not found anywhere in `exec-path'.  If
-REMOTE is non-nil, search on the remote host indicated by
-`default-directory' instead."
+  "Handle optional argument REMOTE."
   :explicit t
   (if (and remote (file-remote-p default-directory))
       (let ((res (locate-file
