@@ -2811,16 +2811,20 @@
 
 (ert-deftest major-mode-suspend ()
   (with-temp-buffer
+    (should (local-variable-if-set-p 'major-mode--suspended))
+    (should (get 'major-mode--suspended 'permanent-local))
     (text-mode)
     (should sentence-end-double-space)
     (setq-local sentence-end-double-space nil)
     (major-mode-suspend)
-    (should-not line-spacing)
-    (prog-mode)
-    (should-equal major-mode 'prog-mode)
-    (major-mode-restore)
+    (should-equal major-mode--suspended #'text-mode)
     (should sentence-end-double-space)
-    (should-equal major-mode 'text-mode)))
+    (prog-mode)
+    (should-equal major-mode #'prog-mode)
+    (major-mode-restore)
+    (should-not major-mode--suspended)
+    (should sentence-end-double-space)
+    (should-equal major-mode #'text-mode)))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

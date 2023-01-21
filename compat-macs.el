@@ -53,25 +53,28 @@ If this is not documented on yourself system, you can check \
       (fill-region (point-min) (point-max)))
     (buffer-string)))
 
-(defun compat--check-attributes (attrs allowed)
-  "Check ATTRS for ALLOWED keys and return rest."
+(defun compat--check-attributes (attrs preds)
+  "Check ATTRS given PREDS predicate plist and return rest."
   (while (keywordp (car attrs))
-    (unless (memq (car attrs) allowed)
-      (error "Invalid attribute %s" (car attrs)))
     (unless (cdr attrs)
       (error "Odd number of element in attribute list"))
+    (let ((pred (plist-get preds (car attrs))))
+      (unless (and pred (or (eq pred t) (funcall pred (cadr attrs))))
+        (error "Invalid attribute %s" (car attrs))))
     (setq attrs (cddr attrs)))
   attrs)
 
-(defun compat--guard (attrs args fun)
+(defun compat--guard (attrs preds fun)
   "Guard compatibility definition generation.
-The version constraints specified by ATTRS are checked.
-ARGS is a list of keywords which are looked up and passed to FUN."
+The version constraints specified by ATTRS are checked.  PREDS is
+a plist of predicates for arguments which are passed to FUN."
   (declare (indent 2))
-  (let* ((body (compat--check-attributes attrs `(,@args :when :feature)))
+  (let* ((body (compat--check-attributes
+                attrs `(,@preds :when t :feature symbolp)))
          (feature (plist-get attrs :feature))
          (attrs `(:body ,body ,@attrs))
-         (when (plist-get attrs :when)))
+         (when (plist-get attrs :when))
+         args)
     ;; Require feature at compile time
     (when feature
       (when (eq feature 'subr-x)
@@ -83,7 +86,10 @@ ARGS is a list of keywords which are looked up and passed to FUN."
             ;; The current Emacs must be older than the current declared Compat
             ;; version, see `compat-declare-version'.
             (version< emacs-version compat--version))
-      (setq body (apply fun (mapcar (lambda (x) (plist-get attrs x)) args)))
+      (while preds
+        (push (plist-get attrs (car preds)) args)
+        (setq preds (cddr preds)))
+      (setq body (apply fun (nreverse args)))
       (when body
         (if feature
             `(with-eval-after-load ',feature ,@body)
@@ -92,7 +98,9 @@ ARGS is a list of keywords which are looked up and passed to FUN."
 (defun compat--guard-defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat--guard rest '(:explicit :obsolete :body)
+  (compat--guard rest `(:explicit booleanp
+                        :obsolete ,(lambda (x) (or (booleanp x) (stringp x)))
+                        :body t)
     (lambda (explicit obsolete body)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
@@ -142,7 +150,7 @@ definition is generated.
   part of the :when expression."
   (declare (debug ([&rest keywordp sexp] def-body))
            (indent 1))
-  (compat--guard rest '(:body)
+  (compat--guard rest '(:body t)
     (lambda (body)
       (if (eq cond t)
           body
@@ -153,11 +161,11 @@ definition is generated.
 ATTRS is a plist of attributes, which specify the conditions
 under which the definition is generated.
 
-- :obsolete :: Mark the alias as obsolete if non-nil.
+- :obsolete :: Mark the alias as obsolete if t.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (name symbolp [&rest keywordp sexp])))
-  (compat--guard attrs '(:obsolete)
+  (compat--guard attrs '(:obsolete booleanp)
     (lambda (obsolete)
       ;; The fboundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
@@ -181,7 +189,7 @@ specify the conditions under which the definition is generated.
   functions which changed their calling convention or their
   behavior.
 
-- :obsolete :: Mark the function as obsolete if non-nil, can be a
+- :obsolete :: Mark the function as obsolete if t, can be a
   string describing the obsoletion.
 
 - :feature and :when :: See `compat-guard'."
@@ -206,20 +214,23 @@ The variable must be documented in DOCSTRING.  ATTRS is a plist
 of attributes, which specify the conditions under which the
 definition is generated.
 
-- :constant :: Mark the variable as constant if non-nil.
+- :constant :: Mark the variable as constant if t.
 
-- :local :: Make the variable permanently local if the value is
-  `permanent'.  For other non-nil values make the variable
-  buffer-local.
+- :local :: Make the variable buffer-local if t.  If the value is
+  `permanent' make the variable additionally permanently local.
 
-- :obsolete :: Mark the variable as obsolete if non-nil, can be a
+- :obsolete :: Mark the variable as obsolete if t, can be a
   string describing the obsoletion.
 
 - :feature and :when :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat--guard attrs '(:local :constant :obsolete)
-    (lambda (local constant obsolete)
+  (compat--guard attrs `(:constant booleanp
+                         :local ,(lambda (x) (memq x '(nil t permanent)))
+                         :obsolete ,(lambda (x) (or (booleanp x) (stringp x))))
+    (lambda (constant local obsolete)
+      (when (and constant local)
+        (error ":constant and :local cannot be specified together"))
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
@@ -230,15 +241,9 @@ definition is generated.
           ,@(when obsolete
               `((make-obsolete-variable
                  ',name ,(if (stringp obsolete) obsolete "No substitute")
-                 ,compat--version)))
-          ,@(cond
-             ((eq local 'permanent)
-              `((put ',name 'permanent-local t)))
-             ((eq local t)
-              `((make-variable-buffer-local ',name)))
-             ((not local)
-              nil)
-             (t (error "Invalid value for :local"))))))))
+                 ,compat--version))))
+        ,@(and local `((make-variable-buffer-local ',name)))
+        ,@(and (eq local 'permanent) `((put ',name 'permanent-local t)))))))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
