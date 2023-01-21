@@ -1052,6 +1052,19 @@ window. When used in a minibuffer window, select the window selected
 just before the minibuffer was activated, and execute the forms.
 @end defmac
 
+@c copied from lispref/minbuf.texi
+@defun read-char-from-minibuffer prompt &optional chars history
+This function uses the minibuffer to read and return a single
+character.  Optionally, it ignores any input that is not a member of
+@var{chars}, a list of accepted characters.  The @var{history}
+argument specifies the history list symbol to use; if it is omitted or
+@code{nil}, this function doesn't use the history.
+
+If you bind @code{help-form} to a non-@code{nil} value while calling
+@code{read-char-from-minibuffer}, then pressing @code{help-char}
+causes it to evaluate @code{help-form} and display the result.
+@end defun
+
 @c copied from lispref/numbers.texi
 @defun bignump object
 This predicate tests whether its argument is a large integer, and
@@ -1539,8 +1552,6 @@ The function @code{time-convert}.
 All @code{iso8601-*} functions.
 @item
 The macro @code{benchmark-progn}.
-@item
-The function @code{read-char-from-minibuffer}.
 @item
 The macro @code{with-suppressed-warnings}.
 @item

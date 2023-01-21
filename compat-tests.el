@@ -364,6 +364,16 @@
       (fset #'read-char orig-rc)
       (setq completing-read-function orig-cr))))
 
+(ert-deftest read-char-from-minibuffer ()
+  (let ((orig (symbol-function #'read-from-minibuffer)))
+    (unwind-protect
+        (progn
+          (fset #'read-from-minibuffer (lambda (&rest _) "a"))
+          (should-equal ?a (read-char-from-minibuffer "Prompt: " '(?a ?b ?c) 'read-char-history))
+          (should-equal ?a (read-char-from-minibuffer "Prompt: " '(?a ?b ?c)))
+          (should-equal ?a (read-char-from-minibuffer "Prompt: ")))
+      (fset #'read-from-minibuffer orig))))
+
 (ert-deftest with-environment-variables ()
   (let ((A "COMPAT_TESTS__VAR") (B "/foo/bar"))
     (should-not (getenv A))

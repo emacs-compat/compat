@@ -13,6 +13,7 @@
 - compat-27: Add ~major-mode-suspend~ and ~major-mode-restore~.
 - compat-27: Add ~make-decoded-time~.
 - compat-27: Add ~minibuffer-history-value~.
+- compat-27: Add ~read-char-from-minibuffer~.
 - compat-27: Add ~ring-resize~.
 - compat-28: Add ~color-dark-p~.
 - compat-28: Add ~directory-files-and-attributes~ with COUNT argument.

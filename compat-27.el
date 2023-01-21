@@ -255,6 +255,98 @@ though trying to avoid AVOIDED-MODES."
              alist)))
       (normal-mode))))
 
+(compat-defun read-char-from-minibuffer-insert-char () ;; <compat-tests:read-char-from-minibuffer>
+  "Insert the character you type into the minibuffer and exit minibuffer.
+Discard all previous input before inserting and exiting the minibuffer."
+  (interactive)
+  (when (minibufferp)
+    (delete-minibuffer-contents)
+    (insert last-command-event)
+    (exit-minibuffer)))
+
+(compat-defun read-char-from-minibuffer-insert-other () ;; <compat-tests:read-char-from-minibuffer>
+  "Reject a disallowed character typed into the minibuffer.
+This command is intended to be bound to keys that users are not
+allowed to type into the minibuffer.  When the user types any
+such key, this command discard all minibuffer input and displays
+an error message."
+  (interactive)
+  (when (minibufferp)
+    (delete-minibuffer-contents)
+    (ding)
+    (discard-input)
+    (minibuffer-message "Wrong answer")
+    (sit-for 2)))
+
+(compat-defvar read-char-history nil ;; <compat-tests:read-char-from-minibuffer>
+  "The default history for the `read-char-from-minibuffer' function.")
+
+(compat-defvar read-char-from-minibuffer-map ;; <compat-tests:read-char-from-minibuffer>
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map minibuffer-local-map)
+    (define-key map [remap self-insert-command] #'read-char-from-minibuffer-insert-char)
+    (define-key map [remap exit-minibuffer] #'read-char-from-minibuffer-insert-other)
+    map)
+  "Keymap for the `read-char-from-minibuffer' function.")
+
+(compat-defvar read-char-from-minibuffer-map-hash  ;; <compat-tests:read-char-from-minibuffer>
+  (make-hash-table :test 'equal)
+  "Hash table of keymaps used by `read-char-from-minibuffer'."
+  :constant t)
+
+(compat-defun read-char-from-minibuffer (prompt &optional chars history) ;; <compat-tests:read-char-from-minibuffer>
+  "Read a character from the minibuffer, prompting for it with PROMPT.
+Like `read-char', but uses the minibuffer to read and return a character.
+Optional argument CHARS, if non-nil, should be a list of characters;
+the function will ignore any input that is not one of CHARS.
+Optional argument HISTORY, if non-nil, should be a symbol that
+specifies the history list variable to use for navigating in input
+history using \\`M-p' and \\`M-n', with \\`RET' to select a character from
+history.
+If you bind the variable `help-form' to a non-nil value
+while calling this function, then pressing `help-char'
+causes it to evaluate `help-form' and display the result.
+There is no need to explicitly add `help-char' to CHARS;
+`help-char' is bound automatically to `help-form-show'."
+  (let* ((map (if (consp chars)
+                  (or (gethash (list help-form (cons help-char chars))
+                               read-char-from-minibuffer-map-hash)
+                      (let ((map (make-sparse-keymap))
+                            (msg help-form))
+                        (set-keymap-parent map read-char-from-minibuffer-map)
+                        ;; If we have a dynamically bound `help-form'
+                        ;; here, then the `C-h' (i.e., `help-char')
+                        ;; character should output that instead of
+                        ;; being a command char.
+                        (when help-form
+                          (define-key map (vector help-char)
+                            (lambda ()
+                              (interactive)
+                              (let ((help-form msg)) ; lexically bound msg
+                                (help-form-show)))))
+                        (dolist (char chars)
+                          (define-key map (vector char)
+                            #'read-char-from-minibuffer-insert-char))
+                        (define-key map [remap self-insert-command]
+                          #'read-char-from-minibuffer-insert-other)
+                        (puthash (list help-form (cons help-char chars))
+                                 map read-char-from-minibuffer-map-hash)
+                        map))
+                read-char-from-minibuffer-map))
+         ;; Protect this-command when called from pre-command-hook (bug#45029)
+         (this-command this-command)
+         (result (read-from-minibuffer prompt nil map nil (or history t)))
+         (char
+          (if (> (length result) 0)
+              ;; We have a string (with one character), so return the first one.
+              (elt result 0)
+            ;; The default value is RET.
+            (when history (push "\r" (symbol-value history)))
+            ?\r)))
+    ;; Display the question with the answer.
+    (message "%s%s" prompt (char-to-string char))
+    char))
+
 ;;;; Defined in simple.el
 
 (compat-guard (not (fboundp 'decoded-time-second))
