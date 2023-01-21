@@ -280,6 +280,37 @@ return nil."
         (setq tail tail-cdr))))
   alist)
 
+(compat-defvar major-mode--suspended nil ;; <compat-tests:major-mode-suspend>
+  "Suspended major mode."
+  :local permanent)
+
+(compat-defun major-mode-suspend () ;; <compat-tests:major-mode-suspend>
+  "Exit current major mode, remembering it."
+  (let* ((prev-major-mode (or major-mode--suspended
+                              (unless (eq major-mode 'fundamental-mode)
+                                major-mode))))
+    (kill-all-local-variables)
+    (setq-local major-mode--suspended prev-major-mode)))
+
+(compat-defun major-mode-restore (&optional avoided-modes) ;; <compat-tests:major-mode-suspend>
+  "Restore major mode earlier suspended with `major-mode-suspend'.
+If there was no earlier suspended major mode, then fallback to `normal-mode',
+though trying to avoid AVOIDED-MODES."
+  (if major-mode--suspended
+      (funcall (prog1 major-mode--suspended
+                 (kill-local-variable 'major-mode--suspended)))
+    (let ((auto-mode-alist
+           (let ((alist (copy-sequence auto-mode-alist)))
+             (dolist (mode avoided-modes)
+               (setq alist (rassq-delete-all mode alist)))
+             alist))
+          (magic-fallback-mode-alist
+           (let ((alist (copy-sequence magic-fallback-mode-alist)))
+             (dolist (mode avoided-modes)
+               (setq alist (rassq-delete-all mode alist)))
+             alist)))
+      (normal-mode))))
+
 ;;;; Defined in simple.el
 
 (compat-guard (not (fboundp 'decoded-time-second))

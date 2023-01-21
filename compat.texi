@@ -952,6 +952,25 @@ The following functions and macros are implemented in Emacs
 27.1. These functions are made available by Compat on Emacs versions
 older than 27.1.
 
+@c copied from lispref/modes.texi
+@defun major-mode-suspend
+This function works like @code{fundamental-mode}, in that it kills all
+buffer-local variables, but it also records the major mode in effect,
+so that it could subsequently be restored.  This function and
+@code{major-mode-restore} (described next) are useful when you need to
+put a buffer under some specialized mode other than the one Emacs
+chooses for it automatically, but would also like to be able to switch
+back to the original mode later.
+@end defun
+
+@c copied from lispref/modes.texi
+@defun major-mode-restore &optional avoided-modes
+This function restores the major mode recorded by
+@code{major-mode-suspend}.  If no major mode was recorded, this
+function calls @code{normal-mode}, but tries to force it not to choose
+any modes in @var{avoided-modes}, if that argument is non-@code{nil}.
+@end defun
+
 @c copied from lispref/sequences.texi
 @defun ring-resize ring size
 Set the size of @var{ring} to @var{size}.  If the new size is smaller,
@@ -1478,8 +1497,6 @@ The minor mode @code{reveal-mode}.
 The macro @code{with-suppressed-warnings}.
 @item
 Support for @code{condition-case} to handle t.
-@item
-The functions @code{major-mode-suspend} and @code{major-mode-restore}.
 @item
 The function @code{file-system-info}.
 @item
@@ -2034,7 +2051,7 @@ Support for @code{:interactive} argument to @code{define-minor-mode} and
 Support for @code{:predicate} argument to
 @code{define-globalized-minor-mode}.
 @item
-"Success handler" for @code{condition-case}.
+Support for the @code{:success} handler of @code{condition-case}.
 @item
 The function @code{benchmark-call}.
 @item
@@ -2085,8 +2102,6 @@ The function @code{innermost-minibuffer-p}.
 The function @code{max-mini-window-lines}.
 @item
 The function @code{lock-file} and @code{unlock-file}.
-@item
-The macro @code{with-window-non-dedicated}.
 @item
 Any @code{multisession} functionality.
 @end itemize

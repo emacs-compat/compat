@@ -2809,5 +2809,18 @@
     (should-equal 4 (count-sentences (point-min) (point-max)))
     (should-equal 2 (count-sentences 16 50))))
 
+(ert-deftest major-mode-suspend ()
+  (with-temp-buffer
+    (text-mode)
+    (should sentence-end-double-space)
+    (setq-local sentence-end-double-space nil)
+    (major-mode-suspend)
+    (should-not line-spacing)
+    (prog-mode)
+    (should-equal major-mode 'prog-mode)
+    (major-mode-restore)
+    (should sentence-end-double-space)
+    (should-equal major-mode 'text-mode)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

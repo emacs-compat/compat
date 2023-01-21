@@ -234,8 +234,11 @@ definition is generated.
           ,@(cond
              ((eq local 'permanent)
               `((put ',name 'permanent-local t)))
-             (local
-              `((make-variable-buffer-local ',name)))))))))
+             ((eq local t)
+              `((make-variable-buffer-local ',name)))
+             ((not local)
+              nil)
+             (t (error "Invalid value for :local"))))))))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here
