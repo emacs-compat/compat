@@ -183,10 +183,16 @@ The library intends to provide support back until Emacs 24.4.  The
 intended audience are package developers that are interested in using
 newer developments, without having to break compatibility.
 
-Complete backwards compatibility cannot be provided for technical
-reasons.  These might include:
+Complete backwards compatibility cannot be provided due to the scope
+of Compat and for technical reasons.  These might include:
 
 @itemize
+@item
+The additional functionality is a user-facing mode or command.  Compat
+is limited to functionality on the ``library level''.  Generally
+functions provided by Compat are non-interactive, such that the user
+interface (M-x) is unaffected by the presence of Compat.
+
 @item
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
