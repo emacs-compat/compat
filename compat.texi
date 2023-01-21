@@ -197,10 +197,11 @@ of Compat and for technical reasons.  These might include:
 
 @itemize
 @item
-The additional functionality is a user-facing mode or command.  Compat
-is limited to functionality on the ``library level''.  Generally
-functions provided by Compat are non-interactive, such that the user
-interface (M-x) is unaffected by the presence of Compat.
+The additional functionality is a command or a user-facing minor or
+major mode.  Compat is limited to functionality on the ``library
+level''.  Generally functions provided by Compat are non-interactive,
+such that the user interface (M-x) is unaffected by the presence of
+Compat.
 
 @item
 An existing function or macro was extended by some new functionality.
@@ -919,6 +920,8 @@ implemented in 26.1:
 
 @itemize
 @item
+The function @code{read-answer}.
+@item
 The function @code{func-arity}.
 @item
 The function @code{secure-hash-algorithms}.
@@ -1500,8 +1503,6 @@ All @code{iso8601-*} functions.
 The macro @code{benchmark-progn}.
 @item
 The function @code{read-char-from-minibuffer}.
-@item
-The minor mode @code{reveal-mode}.
 @item
 The macro @code{with-suppressed-warnings}.
 @item
