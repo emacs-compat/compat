@@ -92,27 +92,19 @@ Support
 
 The objective of Compat is to provide "forwards compatibility" library
 for Emacs Lisp.  That is to say by using Compat, an Elisp package does
-not have to make the decision to either use new and useful functionality
-or support old versions of Emacs.
+not have to make the decision to either use new and useful
+functionality or support old versions of Emacs.
 
 Version 24.4 is chosen as the oldest version we can support, since
-Elisp has seen significant semantic changes at that version.  On the
-library level subr-x was introduced in 24.4.  Most popular Emacs
-packages and new developments which could potentially benefit from
-Compat already require 24.4 or even newer versions of Emacs.  The long
-time support release CentOS 7, which still distributes Emacs 24.3,
-reaches end of life soon in the beginning of 2024.
-
-Note that Compat provides functions with extended functionality for
-commands that are already defined (@code{sort}, @code{assoc},
-@dots{}).  These functions must be looked up explicitly with
-@code{compat-function} or called explicitly with @code{compat-call}.
+Elisp has seen significant changes at that version.  On the library
+level subr-x was introduced in 24.4.  Most popular Emacs packages
+already require 24.4 or even newer versions of Emacs.
 
 @node Usage
 @section Usage
 
-The intended use-case for this library is for package developers to add
-as a dependency in the header:
+The intended use-case for this library is for package developers to
+add as a dependency in the header:
 
 @example
 ;; Package-Requires: ((emacs "24.4") (compat "29.1.2.0"))
@@ -120,7 +112,7 @@ as a dependency in the header:
 
 There is no need to depend on @code{emacs} 24.4 specifically.  One can
 choose to any newer version, if features not provided by Compat
-necessitate it.
+necessitate it, for example bug fixes or UI improvements.
 
 In any file where compatibility forms are used, a
 
@@ -138,10 +130,15 @@ the noerror flag should be specified.
 This will load all implicit and explicit Compat definitions.  Note
 that if Compat is installed on a recent version of Emacs, all of the
 definitions are disabled at compile time, such that no negative
-performance impact is incurred.  Functions and macros where the
-calling convention or behavior has changed can be accessed explicitly
-via @code{compat-function} and @code{compat-call}.  We call these
-definitions ``Explicit Definitions''.  In contrast, ``Implicit
+performance impact is incurred.
+
+Note that Compat provides replacement functions with extended
+functionality for functions that are already defined (@code{sort},
+@code{assoc}, @dots{}).  These functions may have changed their
+calling convention (additional optional arguments) or may have changed
+their behavior.  These functions must be looked up explicitly with
+@code{compat-function} or called explicitly with @code{compat-call}.
+We call them ``Explicit Definitions''.  In contrast, ``Implicit
 Definitions'' can be called as usual.
 
 @example
@@ -153,7 +150,7 @@ Definitions'' can be called as usual.
 This macro calls the compatibility function FUN with ARGS.  Many
 functions provided by Compat can be called directly without this
 macro.  However in the case where Compat provides an alternative
-version of an exisiting function, the function call has to go through
+version of an existing function, the function call has to go through
 @code{compat-call}.  This happens for example when the calling
 convention of a function has changed.
 @end defmac
@@ -165,16 +162,19 @@ compatibility functions.
 @end defmac
 
 If you intend to use a compatibility function in your code it is
-strongly recommended that you check the tests in
-@file{compat-tests.el} to see the supported calling conventions, which
-are guaranteed to work on the supported Emacs versions. We ensure this
-using continuous integration. All functions provided by Compat are
-covered by the testsuite.
+recommended that you take a look at the test suite
+@file{compat-tests.el}. There you can see the supported calling
+conventions, which are guaranteed to work on the supported Emacs
+versions. We ensure this using continuous integration. All functions
+provided by Compat are covered by the test suite.
 
-It is recommended to subscribe to the
+You may want to subscribe to the
 @uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
 mailing list to be notified when new versions are released or relevant
-changes are made.
+changes are made. We also provide a
+@uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
+list} (@email{~pkal/compat-devel@@lists.sr.ht,
+~pkal/compat-devel@@lists.sr.ht}).
 
 @node Intentions
 @section Intentions
@@ -183,37 +183,51 @@ The library intends to provide support back until Emacs 24.4.  The
 intended audience are package developers that are interested in using
 newer developments, without having to break compatibility.
 
-Total backwards compatibility cannot be provided for technical
+Complete backwards compatibility cannot be provided for technical
 reasons.  These might include:
 
 @itemize
 @item
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
-advised. As this is regarded as invasive and adds significant
-overhead, even when the new feature is not used, this approach is not
-used. As a compromise, compatibility functions and macros with a
-changed calling convention or behavior can be accessed via the
-@code{compat-function} and @code{compat-call} macros.
+advised. Since this is invasive and adds significant overhead, even
+when the new feature is not used, Compat does not use advices. As a
+compromise, compatibility functions and macros with a changed calling
+convention or behavior can be accessed via the @code{compat-function}
+and @code{compat-call} macros.
 
 @item
-New functionality was implemented in the core, and depends on external
-libraries that cannot be reasonably duplicated in the scope of a
-compatibility library.
+New functionality was implemented in the C core, and depends on
+external libraries that cannot be reasonably duplicated in the scope
+of a compatibility library.
 
 @item
 New functionality depends on an entire new, non-trivial library.
 Sometimes these are provided via ELPA (xref, project, @dots{}), but
-other times it would be infeasible to duplicate an entire library within
-Compat while also providing the necessary backwards compatibility.
+other times it would be infeasible to duplicate an entire library
+within Compat while also providing the necessary backwards
+compatibility.
 
 @item
-It just wasn't added, and there is no good reason.  If you happen to
-find such a function, @ref{Development, , reporting} it would be much
-appreciated.
+The semantics of Elisp changed on a deep level. For example the
+addition of Bigint support in Emacs 27.1 cannot be replicated on the
+level of Compat.
 
-Always begin by assuming that this might be the case, unless proven
-otherwise.
+@item
+Backported functions would introduce performance bugs. Sometimes
+functions provided by newer Emacs versions are implemented on the C
+level, relying on internal data structures, which we cannot access. In
+this case a backport may still be possible but would be significantly
+slower than the newer functionality, such that downstream packages
+would observe performance bugs. Examples are the
+@code{string-pixel-width} function and the @code{json-parse-string}
+function provided by libjansson.
+
+@item
+It just was not added without a good reason.  If you happen to find
+such a function, @ref{Development, , reporting} it would be much
+appreciated. Always begin by assuming that this might be the case,
+unless proven otherwise.
 @end itemize
 
 @node Support
@@ -234,8 +248,9 @@ manage to provide for each Emacs version.
 @section Emacs 25.1
 
 @subsection Implicit Definitions
-The following functions and macros implemented in 25.1, and are provided
-by Compat:
+The following functions and macros are implemented in Emacs
+25.1. These functions are made available by Compat on Emacs versions
+older than 25.1.
 
 @c copied from lispref/help.texi
 @defopt text-quoting-style
@@ -521,8 +536,9 @@ The functions @code{bufferpos-to-filepos} and
 @section Emacs 26.1
 
 @subsection Implicit Definitions
-The following functions and macros implemented in 26.1, and are provided
-by Compat:
+The following functions and macros are implemented in Emacs
+26.1. These functions are made available by Compat on Emacs versions
+older than 26.1.
 
 @c copied from lispref/functions.texi
 @defun mapcan function sequence
@@ -900,8 +916,6 @@ The function @code{mapbacktrace}.
 @item
 The function @code{file-name-case-insensitive-p}.
 @item
-The file-attributes constructors.
-@item
 The additional elements of @code{parse-partial-sexp}.
 @item
 The function @code{add-variable-watcher}.
@@ -917,8 +931,6 @@ The function @code{frame-list-z-order}.
 @item
 The function @code{frame-restack}.
 @item
-Support for side windows and atomic windows.
-@item
 All changes related to @code{display-buffer}.
 @item
 The function @code{window-swap-states}.
@@ -930,8 +942,9 @@ The function @code{string-version-lessp}.
 @section Emacs 27.1
 
 @subsection Implicit Definitions
-The following functions and macros implemented in 27.1, and are provided
-by Compat:
+The following functions and macros are implemented in Emacs
+27.1. These functions are made available by Compat on Emacs versions
+older than 27.1.
 
 @c copied from lispref/sequences.texi
 @defun ring-resize ring size
@@ -1440,8 +1453,6 @@ implemented in 27.1:
 
 @itemize
 @item
-Bigint support.
-@item
 The functions @code{base64url-encode-*}.
 @item
 The function @code{decoded-time-add}.
@@ -1466,8 +1477,6 @@ The functions @code{major-mode-suspend} and @code{major-mode-restore}.
 @item
 The function @code{file-system-info}.
 @item
-The more consistent treatment of NaN values.
-@item
 The function @code{group-name}.
 @item
 Additional @code{format-spec} modifiers.
@@ -1483,8 +1492,9 @@ functionality.
 @section Emacs 28.1
 
 @subsection Implicit Definitions
-The following functions and macros implemented in 28.1, and are provided
-by Compat:
+The following functions and macros are implemented in Emacs
+28.1. These functions are made available by Compat on Emacs versions
+older than 28.1.
 
 @c copied from lispref/help.texi
 @defun text-quoting-style
@@ -2026,8 +2036,6 @@ Support for the @code{natnum} defcustom type.
 @item
 Additional Edebug keywords.
 @item
-Shorthand support.
-@item
 The libjansson JSON APIs, e.g., @code{json-parse-string}.
 @item
 The macro @code{pcase-setq}.
@@ -2081,8 +2089,9 @@ Any @code{multisession} functionality.
 @section Emacs 29.1
 
 @subsection Implicit Definitions
-The following functions and macros implemented in 29.1 and are
-provided by Compat. Note that due to upstream changes, it might happen
+The following functions and macros are implemented in Emacs
+29.1. These functions are made available by Compat on Emacs versions
+older than 29.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
