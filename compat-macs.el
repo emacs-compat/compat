@@ -92,9 +92,9 @@ a plist of predicates for arguments which are passed to FUN."
 (defun compat-macs--defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat-macs--guard rest `(:extended ,(lambda (x) (or (booleanp x) (version-to-list x)))
-                        :obsolete ,(lambda (x) (or (booleanp x) (stringp x)))
-                        :body t)
+  (compat-macs--guard rest (list :extended (lambda (x) (or (booleanp x) (version-to-list x)))
+                                 :obsolete (lambda (x) (or (booleanp x) (stringp x)))
+                                 :body t)
     (lambda (extended obsolete body)
       (when (stringp extended)
         (compat-macs--assert
@@ -225,9 +225,9 @@ definition is generated.
 - :feature :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat-macs--guard attrs `(:constant booleanp
-                         :local ,(lambda (x) (memq x '(nil t permanent)))
-                         :obsolete ,(lambda (x) (or (booleanp x) (stringp x))))
+  (compat-macs--guard attrs (list :constant #'booleanp
+                                  :local (lambda (x) (memq x '(nil t permanent)))
+                                  :obsolete (lambda (x) (or (booleanp x) (stringp x))))
     (lambda (constant local obsolete)
       (compat-macs--strict (not (boundp name)) "%s already defined" name)
       (compat-macs--assert (not (and constant local)) "Both :constant and :local")
