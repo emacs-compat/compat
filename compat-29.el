@@ -170,6 +170,35 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defun string-lines (string &optional omit-nulls keep-newlines)
+  "Handle additional KEEP-NEWLINES argument."
+  :extended "28.1"
+  (if (equal string "")
+      (if omit-nulls
+          nil
+        (list ""))
+    (let ((lines nil)
+          (start 0))
+      (while (< start (length string))
+        (let ((newline (string-search "\n" string start)))
+          (if newline
+              (progn
+                (when (or (not omit-nulls)
+                          (not (= start newline)))
+                  (let ((line (substring string start
+                                         (if keep-newlines
+                                             (1+ newline)
+                                           newline))))
+                    (when (not (and keep-newlines omit-nulls
+                                    (equal line "\n")))
+                      (push line lines))))
+                (setq start (1+ newline)))
+            (if (zerop start)
+                (push string lines)
+              (push (substring string start) lines))
+            (setq start (length string)))))
+      (nreverse lines))))
+
 (compat-defun readablep (object) ;; <compat-tests:readablep>
   "Say whether OBJECT has a readable syntax.
 This means that OBJECT can be printed out and then read back

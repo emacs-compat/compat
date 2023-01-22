@@ -1,5 +1,10 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
+  KEEP-NEWLINES argument.
+
 * Release of "Compat" Version 29.1.3.0
 
 - compat-25: Add ~hash-table-empty-p~.

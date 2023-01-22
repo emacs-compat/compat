@@ -390,11 +390,6 @@ removed."
       (fill-region (point-min) (point-max)))
     (buffer-string)))
 
-(compat-defun string-lines (string &optional omit-nulls) ;; <compat-tests:string-lines>
-  "Split STRING into a list of lines.
-If OMIT-NULLS, empty lines will be removed from the results."
-  (split-string string "\n" omit-nulls))
-
 (compat-defun string-pad (string length &optional padding start) ;; <compat-tests:string-pad>
   "Pad STRING to LENGTH using PADDING.
 If PADDING is nil, the space character is used.  If not nil, it

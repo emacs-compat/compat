@@ -1802,17 +1802,24 @@
 
 (ert-deftest string-lines ()
   (should-equal '("a" "b" "c") (string-lines "a\nb\nc"))
-  ;; FIXME: Behavior changed on Emacs 30
-  (compat-tests--if (< emacs-major-version 29)
+  (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n" t))
+  (should-equal '("a" "b" "c") (string-lines "a\nb\n\nc\n" t))
+  (should-equal '("abc" "bcd" "cde") (string-lines "abc\nbcd\ncde"))
+  (should-equal '(" abc" " bcd " "cde ") (string-lines " abc\n bcd \ncde "))
+
+  ;; NOTE: Behavior for trailing newline was different on Emacs 28
+  (compat-tests--if (= emacs-major-version 28)
       (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
     (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n"))
     (should-equal '("a\n" "\n" "b\n" "c\n") (string-lines "a\n\nb\nc\n" nil t))
     (should-equal '("a\n" "b\n" "c\n") (string-lines "a\n\nb\nc\n" t t))
     (should-equal '("a\n" "b\n" "c\n") (string-lines "a\nb\nc\n" nil t)))
-  (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n" t))
-  (should-equal '("a" "b" "c") (string-lines "a\nb\n\nc\n" t))
-  (should-equal '("abc" "bcd" "cde") (string-lines "abc\nbcd\ncde"))
-  (should-equal '(" abc" " bcd " "cde ") (string-lines " abc\n bcd \ncde ")))
+
+  ;; Compatibility function provides the Emacs 29 behavior regarding trailing newlines
+  (should-equal '("a" "b" "c") (compat-call string-lines "a\nb\nc\n"))
+  (should-equal '("a\n" "\n" "b\n" "c\n") (compat-call string-lines "a\n\nb\nc\n" nil t))
+  (should-equal '("a\n" "b\n" "c\n") (compat-call string-lines "a\n\nb\nc\n" t t))
+  (should-equal '("a\n" "b\n" "c\n") (compat-call string-lines "a\nb\nc\n" nil t)))
 
 (ert-deftest string-pad ()
   (should-equal "a   " (string-pad "a" 4))
@@ -1984,12 +1991,10 @@
   ;; The `make-string' calls with three arguments have been replaced
   ;; here with the result of their evaluation, to avoid issues with
   ;; older versions of Emacs that only support two arguments.
-  (should-equal 5
-                 (string-search (make-string 2 130)
-                                ;; Per (concat "helló" (make-string 5 130 t) "bár")
-                                "hellóbár"))
-  (should-equal 5
-                  (string-search (make-string 2 127)
+  (should-equal 5 (string-search (make-string 2 130)
+                                 ;; Per (concat "helló" (make-string 5 130 t) "bár")
+                                 "hellóbár"))
+  (should-equal 5 (string-search (make-string 2 127)
                                  ;; Per (concat "helló" (make-string 5 127 t) "bár")
                                  "hellóbár"))
   (should-equal 1 (string-search "\377" "a\377ø"))
@@ -2027,15 +2032,13 @@
   (should-not (string-search "\303\270" "\370"))
   (should-not (string-search (compat-tests--string-to-multibyte "\303\270") "\370"))
   (should-not (string-search "\303\270" (compat-tests--string-to-multibyte "\370")))
-  (should-not
-                  (string-search (compat-tests--string-to-multibyte "\303\270")
-                                 (compat-tests--string-to-multibyte "\370")))
+  (should-not (string-search (compat-tests--string-to-multibyte "\303\270")
+                             (compat-tests--string-to-multibyte "\370")))
   (should-not (string-search "\370" "\303\270"))
   (should-not (string-search (compat-tests--string-to-multibyte "\370") "\303\270"))
   (should-not (string-search "\370" (compat-tests--string-to-multibyte "\303\270")))
-  (should-not
-                 (string-search (compat-tests--string-to-multibyte "\370")
-                                (compat-tests--string-to-multibyte "\303\270")))
+  (should-not (string-search (compat-tests--string-to-multibyte "\370")
+                             (compat-tests--string-to-multibyte "\303\270")))
   (should-equal 3 (string-search "\303\270" "foo\303\270"))
   (when (version<= "27" emacs-version)
     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1 in
@@ -2043,8 +2046,7 @@
     ;; raw bytes.  The compatibility functions should updated to
     ;; backport this behaviour.
     (should-equal 2 (string-search (compat-tests--string-to-multibyte "\377") "ab\377c"))
-    (should-equal 2
-                    (string-search (compat-tests--string-to-multibyte "o\303\270")
+    (should-equal 2 (string-search (compat-tests--string-to-multibyte "o\303\270")
                                    "foo\303\270"))))
 
 (ert-deftest string-replace ()

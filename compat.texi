@@ -483,7 +483,7 @@ arguments, @var{objects}.
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior was extended:
+since their calling convention or behavior was extended in Emacs 25.1:
 
 @defun compat-call@ sort sequence predicate
 This function sorts @var{sequence} stably.  Note that this function
@@ -884,7 +884,7 @@ size, modes, inode-number and device-number.
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior was extended:
+since their calling convention or behavior was extended in Emacs 26.1:
 
 @defun compat-call@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
@@ -1316,7 +1316,7 @@ function signals an error.
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior was extended:
+since their calling convention or behavior was extended in Emacs 27.1:
 
 @c based on lispref/windows.texi
 @defun compat-call@ recenter &optional count redisplay
@@ -1782,14 +1782,12 @@ will not be shortened.
 @end defun
 
 @c copied from lispref/strings.texi
-@defun string-lines string &optional omit-nulls keep-newlines
+@defun string-lines string &optional omit-nulls
 Split @var{string} into a list of strings on newline boundaries.  If
 the optional argument @var{omit-nulls} is non-@code{nil}, remove empty
-lines from the results.  If the optional argument @var{keep-newlines}
-is non-@code{nil}, don't remove the trailing newlines from the result
-strings.
-
-@xref{Creating Strings,,,elisp}.
+lines from the results.  Note that this function returns trailing
+newlines on Emacs 28, use @code{compat-call string-lines} instead if
+you want consistent behavior.
 @end defun
 
 @c copied from lispref/strings.texi
@@ -2023,7 +2021,7 @@ If native compilation is not available, this function always returns
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior was extended:
+since their calling convention or behavior was extended in Emacs 28.1:
 
 @defun compat-call@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
@@ -2809,7 +2807,18 @@ This is comparable to @code{and-let*}.
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
-since their calling convention or behavior was extended:
+since their calling convention or behavior was extended in Emacs 29.1:
+
+@c copied from lispref/strings.texi
+@defun compat-call@ string-lines string &optional omit-nulls keep-newlines
+Split @var{string} into a list of strings on newline boundaries.  If
+the optional argument @var{omit-nulls} is non-@code{nil}, remove empty
+lines from the results.  If the optional argument @var{keep-newlines}
+is non-@code{nil}, don't remove the trailing newlines from the result
+strings.
+
+@xref{Creating Strings,,,elisp}.
+@end defun
 
 @c copied from lispref/keymaps.texi
 @defun compat-call@ define-key
