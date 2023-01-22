@@ -170,7 +170,7 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
-(compat-defun string-lines (string &optional omit-nulls keep-newlines)
+(compat-defun string-lines (string &optional omit-nulls keep-newlines) ;; <compat-tests:string-lines>
   "Handle additional KEEP-NEWLINES argument."
   :extended "28.1"
   (if (equal string "")
