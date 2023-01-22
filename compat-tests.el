@@ -954,12 +954,12 @@
     (let ((state (buffer-local-set-state compat-tests--global 10
                                          compat-tests--local 20
                                          compat-tests--unexist 30)))
-      (should (= compat-tests--global 10))
-      (should (= compat-tests--local 20))
-      (should (= compat-tests--unexist 30))
+      (should-equal compat-tests--global 10)
+      (should-equal compat-tests--local 20)
+      (should-equal compat-tests--unexist 30)
       (buffer-local-restore-state state)
-      (should (= compat-tests--global 1))
-      (should (= compat-tests--local 2))
+      (should-equal compat-tests--global 1)
+      (should-equal compat-tests--local 2)
       (should-not (boundp 'compat-tests--unexist)))))
 
 (ert-deftest gensym ()
@@ -1071,7 +1071,7 @@
       (with-temp-buffer
         (insert "def")
         (insert-into-buffer other))
-      (should (string= (buffer-string) "abcdef"))))
+      (should-equal (buffer-string) "abcdef")))
   ;; With one optional argument
   (with-temp-buffer
     (let ((other (current-buffer)))
@@ -1079,7 +1079,7 @@
       (with-temp-buffer
         (insert "def")
         (insert-into-buffer other 2))
-      (should (string= (buffer-string) "abcef"))))
+      (should-equal (buffer-string) "abcef")))
   ;; With two optional arguments
   (with-temp-buffer
     (let ((other (current-buffer)))
@@ -1087,7 +1087,7 @@
       (with-temp-buffer
         (insert "def")
         (insert-into-buffer other 2 3))
-      (should (string= (buffer-string) "abce")))))
+      (should-equal (buffer-string) "abce"))))
 
 (ert-deftest bool-vector ()
   (should-equal (bool-vector) (bool-vector-not (bool-vector)))
@@ -1690,14 +1690,12 @@
 (ert-deftest replace-string-in-region ()
   (with-temp-buffer
     (insert "foo bar zot foobar")
-    (should (= (replace-string-in-region "foo" "new" (point-min) (point-max))
-               2))
+    (should-equal (replace-string-in-region "foo" "new" (point-min) (point-max)) 2)
     (should-equal (buffer-string) "new bar zot newbar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
-    (should (= (replace-string-in-region "foo" "new" (point-min) 14)
-               1))
+    (should-equal (replace-string-in-region "foo" "new" (point-min) 14) 1)
     (should-equal (buffer-string) "new bar zot foobar"))
 
   (with-temp-buffer
@@ -1706,8 +1704,7 @@
 
   (with-temp-buffer
     (insert "Foo bar zot foobar")
-    (should (= (replace-string-in-region "Foo" "new" (point-min))
-               1))
+    (should-equal (replace-string-in-region "Foo" "new" (point-min)) 1)
     (should-equal (buffer-string) "new bar zot foobar"))
 
   ;; There was a bug in the Emacs 28 implementation
@@ -1715,29 +1712,24 @@
   (unless (= emacs-major-version 28)
     (with-temp-buffer
       (insert "foo bar baz")
-      (should (= (replace-string-in-region "ba" "quux corge grault" (point-min))
-                 2))
+      (should-equal (replace-string-in-region "ba" "quux corge grault" (point-min)) 2)
       (should-equal (buffer-string)
                      "foo quux corge graultr quux corge graultz"))
 
     (with-temp-buffer
       (insert "foo bar bar")
-      (should (= (replace-string-in-region " bar" "" (point-min) 8)
-                 1))
-      (should-equal (buffer-string)
-                     "foo bar"))))
+      (should-equal (replace-string-in-region " bar" "" (point-min) 8) 1)
+      (should-equal (buffer-string) "foo bar"))))
 
 (ert-deftest replace-regexp-in-region ()
   (with-temp-buffer
     (insert "foo bar zot foobar")
-    (should (= (replace-regexp-in-region "fo+" "new" (point-min) (point-max))
-               2))
+    (should-equal (replace-regexp-in-region "fo+" "new" (point-min) (point-max)) 2)
     (should-equal (buffer-string) "new bar zot newbar"))
 
   (with-temp-buffer
     (insert "foo bar zot foobar")
-    (should (= (replace-regexp-in-region "fo+" "new" (point-min) 14)
-               1))
+    (should-equal (replace-regexp-in-region "fo+" "new" (point-min) 14) 1)
     (should-equal (buffer-string) "new bar zot foobar"))
 
   (with-temp-buffer
@@ -1746,8 +1738,7 @@
 
   (with-temp-buffer
     (insert "Foo bar zot foobar")
-    (should (= (replace-regexp-in-region "Fo+" "new" (point-min))
-               1))
+    (should-equal (replace-regexp-in-region "Fo+" "new" (point-min)) 1)
     (should-equal (buffer-string) "new bar zot foobar"))
 
   ;; There was a bug in the Emacs 28 implementation
@@ -1755,17 +1746,13 @@
   (unless (= emacs-major-version 28)
     (with-temp-buffer
       (insert "foo bar baz")
-      (should (= (replace-regexp-in-region "ba." "quux corge grault" (point-min))
-                 2))
-      (should-equal (buffer-string)
-                     "foo quux corge grault quux corge grault"))
+      (should-equal (replace-regexp-in-region "ba." "quux corge grault" (point-min)) 2)
+      (should-equal (buffer-string) "foo quux corge grault quux corge grault"))
 
     (with-temp-buffer
       (insert "foo bar bar")
-      (should (= (replace-regexp-in-region " bar" "" (point-min) 8)
-                 1))
-      (should-equal (buffer-string)
-                     "foo bar"))))
+      (should-equal (replace-regexp-in-region " bar" "" (point-min) 8) 1)
+      (should-equal (buffer-string) "foo bar"))))
 
 (ert-deftest string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
@@ -2219,58 +2206,58 @@
    (and-let* (((= 5 6))) t)))
 
 (ert-deftest named-let ()
-  (should (= (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
-             8))
-  (should (= (named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
-             100000))
-  (should (= (named-let l ((i 0))
-               (cond
-                ((= i 100000) i)
-                ((= (mod i 2) 0)
-                 (l (+ i 2)))
-                ((l (+ i 3)))))
-             100000))
-  (should (= (named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
-             (expt 2 8)))
-  (should (eq (named-let lop ((x 1))
-                (if (> x 0)
-                    (condition-case nil
-                        (lop (1- x))
-                      (arith-error 'ok))
-                  (/ 1 x)))
-              'ok))
-  (should (eq (named-let lop ((n 10000))
-                (if (> n 0)
-                    (condition-case nil
-                        (/ n 0)
-                      (arith-error (lop (1- n))))
-                  'ok))
-              'ok))
-  (should (eq (named-let lop ((x nil))
-                (cond (x)
-                      (t 'ok)))
-              'ok))
-  (should (eq (named-let lop ((x 100000))
-                (cond ((= x 0) 'ok)
-                      ((lop (1- x)))))
-              'ok))
-  (should (eq (named-let lop ((x 100000))
-                (cond
-                 ((= x -1) nil)
-                 ((= x 0) 'ok)
-                 ((lop -1))
-                 ((lop (1- x)))))
-              'ok))
-  (should (eq (named-let lop ((x 10000))
-                (cond ((= x 0) 'ok)
-                      ((and t (lop (1- x))))))
-              'ok))
-  (should (eq (let ((b t))
-                (named-let lop ((i 0))
-                  (cond ((null i) nil) ((= i 10000) 'ok)
-                        ((lop (and (setq b (not b)) (1+ i))))
-                        ((lop (and (setq b (not b)) (1+ i)))))))
-              'ok)))
+  (should-equal (named-let l ((i 0)) (if (= i 8) i (l (1+ i))))
+                8)
+  (should-equal (named-let l ((i 0)) (if (= i 100000) i (l (1+ i))))
+                100000)
+  (should-equal (named-let l ((i 0))
+                  (cond
+                   ((= i 100000) i)
+                   ((= (mod i 2) 0)
+                    (l (+ i 2)))
+                   ((l (+ i 3)))))
+                100000)
+  (should-equal (named-let l ((i 0) (x 1)) (if (= i 8) x (l (1+ i) (* x 2))))
+                (expt 2 8))
+  (should-equal (named-let lop ((x 1))
+                  (if (> x 0)
+                      (condition-case nil
+                          (lop (1- x))
+                        (arith-error 'ok))
+                    (/ 1 x)))
+                'ok)
+  (should-equal (named-let lop ((n 10000))
+                  (if (> n 0)
+                      (condition-case nil
+                          (/ n 0)
+                        (arith-error (lop (1- n))))
+                    'ok))
+                'ok)
+  (should-equal (named-let lop ((x nil))
+                  (cond (x)
+                        (t 'ok)))
+                'ok)
+  (should-equal (named-let lop ((x 100000))
+                  (cond ((= x 0) 'ok)
+                        ((lop (1- x)))))
+                'ok)
+  (should-equal (named-let lop ((x 100000))
+                  (cond
+                   ((= x -1) nil)
+                   ((= x 0) 'ok)
+                   ((lop -1))
+                   ((lop (1- x)))))
+                'ok)
+  (should-equal (named-let lop ((x 10000))
+                  (cond ((= x 0) 'ok)
+                        ((and t (lop (1- x))))))
+                'ok)
+  (should-equal (let ((b t))
+                  (named-let lop ((i 0))
+                    (cond ((null i) nil) ((= i 10000) 'ok)
+                          ((lop (and (setq b (not b)) (1+ i))))
+                          ((lop (and (setq b (not b)) (1+ i)))))))
+                'ok))
 
 (ert-deftest alist-get ()
   ;; Fallback behaviour:
@@ -2749,7 +2736,7 @@
     (should-equal (ring-elements ring) '(3 2 1)))
   (let ((ring (make-ring 3)))
     (ring-resize ring 5)
-    (should (= (ring-size ring) 5))
+    (should-equal (ring-size ring) 5)
     (should-equal (ring-elements ring) '()))
   (let ((ring (make-ring 3)))
     (ring-insert ring 1)
