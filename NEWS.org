@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.3.0
 
 - compat-25: Add ~hash-table-empty-p~.
 - compat-25: Add ~macroexp-parse-body~ and ~macroexp-quote~.
@@ -32,6 +32,8 @@
 - compat-29: Add ~substitute-quotes~.
 - compat-29: Add ~use-region-beginning~, ~use-region-end~ and ~use-region-noncontiguous-p~.
 - compat-29: Add ~with-narrowing~.
+
+(Release <2023-01-22 Sun>)
 
 * Release of "Compat" Version 29.1.2.0
 
