@@ -92,12 +92,17 @@ If you just want to check `major-mode', use `derived-mode-p'."
 (compat-defun assoc (key alist &optional testfn) ;; <compat-tests:assoc>
   "Handle the optional TESTFN."
   :extended t
-  (if testfn
-      (catch 'found
-        (dolist (ent alist)
-          (when (funcall testfn (car ent) key)
-            (throw 'found ent))))
-    (assoc key alist)))
+  (cond
+   ((or (eq testfn #'eq)
+        (and (not testfn) (or (symbolp key) (integerp key)))) ;; eq_comparable_value
+    (assq key alist))
+   ((or (eq testfn #'equal) (not testfn))
+    (assoc key alist))
+   (t
+    (catch 'found
+      (dolist (ent alist)
+        (when (funcall testfn (car ent) key)
+          (throw 'found ent)))))))
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
