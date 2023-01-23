@@ -2091,23 +2091,21 @@ The macro @code{pcase-setq}.
 @item
 The function @code{custom-add-choice}.
 @item
-The function @code{dom-print}.
-@item
-The function @code{dom-remove-attribute}.
+The functions @code{dom-print} and @code{dom-remove-attribute}.
 @item
 The function @code{dns-query-asynchronous}.
 @item
 The function @code{get-locale-names}.
 @item
-The function @code{mail-header-parse-addresses-lax}.
-@item
-The function @code{mail-header-parse-address-lax}.
+The functions @code{mail-header-parse-addresses-lax} and
+@code{mail-header-parse-address-lax}.
 @item
 The function @code{num-processors}.
 @item
 The function @code{object-intervals}.
 @item
-The function @code{process-lines-ignore-status}.
+The functions @code{process-lines-handling-status} and
+@code{process-lines-ignore-status}.
 @item
 The function @code{require-theme}.
 @item
