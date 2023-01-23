@@ -2,6 +2,7 @@
 
 * Development
 
+- compat-27: Add ~file-name-unquote~.
 - compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
   KEEP-NEWLINES argument.
 

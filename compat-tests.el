@@ -1592,6 +1592,13 @@
   (when (>= emacs-major-version 26)
     (should-not (file-name-quoted-p "/ssh:/:a"))))
 
+(ert-deftest file-name-unquote ()
+  (should-equal "/" (compat-call file-name-unquote "/:" t)) ;; top argument
+  (should-equal ":"(compat-call file-name-unquote "/::" t)) ;; top argument
+  (should-equal "/" (file-name-unquote "/:/"))
+  (should-equal "/" (file-name-unquote "/:"))
+  (should-equal ":" (file-name-unquote  "/::")))
+
 (ert-deftest file-name-quote ()
   (should-equal "/:" (compat-call file-name-quote "" t)) ;; top argument
   (should-equal "/::"(compat-call file-name-quote  ":" t)) ;; top argument

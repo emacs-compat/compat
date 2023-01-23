@@ -658,6 +658,13 @@ It should be somewhat more efficient on larger buffers than
 @end defun
 
 @c copied from lispref/files.texi
+@defmac file-name-unquote name
+This macro removes the quotation prefix @samp{/:} from the file
+@var{name}, if any. If @var{name} is a remote file name, the local
+part of @var{name} is unquoted.
+@end defmac
+
+@c copied from lispref/files.texi
 @defun file-name-quoted-p name
 This macro returns non-@code{nil}, when @var{name} is quoted with the
 prefix @samp{/:}.  If @var{name} is a remote file name, the local part
@@ -967,8 +974,6 @@ Compat does not provide support for the following Lisp features
 implemented in 26.1:
 
 @itemize
-@item
-The function @code{file-name-unquote}.
 @item
 The function @code{func-arity}.
 @item

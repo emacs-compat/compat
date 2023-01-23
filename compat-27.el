@@ -427,10 +427,20 @@ the minibuffer was activated, and execute the forms."
 (compat-defun file-name-quote (name &optional top) ;; <compat-tests:file-name-quote>
   "Handle optional argument TOP."
   :extended "26.1"
-  (let ((file-name-handler-alist (unless top file-name-handler-alist)))
-    (if (string-prefix-p "/:" (file-local-name name))
+  (let* ((file-name-handler-alist (unless top file-name-handler-alist))
+         (localname (file-local-name name)))
+    (if (string-prefix-p "/:" localname)
         name
-      (concat (file-remote-p name) "/:" (file-local-name name)))))
+      (concat (file-remote-p name) "/:" localname))))
+
+(compat-defun file-name-unquote (name &optional top) ;; <compat-tests:file-name-unquote>
+  "Handle optional argument TOP."
+  :extended "26.1"
+  (let* ((file-name-handler-alist (unless top file-name-handler-alist))
+         (localname (file-local-name name)))
+    (when (string-prefix-p "/:" localname)
+      (setq localname (if (= (length localname) 2) "/" (substring localname 2))))
+    (concat (file-remote-p name) localname)))
 
 (compat-defun file-size-human-readable (file-size &optional flavor space unit) ;; <compat-tests:file-size-human-readable>
   "Handle the optional arguments SPACE and UNIT."
