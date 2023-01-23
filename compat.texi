@@ -142,8 +142,8 @@ We call them ``Extended Definitions''.  In contrast, newly ``Added
 Definitions'' can be called as usual.
 
 @example
-(compat-call assoc KEY ALIST TESTFN) ;; Call extended `assoc'
-(mapcan FUNCTION SEQUENCE)           ;; Call newly added `mapcan'
+(compat-call assoc key alist testfn) ;; Call extended `assoc'
+(mapcan fun seq)                     ;; Call newly added `mapcan'
 @end example
 
 @defmac compat-call fun &rest args
@@ -1665,9 +1665,9 @@ This function ignores any @var{arguments} and returns @code{t}.
 @xref{Calling Functions,,,elisp}.
 @end defun
 
-@defun make-separator-line &optional LENGTH
+@defun make-separator-line &optional length
 Make a string appropriate for usage as a visual separator line.
-If LENGTH is nil, use the window width.
+If @var{length} is nil, use the window width.
 @end defun
 
 @c copied from lispref/text.texi
@@ -1957,7 +1957,7 @@ environment variable and @var{value} is that variable's value.
 Whether @var{rgb} is more readable against white than black. @var{rgb}
 is a 3-element list (R G B), each component in the range [0,1].  This
 predicate can be used both for determining a suitable (black or white)
-contrast color with RGB as background and as foreground.
+contrast color with @var{rgb} as background and as foreground.
 @end defun
 
 @c based on src/xfaces.c
@@ -2253,11 +2253,11 @@ is called.  If @code{nil}, the button is used as the parameter instead.
 @end defun
 
 @defun buttonize-region start end callback &optional data help-echo
-Make the region between START and END into a button. When clicked,
-CALLBACK will be called with the DATA as the function argument. If
-DATA isn't present (or is nil), the button itself will be used instead
-as the function argument. If HELP-ECHO, use that as the help-echo
-property.
+Make the region between @var{start} and @var{end} into a button. When
+clicked, @var{callback} will be called with the @var{data} as the
+function argument. If @var{data} isn't present (or is nil), the button
+itself will be used instead as the function argument. If
+@var{help-echo}, use that as the help-echo property.
 @end defun
 
 @c copied from lispref/display.texi
@@ -2365,7 +2365,7 @@ differences, like @code{char-equal} when @code{case-fold-search} is
 @xref{Text Comparison,,,elisp}.
 @end defun
 
-@defun string-split STRING &optional SEPARATORS OMIT-NULLS TRIM
+@defun string-split string &optional separators omit-nulls trim
 @code{string-split} is an alias for the function @code{split-string}.
 The name follows the convention of other string functions.
 
@@ -2459,11 +2459,11 @@ you can say:
 
 @c based on lisp/subr-x.el
 @defmac with-buffer-unmodified-if-unchanged &rest body@dots{}
-Evaluate @var{body} like @code{progn}, but change buffer-modified status
-only if buffer text changes.  If the buffer was unmodified before
-execution of BODY, and buffer text after execution of BODY is identical
-to what it was before, ensure that buffer is still marked unmodified
-afterwards.
+Evaluate @var{body} like @code{progn}, but change buffer-modified
+status only if buffer text changes.  If the buffer was unmodified
+before execution of @var{body}, and buffer text after execution of
+@var{body} is identical to what it was before, ensure that buffer is
+still marked unmodified afterwards.
 
 Note that only changes in the raw byte sequence of the buffer text, as
 stored in the internal representation, are monitored for the purpose of
