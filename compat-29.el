@@ -170,6 +170,35 @@ This function does not move point.  Also see `line-end-position'."
 
 ;;;; Defined in subr.el
 
+(compat-defmacro with-delayed-message (_args &rest body) ;; <compat-tests:with-delayed-message>
+  "Like `progn', but display MESSAGE if BODY takes longer than TIMEOUT seconds.
+The MESSAGE form will be evaluated immediately, but the resulting
+string will be displayed only if BODY takes longer than TIMEOUT seconds.
+
+NOTE: The compatibility function never displays the message,
+which is not problematic since the only effect of the function is
+to display a progress message to the user.  Backporting this
+feature is not possible, since the implementation is directly
+baked into the Elisp interpreter.
+
+\(fn (timeout message) &rest body)"
+  (declare (indent 1))
+  (macroexp-progn body))
+
+(compat-defun funcall-with-delayed-message (timeout message function) ;; <compat-tests:with-delayed-message>
+  "Like `funcall', but display MESSAGE if FUNCTION takes longer than TIMEOUT.
+TIMEOUT is a number of seconds, and can be an integer or a
+floating point number. If FUNCTION takes less time to execute
+than TIMEOUT seconds, MESSAGE is not displayed.
+
+NOTE: The compatibility function never displays the message,
+which is not problematic since the only effect of the function is
+to display a progress message to the user.  Backporting this
+feature is not possible, since the implementation is directly
+baked into the Elisp interpreter."
+  (ignore timeout message)
+  (funcall function))
+
 (compat-defun string-lines (string &optional omit-nulls keep-newlines) ;; <compat-tests:string-lines>
   "Handle additional KEEP-NEWLINES argument."
   :extended "28.1"

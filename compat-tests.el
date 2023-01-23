@@ -2848,5 +2848,10 @@
     (should sentence-end-double-space)
     (should-equal major-mode #'text-mode)))
 
+(ert-deftest with-delayed-message ()
+  ;; No real test, since the backported function never displays a message.
+  (should-equal 'result (with-delayed-message (1 "timeout") 'result))
+  (should-equal 'result (funcall-with-delayed-message 1 "timeout" (lambda () 'result))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
