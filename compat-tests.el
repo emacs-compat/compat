@@ -2839,5 +2839,162 @@
     (should sentence-end-double-space)
     (should-equal major-mode #'text-mode)))
 
+(ert-deftest json-parse-string ()
+  ;; Errors
+  (should-error (compat-call json-parse-string ""))
+  (should-error (compat-call json-parse-string " "))
+  (should-error (compat-call json-parse-string "11 22 33"))
+  (should-error (compat-call json-parse-string "[1][2]"))
+  (should-error (compat-call json-parse-string "[1"))
+  (should-error (compat-call json-parse-string " \"foo bar\"\"baz\" "))
+  ;; True, Null, False
+  (should-equal [t :false :null] (compat-call json-parse-string " [true,false,null] "))
+  (should-equal [t nil nil] (compat-call json-parse-string " [true,false,null] " :false-object nil :null-object nil))
+  (should-equal [t "false" nil] (compat-call json-parse-string " [true,false,null] " :null-object nil :false-object "false"))
+  ;; RFC 4627
+  (should-equal [1 2 3] (compat-call json-parse-string " [1,2,3] "))
+  (should-equal [1 2 3] (compat-call json-parse-string "[1,2,3]"))
+  (should-equal ["a" 2 3] (compat-call json-parse-string "[\"a\",2,3]"))
+  (should-equal [["a" 2] 3] (compat-call json-parse-string "[[\"a\",2],3]"))
+  (should-equal [["a" 2] 3] (compat-call json-parse-string "[[\"a\",2],3]" :array-type 'array))
+  (should-equal '(("a" 2) 3) (compat-call json-parse-string "[[\"a\",2],3]" :array-type 'list))
+  (should-equal ["false" t] (compat-call json-parse-string "[false, true]" :false-object "false"))
+  (let ((input "{\"key\":[\"abc\", 2], \"yek\": null}"))
+    (let ((obj (compat-call json-parse-string input :object-type 'alist)))
+      (should-equal (cdr (assq 'key obj)) ["abc" 2])
+      (should-equal (cdr (assq 'yek obj)) :null))
+    (let ((obj (compat-call json-parse-string input :object-type 'plist)))
+      (should-equal (plist-get obj :key) ["abc" 2])
+      (should-equal (plist-get obj :yek) :null))
+    (let ((obj (compat-call json-parse-string input :object-type 'hash-table)))
+      (should-equal (gethash "key" obj) ["abc" 2])
+      (should-equal (gethash "yek" obj) :null))
+    (let ((obj (compat-call json-parse-string input)))
+      (should-equal (gethash "key" obj) ["abc" 2])
+      (should-equal (gethash "yek" obj) :null)))
+  ;; RFC 8259
+  (should-equal "foo bar" (compat-call json-parse-string " \"foo bar\" "))
+  (should-equal 0 (compat-call json-parse-string " 0 "))
+  (should-equal 0 (compat-call json-parse-string " 0"))
+  (should-equal 0 (compat-call json-parse-string "0"))
+  (should-equal 1 (compat-call json-parse-string "1"))
+  (should-equal 0.5 (compat-call json-parse-string "0.5"))
+  (should-equal 'foo (compat-call json-parse-string "null" :null-object 'foo)))
+
+(ert-deftest json-parse-buffer ()
+  ;; Errors
+  (with-temp-buffer
+    (should-error (compat-call json-parse-buffer))
+    (insert " ")
+    (goto-char (point-min))
+    (should-error (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert "[1")
+    (goto-char (point-min))
+    (should-error (compat-call json-parse-buffer)))
+  ;; RFC 4627
+  (with-temp-buffer
+    (insert "[1,2] [4,5]")
+    (goto-char (point-min))
+    (should-equal [1 2] (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert "[1,2,3]")
+    (goto-char (point-min))
+    (should-equal [1 2 3] (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert " [1,2,3] ")
+    (goto-char (point-min))
+    (should-equal '(1 2 3) (compat-call json-parse-buffer :array-type 'list)))
+  ;; RFC 8259
+  (with-temp-buffer
+    (insert " 11 22 33 ")
+    (goto-char (point-min))
+    (should-equal 11 (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert "11 22 33")
+    (goto-char (point-min))
+    (should-equal 11 (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert " \"foo\" ")
+    (goto-char (point-min))
+    (should-equal "foo" (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert " [1,2,3][4,5,6]123{\"a\":1,\"b\":2}\"str\"")
+    (goto-char (point-min))
+    (should-equal [1 2 3] (compat-call json-parse-buffer))
+    (should-equal [4 5 6] (compat-call json-parse-buffer))
+    (should-equal 123 (compat-call json-parse-buffer))
+    (should (member
+             (compat-call json-parse-buffer :object-type 'plist)
+             '((:b 2 :a 1) (:a 1 :b 2))))
+    (should-equal "str" (compat-call json-parse-buffer)))
+  ;; TODO Our compatibility functions don't support RFC 4627 toplevel strings
+  ;; with spaces.
+  ;; (with-temp-buffer ;; TODO
+  ;;   (insert " \"foo bar\"\"baz\" ")
+  ;;   (goto-char (point-min))
+  ;;   (should-equal "foo bar" (compat-call json-parse-buffer))
+  ;;   (should-equal "baz" (compat-call json-parse-buffer)))
+  ;; (with-temp-buffer ;; TODO
+  ;;   (insert " \"foo bar\" \"baz\" ")
+  ;;   (goto-char (point-min))
+  ;;   (should-equal "foo bar" (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert "0")
+    (goto-char (point-min))
+    (should-equal 0 (compat-call json-parse-buffer)))
+  (with-temp-buffer
+    (insert " 1 ")
+    (goto-char (point-min))
+    (should-equal 1 (compat-call json-parse-buffer))))
+
+(ert-deftest json-insert ()
+  (with-temp-buffer
+    (should-error (compat-call json-insert '(("a" . 1)))))
+  (with-temp-buffer
+    (compat-call json-insert nil)
+    (compat-call json-insert 1)
+    (compat-call json-insert [2 3 4])
+    (should-equal "{}1[2,3,4]" (buffer-string))))
+
+(ert-deftest json-serialize ()
+  (should-error (compat-call json-serialize '(("a" . 1))))
+  (should-error (compat-call json-serialize '("a" 1)))
+  (should-error (compat-call json-serialize '("a" 1 2)))
+  (should-error (compat-call json-serialize '(:a 1 2)))
+  (should-error (compat-call json-serialize '(1 . 2)))
+  (should-error (compat-call json-serialize '(1 2 3)))
+  (should-error (compat-call json-serialize '(:a 1 :b)))
+  (should-error (compat-call json-serialize '((one 1) (two 2))))
+  (should-error (compat-call json-serialize 'invalid))
+  (should-error (compat-call json-serialize :invalid))
+  (should-error (compat-call json-serialize
+                             (let ((ht (make-hash-table)))
+                               (puthash 'a 1 ht)
+                               ht)))
+  (should-equal "[{}]" (compat-call json-serialize [nil]))
+  (should-equal "{}" (compat-call json-serialize nil))
+  (should-equal "{\"a\":{},\"b\":{}}" (compat-call json-serialize '(:a nil :b nil)))
+  (should-equal "{\"a\":{},\"b\":{}}" (compat-call json-serialize '((a) (b))))
+  (should-equal "{\"a\":1,\"b\":2}" (compat-call json-serialize '(:a 1 :b 2)))
+  (should-equal "{\"one\":1,\"two\":2,\"three\":3}" (compat-call json-serialize '(:one 1 two 2 three 3)))
+  (should-equal "{\"one\":1,\"two\":2}" (compat-call json-serialize '((one . 1) (two . 2))))
+  (should-equal "[true,false,null]" (compat-call json-serialize [t :false :null]))
+  (should-equal "[true,false,null]" (compat-call json-serialize [t f n] :null-object 'n :false-object 'f))
+  (should-equal "[true,false,null]" (compat-call json-serialize [t f nil] :null-object nil :false-object 'f))
+  (should-equal "[true,false,null]" (compat-call json-serialize [t nil n] :null-object 'n :false-object nil))
+  (should-equal "1" (compat-call json-serialize 1))
+  (should-equal "\"foo\"" (compat-call json-serialize "foo"))
+  (should-equal "[1,2,3]" (compat-call json-serialize [1 2 3]))
+  (should-equal "{\"key\":[\"abc\",2],\"yek\":true}"
+                (compat-call json-serialize '(:key ["abc" 2] yek t)))
+  (should-equal "{\":key\":[\"abc\",2],\"yek\":true}"
+                (compat-call json-serialize '((:key . ["abc" 2]) (yek . t))))
+  (should-equal "{\"key\":[\"abc\",2],\"yek\":true}"
+                (compat-call json-serialize (let ((ht (make-hash-table)))
+                                              (puthash "key" ["abc" 2] ht)
+                                              (puthash "yek" t ht)
+                                              ht))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
