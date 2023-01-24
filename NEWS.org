@@ -3,8 +3,6 @@
 * Development
 
 - compat-27: Add ~file-name-unquote~.
-- compat-28: Add libjansson compatibility functions ~json-parse-string~,
-  ~json-parse-buffer~, ~json-serialize~ and ~json-insert~.
 - compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
   KEEP-NEWLINES argument.
 

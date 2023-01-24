@@ -2028,73 +2028,6 @@ If native compilation is not available, this function always returns
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 28.1:
 
-@c copied from lispref/text.texi
-@defun compat-call@ json-serialize object &rest args
-This function returns a new Lisp string which contains the JSON
-representation of @var{object}.  The argument @var{args} is a list of
-keyword/argument pairs.  The following keywords are accepted:
-
-@table @code
-@item :null-object
-The value decides which Lisp object to use to represent the JSON
-keyword @code{null}.  It defaults to the symbol @code{:null}.
-
-@item :false-object
-The value decides which Lisp object to use to represent the JSON
-keyword @code{false}.  It defaults to the symbol @code{:false}.
-@end table
-
-@end defun
-
-@c copied from lispref/text.texi
-@defun compat-call@ json-insert object &rest args
-This function inserts the JSON representation of @var{object} into the
-current buffer before point.  The argument @var{args} are interpreted
-as in @code{json-parse-string}.
-@end defun
-
-@c copied from lispref/text.texi
-@defun compat-call@ json-parse-string string &rest args
-This function parses the JSON value in @var{string}, which must be a
-Lisp string.  If @var{string} doesn't contain a valid JSON object,
-this function signals the @code{json-parse-error} error.
-
-The argument @var{args} is a list of keyword/argument pairs.  The
-following keywords are accepted:
-
-@table @code
-@item :object-type
-The value decides which Lisp object to use for representing the
-key-value mappings of a JSON object.  It can be either
-@code{hash-table}, the default, to make hashtables with strings as
-keys; @code{alist} to use alists with symbols as keys; or @code{plist}
-to use plists with keyword symbols as keys.
-
-@item :array-type
-The value decides which Lisp object to use for representing a JSON
-array.  It can be either @code{array}, the default, to use Lisp
-arrays; or @code{list} to use lists.
-
-@item :null-object
-The value decides which Lisp object to use to represent the JSON
-keyword @code{null}.  It defaults to the symbol @code{:null}.
-
-@item :false-object
-The value decides which Lisp object to use to represent the JSON
-keyword @code{false}.  It defaults to the symbol @code{:false}.
-@end table
-
-@end defun
-
-@c copied from lispref/text.texi
-@defun compat-call@ json-parse-buffer &rest args
-This function reads the next JSON value from the current buffer,
-starting at point.  It moves point to the position immediately after
-the value if contains a valid JSON object; otherwise it signals the
-@code{json-parse-error} error and doesn't move point.  The arguments
-@var{args} are interpreted as in @code{json-parse-string}.
-@end defun
-
 @defun compat-call@ string-width string &optional from to
 This function returns the width in columns of the string @var{string},
 if it were displayed in the current buffer and the selected window.
@@ -2157,7 +2090,7 @@ Support for the @code{natnum} defcustom type.
 @item
 Additional Edebug keywords.
 @item
-The function @code{json-available-p}.
+The libjansson JSON APIs, e.g., @code{json-parse-string}.
 @item
 The macro @code{pcase-setq}.
 @item
