@@ -89,10 +89,14 @@ See also `compat-function' to lookup compatibility functions."
   (defvar json-object-type)
   (defvar json-key-type)
   (declare-function json-read nil)
-
   (declare-function compat--json--print nil)
+
   (unless (eval-when-compile (ignore-errors (eval '(json-parse-string "[]") t)))
     (defun compat--json--print (obj)
+      "Print OBJ to the current-buffer/standard-output.
+We provide our entire reimplementation of `json--print' and
+`json-encode', since the error checking and the format of
+libjansson and json.el differ too much."
       (cond
        ((numberp obj) (prin1 obj))
        ((eq obj t) (insert "true"))
