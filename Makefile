@@ -17,7 +17,7 @@ all: compile
 
 compile: $(BYTEC)
 
-test: compile
+test:
 	$(EMACS) --version
 	$(EMACS) -Q --batch -L . -l compat-tests.el -f ert-run-tests-batch-and-exit
 

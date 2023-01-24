@@ -38,11 +38,13 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
+    - name: Run interpreted tests
+      run: make test
     - name: Compile
       run: |
         sed -i "s/ no-byte-compile: t;//" compat-macs.el compat-tests.el
         make compile
-    - name: Run tests
+    - name: Run compiled tests
       run: make test
     - name: Make info
       run: make compat.info

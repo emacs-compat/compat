@@ -30,14 +30,14 @@
 (defvar compat-macs--version nil
   "Version of the currently defined compatibility definitions.")
 
-(defmacro compat-macs--strict (cond &rest error)
+(defun compat-macs--strict (cond &rest error)
   "Assert strict COND, otherwise fail with ERROR."
   (when (bound-and-true-p compat-strict)
-    `(compat-macs--assert ,cond ,@error)))
+    (apply #'compat-macs--assert cond error)))
 
-(defmacro compat-macs--assert (cond &rest error)
+(defun compat-macs--assert (cond &rest error)
   "Assert COND, otherwise fail with ERROR."
-  `(unless ,cond (error ,@error)))
+  (unless cond (apply #'error error)))
 
 (defun compat-macs--docstring (type name docstring)
   "Format DOCSTRING for NAME of TYPE.
@@ -102,7 +102,7 @@ REST are attributes and the function BODY."
          "Invalid :extended version %s for %s %s" extended type name)
         (setq extended (version<= extended emacs-version)))
       (compat-macs--strict (eq extended (fboundp name))
-                      "Wrong :extended flag for %s %s" type name)
+                           "Wrong :extended flag for %s %s" type name)
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
@@ -247,10 +247,11 @@ definition is generated.
 
 (defmacro compat-declare-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
-  (setq compat-macs--version version)
-  (let ((before (1- (car (version-to-list version)))))
-    (when (and (< 24 before) (< emacs-major-version before))
-      `(require ',(intern (format "compat-%d" before))))))
+  (prog1
+      (let ((before (1- (car (version-to-list version)))))
+        (when (and (< 24 before) (< emacs-major-version before))
+          `(require ',(require (intern (format "compat-%d" before))))))
+    (setq compat-macs--version version)))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here

@@ -412,9 +412,9 @@ the minibuffer was activated, and execute the forms."
 ;; override the gv expander until Emacs 27.1.
 (compat-guard (or (= emacs-major-version 26) (not (get 'image-property 'gv-expander)))
   :feature image
-  (if (eval-when-compile (< emacs-major-version 26))
-      (gv-define-simple-setter image-property image--set-property) ;; <compat-tests:image-property>
-    (gv-define-simple-setter image-property compat--image--set-property)))
+  (gv-define-setter image-property (value image prop) ;; <compat-tests:image-property>
+    `(,(if (< emacs-major-version 26) 'image--set-property 'compat--image--set-property)
+      ,image ,prop ,value)))
 
 ;;;; Defined in files.el
 
