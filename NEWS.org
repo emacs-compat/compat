@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.3.1
 
 - Fix regression, which prevented from Compat loaded in interpreted mode. We
   ensure that Compat works interpreted and byte compiled by running the entire
@@ -9,6 +9,8 @@
 - compat-28: Add ~mark-thing-at-mouse~.
 - compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
   KEEP-NEWLINES argument.
+
+(Release <2023-01-25 Wed>)
 
 * Release of "Compat" Version 29.1.3.0
 
