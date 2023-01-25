@@ -2,6 +2,9 @@
 
 * Development
 
+- Fix regression, which prevented from Compat loaded in interpreted mode. We
+  ensure that Compat works interpreted and byte compiled by running the entire
+  test suite twice in the CI.
 - compat-27: Add ~file-name-unquote~.
 - compat-28: Add ~mark-thing-at-mouse~.
 - compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
