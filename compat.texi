@@ -1923,6 +1923,11 @@ the position in @var{event} where the mouse button is clicked to find
 the thing nearby.
 @end defun
 
+@c based on lisp/mouse.el
+@defun mark-thing-at-mouse click thing
+Activate the region around @var{thing} found near the mouse @var{click}.
+@end defun
+
 @c based on lisp/emacs-lisp/macroexp.el
 @defun macroexp-file-name
 Return the name of the file in which the code is currently being

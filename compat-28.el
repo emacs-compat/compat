@@ -710,6 +710,17 @@ where the mouse button is clicked to find the thing nearby."
     (mouse-set-point event)
     (bounds-of-thing-at-point thing)))
 
+;;;; Defined in mouse.el
+
+(compat-defun mark-thing-at-mouse (click thing) ;; <compat-tests:thing-at-mouse>
+  "Activate the region around THING found near the mouse CLICK."
+  (when-let ((bounds (bounds-of-thing-at-mouse click thing)))
+    (goto-char (if mouse-select-region-move-to-beginning
+                   (car bounds) (cdr bounds)))
+    (push-mark (if mouse-select-region-move-to-beginning
+                   (cdr bounds) (car bounds))
+               t 'activate)))
+
 ;;;; Defined in macroexp.el
 
 (compat-defun macroexp-warn-and-return (msg form &optional _category _compile-only _arg) ;; <compat-tests:macroexp-warn-and-return>

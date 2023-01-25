@@ -490,6 +490,13 @@ inode-number and device-number."
           (error "Wrong attribute name '%S'" attr))))
     (nreverse result)))
 
+;;;; Defined in mouse.el
+
+(compat-defvar mouse-select-region-move-to-beginning nil ;; <compat-tests:thing-at-mouse>
+  "Effect of selecting a region extending backward from double click.
+Nil means keep point at the position clicked (region end);
+non-nil means move point to beginning of region.")
+
 ;;;; Defined in image.el
 
 (compat-defun image-property (image property) ;; <compat-tests:image-property>
