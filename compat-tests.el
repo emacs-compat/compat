@@ -95,6 +95,8 @@
 
 (defconst compat-tests--version (package-get-version))
 (ert-deftest package-get-version ()
+  (skip-unless (string-match-p "\\`compat\\(-.+\\)?\\'"
+                               (file-name-nondirectory (directory-file-name default-directory))))
   (should (stringp compat-tests--version))
   (should-equal 29 (car (version-to-list compat-tests--version))))
 
