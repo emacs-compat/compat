@@ -56,6 +56,7 @@
 (require 'time-date)
 (require 'image)
 (require 'text-property-search nil t)
+(require 'find-func)
 
 ;; Setup tramp mock
 (require 'tramp)
@@ -93,7 +94,13 @@
     (setq list (funcall sym list "first" 1 #'string=))
     (should-equal (compat-call plist-get list "first" #'string=) 1)))
 
-(defconst compat-tests--version (package-get-version))
+(defconst compat-tests--version (let ((mainfile (find-library-name "compat.el")))
+				  (when (file-readable-p mainfile)
+				    (require 'lisp-mnt)
+				    (with-temp-buffer
+				      (insert-file-contents mainfile)
+				      (or (lm-header "package-version")
+					  (lm-header "version"))))))
 (ert-deftest package-get-version ()
   (should (stringp compat-tests--version))
   (should-equal 29 (car (version-to-list compat-tests--version))))
