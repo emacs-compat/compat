@@ -393,6 +393,25 @@ the minibuffer was activated, and execute the forms."
      (with-selected-window window
        ,@body)))
 
+;;;; Defined in faces.el
+
+(compat-defun set-face-extend (face extend-p &optional frame)
+  "Specify whether face FACE should be extended.
+EXTEND-P nil means FACE explicitly doesn't extend after EOL.
+EXTEND-P t means FACE extends after EOL.
+
+FRAME nil or not specified means change face on all frames.
+Use `set-face-attribute' to \"unspecify\" underlining."
+  (ignore face extend-p frame))
+
+(compat-defun face-extend-p (face &optional frame inherit)
+ "Return non-nil if FACE specifies a non-nil extend.
+If the optional argument FRAME is given, report on face FACE in that frame.
+If FRAME is t, report on the defaults for face FACE (for new frames).
+If FRAME is omitted or nil, use the selected frame.
+Optional argument INHERIT is passed to `face-attribute'."
+ (ignore face frame inherit))
+
 ;;;; Defined in image.el
 
 (compat-defun image--set-property (image property value) ;; <compat-tests:image-property>
