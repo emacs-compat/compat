@@ -39,7 +39,7 @@ also provide a [development mailing list].
 
 Contribute
 ----------
-As compat.el is distribed as part of [GNU ELPA], and therefore requires a
+As compat.el is distributed as part of [GNU ELPA], and therefore requires a
 [copyright assignment] to the [FSF], for all non-trivial code contributions.
 
 [GNU ELPA]:
