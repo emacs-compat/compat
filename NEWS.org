@@ -240,9 +240,4 @@ as some of these changes a functional.  These include:
 - Handling out-of-directory byte compilation better.
 - Fixing the usage and edge-cases of =and-let*=.
 
-Furthermore a bug tracker was added: https://todo.sr.ht/~pkal/compat,
-which is the preferred way to report issues or feature requests.
-General problems, questions, etc. are still better discussed on the
-development mailing list: https://lists.sr.ht/~pkal/compat-devel.
-
 (Released <2022-04-22 Fri>)
