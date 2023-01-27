@@ -158,7 +158,8 @@
      '(3 2 1)))
   (let (y)
     (should-equal
-     (dolist-with-progress-reporter (x '(1 2 3) y) (make-progress-reporter "Reporter")
+     (dolist-with-progress-reporter
+         (x '(1 2 3) y) (make-progress-reporter "Reporter")
        (push x y))
      '(3 2 1))))
 
@@ -174,7 +175,8 @@
              (message "%S" minibuffer-history-variable)
              (throw 'compat-tests--exit (minibuffer-history-value)))
          (let ((executing-kbd-macro t))
-           (completing-read "Prompt: " #'completion-file-name-table nil nil nil 'file-name-history))))
+           (completing-read "Prompt: " #'completion-file-name-table
+                            nil nil nil 'file-name-history))))
      '("x" "y" "z"))))
 
 (ert-deftest with-minibuffer-selected-window ()
@@ -276,7 +278,8 @@
   (should-equal (length (make-separator-line 10)) 11)
   (should (string-suffix-p "\n" (make-separator-line 10)))
   (should (string-suffix-p "\n" (make-separator-line)))
-  (should-equal (replace-regexp-in-string "[^\n]" "" (make-separator-line)) "\n"))
+  (should-equal (replace-regexp-in-string
+                 "[^\n]" "" (make-separator-line)) "\n"))
 
 (ert-deftest pos-bol ()
   (with-temp-buffer
@@ -367,7 +370,8 @@
             (fset #'read-char (lambda (&rest _) (car choice)))
             (fset #'read-event (lambda (&rest _) (car choice)))
             (setq completing-read-function (lambda (&rest _) (cadr choice)))
-            (should-equal choice (compat-call read-multiple-choice (car test) (cdr test) nil nil 'long))
+            (should-equal choice (compat-call read-multiple-choice
+                                              (car test) (cdr test) nil nil 'long))
             (should-equal choice (read-multiple-choice (car test) (cdr test)))))
       (fset #'read-event orig-re)
       (fset #'read-char orig-rc)
@@ -378,7 +382,8 @@
     (unwind-protect
         (progn
           (fset #'read-from-minibuffer (lambda (&rest _) "a"))
-          (should-equal ?a (read-char-from-minibuffer "Prompt: " '(?a ?b ?c) 'read-char-history))
+          (should-equal ?a (read-char-from-minibuffer
+                            "Prompt: " '(?a ?b ?c) 'read-char-history))
           (should-equal ?a (read-char-from-minibuffer "Prompt: " '(?a ?b ?c)))
           (should-equal ?a (read-char-from-minibuffer "Prompt: ")))
       (fset #'read-from-minibuffer orig))))
@@ -948,7 +953,10 @@
 (defvar compat-tests--local-b nil)
 (defvar compat-tests--local-c nil)
 (ert-deftest setq-local ()
-  (compat-call setq-local compat-tests--local-a 1 compat-tests--local-b 2 compat-tests--local-c 3)
+  (compat-call setq-local
+               compat-tests--local-a 1
+               compat-tests--local-b 2
+               compat-tests--local-c 3)
   (should-equal compat-tests--local-a 1)
   (should-equal compat-tests--local-b 2)
   (should-equal compat-tests--local-c 3))
@@ -2742,7 +2750,8 @@
 
 (ert-deftest get-scratch-buffer-create ()
   (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))
-  (should-equal initial-major-mode (buffer-local-value 'major-mode (get-scratch-buffer-create))))
+  (should-equal initial-major-mode
+                (buffer-local-value 'major-mode (get-scratch-buffer-create))))
 
 (ert-deftest ring-resize ()
   (let ((ring (make-ring 3)))
@@ -2851,7 +2860,8 @@
 (ert-deftest with-delayed-message ()
   ;; No real test, since the backported function never displays a message.
   (should-equal 'result (with-delayed-message (1 "timeout") 'result))
-  (should-equal 'result (funcall-with-delayed-message 1 "timeout" (lambda () 'result))))
+  (should-equal 'result (funcall-with-delayed-message
+                         1 "timeout" (lambda () 'result))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
