@@ -1,12 +1,12 @@
 COMPATibility Library for Emacs
 ===============================
-Find here the source for compat.el, a forwards-compatibility library for (GNU)
+This is the source of compat.el, the forwards-compatibility library for (GNU)
 Emacs Lisp, versions 24.4 and newer. The intended audience are package
 developers that are interested in using newer developments, without having to
 break compatibility.
 
 For information on how to use Compat, please consult the [manual]. The latest
-state of development can be found in the [snapshot version].
+state of development can be found in the [snapshot version] of the manual.
 
 [manual]:
     https://elpa.gnu.org/packages/doc/compat.html
@@ -17,13 +17,15 @@ state of development can be found in the [snapshot version].
 Source code
 -----------
 Compat is developed on [GitHub]. The code is mirrored to the [GNU ELPA
-repository].
+repository], which is the canonical repository for the [GNU ELPA package
+builds].
 
 [GitHub]:
     https://github.com/emacs-compat/compat
 [GNU ELPA repository]:
     https://git.savannah.gnu.org/cgit/emacs/elpa.git/tree/?h=externals/compat
-
+[GNU ELPA package builds]:
+    http://elpa.gnu.org/packages/compat.html
 
 Bug and patches
 ---------------
