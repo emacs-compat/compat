@@ -2036,7 +2036,7 @@
   (should-equal 2 (string-search "a\U00010f98z" "a\U00010f98a\U00010f98z"))
   (should-error (string-search "a" "abc" -1) :type '(args-out-of-range -1))
   (should-error (string-search "a" "abc" 4) :type '(args-out-of-range 4))
-  (should-error (string-search "a" "abc" 100000000000) :type '(args-out-of-range 100000000000))
+  (should-error (string-search "a" "abc" most-positive-fixnum) :type '(args-out-of-range most-positive-fixnum))
   (should-not (string-search "a" "aaa" 3))
   (should-not (string-search "aa" "aa" 1))
   (should-not (string-search "\0" ""))
