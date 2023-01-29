@@ -383,6 +383,16 @@ the variable `temporary-file-directory' is returned."
               default-directory
             temporary-file-directory)))))
 
+(compat-defun make-temp-file (prefix &optional dir-flag suffix text) ;; <compat-tests:make-temp-file>
+  "Handle optional argument TEXT."
+  :extended t
+  (let ((file (make-temp-file prefix dir-flag suffix)))
+    (when text
+      (with-temp-buffer
+        (insert text)
+        (write-region (point-min) (point-max) file)))
+    file))
+
 (compat-defun make-nearby-temp-file (prefix &optional dir-flag suffix) ;; <compat-tests:make-nearby-temp-file>
   "Create a temporary file as close as possible to `default-directory'.
 If PREFIX is a relative file name, and `default-directory' is a

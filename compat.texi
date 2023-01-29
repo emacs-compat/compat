@@ -893,6 +893,48 @@ size, modes, inode-number and device-number.
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 26.1:
 
+@c copied from lispref/files.texi
+@defun compat-call make-temp-file prefix &optional dir-flag suffix text
+This function creates a temporary file and returns its name.  Emacs
+creates the temporary file's name by adding to @var{prefix} some
+random characters that are different in each Emacs job.  The result is
+guaranteed to be a newly created file, containing @var{text} if that's
+given as a string and empty otherwise. On MS-DOS, this function can
+truncate @var{prefix} to fit into the 8+3 file-name limits.  If
+@var{prefix} is a relative file name, it is expanded against
+@code{temporary-file-directory}.
+
+The compatibility version adds support for handling the optional
+argument @var{TEXT}.
+
+@example
+@group
+(make-temp-file "foo")
+     @result{} "/tmp/foo232J6v"
+@end group
+@end example
+
+When @code{make-temp-file} returns, the file has been created and is
+empty.  At that point, you should write the intended contents into the
+file.
+
+If @var{dir-flag} is non-@code{nil}, @code{make-temp-file} creates an
+empty directory instead of an empty file.  It returns the file name,
+not the directory name, of that directory.  @xref{Directory Names,,,elisp}.
+
+If @var{suffix} is non-@code{nil}, @code{make-temp-file} adds it at
+the end of the file name.
+
+If @var{text} is a string, @code{make-temp-file} inserts it in the file.
+
+To prevent conflicts among different libraries running in the same
+Emacs, each Lisp program that uses @code{make-temp-file} should have its
+own @var{prefix}.  The number added to the end of @var{prefix}
+distinguishes between the same application running in different Emacs
+jobs.  Additional added characters permit a large number of distinct
+names even in one Emacs job.
+@end defun
+
 @defun compat-call@ assoc key alist &optional testfn
 This function returns the first association for @var{key} in
 @var{alist}, comparing @var{key} against the alist elements using
@@ -2842,6 +2884,28 @@ Like @code{when-let}, but repeat until a binding in @var{spec} is
 @code{nil}.  The return value is always @code{nil}.
 
 This is comparable to @code{and-let*}.
+@end defmac
+
+@c based on lisp/emacs-lisp/ert-x.el
+@defmac ert-with-temp-file name &rest body
+Bind @var{name} to the name of a new temporary file and evaluate
+@var{body}.  Delete the temporary file after @var{body} exits normally
+or non-locally.  @var{name} will be bound to the file name of the
+temporary file. See the docstring for supported keyword arguments.
+@end defmac
+
+@c based on lisp/emacs-lisp/ert-x.el
+@defmac ert-with-temp-directory name &rest body
+Bind @var{name} to the name of a new temporary directory and evaluate
+@var{body}.  Delete the temporary directory after @var{body} exits
+normally or non-locally.
+
+@var{name} is bound to the directory name, not the directory file
+name.  (In other words, it will end with the directory delimiter; on
+Unix-like systems, it will end with "/".)
+
+The same keyword arguments are supported as in
+@code{ert-with-temp-file} (which see), except for @code{:text}.
 @end defmac
 
 @subsection Extended Definitions

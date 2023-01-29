@@ -1281,5 +1281,110 @@ Also see `buttonize'."
           (setq sentences (1- sentences)))
         sentences))))
 
+;;;; Defined in ert-x.el
+
+(compat-defmacro ert-with-temp-file (name &rest body) ;; <compat-tests:ert-with-temp-file>
+  "Bind NAME to the name of a new temporary file and evaluate BODY.
+Delete the temporary file after BODY exits normally or
+non-locally.  NAME will be bound to the file name of the temporary
+file.
+
+The following keyword arguments are supported:
+
+:prefix STRING  If non-nil, pass STRING to `make-temp-file' as
+                the PREFIX argument.  Otherwise, use the value of
+                `ert-temp-file-prefix'.
+
+:suffix STRING  If non-nil, pass STRING to `make-temp-file' as the
+                SUFFIX argument.  Otherwise, use the value of
+                `ert-temp-file-suffix'; if the value of that
+                variable is nil, generate a suffix based on the
+                name of the file that `ert-with-temp-file' is
+                called from.
+
+:text STRING    If non-nil, pass STRING to `make-temp-file' as
+                the TEXT argument.
+
+:buffer SYMBOL  Open the temporary file using `find-file-noselect'
+                and bind SYMBOL to the buffer.  Kill the buffer
+                after BODY exits normally or non-locally.
+
+:coding CODING  If non-nil, bind `coding-system-for-write' to CODING
+                when executing BODY.  This is handy when STRING includes
+                non-ASCII characters or the temporary file must have a
+                specific encoding or end-of-line format.
+
+See also `ert-with-temp-directory'."
+  :feature ert-x
+  (declare (indent 1) (debug (symbolp body)))
+  (cl-check-type name symbol)
+  (let (keyw prefix suffix directory text extra-keywords buffer coding)
+    (while (keywordp (setq keyw (car body)))
+      (setq body (cdr body))
+      (pcase keyw
+        (:prefix (setq prefix (pop body)))
+        (:suffix (setq suffix (pop body)))
+        ;; This is only for internal use by `ert-with-temp-directory'
+        ;; and is therefore not documented.
+        (:directory (setq directory (pop body)))
+        (:text (setq text (pop body)))
+        (:buffer (setq buffer (pop body)))
+        (:coding (setq coding (pop body)))
+        (_ (push keyw extra-keywords) (pop body))))
+    (when extra-keywords
+      (error "Invalid keywords: %s" (mapconcat #'symbol-name extra-keywords " ")))
+    (let ((temp-file (make-symbol "temp-file"))
+          (prefix (or prefix "emacs-test-"))
+          (suffix (or suffix
+                      (thread-last
+                        (file-name-base (or (macroexp-file-name) buffer-file-name))
+                        (replace-regexp-in-string (rx string-start
+                                                      (group (+? not-newline))
+                                                      (regexp "-?tests?")
+                                                      string-end)
+                                                  "\\1")
+                        (concat "-")))))
+      `(let* ((coding-system-for-write ,(or coding coding-system-for-write))
+              (,temp-file (,(if directory 'file-name-as-directory 'identity)
+                           (,(if (< emacs-major-version 26) 'compat--make-temp-file 'make-temp-file)
+                            ,prefix ,directory ,suffix ,text)))
+              (,name ,(if directory
+                          `(file-name-as-directory ,temp-file)
+                        temp-file))
+              ,@(when buffer
+                  (list `(,buffer (find-file-literally ,temp-file)))))
+         (unwind-protect
+             (progn ,@body)
+           (ignore-errors
+             ,@(when buffer
+                 (list `(with-current-buffer ,buffer
+                          (set-buffer-modified-p nil))
+                       `(kill-buffer ,buffer))))
+           (ignore-errors
+             ,(if directory
+                  `(delete-directory ,temp-file :recursive)
+                `(delete-file ,temp-file))))))))
+
+(compat-defmacro ert-with-temp-directory (name &rest body) ;; <compat-tests:ert-with-temp-directory>
+  "Bind NAME to the name of a new temporary directory and evaluate BODY.
+Delete the temporary directory after BODY exits normally or
+non-locally.
+
+NAME is bound to the directory name, not the directory file
+name.  (In other words, it will end with the directory delimiter;
+on Unix-like systems, it will end with \"/\".)
+
+The same keyword arguments are supported as in
+`ert-with-temp-file' (which see), except for :text."
+  :feature ert-x
+  (declare (indent 1) (debug (symbolp body)))
+  (let ((tail body) keyw)
+    (while (keywordp (setq keyw (car tail)))
+      (setq tail (cddr tail))
+      (pcase keyw (:text (error "Invalid keyword for directory: :text")))))
+  `(ert-with-temp-file ,name
+     :directory t
+     ,@body))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here

@@ -50,8 +50,8 @@
 
 ;;; Code:
 
-(require 'ert)
 (require 'compat)
+(require 'ert-x)
 (require 'subr-x)
 (require 'time-date)
 (require 'image)
@@ -1376,34 +1376,48 @@
   (should-equal t (always 1 2 3 4)))             ;; multiple arguments
 
 (ert-deftest file-backup-file-names ()
-  (let ((file (make-temp-file "compat-tests")) backups)
-    (should-not (file-backup-file-names file))
-    (push (concat file "~") backups)
-    (make-empty-file (car backups))
-    (should-equal backups (file-backup-file-names file))
-    (push (concat file ".~1~") backups)
-    (make-empty-file (car backups))
-    (should-equal backups (sort (file-backup-file-names file) #'string<))))
+  (ert-with-temp-directory dir
+    (let ((file (file-name-concat dir "file")) backups)
+      (make-empty-file file)
+      (should (file-exists-p file))
+      (should-not (file-backup-file-names file))
+      (push (concat file "~") backups)
+      (make-empty-file (car backups))
+      (should-equal backups (file-backup-file-names file))
+      (push (concat file ".~1~") backups)
+      (make-empty-file (car backups))
+      (should-equal backups (sort (file-backup-file-names file) #'string<)))))
+
+(ert-deftest make-temp-file ()
+  (let ((file (compat-call make-temp-file "compat-tests" nil nil "test-content")))
+    (unwind-protect
+        (with-temp-buffer
+          (insert-file-contents file)
+          (should-equal "test-content" (buffer-string)))
+      (delete-file file))))
 
 (ert-deftest make-nearby-temp-file ()
   (let ((file1 (make-nearby-temp-file "compat-tests"))
         (file2 (make-nearby-temp-file "compat-tests" nil "suffix"))
         (dir (make-nearby-temp-file "compat-tests" t)))
-    (should (string-suffix-p "suffix" file2))
-    (should (file-regular-p file1))
-    (should (file-regular-p file2))
-    (should (file-directory-p dir))
-    (should-equal (file-name-directory file1) temporary-file-directory)
-    (should-equal (file-name-directory file2) temporary-file-directory)
-    (should-equal (file-name-directory dir) temporary-file-directory)
-    (delete-file file1)
-    (delete-file file2)
-    (delete-directory dir))
-  ;; Tramp test (mock protocol)
-  (let* ((default-directory "/mock::/")
-         (file (make-nearby-temp-file "compat-tests")))
-    (should (string-match-p "\\`/mock:.*:/tmp/compat-tests" file))
-    (delete-file file)))
+    (unwind-protect
+        (progn
+          (should (string-suffix-p "suffix" file2))
+          (should (file-regular-p file1))
+          (should (file-regular-p file2))
+          (should (file-directory-p dir))
+          (should-equal (file-name-directory file1) temporary-file-directory)
+          (should-equal (file-name-directory file2) temporary-file-directory)
+          (should-equal (file-name-directory dir) temporary-file-directory))
+      (delete-file file1)
+      (delete-file file2)
+      (delete-directory dir))
+    ;; Tramp test (mock protocol)
+    (let* ((default-directory "/mock::/")
+           (file (make-nearby-temp-file "compat-tests")))
+      (unwind-protect
+          (should (string-match-p "\\`/mock:.*:/tmp/compat-tests" file))
+        (delete-file file)))))
 
 (ert-deftest executable-find ()
   (should (member (executable-find "sh") '("/usr/bin/sh" "/bin/sh")))
@@ -1462,21 +1476,20 @@
   (should-not (directory-name-p "dir/subdir")))
 
 (ert-deftest directory-empty-p ()
-  (let ((name (make-temp-name "/tmp/compat-tests")))
-    (make-directory name)
-    (should (directory-empty-p name))
-    (make-empty-file (file-name-concat name "file"))
-    (should-not (directory-empty-p name))
-    (delete-file (file-name-concat name "file"))
-    (delete-directory name)))
+  (ert-with-temp-directory dir
+    (should (directory-empty-p dir))
+    (make-empty-file (file-name-concat dir "file"))
+    (should-not (directory-empty-p dir))
+    (delete-file (file-name-concat dir "file"))
+    (should (directory-empty-p dir))))
 
 (ert-deftest make-empty-file ()
-  (let ((name (make-temp-name "/tmp/compat-tests")))
-    (should-not (file-exists-p name))
-    (make-empty-file name)
-    (should-equal 0 (file-attribute-size (file-attributes name)))
-    (should (file-exists-p name))
-    (delete-file name)))
+  (ert-with-temp-directory dir
+    (let ((file (file-name-concat dir "file")))
+      (should-not (file-exists-p file))
+      (make-empty-file file)
+      (should (file-exists-p file))
+      (should-equal 0 (file-attribute-size (file-attributes file))))))
 
 (ert-deftest mounted-file-systems ()
   (should-not (string-match-p mounted-file-systems "/etc/"))
@@ -1500,26 +1513,25 @@
   (should-equal (expand-file-name "bar/.#foo") (make-lock-file-name "bar/foo")))
 
 (ert-deftest file-has-changed-p ()
-  (let ((name (make-temp-file "/tmp/compat-tests")))
-    (should (file-has-changed-p name))
-    (should-not (file-has-changed-p name))
-    (should-not (file-has-changed-p name))
-    (should (file-has-changed-p name 'tag1))
-    (should-not (file-has-changed-p name 'tag1))
-    (should-not (file-has-changed-p name 'tag1))
+  (ert-with-temp-file file
+    (should (file-has-changed-p file))
+    (should-not (file-has-changed-p file))
+    (should-not (file-has-changed-p file))
+    (should (file-has-changed-p file 'tag1))
+    (should-not (file-has-changed-p file 'tag1))
+    (should-not (file-has-changed-p file 'tag1))
     (with-temp-buffer
       (insert "changed")
-      (write-region (point-min) (point-max) name))
-    (should (file-has-changed-p name))
-    (should-not (file-has-changed-p name))
-    (should-not (file-has-changed-p name))
-    (should (file-has-changed-p name 'tag1))
-    (should-not (file-has-changed-p name 'tag1))
-    (should-not (file-has-changed-p name 'tag1))
-    (should (file-has-changed-p name 'tag2))
-    (should-not (file-has-changed-p name 'tag2))
-    (should-not (file-has-changed-p name 'tag2))
-    (delete-file name)))
+      (write-region (point-min) (point-max) file))
+    (should (file-has-changed-p file))
+    (should-not (file-has-changed-p file))
+    (should-not (file-has-changed-p file))
+    (should (file-has-changed-p file 'tag1))
+    (should-not (file-has-changed-p file 'tag1))
+    (should-not (file-has-changed-p file 'tag1))
+    (should (file-has-changed-p file 'tag2))
+    (should-not (file-has-changed-p file 'tag2))
+    (should-not (file-has-changed-p file 'tag2))))
 
 (ert-deftest file-attribute-getters ()
   (let ((attrs '(type link-number user-id group-id access-time modification-time
@@ -2862,6 +2874,26 @@
   (should-equal 'result (with-delayed-message (1 "timeout") 'result))
   (should-equal 'result (funcall-with-delayed-message
                          1 "timeout" (lambda () 'result))))
+
+(ert-deftest ert-with-temp-file ()
+  (ert-with-temp-file file
+    (should-not (directory-name-p file))
+    (should (file-readable-p file))
+    (should (file-writable-p file)))
+  (ert-with-temp-file dir :directory t
+    (should (directory-name-p dir))
+    (should (file-directory-p dir)))
+  (ert-with-temp-file file :buffer buffer
+    (should (equal (current-buffer) buffer))
+    (should-equal buffer-file-name file)
+    (should-not (directory-name-p file))
+    (should (file-readable-p file))
+    (should (file-writable-p file))))
+
+(ert-deftest ert-with-temp-directory ()
+  (ert-with-temp-directory dir
+    (should (directory-name-p dir))
+    (should (file-directory-p dir))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
