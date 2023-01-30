@@ -416,6 +416,63 @@ CONDITION."
         (push buf bufs)))
     bufs))
 
+(compat-defvar set-transient-map-timeout nil ;; <compat-tests:set-transient-map>
+  "Timeout in seconds for deactivation of a transient keymap.
+If this is a number, it specifies the amount of idle time
+after which to deactivate the keymap set by `set-transient-map',
+thus overriding the value of the TIMEOUT argument to that function.")
+
+(compat-defvar set-transient-map-timer nil ;; <compat-tests:set-transient-map>
+  "Timer for `set-transient-map-timeout'.")
+
+(autoload 'format-spec "format-spec")
+(compat-defun set-transient-map (map &optional keep-pred on-exit message timeout) ;; <compat-tests:set-transient-map>
+  "Handle the optional arguments MESSAGE and TIMEOUT."
+  :extended t
+  (let* ((timeout (or set-transient-map-timeout timeout))
+         (message
+          (when message
+            (let (keys)
+              (map-keymap (lambda (key cmd) (and cmd (push key keys))) map)
+              (format-spec (if (stringp message) message "Repeat with %k")
+                           `((?k . ,(mapconcat
+                                     (lambda (key)
+                                       (substitute-command-keys
+                                        (format "\\`%s'"
+                                                (key-description (vector key)))))
+                                     keys ", ")))))))
+         (clearfun (make-symbol "clear-transient-map"))
+         (exitfun
+          (lambda ()
+            (internal-pop-keymap map 'overriding-terminal-local-map)
+            (remove-hook 'pre-command-hook clearfun)
+            (when message (message ""))
+            (when set-transient-map-timer (cancel-timer set-transient-map-timer))
+            (when on-exit (funcall on-exit)))))
+    (fset clearfun
+          (lambda ()
+            (with-demoted-errors "set-transient-map PCH: %S"
+              (if (cond
+                       ((null keep-pred) nil)
+                       ((and (not (eq map (cadr overriding-terminal-local-map)))
+                             (memq map (cddr overriding-terminal-local-map)))
+                        t)
+                       ((eq t keep-pred)
+                        (let ((mc (lookup-key map (this-command-keys-vector))))
+                          (when (and mc (symbolp mc))
+                            (setq mc (or (command-remapping mc) mc)))
+                          (and mc (eq this-command mc))))
+                       (t (funcall keep-pred)))
+                  (when message (message "%s" message))
+                (funcall exitfun)))))
+    (add-hook 'pre-command-hook clearfun)
+    (internal-push-keymap map 'overriding-terminal-local-map)
+    (when timeout
+      (when set-transient-map-timer (cancel-timer set-transient-map-timer))
+      (setq set-transient-map-timer (run-with-idle-timer timeout nil exitfun)))
+    (when message (message "%s" message))
+    exitfun))
+
 ;;;; Defined in simple.el
 
 (compat-defun use-region-noncontiguous-p () ;; <compat-tests:region-noncontiguous-p>

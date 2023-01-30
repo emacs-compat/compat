@@ -2912,6 +2912,45 @@ The same keyword arguments are supported as in
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 29.1:
 
+@c copied from lispref/keymaps.texi
+@defun compat-call@ set-transient-map keymap &optional keep-pred on-exit message timeout
+This function adds @var{keymap} as a @dfn{transient} keymap, which
+takes precedence over other keymaps for one (or more) subsequent keys.
+
+Normally, @var{keymap} is used just once, to look up the very next key.
+If the optional argument @var{keep-pred} is @code{t}, the map stays
+active as long as the user types keys defined in @var{keymap}; when the
+user types a key that is not in @var{keymap}, the transient keymap is
+deactivated and normal key lookup continues for that key.
+
+The @var{keep-pred} argument can also be a function.  In that case, the
+function is called with no arguments, prior to running each command,
+while @var{keymap} is active; it should return non-@code{nil} if
+@var{keymap} should stay active.
+
+The optional argument @var{on-exit}, if non-@code{nil}, specifies a
+function that is called, with no arguments, after @var{keymap} is
+deactivated.
+
+The optional argument @var{message} specifies the message to display
+after activating the transient map.  If @var{message} is a string, it
+is the format string for the message, and any @samp{%k} specifier in
+that string is replaced with the list of keys from the transient map.
+Any other non-@code{nil} value of @var{message} stands for the default
+message format @samp{Repeat with %k}.
+
+@vindex set-transient-map-timeout
+If the optional argument @var{timeout} is non-@code{nil}, it should be
+a number that specifies how many seconds of idle time to wait before
+deactivating @var{keymap}.  The value of the variable
+@code{set-transient-map-timeout}, if non-@code{nil}, overrides the
+value of this argument.
+
+This function works by adding and removing @var{keymap} from the
+variable @code{overriding-terminal-local-map}, which takes precedence
+over all other active keymaps (@pxref{elisp,,,Searching Keymaps}).
+@end defun
+
 @c copied from lispref/strings.texi
 @defun compat-call@ string-lines string &optional omit-nulls keep-newlines
 Split @var{string} into a list of strings on newline boundaries.  If

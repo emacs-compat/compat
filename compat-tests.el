@@ -2875,6 +2875,15 @@
   (should-equal 'result (funcall-with-delayed-message
                          1 "timeout" (lambda () 'result))))
 
+(ert-deftest set-transient-map ()
+  (let (overriding-terminal-local-map)
+    ;; TODO Implement a proper test.  Interactive features like
+    ;; `set-transient-map' are hard to test and Emacs itself is lacking tests.
+    ;; For now only test the calling convention here.
+    (set-transient-map (define-keymap "x" #'ignore))
+    (compat-call set-transient-map (define-keymap "x" #'ignore))
+    (compat-call set-transient-map (define-keymap "x" #'ignore) nil nil "msg" 1)))
+
 (ert-deftest ert-with-temp-file ()
   (ert-with-temp-file file
     (should-not (directory-name-p file))
