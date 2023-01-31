@@ -566,9 +566,10 @@ The return value is a string (or nil in case we can’t find it)."
 
 ;;;; Defined in dired.el
 
-(compat-defun dired-get-marked-files ;; <compat-tests:dired-get-marked-files>
+(compat-defun dired-get-marked-files
     (&optional localp arg filter distinguish-one-marked error)
-  "Handle optional argument ERROR."
+  "Obsolete function."
+  :obsolete "The compatibility function has been made obsolete."
   :feature dired
   :extended t
   (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))

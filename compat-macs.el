@@ -137,7 +137,7 @@ REST are attributes and the function BODY."
               (list def))
           ,@(when obsolete
               `((make-obsolete
-                 ',name ,(if (stringp obsolete) obsolete "No substitute")
+                 ',defname ,(if (stringp obsolete) obsolete "No substitute")
                  ,compat-macs--version))))))))
 
 (defmacro compat-guard (cond &rest rest)
