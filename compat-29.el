@@ -188,7 +188,7 @@ baked into the Elisp interpreter.
 (compat-defun funcall-with-delayed-message (timeout message function) ;; <compat-tests:with-delayed-message>
   "Like `funcall', but display MESSAGE if FUNCTION takes longer than TIMEOUT.
 TIMEOUT is a number of seconds, and can be an integer or a
-floating point number. If FUNCTION takes less time to execute
+floating point number.  If FUNCTION takes less time to execute
 than TIMEOUT seconds, MESSAGE is not displayed.
 
 NOTE: The compatibility function never displays the message,
@@ -425,10 +425,12 @@ thus overriding the value of the TIMEOUT argument to that function.")
 (compat-defvar set-transient-map-timer nil ;; <compat-tests:set-transient-map>
   "Timer for `set-transient-map-timeout'.")
 
-(autoload 'format-spec "format-spec")
+(declare-function format-spec "format-spec")
 (compat-defun set-transient-map (map &optional keep-pred on-exit message timeout) ;; <compat-tests:set-transient-map>
   "Handle the optional arguments MESSAGE and TIMEOUT."
   :extended t
+  (unless (fboundp 'format-spec)
+    (require 'format-spec))
   (let* ((timeout (or set-transient-map-timeout timeout))
          (message
           (when message
@@ -1403,7 +1405,8 @@ See also `ert-with-temp-directory'."
                         (concat "-")))))
       `(let* ((coding-system-for-write ,(or coding coding-system-for-write))
               (,temp-file (,(if directory 'file-name-as-directory 'identity)
-                           (,(if (< emacs-major-version 26) 'compat--make-temp-file 'make-temp-file)
+                           (,(if (fboundp 'compat--make-temp-file)
+                                 'compat--make-temp-file 'make-temp-file)
                             ,prefix ,directory ,suffix ,text)))
               (,name ,(if directory
                           `(file-name-as-directory ,temp-file)
