@@ -65,7 +65,7 @@ Introduction
 
 * Overview::
 * Usage::
-* Intentions::
+* Limitations::
 
 Support
 
@@ -84,21 +84,20 @@ Support
 @menu
 * Overview::
 * Usage::
-* Intentions::
+* Limitations::
 @end menu
 
 @node Overview
 @section Overview
 
 The objective of Compat is to provide "forwards compatibility" library
-for Emacs Lisp.  That is to say by using Compat, an Elisp package does
-not have to make the decision to either use new and useful
-functionality or support old versions of Emacs.
+for Emacs Lisp.  By using Compat, an Elisp package does not have to
+make the decision to either use new and useful functionality or
+support old versions of Emacs.
 
-Version 24.4 is chosen as the oldest version we can support, since
-Elisp has seen significant changes at that version.  On the library
-level subr-x was introduced in 24.4.  Most popular Emacs packages
-already require 24.4 or even newer versions of Emacs.
+The library provides support back until Emacs 24.4.  The intended
+audience are package developers that are interested in using newer
+developments, without having to break compatibility.
 
 @node Usage
 @section Usage
@@ -185,17 +184,29 @@ changes are made.  We also provide a
 list} (@email{~pkal/compat-devel@@lists.sr.ht,
 ~pkal/compat-devel@@lists.sr.ht}).
 
-@node Intentions
-@section Intentions
+@node Limitations
+@section Limitations
 
-The library intends to provide support back until Emacs 24.4.  The
-intended audience are package developers that are interested in using
-newer developments, without having to break compatibility.
+The Compat library has a number of limitations.  Complete backwards
+compatibility cannot be provided due to the scope of Compat and for
+technical reasons.  The scope is intentionally restricted in order to
+limit the size of Compat and to ensure that the library stays
+maintainable.
 
-Complete backwards compatibility cannot be provided due to the scope
-of Compat and for technical reasons.  The scope is intentionally
-restricted in order to limit the size of Compat and to ensure that the
-library stays maintainable.  The limitations include:
+Emacs version 24.4 is chosen as the oldest version supported by
+Compat, since Elisp has seen significant changes at that version.  On
+the library level, subr-x was introduced in 24.4.  Most popular Emacs
+packages already require 24.4 or even newer versions of
+Emacs. Supporting for more historical Emacs versions would complicate
+maintainance significantly while only few packages and users would
+benefit.
+
+Below we list a number of reasons why certain functionality cannot be
+provided.  Note that in some special cases exceptions can be made and
+functions can still be added to Compat even if they satisfy the
+criteria from the list. In case you miss functionality which you think
+should belong here, a @ref{Development, , report} would be much
+appreciated.
 
 @itemize
 @item
@@ -263,13 +274,6 @@ slower than the newer functionality, such that downstream packages
 would observe performance bugs. Examples are the
 @code{string-pixel-width} function and the @code{json-parse-string}
 function provided by libjansson.
-
-@item
-It just was not added without a good reason.  If you happen to find
-such a function, @ref{Development, , reporting} it would be much
-appreciated.  Note that in some special cases exceptions can be made
-and functions can still be added even if they satisfy the
-aforementioned criteria.
 @end itemize
 
 @node Support
