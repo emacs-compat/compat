@@ -193,7 +193,9 @@ intended audience are package developers that are interested in using
 newer developments, without having to break compatibility.
 
 Complete backwards compatibility cannot be provided due to the scope
-of Compat and for technical reasons.  These might include:
+of Compat and for technical reasons.  The scope is intentionally
+restricted in order to limit the size of Compat and to ensure that the
+library stays maintainable.  The limitations include:
 
 @itemize
 @item
@@ -204,25 +206,48 @@ such that the user interface (M-x) is unaffected by the presence of
 Compat.
 
 @item
+The function is not useful for package authors or not intended to be
+used by packages, but is only useful on the configuration level.  The
+macro @code{setopt} is such an example.
+
+@item
+The added or extended function belongs to the ``application level''
+and not the ``library level''.  Features which not preloaded often
+belong to the ``application level''.  Application examples are
+programming modes or modes like Dired, IRC and Gnus.  If these modes
+are extended with new functions, these are not ported back.
+
+@item
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
 advised. Since this is invasive and adds significant overhead, even
 when the new feature is not used, Compat does not use advices.  As a
 compromise, compatibility functions and macros with a changed calling
 convention or behavior can be accessed via the @code{compat-function}
-and @code{compat-call} macros.
+and @code{compat-call} macros. An example is the function
+@code{plist-get}.
+
+@item
+Bug fixes are usually not ported back as part of Compat.  Sometimes
+library functions show wrong behavior for edge cases.  In those cases
+Compat could in principle provide a compatibility function which is
+invoked via @code{compat-call}. Such extended definitions would
+increase the maintainance burden of Compat. At the same time the
+benefits would be small given that Compat does not override existing
+definitions.
+
+@item
+New functionality depends on an entire new, non-trivial library.
+Sometimes these are provided via ELPA (xref, project, seq, map,
+@dots{}), but other times it would be infeasible to duplicate an
+entire library within Compat while also providing the necessary
+backwards compatibility.
 
 @item
 New functionality was implemented in the C core, and depends on
 external libraries that cannot be reasonably duplicated in the scope
-of a compatibility library.
-
-@item
-New functionality depends on an entire new, non-trivial library.
-Sometimes these are provided via ELPA (xref, project, @dots{}), but
-other times it would be infeasible to duplicate an entire library
-within Compat while also providing the necessary backwards
-compatibility.
+of a compatibility library. For example a missing libxml cannot be
+emulated.
 
 @item
 The semantics of Elisp changed on a deep level. For example the
@@ -242,8 +267,9 @@ function provided by libjansson.
 @item
 It just was not added without a good reason.  If you happen to find
 such a function, @ref{Development, , reporting} it would be much
-appreciated. Always begin by assuming that this might be the case,
-unless proven otherwise.
+appreciated.  Note that in some special cases exceptions can be made
+and functions can still be added even if they satisfy the
+aforementioned criteria.
 @end itemize
 
 @node Support
