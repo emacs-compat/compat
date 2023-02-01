@@ -253,11 +253,16 @@ benefits would be small given that Compat does not override existing
 definitions.
 
 @item
-New functionality depends on an entire new, non-trivial library.
-Sometimes these are provided via ELPA (xref, project, seq, map,
-@dots{}), but other times it would be infeasible to duplicate an
-entire library within Compat while also providing the necessary
-backwards compatibility.
+The definition belongs to an Emacs core package, which is also
+distributed via ELPA.  Compat does not have to provide backward
+compatibility for core packages since the updated package can be
+installed directly from ELPA. Examples include xref, project, seq, map
+and transient.
+
+@item
+New functionality depends on an entire new, non-trivial core library,
+which is infeasible to duplicate within Compat while also providing
+the necessary backwards compatibility.
 
 @item
 New functionality was implemented in the C core, and depends on
