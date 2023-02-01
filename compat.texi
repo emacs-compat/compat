@@ -223,7 +223,7 @@ macro @code{setopt} is such an example.
 
 @item
 The added or extended function belongs to the ``application level''
-and not the ``library level''.  Features which not preloaded often
+and not the ``library level''.  Features which are not preloaded often
 belong to the ``application level''.  Application examples are
 programming modes or modes like Dired, IRC and Gnus.  If these modes
 are extended with new functions, these are not ported back.
@@ -231,12 +231,17 @@ are extended with new functions, these are not ported back.
 @item
 An existing function or macro was extended by some new functionality.
 To support these cases, the function or macro would have to be
-advised. Since this is invasive and adds significant overhead, even
+advised.  Since this is invasive and adds significant overhead, even
 when the new feature is not used, Compat does not use advices.  As a
 compromise, compatibility functions and macros with a changed calling
 convention or behavior can be accessed via the @code{compat-function}
-and @code{compat-call} macros. An example is the function
-@code{plist-get}.
+and @code{compat-call} macros.  In this manual we call such
+definitions ``Extended Definitions''. An example is the function
+@code{plist-get}.  Note that extended functions are subject to closer
+scrutiny, since their usage is not completely painless thanks to
+@code{compat-call}.  If a particular extended function does not see
+much usage or the extension yields only marginal benefits, we may not
+provide it as part of Compat.
 
 @item
 Bug fixes are usually not ported back as part of Compat.  Sometimes
