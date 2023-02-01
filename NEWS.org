@@ -1,6 +1,6 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.3.2
 
 - compat-26: Add ~make-temp-file~ with optional argument TEXT.
 - compat-27: Mark ~compat-call dired-get-marked-files~ as obsolete. See the
@@ -8,6 +8,8 @@
 - compat-29: Add ~funcall-with-delayed-message~ and ~with-delayed-message~.
 - compat-29: Add ~ert-with-temp-file~ and ~ert-with-temp-directory~.
 - compat-29: Add ~set-transient-map~ with optional arguments MESSAGE and TIMEOUT.
+
+(Release <2023-02-01 Wed>)
 
 * Release of "Compat" Version 29.1.3.1
 
