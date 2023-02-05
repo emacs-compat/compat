@@ -2899,5 +2899,21 @@
     (should (directory-name-p dir))
     (should (file-directory-p dir))))
 
+(defmacro compat-tests--with-gensyms ()
+  (cl-with-gensyms (x y)
+    `(let ((,x 1) (,y 2)) (+ ,x ,y))))
+
+(ert-deftest cl-with-gensyms ()
+  (should-equal 3 (compat-tests--with-gensyms)))
+
+(defmacro compat-tests--once-only (x)
+  (cl-once-only (x)
+    `(cons ,x ,x)))
+
+(ert-deftest cl-once-only ()
+  (let ((x 0))
+    (should-equal (cons 1 1) (compat-tests--once-only (cl-incf x)))
+    (should-equal 1 x)))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

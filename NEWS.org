@@ -1,5 +1,9 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-29: Add ~cl-with-gensyms~ and ~cl-once-only~.
+
 * Release of "Compat" Version 29.1.3.2
 
 - compat-26: Add ~make-temp-file~ with optional argument TEXT.
