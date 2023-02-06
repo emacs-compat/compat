@@ -585,6 +585,8 @@ The function @code{set-binary-mode}.
 @item
 The functions @code{bufferpos-to-filepos} and
 @code{filepos-to-bufferpos}.
+@item
+The @code{thunk} library.
 @end itemize
 
 @node Emacs 26.1
@@ -1089,6 +1091,10 @@ All changes related to @code{display-buffer}.
 The function @code{window-swap-states}.
 @item
 The function @code{string-version-lessp}.
+@item
+The @code{svg} library.
+@item
+The @code{xdg} library.
 @end itemize
 
 @node Emacs 27.1
@@ -1628,8 +1634,6 @@ The function @code{decoded-time-set-defaults}.
 @item
 The function @code{time-convert}.
 @item
-All @code{iso8601-*} functions.
-@item
 The macro @code{benchmark-progn}.
 @item
 The macro @code{with-suppressed-warnings}.
@@ -1647,6 +1651,12 @@ Support for additional body forms for
 @item
 The macro @code{with-connection-local-variables} and related
 functionality.
+@item
+The @code{iso8601} library.
+@item
+The @code{exif} library.
+@item
+The @code{image-converter} library.
 @end itemize
 
 @node Emacs 28.1
@@ -2211,7 +2221,7 @@ The function @code{max-mini-window-lines}.
 @item
 The function @code{lock-file} and @code{unlock-file}.
 @item
-Any @code{multisession} functionality.
+The @code{multisession} library.
 @end itemize
 
 @node Emacs 29.1
@@ -3158,8 +3168,6 @@ The function @code{string-pixel-width} and @code{buffer-text-pixel-size}.
 @item
 The function @code{pixel-fill-region}.
 @item
-The function @code{textsec-suspicious-p}.
-@item
 The function @code{minibuffer-lazy-highlight-setup}.
 @item
 The function @code{pp-emacs-lisp-code}.
@@ -3168,7 +3176,11 @@ The functions @code{xdg-state-home}, @code{xdg-current-desktop} and @code{xdg-se
 @item
 The macro @code{setopt}.
 @item
-The library oclosure.el (Open Closures).
+The @code{oclosure} library.
+@item
+The @code{textsec} library.
+@item
+The @code{range} library.
 @end itemize
 
 @node Development
