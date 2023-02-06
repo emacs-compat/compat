@@ -3166,6 +3166,8 @@ The function @code{pp-emacs-lisp-code}.
 @item
 The functions @code{xdg-state-home}, @code{xdg-current-desktop} and @code{xdg-session-type}.
 @item
+The macro @code{setopt}.
+@item
 The library oclosure.el (Open Closures).
 @end itemize
 
