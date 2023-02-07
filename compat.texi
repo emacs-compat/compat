@@ -265,24 +265,16 @@ which is infeasible to duplicate within Compat while also providing
 the necessary backwards compatibility.
 
 @item
-New functionality was implemented in the C core, and depends on
+New functionality was implemented in the C core, or depends on
 external libraries that cannot be reasonably duplicated in the scope
-of a compatibility library. For example a missing libxml cannot be
-emulated.
+of a compatibility library. Sometimes new functions on the C level
+rely on internal data structures, which we cannot access, rendering a
+backport impossible. For example a missing libxml cannot be emulated.
 
 @item
 The semantics of Elisp changed on a deep level. For example the
 addition of Bigint support in Emacs 27.1 cannot be replicated on the
 level of Compat.
-
-@item
-Backported functions would introduce performance bugs. Sometimes
-functions provided by newer Emacs versions are implemented on the C
-level, relying on internal data structures, which we cannot access. In
-this case a backport may still be possible but would be significantly
-slower than the newer functionality, such that downstream packages
-would observe performance bugs. Examples are the
-@code{json-parse-string} function provided by libjansson.
 @end itemize
 
 @node Support
