@@ -282,8 +282,7 @@ level, relying on internal data structures, which we cannot access. In
 this case a backport may still be possible but would be significantly
 slower than the newer functionality, such that downstream packages
 would observe performance bugs. Examples are the
-@code{string-pixel-width} function and the @code{json-parse-string}
-function provided by libjansson.
+@code{json-parse-string} function provided by libjansson.
 @end itemize
 
 @node Support
