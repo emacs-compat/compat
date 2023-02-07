@@ -238,10 +238,10 @@ convention or behavior can be accessed via the @code{compat-function}
 and @code{compat-call} macros.  In this manual we call such
 definitions ``Extended Definitions''. An example is the function
 @code{plist-get}.  Note that extended functions are subject to closer
-scrutiny, since their usage is not completely painless thanks to
-@code{compat-call}.  If a particular extended function does not see
-much usage or the extension yields only marginal benefits, we may not
-provide it as part of Compat.
+scrutiny, since their usage via @code{compat-call} is not completely
+painless.  If a particular extended function does not see much usage
+or the extension yields only marginal benefits, we may not provide it
+as part of Compat.
 
 @item
 Bug fixes are usually not ported back as part of Compat.  Sometimes
