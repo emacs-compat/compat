@@ -1648,6 +1648,8 @@ The function @code{file-system-info}.
 @item
 The function @code{group-name}.
 @item
+The function @code{face-extend-p} and @code{set-face-extend}.
+@item
 Additional @code{format-spec} modifiers.
 @item
 Support for additional body forms for
