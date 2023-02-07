@@ -395,7 +395,7 @@ the minibuffer was activated, and execute the forms."
 
 ;;;; Defined in byte-run.el
 
-(defmacro with-suppressed-warnings (_warnings &rest body) ;; <compat-tests:with-suppressed-warnings>
+(compat-defmacro with-suppressed-warnings (_warnings &rest body) ;; <compat-tests:with-suppressed-warnings>
   "Like `progn', but prevents compiler WARNINGS in BODY.
 NOTE: The compatibility version behaves like `with-no-warnings'."
   `(with-no-warnings ,@body))
