@@ -3147,8 +3147,6 @@ The function @code{image-at-point-p}.
 @item
 The function @code{function-documentation}.
 @item
-The command @code{string-edit} and @code{read-string-from-buffer}.
-@item
 The macro @code{with-undo-amalgamate}.
 @item
 The function @code{string-glyph-split}.
@@ -3172,6 +3170,10 @@ The @code{oclosure} library.
 The @code{textsec} library.
 @item
 The @code{range} library.
+@item
+The @code{string-edit} library.
+@item
+The @code{vtable} library.
 @end itemize
 
 @node Development
