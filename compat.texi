@@ -256,13 +256,15 @@ definitions.
 The definition belongs to an Emacs core package, which is also
 distributed via ELPA.  Compat does not have to provide backward
 compatibility for core packages since the updated package can be
-installed directly from ELPA. Examples include xref, project, seq, map
-and transient.
+installed directly from ELPA. Examples include the libraries xref,
+project, seq, map and transient.
 
 @item
 New functionality depends on an entire new, non-trivial core library,
-which is infeasible to duplicate within Compat while also providing
-the necessary backwards compatibility.
+which is infeasible to duplicate within Compat.  If a backport of such
+a library is required, the preferred approach is to either release the
+library separately on GNU ELPA as a core package or as a separately
+maintained GNU ELPA package.  An example is the iso8601 library.
 
 @item
 New functionality was implemented in the C core, or depends on
