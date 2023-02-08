@@ -1,5 +1,9 @@
 #+title: compat.el - Changelog
 
+* Development
+
+- compat-27: Drop obsolete ~compat-call dired-get-marked-files~.
+
 * Release of "Compat" Version 29.1.3.3
 
 - compat-27: Add ~with-suppressed-warnings~.
