@@ -2923,5 +2923,9 @@
     (should-equal (cons 1 1) (compat-tests--once-only (cl-incf x)))
     (should-equal 1 x)))
 
+(ert-deftest seq ()
+  (should-equal 3 (seq-length '(a b c)))
+  (should-equal 3 (seq-length [a b c])))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

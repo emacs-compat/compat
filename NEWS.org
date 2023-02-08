@@ -4,6 +4,7 @@
 
 - compat-27: Add ~with-suppressed-warnings~.
 - compat-29: Add ~cl-with-gensyms~ and ~cl-once-only~.
+- compat-29: Load ~seq~, which is preloaded on Emacs 29.
 
 * Release of "Compat" Version 29.1.3.2
 

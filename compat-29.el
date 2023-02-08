@@ -25,6 +25,10 @@
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
 (compat-declare-version "29.0")
 
+;;;; Preloaded in loadup.el
+
+(compat-guard (require 'seq)) ;; <compat-tests:seq>
+
 ;;;; Defined in xdisp.c
 
 (compat-defun get-display-property (position prop &optional object properties) ;; <compat-tests:get-display-property>

@@ -36,6 +36,9 @@ jobs:
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
+    - name: Provide seq.el on Emacs 24
+      if: ${{ startsWith(matrix.emacs-version, '24.') }}
+      run: mv .github/workflows/seq-24.el seq.el
     - name: Run interpreted tests
       run: make test
     - name: Compile
