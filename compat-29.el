@@ -125,8 +125,8 @@ Unibyte strings are converted to multibyte for comparison."
 
 ;;;; Defined in gv.el
 
-(compat-guard t
-  (gv-define-expander compat--plist-get ;; <compat-tests:plist-get-gv>
+(compat-guard t ;; <compat-tests:plist-get-gv>
+  (gv-define-expander compat--plist-get
     (lambda (do plist prop &optional predicate)
       (macroexp-let2 macroexp-copyable-p key prop
         (gv-letplace (getter setter) plist

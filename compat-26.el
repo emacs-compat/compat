@@ -113,8 +113,8 @@ If you just want to check `major-mode', use `derived-mode-p'."
              (compat--assoc key alist testfn))))
     (if x (cdr x) default)))
 
-(compat-guard t
-  (gv-define-expander compat--alist-get ;; <compat-tests:alist-get-gv>
+(compat-guard t ;; <compat-tests:alist-get-gv>
+  (gv-define-expander compat--alist-get
     (lambda (do key alist &optional default remove testfn)
       (macroexp-let2 macroexp-copyable-p k key
         (gv-letplace (getter setter) alist
