@@ -126,10 +126,11 @@ the noerror flag should be specified.
 (require 'compat nil 'noerror)
 @end example
 
-This will load all necessary Compat definitions.  Note that if Compat
-is installed on a recent version of Emacs, all of the definitions are
-disabled at compile time, such that no negative performance impact is
-incurred.
+This will load all necessary Compat definitions.  Compat also loads
+the @code{seq} library which is preloaded by default on Emacs 29.
+Note that if Compat is installed on a recent version of Emacs, all of
+the definitions are disabled at compile time, such that no negative
+performance impact is incurred.
 
 Note that Compat provides replacement functions with extended
 functionality for functions that are already defined (@code{sort},
