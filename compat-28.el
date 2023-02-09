@@ -605,6 +605,14 @@ onwards does."
     ".#" (file-name-nondirectory filename))
    (file-name-directory filename)))
 
+;;;; Defined in minibuf.c
+
+(compat-defun innermost-minibuffer-p (&optional buffer) ;; <compat-tests:innermost-minibuffer-p>
+  "Return t if BUFFER is the most nested active minibuffer.
+No argument or nil as argument means use the current buffer as BUFFER."
+  (when-let ((win (active-minibuffer-window)))
+    (eq (window-buffer win) (or buffer (current-buffer)))))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defun format-prompt (prompt default &rest format-args) ;; <compat-tests:format-prompt>

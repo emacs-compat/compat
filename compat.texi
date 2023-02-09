@@ -2224,8 +2224,6 @@ The function @code{split-string-shell-command}.
 @item
 The function @code{string-limit}.
 @item
-The function @code{innermost-minibuffer-p}.
-@item
 The function @code{max-mini-window-lines}.
 @item
 The function @code{lock-file} and @code{unlock-file}.

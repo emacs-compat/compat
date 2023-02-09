@@ -163,6 +163,9 @@
        (push x y))
      '(3 2 1))))
 
+(ert-deftest innermost-minibuffer-p ()
+  )
+
 (ert-deftest minibuffer-history-value ()
   (let ((minibuffer-history-variable 'file-name-history)
         (file-name-history '("a" "b" "c")))
