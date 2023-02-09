@@ -1676,6 +1676,22 @@ The following functions and macros are implemented in Emacs
 28.1. These functions are made available by Compat on Emacs versions
 older than 28.1.
 
+@c copied from lispref/processes.texi
+@defun process-lines-ignore-status program &rest args
+This function is just like @code{process-lines}, but does not signal
+an error if @var{program} exits with a non-zero exit status.
+@end defun
+
+@c based on lisp/subr.el
+@defun process-lines-handling-status program status-handler &rest args
+Execute @var{program} with @var{args}, returning its output as a list
+of lines. If @var{status-handler} is non-nil, it must be a function
+with one argument, which will be called with the exit status of the
+program before the output is collected.  If @var{status-handler} is
+nil, an error is signaled if the program returns with a non-zero exit
+status.
+@end defun
+
 @c copied from lispref/help.texi
 @defun text-quoting-style
 You should not read the value of the variable
@@ -2206,9 +2222,6 @@ The functions @code{mail-header-parse-addresses-lax} and
 The function @code{num-processors}.
 @item
 The function @code{object-intervals}.
-@item
-The functions @code{process-lines-handling-status} and
-@code{process-lines-ignore-status}.
 @item
 The function @code{require-theme}.
 @item

@@ -2923,6 +2923,20 @@
     (should-equal (cons 1 1) (compat-tests--once-only (cl-incf x)))
     (should-equal 1 x)))
 
+(ert-deftest process-lines-ignore-status ()
+  (should-equal '("line1" "line2" "")
+                (process-lines-ignore-status "echo" "line1\nline2\n")))
+
+(ert-deftest process-lines-handling-status ()
+  (let (status)
+    (should-equal '("line1" "line2")
+                  (process-lines-handling-status
+                   "echo" (lambda (s) (setq status s)) "line1\nline2"))
+    (should-equal status 0)
+    (should-not (process-lines-handling-status "false" (lambda (s) (setq status s))))
+    (should-equal status 1)
+    (should-error (process-lines-handling-status "false" nil))))
+
 (ert-deftest seq ()
   (should-equal 3 (seq-length '(a b c)))
   (should-equal 3 (seq-length [a b c])))
