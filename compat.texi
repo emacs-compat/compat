@@ -119,12 +119,11 @@ In any file where compatibility forms are used, a
 (require 'compat)
 @end example
 
-should be added early on. In packages which are part of Emacs itself,
-the noerror flag should be specified.
-
-@example
-(require 'compat nil 'noerror)
-@end example
+should be added early on. In packages which are part of Emacs itself
+and which want to take advantage of Compat, the @code{noerror} flag
+should be specified: @code{(require 'compat nil 'noerror)}.  In the
+future a minimal version of Compat may be added to the Emacs core,
+such that the @code{noerror} flag will not be necessary anymore.
 
 This will load all necessary Compat definitions.  Compat also loads
 the @code{seq} library which is preloaded by default on Emacs 29.
@@ -160,6 +159,15 @@ This macro returns the compatibility function symbol for @var{fun}.
 See @code{compat-call} for a more convenient macro to directly call
 compatibility functions.
 @end defmac
+
+If Compat is used in core packages, where Compat must be required
+currently with the @code{noerror} flag, the macros @code{compat-call}
+and @code{compat-function} ar not available.  In the future the macros
+could be added to subr.  Alternatively a minimal version of compat.el
+could be added to the core.  For now it is necessary to replicate the
+definition of the macros within core packages.  For example the
+package ERC defines its own macro @code{erc-compat-call}, which
+replicates the Compat definition precisely.
 
 This design has been chosen since Compat does not advise or override
 existing functions.  Generally Compat is written in defensive style
