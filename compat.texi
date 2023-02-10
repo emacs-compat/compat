@@ -3187,8 +3187,6 @@ The function @code{string-limit}.
 @item
 The function @code{string-pixel-width} and @code{buffer-text-pixel-size}.
 @item
-The function @code{pixel-fill-region}.
-@item
 The function @code{minibuffer-lazy-highlight-setup}.
 @item
 The function @code{pp-emacs-lisp-code}.
@@ -3206,6 +3204,8 @@ The @code{range} library.
 The @code{string-edit} library.
 @item
 The @code{vtable} library.
+@item
+The @code{pixel-fill} library.
 @end itemize
 
 @node Development
