@@ -2237,7 +2237,8 @@ The function @code{split-string-shell-command}.
 @item
 The function @code{string-limit}.
 @item
-The function @code{innermost-minibuffer-p}.
+The functions @code{innermost-minibuffer-p} and
+@code{minibuffer-innermost-command-loop-p}.
 @item
 The function @code{max-mini-window-lines}.
 @item
