@@ -27,7 +27,7 @@
 
 ;;;; Preloaded in loadup.el
 
-(compat-guard (require 'seq)) ;; <compat-tests:seq>
+(compat-guard t (require 'seq)) ;; <compat-tests:seq>
 
 ;;;; Defined in xdisp.c
 
