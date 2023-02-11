@@ -1,12 +1,14 @@
 #+title: compat.el - Changelog
 
-* Development
+* Release of "Compat" Version 29.1.3.4
 
 - Ensure that ~seq~ is required properly both at compile time and runtime, such
   that compilation of downstream packages works even if Compat itself is not
   compiled. Magit uses a complex continuous integration system, where Magit is
   compiled and tested, while the Compat dependency is not compiled.
 - compat-28: Add ~process-lines-handling-status~ and ~process-lines-ignore-status~.
+
+(Release <2023-02-11 Sat>)
 
 * Release of "Compat" Version 29.1.3.3
 
