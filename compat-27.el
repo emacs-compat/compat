@@ -574,19 +574,6 @@ The return value is a string (or nil in case we can’t find it)."
             (or (lm-header "package-version")
                 (lm-header "version")))))))))
 
-;;;; Defined in dired.el
-
-(compat-defun dired-get-marked-files
-    (&optional localp arg filter distinguish-one-marked error)
-  "Obsolete function."
-  :obsolete "The compatibility function has been made obsolete."
-  :feature dired
-  :extended t
-  (let ((result (dired-get-marked-files localp arg filter distinguish-one-marked)))
-    (if (and (null result) error)
-        (user-error (if (stringp error) error "No files specified"))
-      result)))
-
 ;;;; Defined in time-date.el
 
 (compat-defun make-decoded-time ;; <compat-tests:make-decoded-time>
