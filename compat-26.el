@@ -21,8 +21,10 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
-(compat-declare-version "26.1")
+(eval-when-compile (require 'compat-macs))
+(compat-require compat-25 "25.1")
+
+(compat-version "26.1")
 
 ;;;; Defined in fns.c
 

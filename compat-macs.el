@@ -250,13 +250,16 @@ definition is generated.
         ,@(and local `((make-variable-buffer-local ',name)))
         ,@(and (eq local 'permanent) `((put ',name 'permanent-local t)))))))
 
-(defmacro compat-declare-version (version)
+(defmacro compat-version (version)
   "Set the Emacs version that is currently being handled to VERSION."
-  (prog1
-      (let ((before (1- (car (version-to-list version)))))
-        (when (and (< 24 before) (< emacs-major-version before))
-          `(require ',(require (intern (format "compat-%d" before))))))
-    (setq compat-macs--version version)))
+  (setq compat-macs--version version)
+  nil)
+
+(defmacro compat-require (feature version)
+  "Require FEATURE if the Emacs version is less than VERSION."
+  (when (version< emacs-version version)
+    (require feature)
+    `(require ',feature)))
 
 (provide 'compat-macs)
 ;;; compat-macs.el ends here

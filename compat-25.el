@@ -21,8 +21,9 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
-(compat-declare-version "25.1")
+(eval-when-compile (require 'compat-macs))
+
+(compat-version "25.1")
 
 ;;;; Defined in alloc.c
 

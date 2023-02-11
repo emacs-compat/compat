@@ -21,13 +21,15 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
+(eval-when-compile (require 'compat-macs))
+(compat-require compat-28 "28.1")
+
+;; Preloaded in loadup.el
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
-(compat-declare-version "29.0")
+(compat-require seq "29.0") ;; <compat-tests:seq>
 
-;;;; Preloaded in loadup.el
-
-(compat-guard t (require 'seq)) ;; <compat-tests:seq>
+;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
+(compat-version "29.0")
 
 ;;;; Defined in xdisp.c
 

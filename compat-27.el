@@ -21,8 +21,10 @@
 
 ;;; Code:
 
-(eval-when-compile (load "compat-macs.el" nil t t))
-(compat-declare-version "27.1")
+(eval-when-compile (require 'compat-macs))
+(compat-require compat-26 "26.1")
+
+(compat-version "27.1")
 
 ;;;; Defined in fns.c
 
@@ -825,7 +827,7 @@ discarded."
 
 ;;;; Defined in map-ynp.el
 
-(compat-declare-version "26.2")
+(compat-version "26.2")
 
 (compat-defvar read-answer-short 'auto ;; <compat-tests:read-answer>
   "If non-nil, the `read-answer' function accepts single-character answers.
