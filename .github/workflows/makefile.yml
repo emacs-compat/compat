@@ -39,13 +39,15 @@ jobs:
     - name: Provide seq.el on Emacs 24
       if: ${{ startsWith(matrix.emacs-version, '24.') }}
       run: mv .github/workflows/seq-24.el seq.el
+    - name: Basic checks
+      run: make check
     - name: Run interpreted tests
       run: make test
-    - name: Compile
+    - name: Byte compile all files
       run: |
         sed -i "s/ no-byte-compile: t;//" compat-macs.el compat-tests.el
         make compile
     - name: Run compiled tests
       run: make test
-    - name: Make info
+    - name: Make info manual
       run: make compat.info

@@ -61,8 +61,8 @@ See (compat) Emacs %s' for more details.]\n\n%s"
   "Check ATTRS given PREDS predicate plist and return rest."
   (while (keywordp (car attrs))
     (compat-macs--assert (cdr attrs) "Attribute list length is odd")
-    (compat-macs--assert (when-let ((p (plist-get preds (car attrs))))
-                           (or (eq p t) (funcall p (cadr attrs))))
+    (compat-macs--assert (let ((p (plist-get preds (car attrs))))
+                           (and p (or (eq p t) (funcall p (cadr attrs)))))
                          "Invalid attribute %s" (car attrs))
     (setq attrs (cddr attrs)))
   attrs)
