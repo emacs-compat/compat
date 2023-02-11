@@ -2,6 +2,10 @@
 
 * Development
 
+- Ensure that ~seq~ is required properly both at compile time and runtime, such
+  that compilation of downstream packages works even if Compat itself is not
+  compiled. Magit uses a complex continuous integration system, where Magit is
+  compiled and tested, while the Compat dependency is not compiled.
 - compat-27: Drop obsolete ~compat-call dired-get-marked-files~.
 - compat-28: Add ~process-lines-handling-status~ and ~process-lines-ignore-status~.
 
