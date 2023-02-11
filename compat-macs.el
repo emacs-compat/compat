@@ -50,12 +50,9 @@ Prepend compatibility notice to the actual documentation string."
   (with-temp-buffer
     (insert
      (format
-      "[Compatibility %s for `%S', defined in Emacs %s.  \
-If this is not documented on yourself system, you can check \
-`(compat) Emacs %s' for more details.]\n\n%s"
-      type name
-      compat-macs--version compat-macs--version
-      docstring))
+      "[Compatibility %s for `%s', defined in Emacs %s. \
+See (compat) Emacs %s' for more details.]\n\n%s"
+      type name compat-macs--version compat-macs--version docstring))
     (let ((fill-column 80))
       (fill-region (point-min) (point-max)))
     (buffer-string)))
@@ -64,9 +61,9 @@ If this is not documented on yourself system, you can check \
   "Check ATTRS given PREDS predicate plist and return rest."
   (while (keywordp (car attrs))
     (compat-macs--assert (cdr attrs) "Attribute list length is odd")
-    (let ((pred (plist-get preds (car attrs))))
-      (compat-macs--assert (and pred (or (eq pred t) (funcall pred (cadr attrs))))
-                      "Invalid attribute %s" (car attrs)))
+    (compat-macs--assert (when-let ((p (plist-get preds (car attrs))))
+                           (or (eq p t) (funcall p (cadr attrs))))
+                         "Invalid attribute %s" (car attrs))
     (setq attrs (cddr attrs)))
   attrs)
 
@@ -75,6 +72,7 @@ If this is not documented on yourself system, you can check \
 The version constraints specified by ATTRS are checked.  PREDS is
 a plist of predicates for arguments which are passed to FUN."
   (declare (indent 2))
+  (compat-macs--assert compat-macs--version "No `compat-version' was declared")
   (let* ((body (compat-macs--check-attributes
                 attrs `(,@preds :feature symbolp)))
          (feature (plist-get attrs :feature))
@@ -97,9 +95,10 @@ a plist of predicates for arguments which are passed to FUN."
 (defun compat-macs--defun (type name arglist docstring rest)
   "Define function NAME of TYPE with ARGLIST and DOCSTRING.
 REST are attributes and the function BODY."
-  (compat-macs--guard rest (list :extended (lambda (x) (or (booleanp x) (version-to-list x)))
-                                 :obsolete (lambda (x) (or (booleanp x) (stringp x)))
-                                 :body t)
+  (compat-macs--guard
+     rest (list :extended (lambda (x) (or (booleanp x) (version-to-list x)))
+                :obsolete (lambda (x) (or (booleanp x) (stringp x)))
+                :body t)
     (lambda (extended obsolete body)
       (when (stringp extended)
         (compat-macs--assert
@@ -153,6 +152,7 @@ definition is generated.
            (indent 1))
   (compat-macs--guard rest '(:body t)
     (lambda (body)
+      (compat-macs--assert body "The guarded body is empty")
       (if (eq cond t)
           body
         (compat-macs--strict (eval cond t) "Guard %S failed" cond)
@@ -230,9 +230,10 @@ definition is generated.
 - :feature :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
-  (compat-macs--guard attrs (list :constant #'booleanp
-                                  :local (lambda (x) (memq x '(nil t permanent)))
-                                  :obsolete (lambda (x) (or (booleanp x) (stringp x))))
+  (compat-macs--guard
+      attrs (list :constant #'booleanp
+                  :local (lambda (x) (memq x '(nil t permanent)))
+                  :obsolete (lambda (x) (or (booleanp x) (stringp x))))
     (lambda (constant local obsolete)
       (compat-macs--strict (not (boundp name)) "%s already defined" name)
       (compat-macs--assert (not (and constant local)) "Both :constant and :local")
