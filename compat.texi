@@ -2338,16 +2338,68 @@ evaluated and then stashed in @var{place}.  If @var{place}'s value is
 non-@code{nil}, return that value instead of evaluating @var{code}.
 @end defmac
 
-@c based on lisp/subr.el
-@defmac with-narrowing start end [:locked tag] &rest body
-Execute @var{body} with restrictions set to @var{start} and @var{end}.
-The current restrictions, if any, are restored upon return.  With the
-optional :locked @var{tag} argument, inside @var{tag},
-@code{narrow-to-region} and @code{widen} can be used only within the
-@var{start} and @var{end} limits, unless the restrictions are unlocked
-by calling @code{narrowing-unlock} with @var{tag}.  See
-@code{narrowing-lock} for a more detailed description.
-@end defmac
+@c copied from lispref/positions.texi
+@defspec with-restriction start end [:label label] body
+This special form saves the current bounds of the accessible portion
+of the buffer, sets the accessible portion to start at @var{start} and
+end at @var{end}, evaluates the @var{body} forms, and restores the
+saved bounds.  In that case it is equivalent to
+
+@example
+(save-restriction
+  (narrow-to-region start end)
+  body)
+@end example
+
+@cindex labeled narrowing
+When the optional argument @var{label}, a symbol, is present, the
+narrowing is @dfn{labeled}.  A labeled narrowing differs from a
+non-labeled one in several ways:
+
+@itemize @bullet
+@item
+During the evaluation of the @var{body} form, @code{narrow-to-region}
+and @code{widen} can be used only within the @var{start} and @var{end}
+limits.
+
+@item
+To lift the restriction introduced by @code{with-restriction} and gain
+access to other portions of the buffer, use @code{without-restriction}
+with the same @var{label} argument.  (Another way to gain access to
+other portions of the buffer is to use an indirect buffer
+(@pxref{Indirect Buffers,,,elisp}).)
+
+@item
+Labeled narrowings can be nested.
+
+@item
+Labeled narrowings can only be used in Lisp programs: they are never
+visible on display, and never interfere with narrowings set by the
+user.
+@end itemize
+
+If you use @code{with-restriction} with the optional @var{label}
+argument, we recommend documenting the @var{label} in the doc strings
+of the functions which use it, so that other Lisp programs your code
+calls could lift the labeled narrowing if and when it needs.
+@end defspec
+
+@c copied from lispref/positions.texi
+@defspec without-restriction [:label label] body
+This special form saves the current bounds of the accessible portion
+of the buffer, widens the buffer, evaluates the @var{body} forms, and
+restores the saved bounds.  In that case it is equivalent to
+
+@example
+(save-restriction
+  (widen)
+  body)
+@end example
+
+When the optional argument @var{label} is present, the narrowing set
+by @code{with-restriction} with the same @var{label} argument is
+lifted.
+@end defspec
 
 @c copied from lispref/positions.texi
 @defun pos-bol &optional count

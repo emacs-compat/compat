@@ -294,22 +294,37 @@ in order to restore the state of the local variables set via this macro.
   "Delete the current line."
   (delete-region (pos-bol) (pos-bol 2)))
 
-(compat-defmacro with-narrowing (start end &rest rest) ;; <compat-tests:with-narrowing>
+(compat-defmacro with-restriction (start end &rest rest) ;; <compat-tests:with-restriction>
   "Execute BODY with restrictions set to START and END.
 
 The current restrictions, if any, are restored upon return.
 
-With the optional :locked TAG argument, inside BODY,
-`narrow-to-region' and `widen' can be used only within the START
-and END limits, unless the restrictions are unlocked by calling
-`narrowing-unlock' with TAG.  See `narrowing-lock' for a more
-detailed description.
+When the optional :label LABEL argument is present, in which
+LABEL is a symbol, inside BODY, `narrow-to-region' and `widen'
+can be used only within the START and END limits.  To gain access
+to other portions of the buffer, use `without-restriction' with the
+same LABEL argument.
 
-\(fn START END [:locked TAG] BODY)"
+\(fn START END [:label LABEL] BODY)"
   `(save-restriction
      (narrow-to-region ,start ,end)
      ;; Locking is ignored
-     ,@(if (eq (car rest) :locked) (cddr rest) rest)))
+     ,@(if (eq (car rest) :label) (cddr rest) rest)))
+
+(compat-defmacro without-restriction (&rest rest) ;; <compat-tests:without-restriction>
+  "Execute BODY without restrictions.
+
+The current restrictions, if any, are restored upon return.
+
+When the optional :label LABEL argument is present, the
+restrictions set by `with-restriction' with the same LABEL argument
+are lifted.
+
+\(fn [:label LABEL] BODY)"
+  `(save-restriction
+     (widen)
+     ;; Locking is ignored
+     ,@(if (eq (car rest) :label) (cddr rest) rest)))
 
 (compat-defmacro with-memoization (place &rest code) ;; <compat-tests:with-memoization>
   "Return the value of CODE and stash it in PLACE.

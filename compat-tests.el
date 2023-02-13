@@ -237,15 +237,29 @@
     (should-equal 'h (get-text-property 2 'help-echo))
     (should-equal 'h (get-text-property 6 'help-echo))))
 
-(ert-deftest with-narrowing ()
+  ;; TODO reenable if Emacs 29 nightly builds are updated
+(compat-tests--if (< emacs-major-version 29) (progn
+(ert-deftest with-restriction ()
   (with-temp-buffer
     (insert "abc")
-    (with-narrowing 2 3 :locked 'foo
+    (with-restriction 2 3 :label 'foo
       (should-equal "b" (buffer-string)))
     (should-equal "abc" (buffer-string))
-    (with-narrowing 2 3
-                    (should-equal "b" (buffer-string)))
+    (with-restriction 2 3
+      (should-equal "b" (buffer-string)))
     (should-equal "abc" (buffer-string))))
+
+(ert-deftest without-restriction ()
+  (with-temp-buffer
+    (insert "abc")
+    (narrow-to-region 2 3)
+    (without-restriction :label 'foo
+      (should-equal "abc" (buffer-string)))
+    (should-equal "b" (buffer-string))
+    (without-restriction
+      (should-equal "abc" (buffer-string)))
+    (should-equal "b" (buffer-string))))
+))
 
 (ert-deftest with-memoization ()
   (let ((x (cons nil nil)) y computed)
