@@ -55,7 +55,6 @@
 (require 'subr-x)
 (require 'time-date)
 (require 'image)
-(require 'text-property-search nil t)
 
 ;; Setup tramp mock
 (require 'tramp)
@@ -2379,63 +2378,6 @@
     (setf (compat-call plist-get plist "one" #'string=) "eins")
     (should-equal (compat-call plist-get plist "one" #'string=) "eins")
     (should-equal plist '("one" "eins" "two" 2 "three" 3))))
-
-(ert-deftest prop-match ()
-  (should (prop-match-p (make-prop-match)))
-  (should (prop-match-p (make-prop-match :end 1)))
-  (should (prop-match-p (make-prop-match :beginning 1 :end 2 :value 3)))
-  (should-equal 1 (prop-match-beginning (make-prop-match :beginning 1 :end 2 :value 3)))
-  (should-equal 2 (prop-match-end (make-prop-match :beginning 1 :end 2 :value 3)))
-  (should-equal 3 (prop-match-value (make-prop-match :beginning 1 :end 2 :value 3)))
-  (should-not (prop-match-p nil))
-  (should-not (prop-match-p []))
-  (should-not (prop-match-p 'symbol))
-  (should-not (prop-match-p "string"))
-  (should-not (prop-match-p '(1 2 3))))
-
-(ert-deftest text-property-search-forward ()
-  (with-temp-buffer
-    (insert "one "
-            (propertize "two " 'prop 'val)
-            "three "
-            (propertize "four " 'prop 'wert)
-            "five ")
-    (goto-char (point-min))
-    (let ((match (text-property-search-forward 'prop)))
-      (should (prop-match-p match))
-      (should-equal (prop-match-beginning match) 5)
-      (should-equal (prop-match-end match) 9)
-      (should-equal (prop-match-value match) 'val))
-    (let ((match (text-property-search-forward 'prop)))
-      (should (prop-match-p match))
-      (should-equal (prop-match-beginning match) 15)
-      (should-equal (prop-match-end match) 20)
-      (should-equal (prop-match-value match) 'wert))
-    (should-not (text-property-search-forward 'prop))
-    (goto-char (point-min))
-    (should-not (text-property-search-forward 'non-existant))))
-
-(ert-deftest text-property-search-backward ()
-  (with-temp-buffer
-    (insert "one "
-            (propertize "two " 'prop 'val)
-            "three "
-            (propertize "four " 'prop 'wert)
-            "five ")
-    (goto-char (point-max))
-    (let ((match (text-property-search-backward 'prop)))
-      (should (prop-match-p match))
-      (should-equal (prop-match-beginning match) 15)
-      (should-equal (prop-match-end match) 20)
-      (should-equal (prop-match-value match) 'wert))
-    (let ((match (text-property-search-backward 'prop)))
-      (should (prop-match-p match))
-      (should-equal (prop-match-beginning match) 5)
-      (should-equal (prop-match-end match) 9)
-      (should-equal (prop-match-value match) 'val))
-    (should-not (text-property-search-backward 'prop))
-    (goto-char (point-max))
-    (should-not (text-property-search-backward 'non-existant))))
 
 (ert-deftest color-dark-p ()
   (should (color-dark-p '(0 0 0)))
