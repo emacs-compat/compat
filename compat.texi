@@ -3033,6 +3033,11 @@ The same keyword arguments are supported as in
 @code{ert-with-temp-file} (which see), except for @code{:text}.
 @end defmac
 
+@c based on lisp/emacs-lisp/cl-lib.el
+@defun cl-constantly value
+Return a function that takes any number of arguments, but returns @var{value}.
+@end defun
+
 @c copied from lispref/cl.texi
 @defmac cl-with-gensyms names@dots{} body
 This macro expands to code that executes @var{body} with each of the

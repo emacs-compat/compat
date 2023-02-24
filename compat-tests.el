@@ -2937,6 +2937,10 @@
     (should-equal (cons 1 1) (compat-tests--once-only (cl-incf x)))
     (should-equal 1 x)))
 
+(ert-deftest cl-constantly ()
+  (should-equal (mapcar (cl-constantly 3) '(a b c d))
+                '(3 3 3 3)))
+
 (ert-deftest process-lines-ignore-status ()
   (should-equal '("line1" "line2" "")
                 (process-lines-ignore-status "echo" "line1\nline2\n")))

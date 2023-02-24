@@ -4,6 +4,7 @@
 
 - compat-27: Drop obsolete ~compat-call dired-get-marked-files~.
 - compat-29: Add ~with-restriction~ and ~without-restriction~.
+- compat-29: Add ~cl-constantly~.
 - compat-29: Drop ~with-narrowing~ which was renamed to ~with-restriction~.
 
 * Release of "Compat" Version 29.1.3.4

@@ -1361,6 +1361,13 @@ Also see `buttonize'."
           (setq sentences (1- sentences)))
         sentences))))
 
+;;;; Defined in cl-lib.el
+
+(compat-defun cl-constantly (value) ;; <compat-tests:cl-constantly>
+  "Return a function that takes any number of arguments, but returns VALUE."
+  :feature cl-lib
+  (lambda (&rest _) value))
+
 ;;;; Defined in cl-macs.el
 
 (compat-defmacro cl-with-gensyms (names &rest body) ;; <compat-tests:cl-with-gensyms>
