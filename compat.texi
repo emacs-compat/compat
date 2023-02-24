@@ -13,9 +13,9 @@ Copyright @copyright{} 2022-2023 Free Software Foundation, Inc.
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
 any later version published by the Free Software Foundation; with no
-Invariant Sections, with the Front-Cover Texts being “A GNU Manual,” and
-with the Back-Cover Texts as in (a) below.  A copy of the license is
-included in the section entitled “GNU Free Documentation License.”
+Invariant Sections, with the Front-Cover Texts being “A GNU Manual,”
+and with the Back-Cover Texts as in (a) below.  A copy of the license
+is included in the section entitled “GNU Free Documentation License.”
 
 (a) The FSF’s Back-Cover Text is: “You have the freedom to copy and
 modify this GNU manual.”
@@ -352,9 +352,9 @@ the mark location and @code{mark-active}.  This macro does what
 
 @c copied from lispref/strings.texi
 @defun format-message string &rest objects
-This function acts like @code{format}, except it also converts any grave
-accents (@t{`}) and apostrophes (@t{'}) in @var{string} as per the value
-of @code{text-quoting-style}.
+This function acts like @code{format}, except it also converts any
+grave accents (@t{`}) and apostrophes (@t{'}) in @var{string} as per
+the value of @code{text-quoting-style}.
 
 Typically grave accent and apostrophe in the format translate to
 matching curved quotes, e.g., @t{"Missing `%s'"} might result in
@@ -454,8 +454,8 @@ Combine @var{forms} into a single expression by ``threading'' each
 element as the @emph{first} argument of their successor.  Elements of
 @var{forms} can either be an list of an atom.
 
-For example, consider the threading expression and it's equivalent macro
-expansion:
+For example, consider the threading expression and it's equivalent
+macro expansion:
 
 @example
 (thread-first
@@ -478,8 +478,8 @@ Combine @var{forms} into a single expression by ``threading'' each
 element as the @emph{last} argument of their successor.  Elements of
 @var{forms} can either be an list of an atom.
 
-For example, consider the threading expression and it's equivalent macro
-expansion:
+For example, consider the threading expression and it's equivalent
+macro expansion:
 
 @example
 (thread-first
@@ -533,9 +533,9 @@ doesn't work for all sequences; it may be used only for lists and
 vectors.  If @var{sequence} is a list, it is modified destructively.
 This functions returns the sorted @var{sequence} and compares elements
 using @var{predicate}.  A stable sort is one in which elements with
-equal sort keys maintain their relative order before and after the sort.
-Stability is important when successive sorts are used to order elements
-according to different criteria.
+equal sort keys maintain their relative order before and after the
+sort.  Stability is important when successive sorts are used to order
+elements according to different criteria.
 
 @xref{Sequence Functions,,,elisp}.
 
@@ -650,12 +650,12 @@ Here is an example of using this function:
 
 @c copied from lispref/functions.texi
 @defun mapcan function sequence
-This function applies @var{function} to each element of @var{sequence},
-like @code{mapcar}, but instead of collecting the results into a list,
-it returns a single list with all the elements of the results (which
-must be lists), by altering the results (using @code{nconc};
-@pxref{Rearrangement,,,elisp}).  Like with @code{mapcar}, @var{sequence}
-can be of any type except a char-table.
+This function applies @var{function} to each element of
+@var{sequence}, like @code{mapcar}, but instead of collecting the
+results into a list, it returns a single list with all the elements of
+the results (which must be lists), by altering the results (using
+@code{nconc}; @pxref{Rearrangement,,,elisp}).  Like with
+@code{mapcar}, @var{sequence} can be of any type except a char-table.
 
 @example
 @group
@@ -2495,8 +2495,9 @@ If @code{nil}, this defaults to the current buffer.
 
 @c copied from lispref/lists.texi
 @defun take n list
-This function returns the @var{n} first elements of @var{list}.  Essentially,
-it returns the part of @var{list} that @code{nthcdr} skips.
+This function returns the @var{n} first elements of @var{list}.
+Essentially, it returns the part of @var{list} that @code{nthcdr}
+skips.
 
 @code{take} returns @var{list} if shorter than @var{n} elements;
 it returns @code{nil} if @var{n} is zero or negative.
@@ -2865,11 +2866,11 @@ local map.
 
 @c based on from lisp/keymap.el
 @defun keymap-substitute keymap olddef newdef &optional oldmap prefix
-Replace @var{olddef} with @var{newdef} for any keys in @var{keymap} now
-defined as @var{olddef}.  In other words, @var{olddef} is replaced with
-@var{newdef} wherever it appears.  Alternatively, if optional fourth
-argument @var{oldmap} is specified, we redefine in @var{keymap} as
-@var{newdef} those keys that are defined as @var{olddef} in
+Replace @var{olddef} with @var{newdef} for any keys in @var{keymap}
+now defined as @var{olddef}.  In other words, @var{olddef} is replaced
+with @var{newdef} wherever it appears.  Alternatively, if optional
+fourth argument @var{oldmap} is specified, we redefine in @var{keymap}
+as @var{newdef} those keys that are defined as @var{olddef} in
 @var{oldmap}.
 @end defun
 
@@ -2907,13 +2908,13 @@ to @var{keys} to the current global keymap.
 
 @c copied from lispref/keymaps.texi
 @defun define-keymap &rest definitions
-You can create a keymap with the functions described above, and then use
-@code{keymap-set} (@pxref{Changing Key Bindings,,,elisp}) to specify key
-bindings in that map.  When writing modes, however, you frequently have
-to bind a large number of keys at once, and using @code{keymap-set} on
-them all can be tedious and error-prone.  Instead you can use
-@code{define-keymap}, which creates a keymap and binds a number of keys.
-Here's a very basic example:
+You can create a keymap with the functions described above, and then
+use @code{keymap-set} (@pxref{Changing Key Bindings,,,elisp}) to
+specify key bindings in that map.  When writing modes, however, you
+frequently have to bind a large number of keys at once, and using
+@code{keymap-set} on them all can be tedious and error-prone.  Instead
+you can use @code{define-keymap}, which creates a keymap and binds a
+number of keys.  Here's a very basic example:
 
 @lisp
 (define-keymap
@@ -3035,7 +3036,8 @@ The same keyword arguments are supported as in
 
 @c based on lisp/emacs-lisp/cl-lib.el
 @defun cl-constantly value
-Return a function that takes any number of arguments, but returns @var{value}.
+Return a function that takes any number of arguments, but returns
+@var{value}.
 @end defun
 
 @c copied from lispref/cl.texi
@@ -3122,16 +3124,16 @@ since their calling convention or behavior was extended in Emacs 29.1:
 This function adds @var{keymap} as a @dfn{transient} keymap, which
 takes precedence over other keymaps for one (or more) subsequent keys.
 
-Normally, @var{keymap} is used just once, to look up the very next key.
-If the optional argument @var{keep-pred} is @code{t}, the map stays
-active as long as the user types keys defined in @var{keymap}; when the
-user types a key that is not in @var{keymap}, the transient keymap is
-deactivated and normal key lookup continues for that key.
+Normally, @var{keymap} is used just once, to look up the very next
+key.  If the optional argument @var{keep-pred} is @code{t}, the map
+stays active as long as the user types keys defined in @var{keymap};
+when the user types a key that is not in @var{keymap}, the transient
+keymap is deactivated and normal key lookup continues for that key.
 
-The @var{keep-pred} argument can also be a function.  In that case, the
-function is called with no arguments, prior to running each command,
-while @var{keymap} is active; it should return non-@code{nil} if
-@var{keymap} should stay active.
+The @var{keep-pred} argument can also be a function.  In that case,
+the function is called with no arguments, prior to running each
+command, while @var{keymap} is active; it should return non-@code{nil}
+if @var{keymap} should stay active.
 
 The optional argument @var{on-exit}, if non-@code{nil}, specifies a
 function that is called, with no arguments, after @var{keymap} is
@@ -3177,8 +3179,8 @@ non-@code{nil}, the definition will be removed.  This is almost the
 same as setting the definition to @code{nil}, but makes a difference
 if the @var{keymap} has a parent, and @var{key} is shadowing the same
 binding in the parent.  With @var{remove}, subsequent lookups will
-return the binding in the parent, whereas with a @code{nil} definition the
-lookups will return @code{nil}.
+return the binding in the parent, whereas with a @code{nil} definition
+the lookups will return @code{nil}.
 
 @xref{Low-Level Key Binding,,,elisp}.
 
@@ -3205,11 +3207,11 @@ Variables,,,elisp}) that can be used to change a value with
 @c copied from lispref/lists.texi
 @defun compat-call@ plist-put plist prop val &optional predicate
 This stores @var{value} as the value of the @var{property} property in
-the property list @var{plist}.  Comparisons are done with @var{predicate},
-and defaults to @code{eq}.  It may modify @var{plist} destructively,
-or it may construct a new list structure without altering the old.  The
-function returns the modified property list, so you can store that back
-in the place where you got @var{plist}.
+the property list @var{plist}.  Comparisons are done with
+@var{predicate}, and defaults to @code{eq}.  It may modify @var{plist}
+destructively, or it may construct a new list structure without
+altering the old.  The function returns the modified property list, so
+you can store that back in the place where you got @var{plist}.
 
 @xref{Plist Access,,,elisp}.
 
