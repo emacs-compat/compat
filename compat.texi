@@ -231,6 +231,11 @@ used by packages, but is only useful on the configuration level.  The
 macro @code{setopt} is such an example.
 
 @item
+Private (double dashed) functions are not ported back.  If Compat
+includes some private functions, they are meant purely for internal
+usage.
+
+@item
 The added or extended function belongs to the ``application level''
 and not the ``library level''.  Features which are not preloaded often
 belong to the ``application level''.  Application examples are
