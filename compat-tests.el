@@ -237,8 +237,6 @@
     (should-equal 'h (get-text-property 2 'help-echo))
     (should-equal 'h (get-text-property 6 'help-echo))))
 
-  ;; TODO reenable if Emacs 29 nightly builds are updated
-(compat-tests--if (< emacs-major-version 29) (progn
 (ert-deftest with-restriction ()
   (with-temp-buffer
     (insert "abc")
@@ -259,7 +257,6 @@
     (without-restriction
       (should-equal "abc" (buffer-string)))
     (should-equal "b" (buffer-string))))
-))
 
 (ert-deftest with-memoization ()
   (let ((x (cons nil nil)) y computed)
