@@ -882,13 +882,19 @@
   (defalias 'compat-tests--alias-b 'compat-tests--alias-c)
   (should-equal (function-alias-p 'compat-tests--alias-a)
                 '(compat-tests--alias-b compat-tests--alias-c))
-  (defalias 'compat-tests--alias-d 'compat-tests--alias-e)
-  (defalias 'compat-tests--alias-e 'compat-tests--alias-d)
-  (should-error (function-alias-p 'compat-tests--alias-d))
-  (should-equal (function-alias-p 'compat-tests--alias-d 'noerror)
-                '(compat-tests--alias-e))
-  (should-equal (function-alias-p 'compat-tests--alias-d t)
-                '(compat-tests--alias-e)))
+  ;; Emacs 30 disallows cyclic function aliases
+  (if (>= emacs-major-version 30)
+      (should-error
+       (progn
+         (defalias 'compat-tests--cyclic-alias-a 'compat-tests--cyclic-alias-b)
+         (defalias 'compat-tests--cyclic-alias-b 'compat-tests--cyclic-alias-a)))
+    (defalias 'compat-tests--cyclic-alias-a 'compat-tests--cyclic-alias-b)
+    (defalias 'compat-tests--cyclic-alias-b 'compat-tests--cyclic-alias-a)
+    (should-error (function-alias-p 'compat-tests--cyclic-alias-a))
+    (should-equal (function-alias-p 'compat-tests--cyclic-alias-a 'noerror)
+                  '(compat-tests--cyclic-alias-b))
+    (should-equal (function-alias-p 'compat-tests--cyclic-alias-a t)
+                  '(compat-tests--cyclic-alias-b))))
 
 (ert-deftest ignore-error ()
   (should-equal (ignore-error (end-of-file)
