@@ -1,4 +1,5 @@
 #+title: compat.el - Changelog
+#+link:  compat https://todo.sr.ht/~pkal/compat/
 
 * Development
 
