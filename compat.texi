@@ -3245,6 +3245,8 @@ implemented in 29.1:
 
 @itemize
 @item
+Support for the @code{key} defcustom type.
+@item
 The function @code{imagep}.
 @item
 The function @code{image-at-point-p}.
