@@ -5,6 +5,7 @@
 * Development
 
 - compat-27: Drop obsolete ~compat-call dired-get-marked-files~.
+- compat-28: Add support for ~defcustom~ type ~natnum~.
 - compat-29: Add ~with-restriction~ and ~without-restriction~.
 - compat-29: Add ~cl-constantly~.
 - compat-29: Drop ~with-narrowing~ which was renamed to ~with-restriction~.

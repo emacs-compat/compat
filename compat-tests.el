@@ -2956,5 +2956,10 @@
   (should-equal 3 (seq-length '(a b c)))
   (should-equal 3 (seq-length [a b c])))
 
+(ert-deftest widget-natnum ()
+  (with-temp-buffer
+    (should-error (widget-create 'compat--not-existing))
+    (should-equal (take 3 (widget-create 'natnum)) '(natnum :value "0"))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

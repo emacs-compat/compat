@@ -1689,6 +1689,9 @@ The following functions and macros are implemented in Emacs
 28.1. These functions are made available by Compat on Emacs versions
 older than 28.1.
 
+The @code{defcustom} type @code{natnum} introduced in Emacs 28.1 is
+made available by Compat.
+
 @c copied from lispref/processes.texi
 @defun process-lines-ignore-status program &rest args
 This function is just like @code{process-lines}, but does not signal
@@ -2212,8 +2215,6 @@ Support for @code{:predicate} argument to
 Support for the @code{:success} handler of @code{condition-case}.
 @item
 The function @code{benchmark-call}.
-@item
-Support for the @code{natnum} defcustom type.
 @item
 Additional Edebug keywords.
 @item
