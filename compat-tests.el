@@ -883,7 +883,7 @@
   (should-equal (function-alias-p 'compat-tests--alias-a)
                 '(compat-tests--alias-b compat-tests--alias-c))
   ;; Emacs 30 disallows cyclic function aliases
-  (if (>= emacs-major-version 30)
+  (compat-tests--if (>= emacs-major-version 30)
       (should-error
        (progn
          (defalias 'compat-tests--cyclic-alias-a 'compat-tests--cyclic-alias-b)
@@ -1062,7 +1062,7 @@
                    (insert "foo")
                    (goto-char 2)
                    (insert " ")
-                   (backward-delete-char 1)
+                   (delete-char (- 1))
                    (buffer-hash))
                  (sha1 "foo")))
 
