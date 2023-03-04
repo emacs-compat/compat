@@ -1,4 +1,5 @@
-#+link:    compat https://todo.sr.ht/~pkal/compat/
+#+link:    compat-srht https://todo.sr.ht/~pkal/compat/
+#+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
 * Development
@@ -41,7 +42,8 @@
 
 - Fix regression, which prevented loading Compat in interpreted mode. We ensure
   that Compat works interpreted and byte compiled by running the entire test
-  suite twice in the CI.
+  suite twice in the CI. See https://github.com/magit/magit/issues/4858 for the
+  corresponding Magit issue.
 - compat-27: Add ~file-name-unquote~.
 - compat-28: Add ~mark-thing-at-mouse~.
 - compat-29: Replace ~string-lines~ with version from Emacs 29, support optional
@@ -136,7 +138,7 @@
 - compat-29: Drop broken functions ~string-pixel-width~ and
   ~buffer-text-pixel-size~. These functions had poor performance which lead to a
   downstream issue in the doom-modeline package. If a more efficient solution is
-  possible, the function will be added back.
+  possible, the function will be added back. See [[compat-gh:8]] for the bug report.
 - compat-29: Drop broken function ~string-limit~.
 - compat-29: Drop broken macro ~with-buffer-unmodified-if-unchanged~, which relied
   on ~buffer-hash~ which does not exist on all supported Emacs versions.
@@ -178,7 +180,7 @@
 
 * Release of "Compat" Version 28.1.2.2
 
-This is a minor release that hopes to address [[compat:7]].
+This is a minor release that hopes to address [[compat-srht:7]].
 
 (Release <2022-08-25 Thu>)
 
@@ -200,7 +202,7 @@ include much more documentation that had been the case previously.
 
 The main change of this release has been the major simplification of
 Compat's initialisation system, improving the situation around issues
-people had been reporting ([[compat:4]], once again) with unconventional
+people had been reporting ([[compat-srht:4]], once again) with unconventional
 or unpopular packaging systems.
 
 In addition to this, the following functional changes have been made:
@@ -217,7 +219,7 @@ Minor improvements to manual are also part of this release.
 
 This release just contains a hot-fix for an issue introduced in the
 last version, where compat.el raises an error during byte compilation.
-See [[compat:4]].
+See [[compat-srht:4]].
 
 (Release <2022-06-19 Sun>)
 
@@ -237,7 +239,7 @@ Two main changes have necessitated a new patch release:
 
 This is a minor release fixing a bug in =json-serialize=, that could
 cause unintended side-effects, not related to packages using Compat
-directly (see [[compat:2]]).
+directly (see [[compat-srht:2]]).
 
 (Released <2022-05-05 Thu>)
 
