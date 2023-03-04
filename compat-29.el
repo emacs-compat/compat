@@ -1521,5 +1521,29 @@ The same keyword arguments are supported as in
      :directory t
      ,@body))
 
+;;;; Defined in wid-edit.el
+
+(compat-guard (not (fboundp 'widget-key-validate)) ;; <compat-tests:widget-key>
+  :feature wid-edit
+  (defvar widget-key-prompt-value-history nil
+    "History of input to `widget-key-prompt-value'.")
+  (define-widget 'key 'editable-field
+    "A key sequence."
+    :prompt-value 'widget-field-prompt-value
+    :match 'widget-key-valid-p
+    :format "%{%t%}: %v"
+    :validate 'widget-key-validate
+    :keymap widget-key-sequence-map
+    :help-echo "C-q: insert KEY, EVENT, or CODE; RET: enter value"
+    :tag "Key")
+  (defun widget-key-valid-p (_widget value)
+    (key-valid-p value))
+  (defun widget-key-validate (widget)
+    (unless (and (stringp (widget-value widget))
+                 (key-valid-p (widget-value widget)))
+      (widget-put widget :error (format "Invalid key: %S"
+                                        (widget-value widget)))
+      widget)))
+
 (provide 'compat-29)
 ;;; compat-29.el ends here

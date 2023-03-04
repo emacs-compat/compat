@@ -9,6 +9,7 @@
 - compat-29: Add ~with-restriction~ and ~without-restriction~.
 - compat-29: Add ~cl-constantly~.
 - compat-29: Drop ~with-narrowing~ which was renamed to ~with-restriction~.
+- compat-28: Add support for ~defcustom~ type ~key~.
 
 * Release of "Compat" Version 29.1.3.4
 

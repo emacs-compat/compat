@@ -2271,6 +2271,9 @@ older than 29.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+The @code{defcustom} type @code{key} introduced in Emacs 28.1 is
+made available by Compat.
+
 @c based on lisp/textmodes/paragraphs.el
 @defun count-sentences start end
 Count sentences in current buffer from @var{start} to @var{end}.
@@ -3245,8 +3248,6 @@ Compat does not provide support for the following Lisp features
 implemented in 29.1:
 
 @itemize
-@item
-Support for the @code{key} defcustom type.
 @item
 The function @code{imagep}.
 @item

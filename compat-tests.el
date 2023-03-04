@@ -2967,5 +2967,9 @@
     (should-error (widget-create 'compat--not-existing))
     (should-equal (take 3 (widget-create 'natnum)) '(natnum :value "0"))))
 
+(ert-deftest widget-key ()
+  (with-temp-buffer
+    (should-equal (take 3 (widget-create 'key)) '(key :value ""))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
