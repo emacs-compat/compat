@@ -306,6 +306,7 @@ to other portions of the buffer, use `without-restriction' with the
 same LABEL argument.
 
 \(fn START END [:label LABEL] BODY)"
+  (declare (indent 0) (debug t))
   `(save-restriction
      (narrow-to-region ,start ,end)
      ;; Locking is ignored
@@ -321,6 +322,7 @@ restrictions set by `with-restriction' with the same LABEL argument
 are lifted.
 
 \(fn [:label LABEL] BODY)"
+  (declare (indent 0) (debug t))
   `(save-restriction
      (widen)
      ;; Locking is ignored
