@@ -2737,6 +2737,19 @@ time comparisons are limited to calls with the same tag.
 @xref{File Attributes,,,elisp}.
 @end defun
 
+@c based on lisp/files.el
+@defun directory-abbrev-make-regexp directory
+Create a regexp to match @var{directory} for
+@code{directory-abbrev-alist}.
+@end defun
+
+@c based on lisp/files.el
+@defun directory-abbrev-apply filename
+Apply the abbreviations in @code{directory-abbrev-alist} to @var{filename}.
+Note that when calling this, you should set @code{case-fold-search} as
+appropriate for the filesystem used for @var{filename}.
+@end defun
+
 @c based on lisp/keymap.el
 @defun key-valid-p keys
 Say whether @var{keys} is a valid key.  A key is a string consisting of

@@ -1500,6 +1500,17 @@
     (delete-file (file-name-concat dir "file"))
     (should (directory-empty-p dir))))
 
+(ert-deftest directory-abbrev-apply ()
+  (let ((directory-abbrev-alist
+         (list
+          (cons (directory-abbrev-make-regexp "/long/path/to/foo") "foo:")
+          (cons (directory-abbrev-make-regexp "/long/path/to/bar") "bar:"))))
+    (should-equal (directory-abbrev-apply "/long/path/to/foo/file") "foo:file")
+    (should-equal (directory-abbrev-apply "/long/path/to/bar/file") "bar:file")))
+
+(ert-deftest directory-abbrev-make-regexp ()
+  (should-equal (directory-abbrev-make-regexp "/home/user/") "\\`/home/user/\\(/\\|\\'\\)"))
+
 (ert-deftest make-empty-file ()
   (ert-with-temp-directory dir
     (let ((file (file-name-concat dir "file")))

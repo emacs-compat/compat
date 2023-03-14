@@ -623,6 +623,31 @@ The variable list SPEC is the same as in `if-let*'."
 
 ;;;; Defined in files.el
 
+(compat-defun directory-abbrev-make-regexp (directory) ;; <compat-tests:directory-abbrev-make-regexp>
+  "Create a regexp to match DIRECTORY for `directory-abbrev-alist'."
+  (let ((regexp
+         ;; We include a slash at the end, to avoid spurious
+         ;; matches such as `/usr/foobar' when the home dir is
+         ;; `/usr/foo'.
+         (concat "\\`" (regexp-quote directory) "\\(/\\|\\'\\)")))
+    ;; The value of regexp could be multibyte or unibyte.  In the
+    ;; latter case, we need to decode it.
+    (if (multibyte-string-p regexp)
+        regexp
+      (decode-coding-string regexp
+                            (if (eq system-type 'windows-nt)
+                                'utf-8
+                              locale-coding-system)))))
+
+(compat-defun directory-abbrev-apply (filename) ;; <compat-tests:directory-abbrev-apply>
+  "Apply the abbreviations in `directory-abbrev-alist' to FILENAME.
+Note that when calling this, you should set `case-fold-search' as
+appropriate for the filesystem used for FILENAME."
+  (dolist (dir-abbrev directory-abbrev-alist filename)
+    (when (string-match (car dir-abbrev) filename)
+         (setq filename (concat (cdr dir-abbrev)
+                                (substring filename (match-end 0)))))))
+
 (compat-defun file-name-split (filename) ;; <compat-tests:file-name-split>
   "Return a list of all the components of FILENAME.
 On most systems, this will be true:
