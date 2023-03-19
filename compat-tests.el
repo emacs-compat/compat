@@ -79,14 +79,14 @@
   (declare (indent 2))
   (if (eval cond t) then (macroexp-progn else)))
 
-(ert-deftest compat-compat-loaded-features ()
+(ert-deftest compat-loaded-features ()
   (let ((version 0))
     (while (< version 30)
       (should-equal (> version emacs-major-version)
                     (featurep (intern (format "compat-%s" version))))
       (setq version (1+ version)))))
 
-(ert-deftest compat-compat-function ()
+(ert-deftest compat-function ()
   (let ((sym (compat-function plist-put)) list)
     (should sym)
     (should (symbolp sym))
