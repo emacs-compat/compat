@@ -2,10 +2,12 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 29.1.4.1
 
 - compat-29: Add ~directory-abbrev-apply~.
 - compat-29: Add ~directory-abbrev-make-regexp~.
+
+(Release <2023-03-26 Sun>)
 
 * Release of "Compat" Version 29.1.4.0
 
