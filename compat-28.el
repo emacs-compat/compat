@@ -221,10 +221,10 @@ and BLUE, is normalized to have its value in [0,65535]."
 (compat-defun make-separator-line (&optional length) ;; <compat-tests:make-separator-line>
   "Make a string appropriate for usage as a visual separator line.
 If LENGTH is nil, use the window width."
-  ;; :extend is only supported on Emacs 27 and newer
-  (if (and (eval-when-compile (> emacs-major-version 26))
-           (not length) (display-graphic-p))
-      (propertize "\n" 'face '(:extend t :height 0.1 :inverse-video t))
+  (if (display-graphic-p)
+      (if length
+          (concat (propertize (make-string length ?\s) 'face '(:underline t)) "\n")
+        (propertize "\n" 'face '(:extend t :height 0.1 :inverse-video t)))
     (concat (make-string (or length (1- (window-width))) ?-) "\n")))
 
 ;;;; Defined in subr.el
