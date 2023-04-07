@@ -221,9 +221,7 @@ and BLUE, is normalized to have its value in [0,65535]."
 (compat-defun make-separator-line (&optional length) ;; <compat-tests:make-separator-line>
   "Make a string appropriate for usage as a visual separator line.
 If LENGTH is nil, use the window width."
-    (concat (propertize (make-string (or length (1- (window-width))) ?-)
-                        'face 'separator-line)
-            "\n"))
+    (concat (make-string (or length (1- (window-width))) ?-) "\n"))
 
 ;;;; Defined in subr.el
 
