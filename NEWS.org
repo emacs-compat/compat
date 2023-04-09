@@ -4,7 +4,8 @@
 
 * Development
 
-- Improve =make-separator-line= visuals on graphic displays.
+- compat-28: Improve =make-separator-line= visuals on graphic displays.
+- compat-28: Add =native-comp-available-p=, which always returns nil.
 
 * Release of "Compat" Version 29.1.4.1
 

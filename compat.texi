@@ -2154,6 +2154,15 @@ If native compilation is not available, this function always returns
 @code{nil}.
 @end defun
 
+@c copied from lispref/compile.texi
+@defun native-comp-available-p
+This function returns non-@code{nil} if the running Emacs process has
+the native-compilation support compiled into it.  On systems that load
+@file{libgccjit} dynamically, it also makes sure that library is
+available and can be loaded.  Lisp programs that need to know up front
+whether native-compilation is available should use this predicate.
+@end defun
+
 @c copied from on lisp/window.el
 @defmac with-window-non-dedicated window &rest body
 Evaluate @var{body} with @var{window} temporarily made non-dedicated.

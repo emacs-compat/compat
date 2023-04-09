@@ -1285,6 +1285,9 @@
   (should (compiled-function-p (symbol-function 'assq)))
   (should (compiled-function-p (symbol-function 'identity))))
 
+(ert-deftest compat-native-comp-available-p ()
+  (should (memq (native-comp-available-p) '(nil t))))
+
 (ert-deftest compat-subr-native-elisp-p ()
   (should-not (subr-native-elisp-p (symbol-function 'identity))))
 

@@ -26,6 +26,13 @@
 
 (compat-version "28.1")
 
+;;;; Defined in comp.c
+
+(compat-defun native-comp-available-p () ;; <compat-tests:native-comp-available-p>
+  "Return non-nil if native compilation support is built-in.
+NOTE: The compatibility version always returns nil."
+  nil)
+
 ;;;; Defined in fns.c
 
 ;; FIXME Should handle multibyte regular expressions
