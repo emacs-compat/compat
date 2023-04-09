@@ -278,7 +278,7 @@ in order to restore the state of the local variables set via this macro.
      (,(if (fboundp 'compat--setq-local) 'compat--setq-local 'setq-local)
       ,@pairs)))
 
-(compat-defun list-of-strings-p (object) ;; <compat-tests:lists-of-strings-p>
+(compat-defun list-of-strings-p (object) ;; <compat-tests:list-of-strings-p>
   "Return t if OBJECT is nil or a list of strings."
   (declare (pure t) (side-effect-free t))
   (while (and (consp object) (stringp (car object)))

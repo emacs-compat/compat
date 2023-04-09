@@ -139,7 +139,7 @@ inserted before contatenating."
       (setf (nthcdr count files) nil))
     files))
 
-(compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributs>
+(compat-defun directory-files-and-attributes (directory &optional full match nosort id-format count) ;; <compat-tests:directory-files-and-attributes>
   "Handle additional optional argument COUNT."
   :extended t
   (let ((files (directory-files-and-attributes directory full match nosort id-format)))
