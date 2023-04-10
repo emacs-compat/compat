@@ -7,7 +7,7 @@
 ;; Version: 29.1.4.1
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4") (seq "2.3"))
-;; Keywords: lisp
+;; Keywords: lisp, maint
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
