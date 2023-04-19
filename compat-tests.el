@@ -1750,8 +1750,9 @@
   (should-equal [1 2 3] (compat-call sort [1 3 2] #'<))
   (should-equal [1 2 3] (compat-call sort [3 2 1] #'<))
   ;; Test side effect
-  (let ((vec [4 5 8 3 1 2 3 2 3 4]))
-    (compat-call sort vec #'>)
+  (let* ((vec [4 5 8 3 1 2 3 2 3 4])
+         (sorted (compat-call sort vec #'>)))
+    (should-equal sorted [8 5 4 4 3 3 3 2 2 1])
     (should-equal vec [8 5 4 4 3 3 3 2 2 1])))
 
 (ert-deftest compat-replace-string-in-region ()
