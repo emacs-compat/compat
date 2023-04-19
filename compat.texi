@@ -1099,9 +1099,9 @@ The function @code{window-swap-states}.
 @item
 The function @code{string-version-lessp}.
 @item
-The @code{svg} library.
-@item
 The @code{xdg} library.
+@item
+The @code{svg} library (published separately as a :core package).
 @end itemize
 
 @node Emacs 27.1
