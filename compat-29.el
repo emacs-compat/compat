@@ -31,6 +31,14 @@
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
 (compat-version "29.0")
 
+;;;; Defined in startup.el
+
+(compat-defvar lisp-directory ;; <compat-tests:lisp-directory>
+    (file-truename
+     (file-name-directory
+      (locate-file "simple" load-path (get-load-suffixes))))
+  "Directory where Emacs's own *.el and *.elc Lisp files are installed.")
+
 ;;;; Defined in xdisp.c
 
 (compat-defun get-display-property (position prop &optional object properties) ;; <compat-tests:get-display-property>

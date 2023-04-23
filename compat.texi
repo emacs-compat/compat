@@ -2280,8 +2280,18 @@ older than 29.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
-The @code{defcustom} type @code{key} introduced in Emacs 28.1 is
+The @code{defcustom} type @code{key} introduced in Emacs 29.1 is
 made available by Compat.
+
+@c copied from lispref/loading.texi
+@defvar lisp-directory
+This variable holds a string naming the directory which holds Emacs's
+own @file{*.el} and @file{*.elc} files.  This is usually the place
+where those files are located in the Emacs installation tree, unless
+Emacs is run from its build directory in which case it points to the
+@file{lisp} subdirectory in the source directory from which Emacs was
+built.
+@end defvar
 
 @c based on lisp/textmodes/paragraphs.el
 @defun count-sentences start end

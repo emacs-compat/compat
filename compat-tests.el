@@ -1453,6 +1453,12 @@
   (let ((default-directory "/mock::/"))
     (should (member "/bin" (exec-path)))))
 
+(ert-deftest compat-lisp-directory ()
+  (should-equal lisp-directory
+                (file-truename
+                 (file-name-directory
+                  (locate-file "subr" load-path (get-load-suffixes))))))
+
 (ert-deftest compat-with-existing-directory ()
   (let ((dir (make-temp-name "/tmp/not-exist-")))
     (let ((default-directory dir))
