@@ -26,10 +26,10 @@
 
 ;; Preloaded in loadup.el
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
-(compat-require seq "29.0") ;; <compat-tests:seq>
+(compat-require seq "29.0.90") ;; <compat-tests:seq>
 
 ;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
-(compat-version "29.0")
+(compat-version "29.0.90")
 
 ;;;; Defined in startup.el
 
