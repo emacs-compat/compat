@@ -9,6 +9,7 @@ BYTEC = compat-25.elc \
 	compat-27.elc \
 	compat-28.elc \
 	compat-29.elc \
+	compat-30.elc \
 	compat.elc \
 	compat-macs.elc \
 	compat-tests.elc
