@@ -464,7 +464,7 @@
                    [(raise 0.5) (height 2.0)])
     (should-equal (get-text-property 9 'display) '(raise 0.5)))
   (with-temp-buffer
-    (should-equal (let ((str "some useless string"))
+    (should-equal (let ((str (copy-sequence "some useless string")))
                      (add-display-text-property 4 8 'height 2.0 str)
                      (add-display-text-property 2 12 'raise 0.5 str)
                      str)
