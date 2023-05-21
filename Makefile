@@ -1,5 +1,5 @@
 .POSIX:
-.PHONY: all compile test clean
+.PHONY: all compile test clean check
 .SUFFIXES: .el .elc
 
 EMACS = emacs
