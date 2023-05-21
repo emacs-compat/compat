@@ -2992,5 +2992,80 @@
   (with-temp-buffer
     (should-equal (take 3 (widget-create 'key)) '(key :value ""))))
 
+(ert-deftest compat-copy-tree ()
+  ;; Adapted from Emacs /test/lisp/subr-tests.el
+  ;; Check that values other than conses, vectors and records are
+  ;; neither copied nor traversed.
+  (cl-defstruct compat-test--a foo)
+  (cl-defstruct compat-test--c foo)
+  (cl-defstruct compat-test--d)
+  (cl-defstruct compat-test--e foo)
+  (let ((s (propertize "abc" 'prop (list 11 12)))
+        (h (make-hash-table :test #'equal)))
+    (puthash (list 1 2) (list 3 4) h)
+    (dolist (x (list nil 'a "abc" s h))
+      (should (eq (compat-call copy-tree x) x))
+      (should (eq (compat-call copy-tree x t) x))))
+
+  ;; Use the printer to detect common parts of Lisp values.
+  (let ((print-circle t))
+    (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
+                (cat3 (x y z) (concat "(" x " " y " " z ")")))
+      (let ((x '(a (b ((c) . d) e) (f))))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (cat3 "(a (b ((c) . d) e) (f))"
+                             "(a (b ((c) . d) e) (f))"
+                             "(a (b ((c) . d) e) (f))"))))
+      (let ((x `(a [b (c d)] ,(make-compat-test--e :foo '(f [g])))))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (if (< emacs-major-version 26)
+                           (cat3 "(a #1=[b (c d)] #2=[cl-struct-compat-test--e (f [g])])"
+                                 "(a #1# #2#)"
+                                 "(a [b (c d)] [cl-struct-compat-test--e (f [g])])")
+                         (cat3 "(a #1=[b (c d)] #2=#s(compat-test--e (f [g])))"
+                               "(a #1# #2#)"
+                               "(a [b (c d)] #s(compat-test--e (f [g])))")))))
+      (let ((x (vector 'a `(b ,(make-compat-test--c :foo 'd)))))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (if (< emacs-major-version 26)
+                           (cat3 "#1=[a (b [cl-struct-compat-test--c d])]"
+                                 "#1#"
+                                 "[a (b [cl-struct-compat-test--c d])]")
+                         (cat3 "#1=[a (b #s(compat-test--c d))]"
+                               "#1#"
+                               "[a (b #s(compat-test--c d))]")))))
+      (let ((x (make-compat-test--a :foo '(b [c d]))))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (if (< emacs-major-version 26)
+                           (cat3 "#1=[cl-struct-compat-test--a (b [c d])]"
+                                 "#1#"
+                                 "[cl-struct-compat-test--a (b [c d])]")
+                         (cat3 "#1=#s(compat-test--a (b [c d]))"
+                               "#1#"
+                               "#s(compat-test--a (b [c d]))")))))
+      ;; Check cdr recursion.
+      (let ((x `(a b . ,(vector `(c . ,(make-compat-test--d))))))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (if (< emacs-major-version 26)
+                           (cat3 "(a b . #1=[(c . [cl-struct-compat-test--d])])"
+                                 "(a b . #1#)"
+                                 "(a b . [(c . [cl-struct-compat-test--d])])")
+                         (cat3 "(a b . #1=[(c . #s(compat-test--d))])"
+                               "(a b . #1#)"
+                               "(a b . [(c . #s(compat-test--d))])")))))
+      ;; Check that we can copy DAGs (the result is a tree).
+      (let ((x (list '(a b) nil [c d] nil (make-compat-test--e :foo 'f) nil)))
+        (setf (nth 1 x) (nth 0 x))
+        (setf (nth 3 x) (nth 2 x))
+        (setf (nth 5 x) (nth 4 x))
+        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                       (if (< emacs-major-version 26)
+                           (cat3 "(#1=(a b) #1# #2=[c d] #2# #3=[cl-struct-compat-test--e f] #3#)"
+                                 "((a b) (a b) #2# #2# #3# #3#)"
+                                 "((a b) (a b) [c d] [c d] [cl-struct-compat-test--e f] [cl-struct-compat-test--e f])")
+                         (cat3 "(#1=(a b) #1# #2=[c d] #2# #3=#s(compat-test--e f) #3#)"
+                               "((a b) (a b) #2# #2# #3# #3#)"
+                               "((a b) (a b) [c d] [c d] #s(compat-test--e f) #s(compat-test--e f))"))))))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
