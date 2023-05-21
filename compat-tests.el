@@ -944,8 +944,8 @@
 
 (ert-deftest compat-ntake ()
   (should-not (ntake 5 nil))
-  (should-equal '(1 2) (ntake 5 '(1 2)))
-  (should-equal '(1 2 3) (ntake 3 '(1 2 3 4))))
+  (should-equal '(1 2) (ntake 5 (list 1 2)))
+  (should-equal '(1 2 3) (ntake 3 (list 1 2 3 4))))
 
 (ert-deftest compat-take ()
   (should-not (take 5 nil))
@@ -1752,11 +1752,11 @@
   (should-equal (list 1 2 3) (compat-call sort (list 1 2 3) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 1 3 2) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 3 2 1) #'<))
-  (should-equal [1 2 3] (compat-call sort [1 2 3] #'<))
-  (should-equal [1 2 3] (compat-call sort [1 3 2] #'<))
-  (should-equal [1 2 3] (compat-call sort [3 2 1] #'<))
+  (should-equal [1 2 3] (compat-call sort (vector 1 2 3) #'<))
+  (should-equal [1 2 3] (compat-call sort (vector 1 3 2) #'<))
+  (should-equal [1 2 3] (compat-call sort (vector 3 2 1) #'<))
   ;; Test side effect
-  (let* ((vec [4 5 8 3 1 2 3 2 3 4])
+  (let* ((vec (vector 4 5 8 3 1 2 3 2 3 4))
          (sorted (compat-call sort vec #'>)))
     (should-equal sorted [8 5 4 4 3 3 3 2 2 1])
     (should-equal vec [8 5 4 4 3 3 3 2 2 1])))
@@ -2647,7 +2647,7 @@
   )
 
 (ert-deftest compat-decoded-time ()
-  (let ((time '(second minute hour day month year weekday dst zone)))
+  (let ((time (list 'second 'minute 'hour 'day 'month 'year 'weekday 'dst 'zone)))
     (should-equal (decoded-time-second time) 'second)
     (should-equal (decoded-time-minute time) 'minute)
     (should-equal (decoded-time-hour time) 'hour)
