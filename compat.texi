@@ -3316,6 +3316,24 @@ The @code{vtable} library.
 The @code{pixel-fill} library.
 @end itemize
 
+@node Emacs 30.1
+@section Emacs 30.1
+
+@subsection Added Definitions
+The following functions and macros are implemented in Emacs
+30.1. These functions are made available by Compat on Emacs versions
+older than 30.1.  Note that due to upstream changes, it might happen
+that there will be the need for changes, so use these functions with
+care.
+
+@subsection Extended Definitions
+These functions must be called explicitly via @code{compat-call},
+since their calling convention or behavior was extended in Emacs 30.1:
+
+@subsection Missing Definitions
+Compat does not provide support for the following Lisp features
+implemented in 30.1:
+
 @node Development
 @chapter Development
 
