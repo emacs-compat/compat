@@ -32,30 +32,29 @@
 
 (compat-defun copy-tree (tree &optional vectors-and-records) ;; <compat-tests:copy-tree>
   "Handle copying records when optional arg is non-nil."
+  :min-version "26.1" ;; recordp is only available on Emacs 26.1 and newer
   :extended t
   (declare (side-effect-free error-free))
-  (if (fboundp 'recordp)
-      (if (consp tree)
-          (let (result)
-            (while (consp tree)
-              (let ((newcar (car tree)))
-                (if (or (consp (car tree))
-                        (and vectors-and-records
-                             (or (vectorp (car tree)) (recordp (car tree)))))
-                    (setq newcar (compat--copy-tree (car tree) vectors-and-records)))
-                (push newcar result))
-              (setq tree (cdr tree)))
-            (nconc (nreverse result)
-                   (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
-                       (compat--copy-tree tree vectors-and-records)
-                     tree)))
-        (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
-            (let ((i (length (setq tree (copy-sequence tree)))))
-              (while (>= (setq i (1- i)) 0)
-                (aset tree i (compat--copy-tree (aref tree i) vectors-and-records)))
-              tree)
-          tree))
-    (copy-tree tree vectors-and-records)))
+  (if (consp tree)
+      (let (result)
+        (while (consp tree)
+          (let ((newcar (car tree)))
+            (if (or (consp (car tree))
+                    (and vectors-and-records
+                         (or (vectorp (car tree)) (recordp (car tree)))))
+                (setq newcar (compat--copy-tree (car tree) vectors-and-records)))
+            (push newcar result))
+          (setq tree (cdr tree)))
+        (nconc (nreverse result)
+               (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
+                   (compat--copy-tree tree vectors-and-records)
+                 tree)))
+    (if (and vectors-and-records (or (vectorp tree) (recordp tree)))
+        (let ((i (length (setq tree (copy-sequence tree)))))
+          (while (>= (setq i (1- i)) 0)
+            (aset tree i (compat--copy-tree (aref tree i) vectors-and-records)))
+          tree)
+      tree)))
 
 (provide 'compat-30)
 ;;; compat-30.el ends here
