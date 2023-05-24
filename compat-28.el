@@ -28,10 +28,7 @@
 
 ;;;; Defined in comp.c
 
-(compat-defun native-comp-available-p () ;; <compat-tests:native-comp-available-p>
-  "Return non-nil if native compilation support is built-in.
-NOTE: The compatibility version always returns nil."
-  nil)
+(compat-defalias native-comp-available-p ignore) ;; <compat-tests:native-comp-available-p>
 
 ;;;; Defined in fns.c
 
