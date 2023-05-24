@@ -103,14 +103,16 @@ developments, without having to break compatibility.
 @section Usage
 
 The intended use-case for this library is for package developers to
-add as a dependency in the header:
+add as a dependency in the header.  The version of the Compat library
+mirrors the version of Emacs releases.  The current version of Compat
+corresponds to the upcoming Emacs 29 release.
 
 @example
 ;; Package-Requires: ((emacs "24.4") (compat "29.1.4.1"))
 @end example
 
-There is no need to depend on @code{emacs} 24.4 specifically.  One can
-choose to any newer version, if features not provided by Compat
+There is no need to depend on @code{emacs 24.4} specifically.  One can
+choose any newer version, if features not provided by Compat
 necessitate it, for example bug fixes or UI improvements.
 
 In any file where compatibility forms are used, a
@@ -125,10 +127,10 @@ should be specified: @code{(require 'compat nil 'noerror)}.  In the
 future a minimal version of Compat may be added to the Emacs core,
 such that the @code{noerror} flag will not be necessary anymore.
 
-This will load all necessary Compat definitions.  Compat also loads
-the @code{seq} library which is preloaded by default on Emacs 29.
-Note that if Compat is installed on a recent version of Emacs, all of
-the definitions are disabled at compile time, such that no negative
+This will load all necessary Compat definitions.  Compat loads the
+@code{seq} library which is preloaded by default on Emacs 29.  Note
+that if Compat is installed on a recent version of Emacs, all of the
+definitions are disabled at compile time, such that no negative
 performance impact is incurred.
 
 Note that Compat provides replacement functions with extended
@@ -203,12 +205,12 @@ limit the size of Compat and to ensure that the library stays
 maintainable.
 
 Emacs version 24.4 is chosen as the oldest version supported by
-Compat, since Elisp has seen significant changes at that version.  On
-the library level, subr-x was introduced in 24.4.  Most popular Emacs
-packages already require 24.4 or even newer versions of
+Compat, since Elisp has seen significant changes at that version.
+Since 24.4 Emacs major versions consistently bump the major version
+number. On the library level, subr-x was introduced in 24.4.  Most
+popular Emacs packages already require 24.4 or even newer versions of
 Emacs. Supporting for more historical Emacs versions would complicate
-maintainance significantly while only few packages and users would
-benefit.
+maintainance while only few packages and users would benefit.
 
 Below we list a number of reasons why certain functionality cannot be
 provided.  Note that in some special cases exceptions can be made and
