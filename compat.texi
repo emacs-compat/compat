@@ -943,7 +943,7 @@ These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 26.1:
 
 @c copied from lispref/files.texi
-@defun compat-call make-temp-file prefix &optional dir-flag suffix text
+@defun compat-call@ make-temp-file prefix &optional dir-flag suffix text
 This function creates a temporary file and returns its name.  Emacs
 creates the temporary file's name by adding to @var{prefix} some
 random characters that are different in each Emacs job.  The result is
