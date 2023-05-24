@@ -110,10 +110,9 @@ REST are attributes and the function BODY."
       ;; Remove unsupported declares.  It might be possible to set these
       ;; properties otherwise.  That should be looked into and implemented
       ;; if it is the case.
-      (when (and (listp (car-safe body)) (eq (caar body) 'declare))
-        (when (<= emacs-major-version 25)
-          (delq (assq 'side-effect-free (car body)) (car body))
-          (delq (assq 'pure (car body)) (car body))))
+      (when (and (listp (car-safe body)) (eq (caar body) 'declare) (<= emacs-major-version 25))
+        (setcar body (assq-delete-all 'pure (assq-delete-all
+                                             'side-effect-free (car body)))))
       ;; Use `:extended' name if the function is already defined.
       (let* ((defname (if (and extended (fboundp name))
                           (intern (format "compat--%s" name))
