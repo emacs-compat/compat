@@ -683,10 +683,10 @@ the results (which must be lists), by altering the results (using
 @c copied from lispref/symbols.texi
 @defun gensym &optional prefix
 This function returns a symbol using @code{make-symbol}, whose name is
-made by appending @code{gensym-counter} to @var{prefix} and incrementing
-that counter, guaranteeing that no two calls to this function will
-generate a symbol with the same name.  The prefix defaults to
-@code{"g"}.
+made by appending @code{gensym-counter} to @var{prefix} and
+incrementing that counter, guaranteeing that no two calls to this
+function will generate a symbol with the same name.  The prefix
+defaults to @code{"g"}.
 @end defun
 
 @defvar gensym-counter
@@ -771,8 +771,8 @@ file is created in the directory returned by the function
 
 @c based on lisp/files.el
 @defvar mounted-file-systems
-A regular expression matching files names that are probably on a mounted
-file system.
+A regular expression matching files names that are probably on a
+mounted file system.
 @end defvar
 
 @c copied from lispref/fiels.texi
@@ -815,11 +815,11 @@ does not include a bug that was observed with Emacs 26 (see
 
 @c copied from lispref/files.texi
 @defun file-local-name filename
-This function returns the @emph{local part} of @var{filename}.  This is
-the part of the file's name that identifies it on the remote host, and
-is typically obtained by removing from the remote file name the parts
-that specify the remote host and the method of accessing it.  For
-example:
+This function returns the @emph{local part} of @var{filename}.  This
+is the part of the file's name that identifies it on the remote host,
+and is typically obtained by removing from the remote file name the
+parts that specify the remote host and the method of accessing it.
+For example:
 
 @smallexample
 (file-local-name "/ssh:@var{user}@@@var{host}:/foo/bar") @result{}
@@ -993,8 +993,8 @@ This function returns the first association for @var{key} in
 (@pxref{Equality Predicates,,,elisp}).  If @var{testfn} is a function,
 it is called with two arguments: the @sc{car} of an element from
 @var{alist} and @var{key}.  The function returns @code{nil} if no
-association in @var{alist} has a @sc{car} equal to @var{key}, as tested
-by @var{testfn}.
+association in @var{alist} has a @sc{car} equal to @var{key}, as
+tested by @var{testfn}.
 
 @xref{Association Lists,,,elisp}.
 
@@ -1020,11 +1020,11 @@ argument @var{absolute}.
 @defun compat-call@ alist-get key alist &optional default remove testfn
 @xref{Association Lists,,,elisp}.  This function is similar to
 @code{assq}.  It finds the first association @w{@code{(@var{key}
-. @var{value})}} by comparing @var{key} with @var{alist} elements, and,
-if found, returns the @var{value} of that association.  If no
-association is found, the function returns @var{default}.  Comparison of
-@var{key} against @var{alist} elements uses the function specified by
-@var{testfn}, defaulting to @code{eq}.
+. @var{value})}} by comparing @var{key} with @var{alist} elements,
+and, if found, returns the @var{value} of that association.  If no
+association is found, the function returns @var{default}.  Comparison
+of @var{key} against @var{alist} elements uses the function specified
+by @var{testfn}, defaulting to @code{eq}.
 
 @xref{Association Lists,,,elisp,}.
 
@@ -1171,7 +1171,8 @@ causes it to evaluate @code{help-form} and display the result.
 @defun bignump object
 This predicate tests whether its argument is a large integer, and
 returns @code{t} if so, @code{nil} otherwise.  Unlike small integers,
-large integers can be @code{=} or @code{eql} even if they are not @code{eq}.
+large integers can be @code{=} or @code{eql} even if they are not
+@code{eq}.
 @end defun
 
 @c copied from lispref/numbers.texi
@@ -1606,10 +1607,11 @@ suffixes are @code{k}, @code{M}, @code{G}, @code{T}, etc.
 @end itemize
 
 The compatibility version handles the optional third (@var{space}) and
-forth (@var{unit}) arguments.  The argument @var{space} can be a string
-that is placed between the number and the unit.  The argument @var{unit}
-determines the unit to use.  By default it will be an empty string,
-unless @var{flavor} is @code{iec}, in which case it will be @code{B}.
+forth (@var{unit}) arguments.  The argument @var{space} can be a
+string that is placed between the number and the unit.  The argument
+@var{unit} determines the unit to use.  By default it will be an empty
+string, unless @var{flavor} is @code{iec}, in which case it will be
+@code{B}.
 @end defun
 
 @c copied from lispref/lists.texi
@@ -1724,8 +1726,8 @@ Return the position of the first instance of @var{needle} in
 @var{haystack}, both of which are strings.  If @var{start-pos} is
 non-@code{nil}, start searching from that position in @var{needle}.
 Return @code{nil} if no match was found.  This function only considers
-the characters in the strings when doing the comparison; text properties
-are ignored.  Matching is always case-sensitive.
+the characters in the strings when doing the comparison; text
+properties are ignored.  Matching is always case-sensitive.
 @end defun
 
 @c copied from lispref/sequences.texi
@@ -1758,13 +1760,13 @@ didn't end with a slash.
 @end group
 @end example
 
-A @var{directory} or components that are @code{nil} or the empty string
-are ignored---they are filtered out first and do not affect the results
-in any way.
+A @var{directory} or components that are @code{nil} or the empty
+string are ignored---they are filtered out first and do not affect the
+results in any way.
 
 This is almost the same as using @code{concat}, but @var{dirname} (and
-the non-final components) may or may not end with slash characters, and
-this function will not double those characters.
+the non-final components) may or may not end with slash characters,
+and this function will not double those characters.
 @end defun
 
 @c based on src/alloc.c
@@ -1943,15 +1945,14 @@ Remove the final newline, if any, from @var{string}.
 
 @c based on lispref/variables.texi
 @defmac named-let name bindings &rest body
-This special form is a looping construct inspired from the
-Scheme language.  It is similar to @code{let}: It binds the variables in
+This special form is a looping construct inspired from the Scheme
+language.  It is similar to @code{let}: It binds the variables in
 @var{bindings}, and then evaluates @var{body}.  However,
-@code{named-let} also binds @var{name} to a
-local function whose formal arguments are the variables in @var{bindings}
-and whose body is @var{body}.  This allows @var{body} to call itself
-recursively by calling
-@var{name}, where the arguments passed to @var{name} are used as the
-new values of the bound variables in the recursive invocation.
+@code{named-let} also binds @var{name} to a local function whose
+formal arguments are the variables in @var{bindings} and whose body is
+@var{body}.  This allows @var{body} to call itself recursively by
+calling @var{name}, where the arguments passed to @var{name} are used
+as the new values of the bound variables in the recursive invocation.
 
 Recursive calls to @var{name} that occur in @emph{tail positions} in
 @var{body} are guaranteed to be optimized as @emph{tail calls}, which
