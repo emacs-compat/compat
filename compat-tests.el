@@ -3003,33 +3003,31 @@
       (should (eq (compat-call copy-tree x) x))
       (should (eq (compat-call copy-tree x t) x))))
 
-  ;; TODO reenable tests when Emacs snapshot is updated to include new `copy-tree'
-  (when (< emacs-major-version 30)
-    (cl-defstruct compat-tests--rec foo)
-    (let* ((rec (make-compat-tests--rec :foo 1))
-           (lst (list rec rec)))
-      ;; Plain record
-      (should-equal (compat-call copy-tree rec) rec)
-      (should-equal (compat-call copy-tree rec t) rec)
-      (should (eq (compat-call copy-tree rec) rec))
-      (should-not (eq (compat-call copy-tree rec t) rec))
-      ;; Record inside list
-      (should-equal (compat-call copy-tree lst) lst)
-      (should-not (eq (compat-call copy-tree lst) lst))
-      (should (eq (car (compat-call copy-tree lst)) rec))
-      (should-not (eq (car (compat-call copy-tree lst t)) rec))
-      (should (eq (cadr (compat-call copy-tree lst)) rec))
-      (should-not (eq (cadr (compat-call copy-tree lst t)) rec))))
+  (cl-defstruct compat-tests--rec foo)
+  (let* ((rec (make-compat-tests--rec :foo 1))
+         (lst (list rec rec)))
+    ;; Plain record
+    (should-equal (compat-call copy-tree rec) rec)
+    (should-equal (compat-call copy-tree rec t) rec)
+    (should (eq (compat-call copy-tree rec) rec))
+    (should-not (eq (compat-call copy-tree rec t) rec))
+    ;; Record inside list
+    (should-equal (compat-call copy-tree lst) lst)
+    (should-not (eq (compat-call copy-tree lst) lst))
+    (should (eq (car (compat-call copy-tree lst)) rec))
+    (should-not (eq (car (compat-call copy-tree lst t)) rec))
+    (should (eq (cadr (compat-call copy-tree lst)) rec))
+    (should-not (eq (cadr (compat-call copy-tree lst t)) rec))))
 
-  ;; Use the printer to detect common parts of Lisp values.
-  (let ((print-circle t))
-    (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
-                (cat3 (x y z) (concat "(" x " " y " " z ")")))
-      (let ((x '(a (b ((c) . d) e) (f))))
-        (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
-                       (cat3 "(a (b ((c) . d) e) (f))"
-                             "(a (b ((c) . d) e) (f))"
-                             "(a (b ((c) . d) e) (f))")))))))
+;; Use the printer to detect common parts of Lisp values.
+(let ((print-circle t))
+  (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
+              (cat3 (x y z) (concat "(" x " " y " " z ")")))
+    (let ((x '(a (b ((c) . d) e) (f))))
+      (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                     (cat3 "(a (b ((c) . d) e) (f))"
+                           "(a (b ((c) . d) e) (f))"
+                           "(a (b ((c) . d) e) (f))"))))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
