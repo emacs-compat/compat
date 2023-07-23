@@ -82,7 +82,10 @@
 (ert-deftest compat-loaded-features ()
   (let ((version 0))
     (while (< version 30)
-      (should-equal (> version emacs-major-version)
+      (should-equal (or (> version emacs-major-version)
+                        ;; TODO Remove when Emacs 29.1 available on CI
+                        (and (= 29 version emacs-major-version)
+                             (= 0 emacs-minor-version)))
                     (featurep (intern (format "compat-%s" version))))
       (setq version (1+ version)))))
 
