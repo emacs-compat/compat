@@ -2,11 +2,13 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 29.1.4.2
 
 - compat-28: Improve =make-separator-line= visuals on graphic displays.
 - compat-28: Add =native-comp-available-p=, which always returns nil.
 - compat-29: Add variable =lisp-directory=.
+
+(Release <2023-07-30 Sun>)
 
 * Release of "Compat" Version 29.1.4.1
 
