@@ -3062,6 +3062,13 @@ Like @code{when-let}, but repeat until a binding in @var{spec} is
 This is comparable to @code{and-let*}.
 @end defmac
 
+@c copied from lispref/windows.texi
+@defun window-configuration-equal-p config1 config2
+This function says whether two window configurations have the same
+window layout, but ignores the values of point and the saved scrolling
+positions---it can return @code{t} even if those aspects differ.
+@end defun
+
 @c based on lisp/emacs-lisp/ert-x.el
 @defmac ert-with-temp-file name &rest body
 Bind @var{name} to the name of a new temporary file and evaluate

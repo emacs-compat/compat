@@ -37,6 +37,10 @@
       (locate-file "simple" load-path (get-load-suffixes))))
   "Directory where Emacs's own *.el and *.elc Lisp files are installed.")
 
+;;;; Defined in window.c
+
+(compat-defalias window-configuration-equal-p compare-window-configurations) ;; <compat-tests:window-configuration-equal-p>
+
 ;;;; Defined in xdisp.c
 
 (compat-defun get-display-property (position prop &optional object properties) ;; <compat-tests:get-display-property>
