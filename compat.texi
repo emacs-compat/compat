@@ -2445,6 +2445,12 @@ efficient).
 @end defun
 
 @c copied from lispref/display.texi
+@defun char-uppercase-p char
+Return non-@code{nil} if @var{char} is an uppercase character
+according to Unicode.
+@end defun
+
+@c copied from lispref/display.texi
 @defmac with-delayed-message (timeout message) body@dots{}
 Sometimes it's unclear whether an operation will take a long time to
 execute or not, or it can be inconvenient to implement a progress
