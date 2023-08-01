@@ -508,6 +508,14 @@ thus overriding the value of the TIMEOUT argument to that function.")
     (when message (message "%s" message))
     exitfun))
 
+;;;; Defined in characters.el
+
+(compat-defun bidi-string-strip-control-characters (string) ;; <compat-tests:bidi-string-strip-control-characters>
+  "Strip bidi control characters from STRING and return the result."
+  (apply #'string (seq-filter (lambda (char)
+                                (not (memq char bidi-control-characters)))
+                              string)))
+
 ;;;; Defined in simple.el
 
 (compat-defun char-uppercase-p (char) ;; <compat-tests:char-uppercase-p>

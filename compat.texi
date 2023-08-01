@@ -2613,6 +2613,11 @@ The name follows the convention of other string functions.
 @xref{Creating Strings,,,elisp}.
 @end defun
 
+@c based on lisp/international/characters.el
+@defun bidi-string-strip-control-characters string
+Strip bidi control characters from @var{string} and return the result.
+@end defun
+
 @c copied from lispref/buffers.texi
 @defun buffer-match-p condition buffer-or-name &optional arg
 This function checks if a buffer designated by @code{buffer-or-name}
@@ -2914,7 +2919,7 @@ local map.
 @xref{Key Binding Commands,,,elisp}.
 @end defun
 
-@c based on from lisp/keymap.el
+@c based on lisp/keymap.el
 @defun keymap-substitute keymap olddef newdef &optional oldmap prefix
 Replace @var{olddef} with @var{newdef} for any keys in @var{keymap}
 now defined as @var{olddef}.  In other words, @var{olddef} is replaced

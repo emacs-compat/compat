@@ -4,6 +4,7 @@
 
 * Development
 
+- compat-29: Add function =bidi-string-strip-control-characters=.
 - compat-29: Add function =char-uppercase-p=.
 - compat-29: Add function =window-configuration-equal-p=.
 

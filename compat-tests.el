@@ -1843,6 +1843,12 @@
   (dolist (c (list ?a ?b ?α ?β))
     (should-not (char-uppercase-p c))))
 
+(ert-deftest compat-bidi-string-strip-control-characters ()
+  (should-equal (bidi-string-strip-control-characters (apply #'string bidi-control-characters)) "")
+  (should-equal (bidi-string-strip-control-characters "\x202e") "")
+  (should-equal (bidi-string-strip-control-characters "abc") "abc")
+  (should-equal (bidi-string-strip-control-characters "x\x202ey\x202ez") "xyz"))
+
 (ert-deftest compat-string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
   (should-equal '("a" "b" "c") (string-split "a b c")))
