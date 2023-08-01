@@ -1828,6 +1828,12 @@
       (should-equal (replace-regexp-in-region " bar" "" (point-min) 8) 1)
       (should-equal (buffer-string) "foo bar"))))
 
+(ert-deftest compat-char-uppercase-p ()
+  (dolist (c (list ?R ?S ?Ω ?Ψ))
+    (should (char-uppercase-p c)))
+  (dolist (c (list ?a ?b ?α ?β))
+    (should-not (char-uppercase-p c))))
+
 (ert-deftest compat-string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
   (should-equal '("a" "b" "c") (string-split "a b c")))
