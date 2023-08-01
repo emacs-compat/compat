@@ -406,6 +406,15 @@
       (should-equal (getenv A) B))
     (should-not (getenv A))))
 
+(ert-deftest compat-window-configuration-equal-p ()
+  (let ((wc (current-window-configuration)))
+    (should (window-configuration-equal-p wc wc))
+    (save-window-excursion
+      (with-temp-buffer
+        (pop-to-buffer (current-buffer))
+        (should-not (window-configuration-equal-p (current-window-configuration) wc))))
+    (should (window-configuration-equal-p (current-window-configuration) wc))))
+
 (ert-deftest compat-with-window-non-dedicated ()
   (unwind-protect
       (progn

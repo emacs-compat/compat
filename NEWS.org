@@ -5,6 +5,7 @@
 * Development
 
 - compat-29: Add function =char-uppercase-p=.
+- compat-29: Add function =window-configuration-equal-p=.
 
 * Release of "Compat" Version 29.1.4.2
 
