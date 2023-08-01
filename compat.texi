@@ -3315,6 +3315,8 @@ The function @code{minibuffer-lazy-highlight-setup}.
 @item
 The function @code{pp-emacs-lisp-code}.
 @item
+The functions @code{bidi-string-strip-control-characters}.
+@item
 The functions @code{xdg-state-home}, @code{xdg-current-desktop} and @code{xdg-session-type}.
 @item
 The macro @code{setopt}.
@@ -3330,6 +3332,8 @@ The @code{string-edit} library.
 The @code{vtable} library.
 @item
 The @code{pixel-fill} library.
+@item
+Support for symbols with position information.
 @end itemize
 
 @node Development
