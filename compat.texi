@@ -3315,7 +3315,9 @@ The function @code{minibuffer-lazy-highlight-setup}.
 @item
 The function @code{pp-emacs-lisp-code}.
 @item
-The functions @code{bidi-string-strip-control-characters}.
+The function @code{bidi-string-strip-control-characters}.
+@item
+The native function @code{current-cpu-time}.
 @item
 The functions @code{xdg-state-home}, @code{xdg-current-desktop} and @code{xdg-session-type}.
 @item
