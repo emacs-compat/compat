@@ -52,9 +52,8 @@ issues are inherited."
   (when (and start-pos (or (< (length haystack) start-pos)
                            (< start-pos 0)))
     (signal 'args-out-of-range (list start-pos)))
-  (save-match-data
-    (let ((case-fold-search nil))
-      (string-match (regexp-quote needle) haystack start-pos))))
+  (let (case-fold-search)
+    (string-match-p (regexp-quote needle) haystack start-pos)))
 
 (compat-defun length= (sequence length) ;; [[compat-tests:length=]]
   "Returns non-nil if SEQUENCE has a length equal to LENGTH."
