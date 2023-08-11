@@ -2136,7 +2136,12 @@
     ;; backport this behaviour.
     (should-equal 2 (string-search (compat-tests--string-to-multibyte "\377") "ab\377c"))
     (should-equal 2 (string-search (compat-tests--string-to-multibyte "o\303\270")
-                                   "foo\303\270"))))
+                                   "foo\303\270")))
+  ;; Ensure that `match-data' is preserved by `string-search'
+  (string-match (rx (* "a") (group (* "b")) (* "a")) "abba")
+  (should-equal '(0 4 1 3) (match-data))
+  (should (string-search "foo" "foobar"))
+  (should-equal '(0 4 1 3) (match-data)))
 
 (ert-deftest compat-string-replace ()
   (should-equal "bba" (string-replace "aa" "bb" "aaa"))
