@@ -4,11 +4,18 @@
 
 * Development
 
+- compat-29: Add function =char-uppercase-p=.
+- compat-29: Add function =window-configuration-equal-p=.
+
+* Release of "Compat" Version 29.1.4.2
+
 - compat-28: Improve =make-separator-line= visuals on graphic displays.
 - compat-28: Add =native-comp-available-p=, which always returns nil.
 - compat-29: Add variable =lisp-directory=.
 - compat-30: Replace ~copy-tree~ with version from Emacs 30, support
   copying records with non-nil optional second argument.
+
+(Release <2023-07-30 Sun>)
 
 * Release of "Compat" Version 29.1.4.1
 

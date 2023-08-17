@@ -31,7 +31,7 @@ modify this GNU manual.”
 @finalout
 @titlepage
 @title "Compat" Manual
-@subtitle For version 29.1.4.1
+@subtitle For version 29.1.4.2
 @author Philip Kaludercic, Daniel Mendler
 @page
 @vskip 0pt plus 1filll
@@ -46,7 +46,7 @@ modify this GNU manual.”
 
 This manual documents the usage of the "Compat" Emacs lisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
-version 29.1.4.1.
+version 29.1.4.2.
 
 @insertcopying
 @end ifnottex
@@ -108,7 +108,7 @@ mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the upcoming Emacs 29 release.
 
 @example
-;; Package-Requires: ((emacs "24.4") (compat "29.1.4.1"))
+;; Package-Requires: ((emacs "24.4") (compat "29.1.4.2"))
 @end example
 
 There is no need to depend on @code{emacs 24.4} specifically.  One can
@@ -2445,6 +2445,12 @@ efficient).
 @end defun
 
 @c copied from lispref/display.texi
+@defun char-uppercase-p char
+Return non-@code{nil} if @var{char} is an uppercase character
+according to Unicode.
+@end defun
+
+@c copied from lispref/display.texi
 @defmac with-delayed-message (timeout message) body@dots{}
 Sometimes it's unclear whether an operation will take a long time to
 execute or not, or it can be inconvenient to implement a progress
@@ -2908,7 +2914,7 @@ local map.
 @xref{Key Binding Commands,,,elisp}.
 @end defun
 
-@c based on from lisp/keymap.el
+@c based on lisp/keymap.el
 @defun keymap-substitute keymap olddef newdef &optional oldmap prefix
 Replace @var{olddef} with @var{newdef} for any keys in @var{keymap}
 now defined as @var{olddef}.  In other words, @var{olddef} is replaced
@@ -3055,6 +3061,13 @@ Like @code{when-let}, but repeat until a binding in @var{spec} is
 
 This is comparable to @code{and-let*}.
 @end defmac
+
+@c copied from lispref/windows.texi
+@defun window-configuration-equal-p config1 config2
+This function says whether two window configurations have the same
+window layout, but ignores the values of point and the saved scrolling
+positions---it can return @code{t} even if those aspects differ.
+@end defun
 
 @c based on lisp/emacs-lisp/ert-x.el
 @defmac ert-with-temp-file name &rest body
@@ -3302,6 +3315,10 @@ The function @code{minibuffer-lazy-highlight-setup}.
 @item
 The function @code{pp-emacs-lisp-code}.
 @item
+The function @code{bidi-string-strip-control-characters}.
+@item
+The native function @code{current-cpu-time}.
+@item
 The functions @code{xdg-state-home}, @code{xdg-current-desktop} and @code{xdg-session-type}.
 @item
 The macro @code{setopt}.
@@ -3317,6 +3334,8 @@ The @code{string-edit} library.
 The @code{vtable} library.
 @item
 The @code{pixel-fill} library.
+@item
+Support for symbols with position information.
 @end itemize
 
 @node Emacs 30.1

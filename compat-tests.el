@@ -406,6 +406,15 @@
       (should-equal (getenv A) B))
     (should-not (getenv A))))
 
+(ert-deftest compat-window-configuration-equal-p ()
+  (let ((wc (current-window-configuration)))
+    (should (window-configuration-equal-p wc wc))
+    (save-window-excursion
+      (with-temp-buffer
+        (pop-to-buffer (current-buffer))
+        (should-not (window-configuration-equal-p (current-window-configuration) wc))))
+    (should (window-configuration-equal-p (current-window-configuration) wc))))
+
 (ert-deftest compat-with-window-non-dedicated ()
   (unwind-protect
       (progn
@@ -1828,6 +1837,12 @@
       (should-equal (replace-regexp-in-region " bar" "" (point-min) 8) 1)
       (should-equal (buffer-string) "foo bar"))))
 
+(ert-deftest compat-char-uppercase-p ()
+  (dolist (c (list ?R ?S ?Ω ?Ψ))
+    (should (char-uppercase-p c)))
+  (dolist (c (list ?a ?b ?α ?β))
+    (should-not (char-uppercase-p c))))
+
 (ert-deftest compat-string-split ()
   (should-equal '("a" "b" "c") (split-string "a b c"))
   (should-equal '("a" "b" "c") (string-split "a b c")))
@@ -2121,7 +2136,12 @@
     ;; backport this behaviour.
     (should-equal 2 (string-search (compat-tests--string-to-multibyte "\377") "ab\377c"))
     (should-equal 2 (string-search (compat-tests--string-to-multibyte "o\303\270")
-                                   "foo\303\270"))))
+                                   "foo\303\270")))
+  ;; Ensure that `match-data' is preserved by `string-search'
+  (string-match (rx (* "a") (group (* "b")) (* "a")) "abba")
+  (should-equal '(0 4 1 3) (match-data))
+  (should (string-search "foo" "foobar"))
+  (should-equal '(0 4 1 3) (match-data)))
 
 (ert-deftest compat-string-replace ()
   (should-equal "bba" (string-replace "aa" "bb" "aaa"))
