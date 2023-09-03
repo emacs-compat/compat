@@ -22,8 +22,7 @@
 ;;; Code:
 
 (eval-when-compile (load "compat-macs.el" nil t t))
-;; TODO Update to 29.1 as soon as the Emacs emacs-29 branch version bumped
-(compat-require compat-29 "29.0.90")
+(compat-require compat-29 "29.1")
 
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
@@ -55,6 +54,16 @@
             (aset tree i (compat--copy-tree (aref tree i) vectors-and-records)))
           tree)
       tree)))
+
+(compat-defmacro static-if (condition then-form &rest else-forms) ;; <compat-tests:static-if>
+  "A conditional compilation macro.
+Evaluate CONDITION at macro-expansion time.  If it is non-nil,
+expand the macro to THEN-FORM.  Otherwise expand it to ELSE-FORMS
+enclosed in a `progn' form.  ELSE-FORMS may be empty."
+  (declare (indent 2) (debug (sexp sexp &rest sexp)))
+  (if (eval condition lexical-binding)
+      then-form
+    (cons 'progn else-forms)))
 
 (provide 'compat-30)
 ;;; compat-30.el ends here

@@ -3348,6 +3348,31 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@defmac static-if condition then-form else-forms...
+Test @var{condition} at macro-expansion time.  If its value is
+non-@code{nil}, expand the macro to @var{then-form}, otherwise expand
+it to @var{else-forms} enclosed in a @code{progn}.  @var{else-forms}
+may be empty.
+
+Here is an example of its use from CC Mode, which prevents a
+@code{defadvice} form being compiled in newer versions of Emacs:
+@example
+@group
+(static-if (boundp 'comment-line-break-function)
+    (progn)
+  (defvar c-inside-line-break-advice nil)
+  (defadvice indent-new-comment-line (around c-line-break-advice
+                                             activate preactivate)
+    "Call `c-indent-new-comment-line' if in CC Mode."
+    (if (or c-inside-line-break-advice
+            (not c-buffer-is-cc-mode))
+        ad-do-it
+      (let ((c-inside-line-break-advice t))
+        (c-indent-new-comment-line (ad-get-arg 0))))))
+@end group
+@end example
+@end defmac
+
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 30.1:

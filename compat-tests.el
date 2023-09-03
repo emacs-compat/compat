@@ -75,6 +75,7 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
+;; TODO replace `compat-tests--if' with `static-if'
 (defmacro compat-tests--if (cond then &rest else)
   (declare (indent 2))
   (if (eval cond t) then (macroexp-progn else)))
@@ -3048,6 +3049,14 @@
                      (cat3 "(a (b ((c) . d) e) (f))"
                            "(a (b ((c) . d) e) (f))"
                            "(a (b ((c) . d) e) (f))"))))))
+
+(ert-deftest compat-static-if ()
+  ;; TODO enable if CI Emacs 30 snapshot has been updated
+  (compat-tests--if (< emacs-major-version 30)
+    (progn
+      (should-equal "true" (static-if t "true"))
+      (should-not (static-if nil "true"))
+      (should-equal "else2" (static-if nil "true" "else1" "else2")))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
