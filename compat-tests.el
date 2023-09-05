@@ -75,11 +75,6 @@
 (defmacro should-equal (a b)
   `(should (equal ,a ,b)))
 
-;; TODO replace `compat-tests--if' with `static-if'
-(defmacro compat-tests--if (cond then &rest else)
-  (declare (indent 2))
-  (if (eval cond t) then (macroexp-progn else)))
-
 (ert-deftest compat-loaded-features ()
   (let ((version 0))
     (while (< version 31)
@@ -893,7 +888,7 @@
   (should-equal (function-alias-p 'compat-tests--alias-a)
                 '(compat-tests--alias-b compat-tests--alias-c))
   ;; Emacs 30 disallows cyclic function aliases
-  (compat-tests--if (>= emacs-major-version 30)
+  (static-if (>= emacs-major-version 30)
       (should-error
        (progn
          (defalias 'compat-tests--cyclic-alias-a 'compat-tests--cyclic-alias-b)
@@ -1898,7 +1893,7 @@
   (should-equal '(" abc" " bcd " "cde ") (string-lines " abc\n bcd \ncde "))
 
   ;; NOTE: Behavior for trailing newline was different on Emacs 28
-  (compat-tests--if (= emacs-major-version 28)
+  (static-if (= emacs-major-version 28)
       (should-equal '("a" "b" "c" "") (string-lines "a\nb\nc\n"))
     (should-equal '("a" "b" "c") (string-lines "a\nb\nc\n"))
     (should-equal '("a\n" "\n" "b\n" "c\n") (string-lines "a\n\nb\nc\n" nil t))
@@ -2223,7 +2218,7 @@
 
 (ert-deftest compat-when-let ()
   ;; FIXME Broken on Emacs 25
-  (compat-tests--if (= emacs-major-version 25)
+  (static-if (= emacs-major-version 25)
       (should-equal "second"
                     (when-let
                         ((x 3)
@@ -2253,7 +2248,7 @@
 
 (ert-deftest compat-if-let ()
   ;; FIXME Broken on Emacs 25
-  (compat-tests--if (= emacs-major-version 25)
+  (static-if (= emacs-major-version 25)
       (should-equal "then"
                     (if-let
                         ((x 3)
@@ -3051,12 +3046,9 @@
                            "(a (b ((c) . d) e) (f))"))))))
 
 (ert-deftest compat-static-if ()
-  ;; TODO enable if CI Emacs 30 snapshot has been updated
-  (compat-tests--if (< emacs-major-version 30)
-    (progn
-      (should-equal "true" (static-if t "true"))
-      (should-not (static-if nil "true"))
-      (should-equal "else2" (static-if nil "true" "else1" "else2")))))
+  (should-equal "true" (static-if t "true"))
+  (should-not (static-if nil "true"))
+  (should-equal "else2" (static-if nil "true" "else1" "else2")))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
