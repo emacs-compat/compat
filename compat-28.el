@@ -65,7 +65,7 @@ issues are inherited."
          t))
    ((arrayp sequence)
     (= (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 (compat-defun length< (sequence length) ;; [[compat-tests:length<]]
   "Returns non-nil if SEQUENCE is shorter than LENGTH."
@@ -75,7 +75,7 @@ issues are inherited."
     (null (nthcdr (1- length) sequence)))
    ((arrayp sequence)
     (< (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 (compat-defun length> (sequence length) ;; [[compat-tests:length>]]
   "Returns non-nil if SEQUENCE is longer than LENGTH."
@@ -84,7 +84,7 @@ issues are inherited."
     (and (nthcdr length sequence) t))
    ((arrayp sequence)
     (> (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 ;;;; Defined in fileio.c
 
