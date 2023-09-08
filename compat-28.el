@@ -354,11 +354,10 @@ REPLACEMENT can use the following special elements:
 (compat-defun buffer-local-boundp (symbol buffer) ;; <compat-tests:buffer-local-boundp>
   "Return non-nil if SYMBOL is bound in BUFFER.
 Also see `local-variable-p'."
-  (catch 'fail
-    (condition-case nil
-        (buffer-local-value symbol buffer)
-      (void-variable nil (throw 'fail nil)))
-    t))
+  (condition-case nil
+      (progn (buffer-local-value symbol buffer)
+             t)
+    (void-variable nil)))
 
 (compat-defmacro with-existing-directory (&rest body) ;; <compat-tests:with-existing-directory>
   "Execute BODY with `default-directory' bound to an existing directory.
