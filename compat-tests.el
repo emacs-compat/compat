@@ -811,15 +811,15 @@
     (unwind-protect
         (progn
           (use-global-map (make-sparse-keymap))
-          (should-not (keymap-global-lookup "s-c"))
+          (should-not (keymap-global-lookup "H-c"))
           (should-not (keymap-global-lookup "x"))
-          (keymap-global-set "s-c" 'test)
+          (keymap-global-set "H-c" 'test)
           (keymap-global-set "<t>" 'default)
-          (should-equal (keymap-global-lookup "s-c") 'test)
+          (should-equal (keymap-global-lookup "H-c") 'test)
           (should-equal (keymap-global-lookup "x" t) 'default)
           (should-not (keymap-global-lookup "x")))
       (use-global-map orig))
-    (should-not (keymap-global-lookup "s-c"))))
+    (should-not (keymap-global-lookup "H-c"))))
 
 (ert-deftest compat-keymap-global-lookup ()
   (should-equal (keymap-global-lookup "C-x b") #'switch-to-buffer)
@@ -1330,10 +1330,10 @@
                          (list (list) (list) (list) (list)))))
 
 (ert-deftest compat-xor ()
-  (should (xor t nil))
-  (should (xor nil t))
+  (should (equal (xor 'a nil) 'a))
+  (should (equal (xor nil 'b) 'b))
   (should-not (xor nil nil))
-  (should-not (xor t t)))
+  (should-not (xor 'a 'b)))
 
 (ert-deftest compat-length= ()
   (should (length= '() 0))                  ;empty list

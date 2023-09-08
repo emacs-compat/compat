@@ -34,7 +34,7 @@
 
 ;; FIXME Should handle multibyte regular expressions
 (compat-defun string-search (needle haystack &optional start-pos) ;; <compat-tests:string-search>
-  "Search for the string NEEDLE in the strign HAYSTACK.
+  "Search for the string NEEDLE in the string HAYSTACK.
 
 The return value is the position of the first occurrence of
 NEEDLE in HAYSTACK, or nil if no match was found.
@@ -65,7 +65,7 @@ issues are inherited."
          t))
    ((arrayp sequence)
     (= (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 (compat-defun length< (sequence length) ;; [[compat-tests:length<]]
   "Returns non-nil if SEQUENCE is shorter than LENGTH."
@@ -75,7 +75,7 @@ issues are inherited."
     (null (nthcdr (1- length) sequence)))
    ((arrayp sequence)
     (< (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 (compat-defun length> (sequence length) ;; [[compat-tests:length>]]
   "Returns non-nil if SEQUENCE is longer than LENGTH."
@@ -84,7 +84,7 @@ issues are inherited."
     (and (nthcdr length sequence) t))
    ((arrayp sequence)
     (> (length sequence) length))
-   ((signal 'wrong-type-argument sequence))))
+   (t (signal 'wrong-type-argument (list 'sequencep sequence)))))
 
 ;;;; Defined in fileio.c
 
@@ -354,11 +354,10 @@ REPLACEMENT can use the following special elements:
 (compat-defun buffer-local-boundp (symbol buffer) ;; <compat-tests:buffer-local-boundp>
   "Return non-nil if SYMBOL is bound in BUFFER.
 Also see `local-variable-p'."
-  (catch 'fail
-    (condition-case nil
-        (buffer-local-value symbol buffer)
-      (void-variable nil (throw 'fail nil)))
-    t))
+  (condition-case nil
+      (progn (buffer-local-value symbol buffer)
+             t)
+    (void-variable nil)))
 
 (compat-defmacro with-existing-directory (&rest body) ;; <compat-tests:with-existing-directory>
   "Execute BODY with `default-directory' bound to an existing directory.
