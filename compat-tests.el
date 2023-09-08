@@ -1329,10 +1329,10 @@
                          (list (list) (list) (list) (list)))))
 
 (ert-deftest compat-xor ()
-  (should (xor t nil))
-  (should (xor nil t))
+  (should (equal (xor 'a nil) 'a))
+  (should (equal (xor nil 'b) 'b))
   (should-not (xor nil nil))
-  (should-not (xor t t)))
+  (should-not (xor 'a 'b)))
 
 (ert-deftest compat-length= ()
   (should (length= '() 0))                  ;empty list
