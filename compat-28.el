@@ -34,7 +34,7 @@
 
 ;; FIXME Should handle multibyte regular expressions
 (compat-defun string-search (needle haystack &optional start-pos) ;; <compat-tests:string-search>
-  "Search for the string NEEDLE in the strign HAYSTACK.
+  "Search for the string NEEDLE in the string HAYSTACK.
 
 The return value is the position of the first occurrence of
 NEEDLE in HAYSTACK, or nil if no match was found.
