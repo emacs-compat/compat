@@ -3355,11 +3355,24 @@ Please note that as a GNU ELPA package, Compat requires contributors
 to have signed the
 @uref{https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html,
 FSF copyright assignment}, before any non-trivial contribution
-(roughly 15 lines of code) can be applied.  It is important that you
-provide tests when you contribute new functionality.  Compat has 100%
-test coverage by the test suite.  We use continuous integration to
-check if patches preserve existing functionality.
+(roughly 15 lines of code) can be applied.
 
+It is important that you provide tests when you contribute new
+functionality.  Compat has 100% test coverage by the test suite.  We
+use continuous integration to check if patches preserve existing
+functionality.
+
+Development for the currently stable Emacs version happens in the main
+branch of the Compat Git repository.  ELPA-devel nightly builds are
+created from this branch.  New features, which are not yet ready to be
+merged directly into the main branch, are developed in feature
+branches.  Furthermore the Git repository has a branch emacs-<version>
+where the development for the upcoming Emacs release takes place.
+This branch is separate from the main branch since the new
+functionality should not be made available (neither via ELPA nor
+ELPA-devel) before the new Emacs version has been reasonably
+stabilized, e.g., around the time when the Emacs version branch is
+created in the Emacs repository on Savannah.
 
 @node Function Index
 @appendix Function Index
