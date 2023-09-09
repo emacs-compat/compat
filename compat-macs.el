@@ -17,12 +17,13 @@
 
 ;;; Commentary:
 
-;; This file provides *internal* macros, which are used by Compat to
-;; facilitate the definition of compatibility functions, macros and
-;; variables.  The `compat-macs' feature should never be loaded at
-;; runtime in your Emacs and will only be used during byte
-;; compilation.  Every definition provided here should be considered
-;; internal and may change any time between Compat releases.
+;; WARNING: This file provides *internal* macros.  The macros are used
+;; by Compat to facilitate the definition of compatibility functions,
+;; compatibility macros and compatibility variables.  The
+;; `compat-macs' feature should never be loaded at runtime in your
+;; Emacs and will only be used during byte compilation.  Every
+;; definition provided here is internal, may change any time between
+;; Compat releases and must not be used by other packages.
 
 ;;; Code:
 
