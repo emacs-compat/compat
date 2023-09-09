@@ -17,7 +17,7 @@
 
 ;;; Commentary:
 
-;; WARNING: This file provides *internal* macros. The macros are used
+;; WARNING: This file provides *internal* macros.  The macros are used
 ;; by Compat to facilitate the definition of compatibility functions,
 ;; compatibility macros and compatibility variables.  The
 ;; `compat-macs' feature should never be loaded at runtime in your
