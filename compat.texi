@@ -165,11 +165,11 @@ compatibility functions.
 If Compat is used in core packages, where Compat must be required
 currently with the @code{noerror} flag, the macros @code{compat-call}
 and @code{compat-function} ar not available.  In the future the macros
-could be added to subr.  Alternatively a minimal version of compat.el
-could be added to the core.  For now it is necessary to replicate the
-definition of the macros within core packages.  For example the
-package ERC defines its own macro @code{erc-compat-call}, which
-replicates the Compat definition precisely.
+could be added to subr.el.  Alternatively a minimal version of
+compat.el could be added to the core.  For now it is necessary to
+replicate the definition of the macros within core packages.  For
+example the package ERC defines its own macro @code{erc-compat-call},
+which replicates the Compat definition precisely.
 
 This design has been chosen since Compat does not advise or override
 existing functions.  Generally Compat is written in defensive style
@@ -210,7 +210,7 @@ Since 24.4 Emacs major versions consistently bump the major version
 number. On the library level, subr-x was introduced in 24.4.  Most
 popular Emacs packages already require 24.4 or even newer versions of
 Emacs. Supporting for more historical Emacs versions would complicate
-maintainance while only few packages and users would benefit.
+maintenance while only few packages and users would benefit.
 
 Below we list a number of reasons why certain functionality cannot be
 provided.  Note that in some special cases exceptions can be made and
@@ -264,7 +264,7 @@ Bug fixes are usually not ported back as part of Compat.  Sometimes
 library functions show wrong behavior for edge cases.  In those cases
 Compat could in principle provide a compatibility function which is
 invoked via @code{compat-call}. Such extended definitions would
-increase the maintainance burden of Compat. At the same time the
+increase the maintenance burden of Compat. At the same time the
 benefits would be small given that Compat does not override existing
 definitions.
 
@@ -291,8 +291,8 @@ backport impossible. For example a missing libxml cannot be emulated.
 
 @item
 The semantics of Elisp changed on a deep level. For example the
-addition of Bigint support in Emacs 27.1 cannot be replicated on the
-level of Compat.
+addition of big integer support in Emacs 27.1 cannot be replicated on
+the level of Compat.
 @end itemize
 
 @node Support
