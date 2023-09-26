@@ -1,17 +1,30 @@
 .POSIX:
-.PHONY: all compile force-compile test clean check
+.PHONY: all compile force-compile test clean check install
 .SUFFIXES: .el .elc
+
+DESTDIR ?=
+PREFIX  ?= /usr
+DATADIR ?= $(PREFIX)/share
+ELDIR   ?= $(DATADIR)/emacs/site-lisp
+INFODIR	?= $(DATADIR)/info
+
 
 EMACS = emacs
 MAKEINFO = makeinfo
-BYTEC = compat-25.elc \
+GZIP	= gzip
+INSTALL_INFO = install-info
+RUNTIME = compat-25.elc \
 	compat-26.elc \
 	compat-27.elc \
 	compat-28.elc \
 	compat-29.elc \
-	compat.elc \
+	compat.elc
+DEVELOPMENT = \
 	compat-macs.elc \
 	compat-tests.elc
+BYTEC = $(RUNTIME) \
+		$(DEVELOPMENT) \
+INFOS = compat.info
 
 all: compile
 
@@ -42,6 +55,23 @@ check:
 		sed -E "s/.*<compat-tests:([^)]+)>|.*\\[\\[compat-tests:([^)]+)\\]\\]/\1\2/g" | \
 		sort | uniq > /tmp/compat-links
 	@ (diff /tmp/compat-defs /tmp/compat-defs)
+
+install: $(addprefix install-,compat-runtime-el compat-info)
+
+install-compat-runtime-el: $(RUNTIME) $(RUNTIME:.elc=.el)
+
+install-compat-info: compat.info
+
+install-%-el:
+	$(if $<, install -m755 -d $(DESTDIR)$(ELDIR))
+	$(if $<, install -m644 $^ $(DESTDIR)$(ELDIR))
+
+install-%-info:
+	$(if $<, install -m755 -d $(DESTDIR)$(INFODIR))
+	$(if $<, $(INSTALL_INFO) --info-file=$< --info-dir=$(DESTDIR)$(INFODIR))
+	$(if $<, install $^ $(DESTDIR)$(INFODIR))
+	$(if $<, $(GZIP) -9nf $(DESTDIR)$(INFODIR)/$<)
+
 
 $(BYTEC): compat-macs.el
 
