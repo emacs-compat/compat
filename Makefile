@@ -1,5 +1,5 @@
 .POSIX:
-.PHONY: all compile test clean check
+.PHONY: all compile force-compile test clean check
 .SUFFIXES: .el .elc
 
 EMACS = emacs
@@ -16,6 +16,11 @@ BYTEC = compat-25.elc \
 all: compile
 
 compile: $(BYTEC)
+
+force-compile:
+	sed -i "s/ no-byte-compile: t;/ no-byte-compile: nil;/" $(BYTEC:.elc=.el)
+	make compile
+	sed -i "s/ no-byte-compile: nil;/ no-byte-compile: t;/" $(BYTEC:.elc=.el)
 
 test:
 	$(EMACS) --version
