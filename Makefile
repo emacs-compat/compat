@@ -17,11 +17,11 @@
 
 ### Commentary:
 
-# The Makefile is an internal tool used for Compat development and checking on
-# the continuous integration system.
+# The Makefile is an internal tool used for Compat development and
+# checking on the continuous integration system.
 
 # make all/compile   Compile Elisp files without no-byte-compile marking
-# make force-compile Compile *all* Elisp files to check for compilation warnings
+# make force-compile Compile *all* Elisp files to check for warnings
 # make clean         Delete compiled *.elc and *.info files
 # make test          Run the test suite
 # make check         Sanity checking of the test suite
@@ -48,9 +48,9 @@ all: compile
 compile: $(BYTEC)
 
 force-compile:
-	sed -i "s/ no-byte-compile: t;/ no-byte-compile: nil;/" $(BYTEC:.elc=.el)
-	make compile
-	sed -i "s/ no-byte-compile: nil;/ no-byte-compile: t;/" $(BYTEC:.elc=.el)
+	@sed -i "s/ no-byte-compile: t;/ no-byte-compile: nil;/" $(BYTEC:.elc=.el)
+	@$(MAKE) compile
+	@sed -i "s/ no-byte-compile: nil;/ no-byte-compile: t;/" $(BYTEC:.elc=.el)
 
 test:
 	$(EMACS) --version
