@@ -2,10 +2,12 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 29.1.4.3
 
 - compat-29: Add function =char-uppercase-p=.
 - compat-29: Add function =window-configuration-equal-p=.
+
+(Release <2023-11-04 Sat>)
 
 * Release of "Compat" Version 29.1.4.2
 
