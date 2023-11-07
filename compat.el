@@ -6,7 +6,7 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>, Compat Development <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 29.1.4.3
 ;; URL: https://github.com/emacs-compat/compat
-;; Package-Requires: ((emacs "24.4") (seq "2.3"))
+;; Package-Requires: ((emacs "24.4") (seq "2.23"))
 ;; Keywords: lisp, maint
 
 ;; This program is free software; you can redistribute it and/or modify
