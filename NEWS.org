@@ -2,6 +2,13 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Release of "Compat" Version 29.1.4.4
+
+- Fix ~Package-Requires~ header in compat.el
+- Fix ~Maintainer~ header in compat.el
+
+(Release <2023-11-13 Mon>)
+
 * Release of "Compat" Version 29.1.4.3
 
 - compat-29: Add function =char-uppercase-p=.
