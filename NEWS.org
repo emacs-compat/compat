@@ -2,6 +2,15 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-30: Add =copy-tree= with support for copying records with non-nil
+  optional second argument.
+- compat-30: New macro =static-if=.
+- compat-30: New function =merge-ordered-lists=.
+- compat-30: New variables =completion-lazy-hilit= and =completion-lazy-hilit-fn=
+  and new function =completion-lazy-hilit=.
+
 * Release of "Compat" Version 29.1.4.4
 
 - Fix ~Package-Requires~ header in compat.el
@@ -21,8 +30,6 @@
 - compat-28: Improve =make-separator-line= visuals on graphic displays.
 - compat-28: Add =native-comp-available-p=, which always returns nil.
 - compat-29: Add variable =lisp-directory=.
-- compat-30: Replace ~copy-tree~ with version from Emacs 30, support
-  copying records with non-nil optional second argument.
 
 (Release <2023-07-30 Sun>)
 

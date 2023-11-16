@@ -27,7 +27,92 @@
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
 
+;;;; Defined in minibuffer.el
+
+(compat-defvar completion-lazy-hilit nil ;; <compat-tests:completion-lazy-hilit>
+  "If non-nil, request lazy highlighting of completion candidates.
+
+Lisp programs (a.k.a. \"front ends\") that present completion
+candidates may opt to bind this variable to a non-nil value when
+calling functions (such as `completion-all-completions') which
+produce completion candidates.  This tells the underlying
+completion styles that they do not need to fontify (i.e.,
+propertize with the `face' property) completion candidates in a
+way that highlights the matching parts.  Then it is the front end
+which presents the candidates that becomes responsible for this
+fontification.  The front end does that by calling the function
+`completion-lazy-hilit' on each completion candidate that is to be
+displayed to the user.
+
+Note that only some completion styles take advantage of this
+variable for optimization purposes.  Other styles will ignore the
+hint and fontify eagerly as usual.  It is still safe for a
+front end to call `completion-lazy-hilit' in these situations.
+
+To author a completion style that takes advantage of this variable,
+see `completion-lazy-hilit-fn' and `completion-pcm--hilit-commonality'.")
+
+(compat-defvar completion-lazy-hilit-fn nil ;; <compat-tests:completion-lazy-hilit>
+  "Fontification function set by lazy-highlighting completions styles.
+When a given style wants to enable support for `completion-lazy-hilit'
+\(which see), that style should set this variable to a function of one
+argument.  It will be called with each completion candidate, a string, to
+be displayed to the user, and should destructively propertize these
+strings with the `face' property.")
+
+(compat-defun completion-lazy-hilit (str) ;; <compat-tests:completion-lazy-hilit>
+  "Return a copy of completion candidate STR that is `face'-propertized.
+See documentation of the variable `completion-lazy-hilit' for more
+details."
+  (if (and completion-lazy-hilit completion-lazy-hilit-fn)
+      (funcall completion-lazy-hilit-fn (copy-sequence str))
+    str))
+
 ;;;; Defined in subr.el
+
+(compat-defun merge-ordered-lists (lists &optional error-function) ;; <compat-tests:merge-ordered-lists>
+  "Merge LISTS in a consistent order.
+LISTS is a list of lists of elements.
+Merge them into a single list containing the same elements (removing
+duplicates), obeying their relative positions in each list.
+The order of the (sub)lists determines the final order in those cases where
+the order within the sublists does not impose a unique choice.
+Equality of elements is tested with `eql'.
+
+If a consistent order does not exist, call ERROR-FUNCTION with
+a remaining list of lists that we do not know how to merge.
+It should return the candidate to use to continue the merge, which
+has to be the head of one of the lists.
+By default we choose the head of the first list."
+  (let ((result '()))
+    (setq lists (remq nil lists))
+    (while (cdr (setq lists (delq nil lists)))
+      (let* ((next nil)
+             (tail lists))
+        (while tail
+          (let ((candidate (caar tail))
+                (other-lists lists))
+            (while other-lists
+              (if (not (memql candidate (cdr (car other-lists))))
+                  (setq other-lists (cdr other-lists))
+                (setq candidate nil)
+                (setq other-lists nil)))
+            (if (not candidate)
+                (setq tail (cdr tail))
+              (setq next candidate)
+              (setq tail nil))))
+        (unless next
+          (setq next (funcall (or error-function #'caar) lists))
+          (unless (funcall
+                   (eval-when-compile (if (fboundp 'compat--assoc) 'compat--assoc 'assoc))
+                   next lists #'eql)
+            (error "Invalid candidate returned by error-function: %S" next)))
+        (push next result)
+        (setq lists
+              (mapcar (lambda (l) (if (eql (car l) next) (cdr l) l))
+                      lists))))
+    (if (null result) (car lists)
+      (append (nreverse result) (car lists)))))
 
 (compat-defun copy-tree (tree &optional vectors-and-records) ;; <compat-tests:copy-tree>
   "Handle copying records when optional arg is non-nil."

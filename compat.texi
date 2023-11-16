@@ -3348,6 +3348,61 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@defun merge-ordered-lists lists &optional error-function
+Merge @var{lists} in a consistent order.  @var{lists} is a list of
+lists of elements.  Merge them into a single list containing the same
+elements (removing duplicates), obeying their relative positions in
+each list.  The order of the (sub)lists determines the final order in
+those cases where the order within the sublists does not impose a
+unique choice.  Equality of elements is tested with @code{eql}.
+
+If a consistent order does not exist, call @var{error-function} with a
+remaining list of lists that we do not know how to merge.  It should
+return the candidate to use to continue the merge, which has to be the
+head of one of the lists.  By default we choose the head of the first
+list.
+@end defun
+
+@defvar completion-lazy-hilit
+If non-nil, request lazy highlighting of completion candidates.
+
+Lisp programs (a.k.a. "front ends") that present completion candidates
+may opt to bind this variable to a non-nil value when calling
+functions (such as @code{completion-all-completions}) which produce
+completion candidates.  This tells the underlying completion styles
+that they do not need to fontify (i.e., propertize with the
+@code{face} property) completion candidates in a way that highlights
+the matching parts.  Then it is the front end which presents the
+candidates that becomes responsible for this fontification.  The front
+end does that by calling the function @code{completion-lazy-hilit} on
+each completion candidate that is to be displayed to the user.
+
+Note that only some completion styles take advantage of this variable
+for optimization purposes.  Other styles will ignore the hint and
+fontify eagerly as usual.  It is still safe for a front end to call
+@code{completion-lazy-hilit} in these situations.
+
+To author a completion style that takes advantage of this variable,
+see @code{completion-lazy-hilit-fn} and
+@code{completion-pcm--hilit-commonality}.
+@end defvar
+
+@defvar completion-lazy-hilit-fn
+Fontification function set by lazy-highlighting completions styles.
+When a given style wants to enable support for
+@code{completion-lazy-hilit} (which see), that style should set this
+variable to a function of one argument.  It will be called with each
+completion candidate, a string, to be displayed to the user, and
+should destructively propertize these strings with the @code{face}
+property.
+@end defvar
+
+@defun completion-lazy-hilit str
+Return a copy of completion candidate @var{str} that is
+face-propertized.  See documentation of the variable
+@code{completion-lazy-hilit} for more details.
+@end defun
+
 @defmac static-if condition then-form else-forms...
 Test @var{condition} at macro-expansion time.  If its value is
 non-@code{nil}, expand the macro to @var{then-form}, otherwise expand

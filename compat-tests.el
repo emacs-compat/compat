@@ -1325,8 +1325,8 @@
                          (list (list) (list) (list) (list)))))
 
 (ert-deftest compat-xor ()
-  (should (equal (xor 'a nil) 'a))
-  (should (equal (xor nil 'b) 'b))
+  (should-equal (xor 'a nil) 'a)
+  (should-equal (xor nil 'b) 'b)
   (should-not (xor nil nil))
   (should-not (xor 'a 'b)))
 
@@ -2950,7 +2950,7 @@
     (should (directory-name-p dir))
     (should (file-directory-p dir)))
   (ert-with-temp-file file :buffer buffer
-    (should (equal (current-buffer) buffer))
+    (should-equal (current-buffer) buffer)
     (should-equal buffer-file-name file)
     (should-not (directory-name-p file))
     (should (file-readable-p file))
@@ -3040,15 +3040,38 @@
   (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
               (cat3 (x y z) (concat "(" x " " y " " z ")")))
     (let ((x '(a (b ((c) . d) e) (f))))
-      (should (equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
-                     (cat3 "(a (b ((c) . d) e) (f))"
-                           "(a (b ((c) . d) e) (f))"
-                           "(a (b ((c) . d) e) (f))"))))))
+      (should-equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                    (cat3 "(a (b ((c) . d) e) (f))"
+                          "(a (b ((c) . d) e) (f))"
+                          "(a (b ((c) . d) e) (f))")))))
 
 (ert-deftest compat-static-if ()
   (should-equal "true" (static-if t "true"))
   (should-not (static-if nil "true"))
   (should-equal "else2" (static-if nil "true" "else1" "else2")))
+
+(ert-deftest compat-completion-lazy-hilit ()
+  (let ((completion-lazy-hilit t)
+        (completion-lazy-hilit-fn (lambda (x) (concat "<" x ">"))))
+    (should-equal (completion-lazy-hilit "test") "<test>"))
+  (should-equal (completion-lazy-hilit "test") "test"))
+
+(ert-deftest compat-merge-ordered-lists ()
+  ;; TODO: Reenable this test when `merge-ordered-lists' is available on the CI
+  ;; Emacs version
+  (static-if (< emacs-major-version 30)
+    (progn
+      (should-equal (merge-ordered-lists
+                     '((B A) (C A) (D B) (E D C))
+                     (lambda (_) (error "cycle")))
+                    '(E D B C A))
+      (should-equal (merge-ordered-lists
+                     '((E D C) (B A) (C A) (D B))
+                     (lambda (_) (error "cycle")))
+                    '(E D C B A))
+      (should-error (merge-ordered-lists
+                     '((E C D) (B A) (A C) (D B))
+                     (lambda (_) (error "cycle")))))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
