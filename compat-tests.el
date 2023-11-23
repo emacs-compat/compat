@@ -1191,6 +1191,8 @@
   (should-equal '((0 . zero) a (0 . zero)) (compat-call assoc-delete-all 0 (list (cons 0 'zero) (cons 1 'one) 'a  (cons 0 'zero)) #'/=))
   (should-equal '(a (0 . zero) (0 . zero)) (compat-call assoc-delete-all 0 (list 'a (cons 0 'zero) (cons 1 'one) (cons 0 'zero)) #'/=)))
 
+;; TODO Fix broken test on Emacs 30.  This test is likely broken since
+;; 4194f9bd8705b7ccc23f49aa5795af228dab26bb on Emacs master.
 (ert-deftest compat-provided-derived-mode-p ()
   (let ((one (make-symbol "1"))
         (two (make-symbol "2"))
