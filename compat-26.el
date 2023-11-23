@@ -75,7 +75,7 @@ see `region-noncontiguous-p' and `extract-rectangle-bounds'."
 
 ;;;; Defined in subr.el
 
-(compat-defun provided-mode-derived-p (mode &rest modes) ;; <compat-tests:provided-derived-mode-p>
+(compat-defun provided-mode-derived-p (mode &rest modes) ;; <compat-tests:provided-mode-derived-p>
   "Non-nil if MODE is derived from one of MODES.
 Uses the `derived-mode-parent' property of the symbol to trace backwards.
 If you just want to check `major-mode', use `derived-mode-p'."
