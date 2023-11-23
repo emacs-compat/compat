@@ -3057,21 +3057,17 @@
   (should-equal (completion-lazy-hilit "test") "test"))
 
 (ert-deftest compat-merge-ordered-lists ()
-  ;; TODO: Reenable this test when `merge-ordered-lists' is available on the CI
-  ;; Emacs version
-  (static-if (< emacs-major-version 30)
-    (progn
-      (should-equal (merge-ordered-lists
-                     '((B A) (C A) (D B) (E D C))
-                     (lambda (_) (error "cycle")))
-                    '(E D B C A))
-      (should-equal (merge-ordered-lists
-                     '((E D C) (B A) (C A) (D B))
-                     (lambda (_) (error "cycle")))
-                    '(E D C B A))
-      (should-error (merge-ordered-lists
-                     '((E C D) (B A) (A C) (D B))
-                     (lambda (_) (error "cycle")))))))
+  (should-equal (merge-ordered-lists
+                 '((B A) (C A) (D B) (E D C))
+                 (lambda (_) (error "cycle")))
+                '(E D B C A))
+  (should-equal (merge-ordered-lists
+                 '((E D C) (B A) (C A) (D B))
+                 (lambda (_) (error "cycle")))
+                '(E D C B A))
+  (should-error (merge-ordered-lists
+                 '((E C D) (B A) (A C) (D B))
+                 (lambda (_) (error "cycle")))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
