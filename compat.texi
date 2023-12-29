@@ -3348,6 +3348,20 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/loading.texi
+@defun require-with-check feature &optional filename noerror
+This function works like @code{require}, except if @var{feature} is
+already loaded (i.e.@: is already a member of the list in
+@code{features}, see below).  If @var{feature} is already loaded, this
+function checks if @var{feature} was provided by a file different from
+@var{filename}, and if so, it by default signals an error.  If the
+value of the optional argument @var{noerror} is @code{reload}, the
+function doesn't signal an error, but instead forcibly reloads
+@var{filename}; if @var{noerror} is some other non-@code{nil} value,
+the function emits a warning about @var{feature} being already
+provided by another file.
+@end defun
+
 @defun merge-ordered-lists lists &optional error-function
 Merge @var{lists} in a consistent order.  @var{lists} is a list of
 lists of elements.  Merge them into a single list containing the same

@@ -3064,5 +3064,25 @@
                  '((E C D) (B A) (A C) (D B))
                  (lambda (_) (error "cycle")))))
 
+(ert-deftest compat-require-with-check ()
+  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
+  (static-if (< emacs-major-version 30)
+    (ert-with-temp-directory dir1
+      (ert-with-temp-directory dir2
+        (dolist (dir (list dir1 dir2))
+          (with-temp-buffer
+            (insert "(provide 'compat-reload)")
+            (write-region (point-min) (point-max)
+                          (file-name-concat dir "compat-reload.el"))))
+        (should-not (require-with-check 'compat-does-not-exist nil 'noerror))
+        (should-not (require-with-check 'compat-does-not-exist "compat-does-not-exist.el" 'noerror))
+        (let ((load-path (cons dir1 load-path)))
+          (should-equal 'compat-reload (require-with-check 'compat-reload))
+          (should-equal 'compat-reload (require-with-check 'compat-reload)))
+        (let ((load-path (cons dir2 load-path)))
+          (should-error (require-with-check 'compat-reload))
+          (should-equal 'compat-reload (require-with-check 'compat-reload nil 'noerror))
+          (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload)))))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
