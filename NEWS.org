@@ -11,6 +11,7 @@
 - compat-30: New variables =completion-lazy-hilit= and =completion-lazy-hilit-fn=
   and new function =completion-lazy-hilit=.
 - compat-30: New function =require-with-check=.
+- compat-30: New functions =find-buffer= and =get-truename-buffer=.
 
 * Release of "Compat" Version 29.1.4.4
 

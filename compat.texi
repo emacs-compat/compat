@@ -3348,6 +3348,17 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@defun get-truename-buffer filename
+Return the buffer with @code{file-truename} equal to @var{filename} (a string).
+If there is no such live buffer, return nil.
+See also @code{find-buffer-visiting}.
+@end defun
+
+@defun find-buffer variable value
+Return the buffer with buffer-local @var{variable} equal to @var{value}.
+If there is no such live buffer, return nil.
+@end defun
+
 @c copied from lispref/loading.texi
 @defun require-with-check feature &optional filename noerror
 This function works like @code{require}, except if @var{feature} is

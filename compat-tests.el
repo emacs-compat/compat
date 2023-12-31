@@ -3084,5 +3084,32 @@
           (should-equal 'compat-reload (require-with-check 'compat-reload nil 'noerror))
           (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload)))))))
 
+(defvar compat-tests-find-buffer nil)
+(ert-deftest compat-find-buffer ()
+  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
+  (static-if (< emacs-major-version 30)
+             (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
+                   (buf2 (get-buffer-create "*compat-tests-buf2*")))
+               (with-current-buffer buf1
+                 (setq-local compat-tests-find-buffer 1))
+               (with-current-buffer buf2
+                 (setq-local compat-tests-find-buffer 2))
+               (should-equal buf1 (find-buffer 'compat-tests-find-buffer 1))
+               (should-equal buf2 (find-buffer 'compat-tests-find-buffer 2))
+               (should-not (find-buffer 'compat-tests-find-buffer 3)))))
+
+(ert-deftest compat-get-truename-buffer ()
+  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
+  (static-if (< emacs-major-version 30)
+             (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
+                   (buf2 (get-buffer-create "*compat-tests-buf2*")))
+               (with-current-buffer buf1
+                 (setq-local buffer-file-truename "compat-tests-file1"))
+               (with-current-buffer buf2
+                 (setq-local buffer-file-truename "compat-tests-file2"))
+               (should-equal buf1 (get-truename-buffer "compat-tests-file1"))
+               (should-equal buf2 (get-truename-buffer "compat-tests-file2"))
+               (should-not (get-truename-buffer "compat-tests-file3")))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

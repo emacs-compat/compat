@@ -27,6 +27,21 @@
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
 
+;;;; Defined in buffer.c
+
+(compat-defun find-buffer (variable value) ;; <compat-tests:find-buffer>
+  "Return the buffer with buffer-local VARIABLE equal to VALUE.
+If there is no such live buffer, return nil."
+  (cl-loop for buffer the buffers
+           if (equal (buffer-local-value variable buffer) value)
+           return buffer))
+
+(compat-defun get-truename-buffer (filename) ;; <compat-tests:get-truename-buffer>
+  "Return the buffer with `file-truename' equal to FILENAME (a string).
+If there is no such live buffer, return nil.
+See also `find-buffer-visiting'."
+  (find-buffer 'buffer-file-truename filename))
+
 ;;;; Defined in files.el
 
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
