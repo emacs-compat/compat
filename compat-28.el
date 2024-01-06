@@ -782,7 +782,7 @@ Other uses risk returning non-nil value that point to the wrong file."
 ;;;; Defined in env.el
 
 (compat-defmacro with-environment-variables (variables &rest body) ;; <compat-tests:with-environment-variables>
-  "Set VARIABLES in the environent and execute BODY.
+  "Set VARIABLES in the environment and execute BODY.
 VARIABLES is a list of variable settings of the form (VAR VALUE),
 where VAR is the name of the variable (a string) and VALUE
 is its value (also a string).

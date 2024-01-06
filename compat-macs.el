@@ -142,7 +142,7 @@ REST are attributes and the function BODY."
 (defmacro compat-guard (cond &rest rest)
   "Guard definition with a runtime COND and a version check.
 The runtime condition must make sure that no definition is
-overriden.  REST is an attribute plist followed by the definition
+overridden.  REST is an attribute plist followed by the definition
 body.  The attributes specify the conditions under which the
 definition is generated.
 
