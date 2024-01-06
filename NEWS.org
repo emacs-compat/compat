@@ -279,7 +279,7 @@ directly (see [[compat-srht:2]]).
 * Release of "Compat" Version 28.1.1.0
 
 This release mostly fixes a number of smaller bugs that were not
-identified as of 28.1.0.0.  Nevertheless these warrent a version bump,
+identified as of 28.1.0.0.  Nevertheless these warrant a version bump,
 as some of these changes a functional.  These include:
 
 - The addition of the =file-attribute-*= accessor functions.

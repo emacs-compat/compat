@@ -2027,10 +2027,10 @@
 (ert-deftest compat-string-search ()
   ;; Find needle at the beginning of a haystack:
   (should-equal 0 (string-search "a" "abb"))
-  ;; Find needle at the begining of a haystack, with more potential
+  ;; Find needle at the beginning of a haystack, with more potential
   ;; needles that could be found:
   (should-equal 0 (string-search "a" "abba"))
-  ;; Find needle with more than one charachter at the beginning of
+  ;; Find needle with more than one character at the beginning of
   ;; a line:
   (should-equal 0 (string-search "aa" "aabbb"))
   ;; Find a needle midstring:
