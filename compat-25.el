@@ -267,5 +267,11 @@ itself or not."
                 form))))))))
    (t form)))
 
+;;;; Defined in minibuffer.el
+
+(compat-defun completion--category-override (category tag) ;; <compat-tests:completion-metadata-get>
+  "Return completion category override for CATEGORY and TAG."
+  (assq tag (cdr (assq category completion-category-overrides))))
+
 (provide 'compat-25)
 ;;; compat-25.el ends here

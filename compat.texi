@@ -3457,6 +3457,19 @@ Here is an example of its use from CC Mode, which prevents a
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 30.1:
 
+@c based on lisp/minibuffer.el
+@defun compat-call@ completion-metadata-get metadata prop
+Get property @var{prop} from completion @var{metadata}.  If the
+metadata specifies a completion category, the variables
+@code{completion-category-overrides} and
+@code{completion-category-defaults} take precedence for
+category-specific overrides.  If the completion metadata does not
+specify the property, the @code{completion-extra-properties} plist is
+consulted.  Note that the keys of the
+@code{completion-extra-properties} plist are keyword symbols, not
+plain symbols.
+@end defun
+
 @c copied from lispref/lists.texi
 @defun compat-call@ copy-tree tree &optional vectors-and-records
 This function returns a copy of the tree @var{tree}.  If @var{tree} is a

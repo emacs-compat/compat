@@ -3111,5 +3111,28 @@
                (should-equal buf2 (get-truename-buffer "compat-tests-file2"))
                (should-not (get-truename-buffer "compat-tests-file3")))))
 
+(ert-deftest compat-completion-metadata-get ()
+  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
+  (static-if (< emacs-major-version 30)
+    (progn
+      (let ((md '((a . 1) (b . 2) (c . 3) (category . compat-test))))
+        (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
+        (should-equal 1 (compat-call completion-metadata-get md 'a))
+        (should-equal 2 (compat-call completion-metadata-get md 'b))
+        (should-equal 3 (compat-call completion-metadata-get md 'c))
+        (should-not (compat-call completion-metadata-get md 'd))
+        (let ((completion-extra-properties '(:d 4)))
+          (should-equal 4 (compat-call completion-metadata-get md 'd)))
+        (let ((completion-category-overrides '((compat-test (a . 10)))))
+          (should-equal 10 (compat-call completion-metadata-get md 'a))))
+      (let ((md '((a . 1) (b . 2))))
+        (should-not (compat-call completion-metadata-get md 'category))
+        (let ((completion-extra-properties '(:category compat-test)))
+          (should-equal 1 (compat-call completion-metadata-get md 'a))
+          (should-equal 2 (compat-call completion-metadata-get md 'b))
+          (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
+          (let ((completion-category-overrides '((compat-test (a . 10)))))
+            (should-equal 10 (compat-call completion-metadata-get md 'a))))))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

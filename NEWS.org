@@ -4,14 +4,16 @@
 
 * Development
 
-- compat-30: Add =copy-tree= with support for copying records with non-nil
-  optional second argument.
+- compat-30: Add extended =copy-tree= with support for copying records with
+  non-nil optional second argument.
 - compat-30: New macro =static-if=.
 - compat-30: New function =merge-ordered-lists=.
 - compat-30: New variables =completion-lazy-hilit= and =completion-lazy-hilit-fn=
   and new function =completion-lazy-hilit=.
 - compat-30: New function =require-with-check=.
 - compat-30: New functions =find-buffer= and =get-truename-buffer=.
+- compat-30: Add extended =completion-metadata-get= with support for
+  =completion-category-overrides= and =completion-extra-properties=.
 
 * Release of "Compat" Version 29.1.4.4
 

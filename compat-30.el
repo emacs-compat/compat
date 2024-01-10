@@ -69,6 +69,32 @@ the new file (if NOERROR is equal to `reload'), or otherwise emit a warning."
 
 ;;;; Defined in minibuffer.el
 
+(compat-defun completion--metadata-get-1 (metadata prop) ;; <compat-tests:completion-metadata-get>
+  "Helper function.
+See for `completion-metadata-get' for METADATA and PROP arguments."
+  (or (alist-get prop metadata)
+      (plist-get completion-extra-properties
+                 (or (get prop 'completion-extra-properties--keyword)
+                     (put prop 'completion-extra-properties--keyword
+                          (intern (concat ":" (symbol-name prop))))))))
+
+(compat-defun completion-metadata-get (metadata prop) ;; <compat-tests:completion-metadata-get>
+  "Get property PROP from completion METADATA.
+If the metadata specifies a completion category, the variables
+`completion-category-overrides' and
+`completion-category-defaults' take precedence for
+category-specific overrides.  If the completion metadata does not
+specify the property, the `completion-extra-properties' plist is
+consulted.  Note that the keys of the
+`completion-extra-properties' plist are keyword symbols, not
+plain symbols."
+  :extended t
+  (if-let ((cat (and (not (eq prop 'category))
+                     (completion--metadata-get-1 metadata 'category)))
+           (over (completion--category-override cat prop)))
+      (cdr over)
+    (completion--metadata-get-1 metadata prop)))
+
 (compat-defvar completion-lazy-hilit nil ;; <compat-tests:completion-lazy-hilit>
   "If non-nil, request lazy highlighting of completion candidates.
 
