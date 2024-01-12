@@ -1,6 +1,6 @@
 ;;; compat.el --- Emacs Lisp Compatibility Library -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
+;; Copyright (C) 2021-2024 Free Software Foundation, Inc.
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
