@@ -3065,74 +3065,65 @@
                  (lambda (_) (error "cycle")))))
 
 (ert-deftest compat-require-with-check ()
-  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
-  (static-if (< emacs-major-version 30)
-    (ert-with-temp-directory dir1
-      (ert-with-temp-directory dir2
-        (dolist (dir (list dir1 dir2))
-          (with-temp-buffer
-            (insert "(provide 'compat-reload)")
-            (write-region (point-min) (point-max)
-                          (file-name-concat dir "compat-reload.el"))))
-        (should-not (require-with-check 'compat-does-not-exist nil 'noerror))
-        (should-not (require-with-check 'compat-does-not-exist "compat-does-not-exist.el" 'noerror))
-        (let ((load-path (cons dir1 load-path)))
-          (should-equal 'compat-reload (require-with-check 'compat-reload))
-          (should-equal 'compat-reload (require-with-check 'compat-reload)))
-        (let ((load-path (cons dir2 load-path)))
-          (should-error (require-with-check 'compat-reload))
-          (should-equal 'compat-reload (require-with-check 'compat-reload nil 'noerror))
-          (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload)))))))
+  (ert-with-temp-directory dir1
+    (ert-with-temp-directory dir2
+      (dolist (dir (list dir1 dir2))
+        (with-temp-buffer
+          (insert "(provide 'compat-reload)")
+          (write-region (point-min) (point-max)
+                        (file-name-concat dir "compat-reload.el"))))
+      (should-not (require-with-check 'compat-does-not-exist nil 'noerror))
+      (should-not (require-with-check 'compat-does-not-exist "compat-does-not-exist.el" 'noerror))
+      (let ((load-path (cons dir1 load-path)))
+        (should-equal 'compat-reload (require-with-check 'compat-reload))
+        (should-equal 'compat-reload (require-with-check 'compat-reload)))
+      (let ((load-path (cons dir2 load-path)))
+        (should-error (require-with-check 'compat-reload))
+        (should-equal 'compat-reload (require-with-check 'compat-reload nil 'noerror))
+        (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload))))))
 
 (defvar compat-tests-find-buffer nil)
 (ert-deftest compat-find-buffer ()
-  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
-  (static-if (< emacs-major-version 30)
-             (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
-                   (buf2 (get-buffer-create "*compat-tests-buf2*")))
-               (with-current-buffer buf1
-                 (setq-local compat-tests-find-buffer 1))
-               (with-current-buffer buf2
-                 (setq-local compat-tests-find-buffer 2))
-               (should-equal buf1 (find-buffer 'compat-tests-find-buffer 1))
-               (should-equal buf2 (find-buffer 'compat-tests-find-buffer 2))
-               (should-not (find-buffer 'compat-tests-find-buffer 3)))))
+  (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
+        (buf2 (get-buffer-create "*compat-tests-buf2*")))
+    (with-current-buffer buf1
+      (setq-local compat-tests-find-buffer 1))
+    (with-current-buffer buf2
+      (setq-local compat-tests-find-buffer 2))
+    (should-equal buf1 (find-buffer 'compat-tests-find-buffer 1))
+    (should-equal buf2 (find-buffer 'compat-tests-find-buffer 2))
+    (should-not (find-buffer 'compat-tests-find-buffer 3))))
 
 (ert-deftest compat-get-truename-buffer ()
-  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
-  (static-if (< emacs-major-version 30)
-             (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
-                   (buf2 (get-buffer-create "*compat-tests-buf2*")))
-               (with-current-buffer buf1
-                 (setq-local buffer-file-truename "compat-tests-file1"))
-               (with-current-buffer buf2
-                 (setq-local buffer-file-truename "compat-tests-file2"))
-               (should-equal buf1 (get-truename-buffer "compat-tests-file1"))
-               (should-equal buf2 (get-truename-buffer "compat-tests-file2"))
-               (should-not (get-truename-buffer "compat-tests-file3")))))
+  (let ((buf1 (get-buffer-create "*compat-tests-buf1*"))
+        (buf2 (get-buffer-create "*compat-tests-buf2*")))
+    (with-current-buffer buf1
+      (setq-local buffer-file-truename "compat-tests-file1"))
+    (with-current-buffer buf2
+      (setq-local buffer-file-truename "compat-tests-file2"))
+    (should-equal buf1 (get-truename-buffer "compat-tests-file1"))
+    (should-equal buf2 (get-truename-buffer "compat-tests-file2"))
+    (should-not (get-truename-buffer "compat-tests-file3"))))
 
 (ert-deftest compat-completion-metadata-get ()
-  ;; TODO enable test on Emacs 30 as soon as the CI supports it.
-  (static-if (< emacs-major-version 30)
-    (progn
-      (let ((md '((a . 1) (b . 2) (c . 3) (category . compat-test))))
-        (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
-        (should-equal 1 (compat-call completion-metadata-get md 'a))
-        (should-equal 2 (compat-call completion-metadata-get md 'b))
-        (should-equal 3 (compat-call completion-metadata-get md 'c))
-        (should-not (compat-call completion-metadata-get md 'd))
-        (let ((completion-extra-properties '(:d 4)))
-          (should-equal 4 (compat-call completion-metadata-get md 'd)))
-        (let ((completion-category-overrides '((compat-test (a . 10)))))
-          (should-equal 10 (compat-call completion-metadata-get md 'a))))
-      (let ((md '((a . 1) (b . 2))))
-        (should-not (compat-call completion-metadata-get md 'category))
-        (let ((completion-extra-properties '(:category compat-test)))
-          (should-equal 1 (compat-call completion-metadata-get md 'a))
-          (should-equal 2 (compat-call completion-metadata-get md 'b))
-          (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
-          (let ((completion-category-overrides '((compat-test (a . 10)))))
-            (should-equal 10 (compat-call completion-metadata-get md 'a))))))))
+  (let ((md '((a . 1) (b . 2) (c . 3) (category . compat-test))))
+    (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
+    (should-equal 1 (compat-call completion-metadata-get md 'a))
+    (should-equal 2 (compat-call completion-metadata-get md 'b))
+    (should-equal 3 (compat-call completion-metadata-get md 'c))
+    (should-not (compat-call completion-metadata-get md 'd))
+    (let ((completion-extra-properties '(:d 4)))
+      (should-equal 4 (compat-call completion-metadata-get md 'd)))
+    (let ((completion-category-overrides '((compat-test (a . 10)))))
+      (should-equal 10 (compat-call completion-metadata-get md 'a))))
+  (let ((md '((a . 1) (b . 2))))
+    (should-not (compat-call completion-metadata-get md 'category))
+    (let ((completion-extra-properties '(:category compat-test)))
+      (should-equal 1 (compat-call completion-metadata-get md 'a))
+      (should-equal 2 (compat-call completion-metadata-get md 'b))
+      (should-equal 'compat-test (compat-call completion-metadata-get md 'category))
+      (let ((completion-category-overrides '((compat-test (a . 10)))))
+        (should-equal 10 (compat-call completion-metadata-get md 'a))))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
