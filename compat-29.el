@@ -102,38 +102,40 @@ Unibyte strings are converted to multibyte for comparison."
 (compat-defun plist-get (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :extended t
-  (if (or (null predicate) (eq predicate 'eq))
-      (plist-get plist prop)
-    (catch 'found
-      (while (consp plist)
-        (when (funcall predicate prop (car plist))
-          (throw 'found (cadr plist)))
-        (setq plist (cddr plist))))))
+  (pcase predicate
+    ((or `nil `eq) (plist-get plist prop))
+    (`equal (lax-plist-get plist prop))
+    (_ (catch 'found
+         (while (consp plist)
+           (when (funcall predicate prop (car plist))
+             (throw 'found (cadr plist)))
+           (setq plist (cddr plist)))))))
 
 (compat-defun plist-put (plist prop val &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :extended t
-  (if (or (null predicate) (eq predicate 'eq))
-      (plist-put plist prop val)
-    (catch 'found
-      (let ((tail plist))
-        (while (consp tail)
-          (when (funcall predicate prop (car tail))
-            (setcar (cdr tail) val)
-            (throw 'found plist))
-          (setq tail (cddr tail))))
-      (nconc plist (list prop val)))))
+  (pcase predicate
+    ((or `nil `eq) (plist-put plist prop val))
+    (`equal (lax-plist-put plist prop val))
+    (_ (catch 'found
+         (let ((tail plist))
+           (while (consp tail)
+             (when (funcall predicate prop (car tail))
+               (setcar (cdr tail) val)
+               (throw 'found plist))
+             (setq tail (cddr tail))))
+         (nconc plist (list prop val))))))
 
 (compat-defun plist-member (plist prop &optional predicate) ;; <compat-tests:plist-get>
   "Handle optional argument PREDICATE."
   :extended t
-  (if (or (null predicate) (eq predicate 'eq))
-      (plist-member plist prop)
-    (catch 'found
-      (while (consp plist)
-        (when (funcall predicate prop (car plist))
-          (throw 'found plist))
-        (setq plist (cddr plist))))))
+  (pcase predicate
+    ((or `nil `eq) (plist-member plist prop))
+    (_ (catch 'found
+         (while (consp plist)
+           (when (funcall predicate prop (car plist))
+             (throw 'found plist))
+           (setq plist (cddr plist)))))))
 
 ;;;; Defined in gv.el
 
