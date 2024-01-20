@@ -19,10 +19,10 @@
 
 ;; Tests for compatibility functions from compat.el.
 ;;
-;; Note that all functions are covered by tests. When new functions are
+;; Note that all functions are covered by tests.  When new functions are
 ;; added to Compat, they must come with test coverage!
 
-;; Functions are marked with a link to the testsuite.  The link type
+;; Functions are marked with a link to the test suite.  The link type
 ;; `compat-tests' must be registered first by evaluating the following
 ;; code.  If you intend to work on the test suite you can add this code to
 ;; your init.el.
