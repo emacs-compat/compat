@@ -1332,8 +1332,8 @@
                          (list (list) (list) (list) (list)))))
 
 (ert-deftest compat-xor ()
-  (should (equal (xor 'a nil) 'a))
-  (should (equal (xor nil 'b) 'b))
+  (should-equal (xor 'a nil) 'a)
+  (should-equal (xor nil 'b) 'b)
   (should-not (xor nil nil))
   (should-not (xor 'a 'b)))
 
@@ -2957,7 +2957,7 @@
     (should (directory-name-p dir))
     (should (file-directory-p dir)))
   (ert-with-temp-file file :buffer buffer
-    (should (equal (current-buffer) buffer))
+    (should-equal (current-buffer) buffer)
     (should-equal buffer-file-name file)
     (should-not (directory-name-p file))
     (should (file-readable-p file))
