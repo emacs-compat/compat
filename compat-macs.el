@@ -75,9 +75,8 @@ a plist of predicates for arguments which are passed to FUN."
   (declare (indent 2))
   (compat-macs--assert compat-macs--version "No `compat-version' was declared")
   (let* ((body (compat-macs--check-attributes
-                attrs `(,@preds :min-version stringp :feature symbolp)))
+                attrs `(,@preds :feature symbolp)))
          (feature (plist-get attrs :feature))
-         (min-version (plist-get attrs :min-version))
          (attrs `(:body ,body ,@attrs))
          args)
     ;; Require feature at compile time
@@ -85,9 +84,7 @@ a plist of predicates for arguments which are passed to FUN."
       (compat-macs--assert (not (eq feature 'subr-x)) "Invalid feature subr-x")
       (require feature))
     ;; The current Emacs must be older than the currently declared version.
-    (when (and (version< emacs-version compat-macs--version)
-               (or (not min-version)
-                   (version<= min-version emacs-version)))
+    (when (version< emacs-version compat-macs--version)
       (while preds
         (push (plist-get attrs (car preds)) args)
         (setq preds (cddr preds)))
@@ -149,9 +146,6 @@ overridden.  REST is an attribute plist followed by the definition
 body.  The attributes specify the conditions under which the
 definition is generated.
 
-- :min-version :: Only compile the definition for Emacs versions
-  newer than the given version.
-
 - :feature :: Wrap the definition with `with-eval-after-load' for
   the given feature."
   (declare (debug ([&rest keywordp sexp] def-body))
@@ -171,7 +165,7 @@ under which the definition is generated.
 
 - :obsolete :: Mark the alias as obsolete if t.
 
-- :feature and :min-version :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (name symbolp [&rest keywordp sexp])))
   (compat-macs--guard attrs '(:obsolete booleanp)
     (lambda (obsolete)
@@ -203,7 +197,7 @@ specify the conditions under which the definition is generated.
 - :obsolete :: Mark the function as obsolete if t, can be a
   string describing the obsoletion.
 
-- :feature and :min-version :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (&define name (&rest symbolp)
                            stringp
                            [&rest keywordp sexp]
@@ -233,7 +227,7 @@ definition is generated.
 - :obsolete :: Mark the variable as obsolete if t, can be a
   string describing the obsoletion.
 
-- :feature and :min-version :: See `compat-guard'."
+- :feature :: See `compat-guard'."
   (declare (debug (name form stringp [&rest keywordp sexp]))
            (doc-string 3) (indent 2))
   (compat-macs--guard
