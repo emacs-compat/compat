@@ -3036,17 +3036,17 @@
     (should (eq (car (compat-call copy-tree lst)) rec))
     (should-not (eq (car (compat-call copy-tree lst t)) rec))
     (should (eq (cadr (compat-call copy-tree lst)) rec))
-    (should-not (eq (cadr (compat-call copy-tree lst t)) rec))))
+    (should-not (eq (cadr (compat-call copy-tree lst t)) rec)))
 
-;; Use the printer to detect common parts of Lisp values.
-(let ((print-circle t))
-  (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
-              (cat3 (x y z) (concat "(" x " " y " " z ")")))
-    (let ((x '(a (b ((c) . d) e) (f))))
-      (should-equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
-                    (cat3 "(a (b ((c) . d) e) (f))"
-                          "(a (b ((c) . d) e) (f))"
-                          "(a (b ((c) . d) e) (f))")))))
+  ;; Use the printer to detect common parts of Lisp values.
+  (let ((print-circle t))
+    (cl-labels ((prn3 (x y z) (prin1-to-string (list x y z)))
+                (cat3 (x y z) (concat "(" x " " y " " z ")")))
+      (let ((x '(a (b ((c) . d) e) (f))))
+        (should-equal (prn3 x (compat-call copy-tree x) (compat-call copy-tree x t))
+                      (cat3 "(a (b ((c) . d) e) (f))"
+                            "(a (b ((c) . d) e) (f))"
+                            "(a (b ((c) . d) e) (f))"))))))
 
 (ert-deftest compat-static-if ()
   (should-equal "true" (static-if t "true"))
