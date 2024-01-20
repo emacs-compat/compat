@@ -49,11 +49,11 @@
 ;; Ensure that the newest compatibility layer is required at compile
 ;; time and runtime, but only if needed.
 (eval-when-compile
-  (defmacro compat--maybe-require-30 ()
+  (defmacro compat--maybe-require ()
     (when (version< emacs-version "30.0.50")
       (require 'compat-30)
       '(require 'compat-30))))
-(compat--maybe-require-30)
+(compat--maybe-require)
 
 ;;;; Macros for extended compatibility function calls
 
