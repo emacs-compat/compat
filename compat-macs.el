@@ -240,7 +240,8 @@ definition is generated.
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
-      `((unless (boundp ',name)
+      `((defvar ,name)
+        (unless (boundp ',name)
           (,(if constant 'defconst 'defvar)
            ,name ,initval
            ,(compat-macs--docstring 'variable name docstring))
