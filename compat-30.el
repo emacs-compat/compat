@@ -27,6 +27,27 @@
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
 
+;;;; Defined in sort.el
+
+(compat-defun sort-on (sequence predicate accessor) ;; <compat-tests:sort-on>
+  "Sort SEQUENCE by calling PREDICATE on sort keys produced by ACCESSOR.
+SEQUENCE should be the input list to sort.
+Elements of SEQUENCE are sorted by keys which are obtained by
+calling ACCESSOR on each element.  ACCESSOR should be a function of
+one argument, an element of SEQUENCE, and should return the key
+value to be compared by PREDICATE for sorting the element.
+PREDICATE is the function for comparing keys; it is called with two
+arguments, the keys to compare, and should return non-nil if the
+first key should sort before the second key.
+This function has the performance advantage of evaluating
+ACCESSOR only once for each element in the input SEQUENCE, and is
+therefore appropriate when computing the key by ACCESSOR is an
+expensive operation.  This is known as the \"decorate-sort-undecorate\"
+paradigm, or the Schwartzian transform."
+  (mapcar #'car
+          (sort (mapcar #'(lambda (x) (cons x (funcall accessor x))) sequence)
+                #'(lambda (x y) (funcall predicate (cdr x) (cdr y))))))
+
 ;;;; Defined in buffer.c
 
 (compat-defun find-buffer (variable value) ;; <compat-tests:find-buffer>

@@ -4,6 +4,7 @@
 
 * Development
 
+- compat-30: Add =sort-on=.
 - compat-30: Add extended =copy-tree= with support for copying records with
   non-nil optional second argument.
 - compat-30: New macro =static-if=.
