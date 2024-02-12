@@ -2,6 +2,14 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- A minimal version of =compat.el= will be part of Emacs 30. Emacs :core packages
+  can directly ~(require 'compat)~ without the ~NOERROR~ flag. Furthermore Compat
+  will not be installed unnecessarily. If a package depending on Emacs 25.1 and
+  Compat 29.1 is installed on Emacs 30.1, Compat 29.1 will not be installed from
+  ELPA, since Emacs 30.1 already provides the required functionality.
+
 * Release of "Compat" Version 29.1.4.4
 
 - Fix ~Package-Requires~ header in compat.el
