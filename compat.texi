@@ -105,7 +105,7 @@ developments, without having to break compatibility.
 The intended use-case for this library is for package developers to
 add as a dependency in the header.  The version of the Compat library
 mirrors the version of Emacs releases.  The current version of Compat
-corresponds to the upcoming Emacs 29 release.
+corresponds to the current Emacs release.
 
 @example
 ;; Package-Requires: ((emacs "24.4") (compat "29.1.4.4"))
@@ -121,26 +121,31 @@ In any file where compatibility forms are used, a
 (require 'compat)
 @end example
 
-should be added early on. In packages which are part of Emacs itself
-and which want to take advantage of Compat, the @code{noerror} flag
-should be specified: @code{(require 'compat nil 'noerror)}.  In the
-future a minimal version of Compat may be added to the Emacs core,
-such that the @code{noerror} flag will not be necessary anymore.
+should be added early on. This will load all necessary Compat
+definitions.  Compat loads the @code{seq} library which is preloaded
+by default on Emacs 29.  Note that if Compat is installed on a recent
+version of Emacs, all of the definitions are disabled at compile time,
+such that no negative performance impact is incurred.
 
-This will load all necessary Compat definitions.  Compat loads the
-@code{seq} library which is preloaded by default on Emacs 29.  Note
-that if Compat is installed on a recent version of Emacs, all of the
-definitions are disabled at compile time, such that no negative
-performance impact is incurred.
+A minimal version of Compat will be present in Emacs version 30 and
+newer. Packages which are part of Emacs itself and want to take
+advantage of Compat, can also use @code{(require 'compat)}.  The
+advantage of the inclusion of a minimal Compat in Emacs is that Compat
+will not be installed if you require a version newer or equal than the
+current Emacs version.  For example if a package requires Emacs 25.1
+and Compat 29.1 and is installed on Emacs 30.1, the Compat package
+will not be installed, since Emacs 30.1 itself already provides the
+require functionality.
 
-Note that Compat provides replacement functions with extended
-functionality for functions that are already defined (@code{sort},
-@code{assoc}, @dots{}).  These functions may have changed their
-calling convention (additional optional arguments) or may have changed
-their behavior.  These functions must be looked up explicitly with
-@code{compat-function} or called explicitly with @code{compat-call}.
-We call them ``Extended Definitions''.  In contrast, newly ``Added
-Definitions'' can be called as usual.
+Compat provides replacement functions with extended functionality for
+functions that are already defined, e.g., @code{sort} or @code{assoc}.
+These functions may have changed their calling convention (additional
+optional arguments) or may have changed their behavior.  These
+functions must be looked up explicitly with @code{compat-function} or
+called explicitly with @code{compat-call}.  We call them ``Extended
+Definitions''.  In contrast, newly ``Added Definitions'' can be called
+as usual.  The Compat manual explicitly documents the calling
+convention of each compatibility function.
 
 @example
 (compat-call assoc key alist testfn) ;; Call extended `assoc'
@@ -162,16 +167,12 @@ See @code{compat-call} for a more convenient macro to directly call
 compatibility functions.
 @end defmac
 
-If Compat is used in core packages, where Compat must be required
-currently with the @code{noerror} flag, the macros @code{compat-call}
-and @code{compat-function} ar not available.  In the future the macros
-could be added to subr.el.  Alternatively a minimal version of
-compat.el could be added to the core.  For now it is necessary to
-replicate the definition of the macros within core packages.  For
-example the package ERC defines its own macro @code{erc-compat-call},
-which replicates the Compat definition precisely.
+If Compat is used in Emacs core packages, the macros
+@code{compat-call} and @code{compat-function} will be available in
+Emacs version 30 and newer.
 
-This design has been chosen since Compat does not advise or override
+The macros @code{compat-call} and @code{compat-function} are
+introduced by Compat, since Compat does not advise or override
 existing functions.  Generally Compat is written in defensive style
 which is supposed to reduce potential breakage, and to increase the
 chances of staying binary compatible across releases.  The extensive
@@ -287,7 +288,8 @@ New functionality was implemented in the C core, or depends on
 external libraries that cannot be reasonably duplicated in the scope
 of a compatibility library. Sometimes new functions on the C level
 rely on internal data structures, which we cannot access, rendering a
-backport impossible. For example a missing libxml cannot be emulated.
+backport impossible. For example a missing libxml or libtreesitter
+cannot be emulated.
 
 @item
 The semantics of Elisp changed on a deep level. For example the
