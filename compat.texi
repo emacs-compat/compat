@@ -142,9 +142,9 @@ functions that are already defined, e.g., @code{sort} or @code{assoc}.
 These functions may have changed their calling convention (additional
 optional arguments) or may have changed their behavior.  These
 functions must be looked up explicitly with @code{compat-function} or
-called explicitly with @code{compat-call}.  We call them ``Extended
-Definitions''.  In contrast, newly ``Added Definitions'' can be called
-as usual.  The Compat manual explicitly documents the calling
+called explicitly with @code{compat-call}.  We call them @dfn{Extended
+Definitions}.  In contrast, newly @dfn{Added Definitions} can be
+called as usual.  The Compat manual explicitly documents the calling
 convention of each compatibility function.
 
 @example
@@ -253,7 +253,7 @@ when the new feature is not used, Compat does not use advices.  As a
 compromise, compatibility functions and macros with a changed calling
 convention or behavior can be accessed via the @code{compat-function}
 and @code{compat-call} macros.  In this manual we call such
-definitions ``Extended Definitions''. An example is the function
+definitions @dfn{Extended Definitions}.  An example is the function
 @code{plist-get}.  Note that extended functions are subject to closer
 scrutiny, since their usage via @code{compat-call} is not completely
 painless.  If a particular extended function does not see much usage
