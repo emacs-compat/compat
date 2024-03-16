@@ -15,6 +15,8 @@
 - compat-30: New functions =find-buffer= and =get-truename-buffer=.
 - compat-30: Add extended =completion-metadata-get= with support for
   =completion-category-overrides= and =completion-extra-properties=.
+- Minor optimization of ~plist-get~ and ~plist-put~.
+- Minor compatibility adjustments for the Emacs 30 development version.
 - A minimal version of =compat.el= will be part of Emacs 30. Emacs :core packages
   can directly ~(require 'compat)~ without the ~NOERROR~ flag. Furthermore Compat
   will not be installed unnecessarily. If a package depending on Emacs 25.1 and
