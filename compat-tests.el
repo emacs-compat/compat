@@ -137,9 +137,9 @@
     (with-temp-buffer
       (let ((event `(mouse-1 (,(selected-window) 1 (0 . 0) 0))))
         (set-window-buffer nil (current-buffer))
-        (insert "http://emacs.org/")
+        (insert "https://emacs.org/")
         (goto-char (point-min))
-        (should-equal "http://emacs.org/" (thing-at-mouse event 'url))
+        (should-equal "https://emacs.org/" (thing-at-mouse event 'url))
         (should-equal '(1 . 18) (bounds-of-thing-at-mouse event 'url))
         (should-not (region-active-p))
         (mark-thing-at-mouse event 'url)

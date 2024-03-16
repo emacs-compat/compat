@@ -190,7 +190,7 @@ and BLUE, is normalized to have its value in [0,65535]."
        ;; The "RGBi" (RGB Intensity) specification is defined by
        ;; XCMS[0], see [1] for the implementation in Xlib.
        ;;
-       ;; [0] http://www.nic.funet.fi/pub/X11/X11R4/DOCS/color/Xcms.text
+       ;; [0] https://www.nic.funet.fi/pub/X11/X11R4/DOCS/color/Xcms.text
        ;; [1] https://gitlab.freedesktop.org/xorg/lib/libx11/-/blob/master/src/xcms/LRGB.c#L1392
        ((string-match
          ;; (rx bos "rgbi:" (* space)

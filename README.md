@@ -25,7 +25,7 @@ builds].
 [GNU ELPA repository]:
     https://git.savannah.gnu.org/cgit/emacs/elpa.git/tree/?h=externals/compat
 [GNU ELPA package builds]:
-    http://elpa.gnu.org/packages/compat.html
+    https://elpa.gnu.org/packages/compat.html
 
 Bug and patches
 ---------------
@@ -43,7 +43,7 @@ As compat.el is distributed as part of [GNU ELPA], and therefore requires a
 [copyright assignment] to the [FSF], for all non-trivial code contributions.
 
 [GNU ELPA]:
-    http://elpa.gnu.org/packages/compat.html
+    https://elpa.gnu.org/packages/compat.html
 [copyright assignment]:
     https://www.gnu.org/software/emacs/manual/html_node/emacs/Copyright-Assignment.html
 [FSF]:
