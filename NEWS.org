@@ -2,7 +2,7 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Release of "Compat" Version 29.1.4.5
+* Development
 
 - compat-30: Add extended =copy-tree= with support for copying records with
   non-nil optional second argument.
@@ -14,6 +14,9 @@
 - compat-30: New functions =find-buffer= and =get-truename-buffer=.
 - compat-30: Add extended =completion-metadata-get= with support for
   =completion-category-overrides= and =completion-extra-properties=.
+
+* Release of "Compat" Version 29.1.4.5
+
 - Minor optimization of ~plist-get~ and ~plist-put~.
 - Minor compatibility adjustments for the Emacs 30 development version.
 - A minimal version of =compat.el= will be part of Emacs 30. Emacs :core packages
