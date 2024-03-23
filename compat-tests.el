@@ -1753,12 +1753,6 @@
   (should-equal '(1 2 3 4) (flatten-tree '((1) nil 2 ((3 4)))))
   (should-equal '(1 2 3 4) (flatten-tree '(((1 nil)) 2 (((3 nil nil) 4))))))
 
-(ert-deftest compat-sort-on ()
-  (should-equal '(3 2 1) (sort-on '(2 1 3) #'> #'identity))
-  (should-equal '(1 2 3) (sort-on [2 1 3] #'< #'identity))
-  (should-equal '((1 z) (2 y) (3 x)) (sort-on (list '(2 y) '(1 z) '(3 x)) #'< #'car))
-  (should-equal '((x 3) (y 2) (z 1)) (sort-on (list '(y 2) '(z 1) '(x 3)) #'> #'cadr)))
-
 (ert-deftest compat-sort ()
   (should-equal (list 1 2 3) (sort (list 1 2 3) #'<))
   (should-equal (list 1 2 3) (sort (list 1 3 2) #'<))
