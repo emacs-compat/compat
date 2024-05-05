@@ -136,6 +136,8 @@ details."
 
 ;;;; Defined in subr.el
 
+(compat-defalias drop nthcdr) ;; <compat-tests:drop>
+
 (compat-defun merge-ordered-lists (lists &optional error-function) ;; <compat-tests:merge-ordered-lists>
   "Merge LISTS in a consistent order.
 LISTS is a list of lists of elements.

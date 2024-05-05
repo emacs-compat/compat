@@ -7,6 +7,7 @@
 - compat-30: Add extended =copy-tree= with support for copying records with
   non-nil optional second argument.
 - compat-30: New macro =static-if=.
+- compat-30: New alias =drop=.
 - compat-30: New function =merge-ordered-lists=.
 - compat-30: New variables =completion-lazy-hilit= and =completion-lazy-hilit-fn=
   and new function =completion-lazy-hilit=.

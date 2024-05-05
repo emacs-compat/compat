@@ -3350,6 +3350,13 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lispref/lists.texi
+@defun drop n list
+This function is an alias for @code{nthcdr}. It returns the @var{n}th
+@sc{cdr} of @var{list}.  In other words, it skips past the first
+@var{n} links of @var{list} and returns what follows.
+@end defun
+
 @defun get-truename-buffer filename
 Return the buffer with @code{file-truename} equal to @var{filename} (a string).
 If there is no such live buffer, return nil.
