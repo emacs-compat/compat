@@ -958,10 +958,8 @@
   (should-equal '(1 2 3) (take 3 '(1 2 3 4))))
 
 (ert-deftest compat-drop ()
-  (static-if (< emacs-major-version 30) ;; TODO reenable if available on CI
-    (progn
-      (should-not (drop 5 nil))
-      (should-equal '(3 4 5) (drop 2 '(1 2 3 4 5))))))
+  (should-not (drop 5 nil))
+  (should-equal '(3 4 5) (drop 2 '(1 2 3 4 5))))
 
 (ert-deftest compat-format-message ()
   (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
