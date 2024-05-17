@@ -310,29 +310,26 @@ The following arguments are defined:
 For compatibility, the calling convention (sort SEQ LESSP) can also be used;
 in this case, sorting is always done in-place."
   :extended t
-  (let ((in-place t) (orig-seq seq))
+  (let ((in-place t) (reverse nil) (orig-seq seq))
     (when (or (not lessp) rest)
       (setq
        rest (if lessp (cons lessp rest) rest)
        in-place (plist-get rest :in-place)
+       reverse (plist-get rest :reverse)
        lessp (let ((key (plist-get rest :key))
-                   (reverse (plist-get rest :reverse))
                    (< (or (plist-get rest :lessp) #'value<)))
-               (cond
-                ((and key reverse)
-                 (lambda (a b) (not (funcall < (funcall key a) (funcall key b)))))
-                (key
-                 (lambda (a b) (funcall < (funcall key a) (funcall key b))))
-                (reverse
-                 (lambda (a b) (not (funcall < a b))))
-                (t <)))
+               (if key
+                 (lambda (a b) (funcall < (funcall key a) (funcall key b)))
+                 <))
        seq (if (or (eval-when-compile (< emacs-major-version 25)) in-place)
                seq
              (copy-sequence seq))))
     ;; Emacs 24 does not support vectors. Convert to list.
     (when (and (eval-when-compile (< emacs-major-version 25)) (vectorp seq))
       (setq seq (append seq nil)))
-    (setq seq (sort seq lessp))
+    (setq seq (if reverse
+                  (nreverse (sort (nreverse seq) lessp))
+                (sort seq lessp)))
     ;; Emacs 24: Convert back to vector.
     (if (and (eval-when-compile (< emacs-major-version 25)) (vectorp orig-seq))
         (if in-place
