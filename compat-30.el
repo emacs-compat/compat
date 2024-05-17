@@ -272,7 +272,10 @@ Other types are considered unordered and the return value will be ‘nil’."
       (while (and (< i n) (equal (aref a i) (aref b i)))
         (cl-incf i))
       (if (< i n) (value< (aref a i) (aref b i)) (< n nb))))
-   ;; TODO Add support for more types.
+   ;; TODO Add support for more types here.
+   ;; Other values of equal type are considered unordered (return value nil).
+   ((eq (type-of a) (type-of b)) nil)
+   ;; Different types.
    (t (error "value< unsupported type: %S %S" a b))))
 
 (compat-defun sort (seq &optional lessp &rest rest) ;; <compat-tests:sort>
