@@ -256,6 +256,12 @@ Other types are considered unordered and the return value will be ‘nil’."
    ((or (and (stringp a) (stringp b))
         (and (symbolp a) (symbolp b)))
     (string< a b))
+   ((and (bufferp a) (bufferp b))
+    (setq a (buffer-name a)
+          b (buffer-name b))
+    (cond
+     ((and a b) (string< a b))
+     (b t)))
    ((and (listp a) (listp b))
     (while (and (consp a) (consp b) (equal (car a) (car b)))
       (setq a (cdr a) b (cdr b)))

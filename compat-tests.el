@@ -1810,7 +1810,9 @@
   (compat--should-value< [1 2] [2 3])
   (compat--should-value< [1 2 3] [2])
   (compat--should-value< [0 1 2] [0 2 3])
-  (compat--should-value< [0 1 2 3] [0 2]))
+  (compat--should-value< [0 1 2 3] [0 2])
+  ;; Buffers are compared by name
+  (compat--should-value< (get-buffer-create "a") (get-buffer-create "b")))
 
 (ert-deftest compat-sort ()
   (should-equal (list 1 2 3) (sort (list 1 2 3) #'<))
