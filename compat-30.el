@@ -256,12 +256,6 @@ Other types are considered unordered and the return value will be ‘nil’."
    ((or (and (stringp a) (stringp b))
         (and (symbolp a) (symbolp b)))
     (string< a b))
-   ((and (bufferp a) (bufferp b))
-    (setq a (buffer-name a)
-          b (buffer-name b))
-    (cond
-     ((and a b) (string< a b))
-     (b t)))
    ((and (listp a) (listp b))
     (while (and (consp a) (consp b) (equal (car a) (car b)))
       (setq a (cdr a) b (cdr b)))
@@ -278,6 +272,15 @@ Other types are considered unordered and the return value will be ‘nil’."
       (while (and (< i n) (equal (aref a i) (aref b i)))
         (cl-incf i))
       (if (< i n) (value< (aref a i) (aref b i)) (< n nb))))
+   ((and (bufferp a) (bufferp b))
+    ;; `buffer-name' is nil for killed buffers.
+    (setq a (buffer-name a)
+          b (buffer-name b))
+    (cond
+     ((and a b) (string< a b))
+     (b t)))
+   ((and (processp a) (processp b))
+    (string< (process-name a) (process-name b)))
    ;; TODO Add support for more types here.
    ;; Other values of equal type are considered unordered (return value nil).
    ((eq (type-of a) (type-of b)) nil)
