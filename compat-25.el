@@ -40,23 +40,6 @@ usage: (bool-vector &rest OBJECTS)"
             i (1+ i)))
     vec))
 
-;;;; Defined in fns.c
-
-(compat-defun sort (seq predicate) ;; <compat-tests:sort>
-  "Handle vector SEQ."
-  :extended t
-  (cond
-   ((listp seq)
-    (sort seq predicate))
-   ((vectorp seq)
-    (let* ((list (sort (append seq nil) predicate))
-           (p list) (i 0))
-      (while p
-        (aset seq i (car p))
-        (setq i (1+ i) p (cdr p)))
-      (apply #'vector list)))
-   (t (signal 'wrong-type-argument (list 'list-or-vector-p seq)))))
-
 ;;;; Defined in editfns.c
 
 (compat-defalias format-message format) ;; <compat-tests:format-message>

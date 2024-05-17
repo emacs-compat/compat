@@ -1757,6 +1757,45 @@
   (should-equal '(1 2 3 4) (flatten-tree '((1) nil 2 ((3 4)))))
   (should-equal '(1 2 3 4) (flatten-tree '(((1 nil)) 2 (((3 nil nil) 4))))))
 
+(defmacro compat--should-value< (x y)
+  "Helper for (value< X Y) test."
+  `(progn
+     (should (value< ,x ,y))
+     (should-not (value< ,y ,x))))
+
+(ert-deftest compat-value< ()
+  ;; Type mismatch
+  (should-error (value< 'aa "aa"))
+  (should-error (value< 1 "aa"))
+  (should-error (value< 1 (cons 1 2)))
+  ;; Nil symbol
+  (compat--should-value< nil t)
+  (compat--should-value< nil 'nim)
+  (compat--should-value< nil 'nll)
+  (compat--should-value< 'mil nil)
+  ;; Atoms
+  (compat--should-value< 1 2)
+  (compat--should-value< "aa" "b")
+  (compat--should-value< 'aa 'b)
+  ;; Lists
+  (compat--should-value< nil '(1))
+  (compat--should-value< '(1 2) '(2 3))
+  (compat--should-value< '(1 2 3) '(2))
+  (compat--should-value< '(0 1 2) '(0 2 3))
+  (compat--should-value< '(0 1 2 3) '(0 2))
+  ;; Pairs and improper lists
+  (compat--should-value< nil '(1 . 2))
+  (compat--should-value< nil '(1 2 . 3))
+  (compat--should-value< '(1 . 2) '(2 . 2))
+  (compat--should-value< '(1 . 2) '(1 . 3))
+  (compat--should-value< '(1 2 . 3) '(1 2 . 4))
+  ;; Vectors
+  (compat--should-value< [] [1])
+  (compat--should-value< [1 2] [2 3])
+  (compat--should-value< [1 2 3] [2])
+  (compat--should-value< [0 1 2] [0 2 3])
+  (compat--should-value< [0 1 2 3] [0 2]))
+
 (ert-deftest compat-sort ()
   (should-equal (list 1 2 3) (sort (list 1 2 3) #'<))
   (should-equal (list 1 2 3) (sort (list 1 3 2) #'<))
@@ -1764,14 +1803,34 @@
   (should-equal (list 1 2 3) (compat-call sort (list 1 2 3) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 1 3 2) #'<))
   (should-equal (list 1 2 3) (compat-call sort (list 3 2 1) #'<))
+  ;; Test Emacs 25 support for vectors.
   (should-equal [1 2 3] (compat-call sort (vector 1 2 3) #'<))
   (should-equal [1 2 3] (compat-call sort (vector 1 3 2) #'<))
   (should-equal [1 2 3] (compat-call sort (vector 3 2 1) #'<))
   ;; Test side effect
   (let* ((vec (vector 4 5 8 3 1 2 3 2 3 4))
          (sorted (compat-call sort vec #'>)))
+    (should (eq vec sorted))
     (should-equal sorted [8 5 4 4 3 3 3 2 2 1])
-    (should-equal vec [8 5 4 4 3 3 3 2 2 1])))
+    (should-equal vec [8 5 4 4 3 3 3 2 2 1]))
+  ;; Test Emacs 30 keyword arguments.
+  (should-equal '(1 2 3) (compat-call sort '(2 3 1)))
+  (should-equal '(3 2 1) (compat-call sort '(2 3 1) :reverse t))
+  (should-equal '((x 3) (y 2) (z 1)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'car))
+  (should-equal '((z 1) (y 2) (x 3)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'car :reverse t))
+  (should-equal '((z 1) (y 2) (x 3)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'cadr))
+  (should-equal '((x 3) (y 2) (z 1)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'cadr :reverse t))
+  (should-equal '(3 2 1) (compat-call sort '(2 3 1) :lessp #'>))
+  (should-equal '(1 2 3) (compat-call sort '(2 3 1) :reverse t :lessp #'>))
+  (should-equal '((30 1) (20 2) (10 3)) (compat-call sort '((30 1) (10 3) (20 2)) :key #'car :lessp #'>))
+  (should-equal '((10 3) (20 2) (30 1)) (compat-call sort '((30 1) (10 3) (20 2)) :key #'car :reverse t :lessp #'>))
+  (should-equal '((x 3) (y 2) (z 1)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'cadr :lessp #'>))
+  (should-equal '((z 1) (y 2) (x 3)) (compat-call sort '((z 1) (x 3) (y 2)) :key #'cadr :reverse t :lessp #'>))
+  (let* ((vec (vector 4 5 8 3 1 2 3 2 3 4))
+         (sorted (compat-call sort vec :in-place t)))
+    (should (eq vec sorted))
+    (should-equal sorted [1 2 2 3 3 3 4 4 5 8])
+    (should-equal vec [1 2 2 3 3 3 4 4 5 8])))
 
 (ert-deftest compat-replace-string-in-region ()
   (with-temp-buffer

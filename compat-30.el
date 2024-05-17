@@ -219,5 +219,96 @@ enclosed in a `progn' form.  ELSE-FORMS may be empty."
       then-form
     (cons 'progn else-forms)))
 
+;;;; Defined in fns.c
+
+(compat-defun value< (a b) ;; <compat-tests:value<>
+  "Return non-nil if A precedes B in standard value order.
+A and B must have the same basic type.
+Numbers are compared with <.
+Strings and symbols are compared with string-lessp.
+Lists, vectors, bool-vectors and records are compared lexicographically.
+Markers are compared lexicographically by buffer and position.
+Buffers and processes are compared by name.
+Other types are considered unordered and the return value will be ‘nil’."
+  (cond
+   ((and (number-or-marker-p a) (number-or-marker-p b))
+    (< a b))
+   ((or (and (stringp a) (stringp b))
+        (and (symbolp a) (symbolp b)))
+    (string< a b))
+   ((and (listp a) (listp b))
+    (while (and (consp a) (consp b) (equal (car a) (car b)))
+      (setq a (cdr a) b (cdr b)))
+    (cond
+     ((not b) nil)
+     ((not a) t)
+     ((and (consp a) (consp b)) (value< (car a) (car b)))
+     (t (value< a b))))
+   ((and (vectorp a) (vectorp b))
+    (let* ((na (length a))
+           (nb (length b))
+           (n (min na nb))
+           (i 0))
+      (while (and (< i n) (equal (aref a i) (aref b i)))
+        (cl-incf i))
+      (if (< i n) (value< (aref a i) (aref b i)) (< n nb))))
+   ;; TODO Add support for more types.
+   (t (error "value< unsupported type: %S %S" a b))))
+
+(compat-defun sort (seq &optional lessp &rest rest) ;; <compat-tests:sort>
+  "Sort function with support for keyword arguments.
+The following arguments are defined:
+
+:key FUNC -- FUNC is a function that takes a single element from SEQ and
+  returns the key value to be used in comparison.  If absent or nil,
+  `identity' is used.
+
+:lessp FUNC -- FUNC is a function that takes two arguments and returns
+  non-nil if the first element should come before the second.
+  If absent or nil, `value<' is used.
+
+:reverse BOOL -- if BOOL is non-nil, the sorting order implied by FUNC is
+  reversed.  This does not affect stability: equal elements still retain
+  their order in the input sequence.
+
+:in-place BOOL -- if BOOL is non-nil, SEQ is sorted in-place and returned.
+  Otherwise, a sorted copy of SEQ is returned and SEQ remains unmodified;
+  this is the default.
+
+For compatibility, the calling convention (sort SEQ LESSP) can also be used;
+in this case, sorting is always done in-place."
+  :extended t
+  (let ((in-place t) (orig-seq seq))
+    (when (or (not lessp) rest)
+      (setq
+       rest (if lessp (cons lessp rest) rest)
+       in-place (plist-get rest :in-place)
+       lessp (let ((key (plist-get rest :key))
+                   (reverse (plist-get rest :reverse))
+                   (< (or (plist-get rest :lessp) #'value<)))
+               (cond
+                ((and key reverse)
+                 (lambda (a b) (not (funcall < (funcall key a) (funcall key b)))))
+                (key
+                 (lambda (a b) (funcall < (funcall key a) (funcall key b))))
+                (reverse
+                 (lambda (a b) (not (funcall < a b))))
+                (t <)))
+       seq (if (or (eval-when-compile (< emacs-major-version 25)) in-place)
+               seq
+             (copy-sequence seq))))
+    ;; Emacs 24 does not support vectors. Convert to list.
+    (when (and (eval-when-compile (< emacs-major-version 25)) (vectorp seq))
+      (setq seq (append seq nil)))
+    (setq seq (sort seq lessp))
+    ;; Emacs 24: Convert back to vector.
+    (if (and (eval-when-compile (< emacs-major-version 25)) (vectorp orig-seq))
+        (if in-place
+            (cl-loop for i from 0 for x in seq
+                     do (aset orig-seq i x)
+                     finally return orig-seq)
+          (apply #'vector seq))
+      seq)))
+
 (provide 'compat-30)
 ;;; compat-30.el ends here

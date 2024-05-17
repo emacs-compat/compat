@@ -4,6 +4,8 @@
 
 * Development
 
+- compat-30: Add extended function =sort= with keyword arguments.
+- compat-30: New function =value<=.
 - compat-30: Add extended =copy-tree= with support for copying records with
   non-nil optional second argument.
 - compat-30: New macro =static-if=.
