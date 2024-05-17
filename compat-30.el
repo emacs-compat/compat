@@ -136,6 +136,21 @@ details."
 
 ;;;; Defined in subr.el
 
+(compat-defun closurep (object) ;; <compat-tests:closurep>
+  "Return t if OBJECT is a function of type closure."
+  (declare (side-effect-free error-free))
+  (eq (car-safe object) 'closure))
+
+(compat-defalias interpreted-function-p closurep) ;; <compat-tests:closurep>
+
+(compat-defun primitive-function-p (object) ;; <compat-tests:primitive-function-p>
+  "Return t if OBJECT is a built-in primitive function.
+This excludes special forms, since they are not functions."
+  (declare (side-effect-free error-free))
+  (and (subrp object)
+       (not (or (subr-native-elisp-p object)
+                (special-form-p object)))))
+
 (compat-defalias drop nthcdr) ;; <compat-tests:drop>
 
 (compat-defun merge-ordered-lists (lists &optional error-function) ;; <compat-tests:merge-ordered-lists>

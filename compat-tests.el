@@ -1303,6 +1303,22 @@
 (ert-deftest compat-subr-native-elisp-p ()
   (should-not (subr-native-elisp-p (symbol-function 'identity))))
 
+(ert-deftest compat-closurep ()
+  (should (interpreted-function-p (eval '(lambda (x) x) t)))
+  (should (closurep (eval '(lambda (x) x) t)))
+  (should-not (closurep '(lambda (x) x)))
+  (should-not (closurep 'identity))
+  (should-not (closurep (symbol-function 'identity)))
+  (should-not (closurep (symbol-function 'if)))
+  (should-not (closurep (symbol-function 'defun))))
+
+(ert-deftest compat-primitive-function-p ()
+  (should (primitive-function-p (symbol-function 'identity)))
+  (should-not (primitive-function-p (eval '(lambda (x) x) t)))
+  (should-not (primitive-function-p '(lambda (x) x)))
+  (should-not (primitive-function-p (symbol-function 'if)))
+  (should-not (primitive-function-p (symbol-function 'defun))))
+
 (ert-deftest compat-subr-primitive-p ()
   (should (subr-primitive-p (symbol-function 'identity)))       ;function from fns.c
   (when (< emacs-major-version 28)

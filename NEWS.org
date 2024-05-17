@@ -4,6 +4,9 @@
 
 * Development
 
+- compat-30: New function =interpreted-function-p=.
+- compat-30: New function =primitive-function-p=.
+- compat-30: New function =closurep=.
 - compat-30: Add extended function =sort= with keyword arguments.
 - compat-30: New function =value<=.
 - compat-30: Add extended =copy-tree= with support for copying records with
