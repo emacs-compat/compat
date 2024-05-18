@@ -321,11 +321,12 @@ in this case, sorting is always done in-place."
                (if key
                  (lambda (a b) (funcall < (funcall key a) (funcall key b)))
                  <))
-       seq (if (or (eval-when-compile (< emacs-major-version 25)) in-place)
+       seq (if (or (and (eval-when-compile (< emacs-major-version 25)) (vectorp orig-seq))
+                   in-place)
                seq
              (copy-sequence seq))))
     ;; Emacs 24 does not support vectors. Convert to list.
-    (when (and (eval-when-compile (< emacs-major-version 25)) (vectorp seq))
+    (when (and (eval-when-compile (< emacs-major-version 25)) (vectorp orig-seq))
       (setq seq (append seq nil)))
     (setq seq (if reverse
                   (nreverse (sort (nreverse seq) lessp))
