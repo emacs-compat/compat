@@ -27,6 +27,12 @@
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
 
+;;;; Defined in lread.c
+
+(compat-defun obarray-clear (ob) ;; <compat-tests:obarray>
+  "Remove all symbols from obarray OB."
+  (fillarray ob 0))
+
 ;;;; Defined in buffer.c
 
 (compat-defun find-buffer (variable value) ;; <compat-tests:find-buffer>

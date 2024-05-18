@@ -4,6 +4,7 @@
 
 * Development
 
+- compat-30: New function =obarray-clear=.
 - compat-30: New function =interpreted-function-p=.
 - compat-30: New function =primitive-function-p=.
 - compat-30: New function =closurep=.

@@ -1005,6 +1005,19 @@
       (should-equal compat-tests--local 2)
       (should-not (boundp 'compat-tests--unexist)))))
 
+(ert-deftest compat-obarray-clear ()
+  ;; obarray APIs are only available since 26
+  (static-if (> emacs-major-version 25)
+      (progn
+        (let ((ob (obarray-make)))
+          (should-not (obarray-get ob "sym1"))
+          (should (intern "sym1" ob))
+          (should (obarray-get ob "sym1"))
+          (obarray-clear ob)
+          (should-not (obarray-get ob "sym1"))
+          (should (intern "sym2" ob))
+          (should (obarray-get ob "sym2"))))))
+
 (ert-deftest compat-gensym ()
   (let ((orig gensym-counter))
     (should (integerp gensym-counter))

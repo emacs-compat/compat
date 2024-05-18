@@ -3330,6 +3330,11 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/symbols.texi
+@defun obarray-clear obarray
+This function removes all symbols from @var{obarray}.
+@end defun
+
 @c copied from lispref/functions.texi
 @defun closurep object
 This function returns @code{t} if @var{object} is a closure, which is
