@@ -1,8 +1,9 @@
-compat-tests.el
-Makefile
+.dir-locals.el
+.elpaignore
 .github
 .gitignore
-.elpaignore
 COPYING
+Makefile
 README.md
+compat-tests.el
 compat.texi
