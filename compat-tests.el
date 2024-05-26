@@ -1004,6 +1004,64 @@
       (should-equal compat-tests--global 1)
       (should-equal compat-tests--local 2)
       (should-not (boundp 'compat-tests--unexist)))))
+ 
+(ert-deftest compat-buffer-tests-inhibit-buffer-hooks ()
+  (let* (run-bluh (bluh (lambda () (setq run-bluh t))))
+    (unwind-protect
+        (let* ( run-kbh  (kbh  (lambda () (setq run-kbh  t)))
+                run-kbqf (kbqf (lambda () (setq run-kbqf t))) )
+
+          ;; Inhibited.
+          (add-hook 'buffer-list-update-hook bluh)
+          (with-current-buffer (compat-call generate-new-buffer " foo" t)
+            (add-hook 'kill-buffer-hook kbh nil t)
+            (add-hook 'kill-buffer-query-functions kbqf nil t)
+            (kill-buffer))
+          (with-temp-buffer (ignore))
+          (with-output-to-string (ignore))
+          (should-not run-bluh)
+          (should-not run-kbh)
+          (should-not run-kbqf)
+
+          ;; Not inhibited.
+          (with-current-buffer (compat-call generate-new-buffer " foo")
+            (should run-bluh)
+            (add-hook 'kill-buffer-hook kbh nil t)
+            (add-hook 'kill-buffer-query-functions kbqf nil t)
+            (kill-buffer))
+          (should run-kbh)
+          (should run-kbqf))
+      (remove-hook 'buffer-list-update-hook bluh))))
+ 
+(ert-deftest compat-buffer-tests-inhibit-buffer-hooks-indirect ()
+  (let* ( base run-bluh run-kbh run-kbqf
+          (bluh (lambda () (setq run-bluh t)))
+          (kbh  (lambda () (setq run-kbh  t)))
+          (kbqf (lambda () (setq run-kbqf t))))
+    (dolist (inhibit-base '(nil t))
+      (unwind-protect
+          (let (indirect)
+            (setq base (compat-call generate-new-buffer " base" inhibit-base))
+            (dolist (inhibit-indirect '(nil t))
+              (dotimes (_ 11)
+                (unwind-protect
+                    (let ((name (generate-new-buffer-name " indirect")))
+                      (setq run-bluh nil run-kbh nil run-kbqf nil)
+                      (add-hook 'buffer-list-update-hook bluh)
+                      (with-current-buffer
+                          (setq indirect (make-indirect-buffer
+                                          base name nil inhibit-indirect))
+                        (add-hook 'kill-buffer-hook kbh nil t)
+                        (add-hook 'kill-buffer-query-functions kbqf nil t)
+                        (kill-buffer))
+                      (should (xor inhibit-indirect run-bluh))
+                      (should (xor inhibit-indirect run-kbh))
+                      (should (xor inhibit-indirect run-kbqf)))
+                  (remove-hook 'buffer-list-update-hook bluh)
+                  (when (buffer-live-p indirect)
+                    (kill-buffer indirect))))))
+        (when (buffer-live-p base)
+          (kill-buffer base))))))
 
 (ert-deftest compat-gensym ()
   (let ((orig gensym-counter))

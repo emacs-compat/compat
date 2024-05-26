@@ -392,6 +392,21 @@ not a list, return a one-element list containing OBJECT."
       object
     (list object)))
 
+(compat-defun get-buffer-create (name &optional inhibit-buffer-hooks) ;; <compat-tests:buffer-tests-inhibit-buffer-hooks>
+  "Handle additional optional argument INHIBIT-BUFFER-HOOKS."
+  :extended t
+  (if inhibit-buffer-hooks
+      (let (kill-buffer-hook
+            kill-buffer-query-functions
+            buffer-list-update-hook)
+        (get-buffer-create name))
+    (get-buffer-create name)))
+ 
+(compat-defun generate-new-buffer (name &optional inhibit-buffer-hooks) ;; <compat-tests:buffer-tests-inhibit-buffer-hooks-indirect>
+  "Handle additional optional argument INHIBIT-BUFFER-HOOKS."
+  :extended t
+  (compat--get-buffer-create (generate-new-buffer-name name) inhibit-buffer-hooks))
+
 (compat-defalias subr-primitive-p subrp) ;; <compat-tests:subr-primitive-p>
 
 ;;;; Defined in data.c
