@@ -2152,13 +2152,6 @@ native compilation is not available, this function behaves identically
 to @code{subrp}.
 @end defun
 
-@c based on lisp/subr.el
-@defun subr-native-elisp-p object
-Return @code{t} if @var{object} if the object is native compiled lisp.
-If native compilation is not available, this function always returns
-@code{nil}.
-@end defun
-
 @c copied from lispref/compile.texi
 @defun native-comp-available-p
 This function returns non-@code{nil} if the running Emacs process has

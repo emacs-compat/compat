@@ -2,6 +2,10 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-28: Mark =subr-native-elisp-p= as obsolete (renamed in Emacs 30).
+
 * Release of "Compat" Version 29.1.4.5
 
 - Minor optimization of ~plist-get~ and ~plist-put~.

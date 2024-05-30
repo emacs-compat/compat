@@ -216,7 +216,7 @@
     (should-equal 'h (get-text-property 0 'help-echo b))
     (should-equal 'h (get-text-property 5 'help-echo b))))
 
-(ert-deftest compat-button-buttonize ()
+(ert-deftest compat-obsolete-button-buttonize ()
   (let ((b (with-no-warnings (button-buttonize "button" 'c 'd))))
     (should-equal b "button")
     (should-equal 'c (get-text-property 0 'action b))
@@ -1300,8 +1300,10 @@
 (ert-deftest compat-native-comp-available-p ()
   (should (memq (native-comp-available-p) '(nil t))))
 
-(ert-deftest compat-subr-native-elisp-p ()
-  (should-not (subr-native-elisp-p (symbol-function 'identity))))
+(ert-deftest compat-obsolete-subr-native-elisp-p ()
+  (with-no-warnings
+    (compat-tests--if (< emacs-major-version 30)
+        (should-not (subr-native-elisp-p (symbol-function 'identity))))))
 
 (ert-deftest compat-subr-primitive-p ()
   (should (subr-primitive-p (symbol-function 'identity)))       ;function from fns.c
