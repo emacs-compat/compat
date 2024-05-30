@@ -142,6 +142,16 @@ details."
 
 ;;;; Defined in subr.el
 
+(compat-defmacro static-if (condition then-form &rest else-forms) ;; <compat-tests:static-if>
+  "A conditional compilation macro.
+Evaluate CONDITION at macro-expansion time.  If it is non-nil,
+expand the macro to THEN-FORM.  Otherwise expand it to ELSE-FORMS
+enclosed in a `progn' form.  ELSE-FORMS may be empty."
+  (declare (indent 2) (debug (sexp sexp &rest sexp)))
+  (if (eval condition lexical-binding)
+      then-form
+    (cons 'progn else-forms)))
+
 (compat-defun closurep (object) ;; <compat-tests:closurep>
   "Return t if OBJECT is a function of type closure."
   (declare (side-effect-free error-free))
@@ -154,7 +164,7 @@ details."
 This excludes special forms, since they are not functions."
   (declare (side-effect-free error-free))
   (and (subrp object)
-       (not (or (subr-native-elisp-p object)
+       (not (or (with-no-warnings (subr-native-elisp-p object))
                 (special-form-p object)))))
 
 (compat-defalias drop nthcdr) ;; <compat-tests:drop>
@@ -229,16 +239,6 @@ By default we choose the head of the first list."
               tree)
           tree))
     (copy-tree tree vectors-and-records)))
-
-(compat-defmacro static-if (condition then-form &rest else-forms) ;; <compat-tests:static-if>
-  "A conditional compilation macro.
-Evaluate CONDITION at macro-expansion time.  If it is non-nil,
-expand the macro to THEN-FORM.  Otherwise expand it to ELSE-FORMS
-enclosed in a `progn' form.  ELSE-FORMS may be empty."
-  (declare (indent 2) (debug (sexp sexp &rest sexp)))
-  (if (eval condition lexical-binding)
-      then-form
-    (cons 'progn else-forms)))
 
 ;;;; Defined in fns.c
 

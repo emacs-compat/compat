@@ -396,7 +396,8 @@ not a list, return a one-element list containing OBJECT."
 
 ;;;; Defined in data.c
 
-(compat-defalias subr-native-elisp-p ignore) ;; <compat-tests:subr-native-elisp-p>
+;; Renamed in Emacs 30 to `native-comp-function-p'.
+(compat-defalias subr-native-elisp-p ignore :obsolete t) ;; <compat-tests:subr-native-elisp-p>
 
 ;;;; Defined in subr-x.el
 
