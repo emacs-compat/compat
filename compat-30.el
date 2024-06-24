@@ -252,13 +252,9 @@ Markers are compared lexicographically by buffer and position.
 Buffers and processes are compared by name.
 Other types are considered unordered and the return value will be ‘nil’."
   (cond
-   ;; TODO Open question: Shall we support mixed arguments? See bug#69709.
-   ;; (and (number-or-marker-p a) (number-or-marker-p b))
    ((or (and (numberp a) (numberp b))
         (and (markerp a) (markerp b)))
     (< a b))
-   ;; TODO Open question: Shall we support mixed arguments? See bug#69709.
-   ;; (and (or (stringp a) (symbolp a)) (or (stringp b) (symbolp b)))
    ((or (and (stringp a) (stringp b))
         (and (symbolp a) (symbolp b)))
     (string< a b))
