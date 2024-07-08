@@ -5,6 +5,7 @@
 * Development
 
 - compat-28: Mark =subr-native-elisp-p= as obsolete (renamed in Emacs 30).
+- compat-30: New function =char-to-name=.
 - compat-30: New function =obarray-clear=.
 - compat-30: New function =interpreted-function-p=.
 - compat-30: New function =primitive-function-p=.

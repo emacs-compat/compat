@@ -342,5 +342,14 @@ in this case, sorting is always done in-place."
           (apply #'vector seq))
       seq)))
 
+;;;; Defined in mule-cmds.el
+
+(compat-defun char-to-name (char) ;; <compat-tests:char-to-name>
+  "Return the Unicode name for CHAR, if it has one, else nil.
+Return nil if CHAR is not a character."
+  (and (characterp char)
+       (or (get-char-code-property char 'name)
+           (get-char-code-property char 'old-name))))
+
 (provide 'compat-30)
 ;;; compat-30.el ends here

@@ -1932,6 +1932,9 @@
       (should-equal (replace-regexp-in-region " bar" "" (point-min) 8) 1)
       (should-equal (buffer-string) "foo bar"))))
 
+(ert-deftest compat-char-to-name ()
+  (should-equal (char-to-name ?.) "FULL STOP"))
+
 (ert-deftest compat-char-uppercase-p ()
   (dolist (c (list ?R ?S ?Ω ?Ψ))
     (should (char-uppercase-p c)))

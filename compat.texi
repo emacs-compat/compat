@@ -3323,6 +3323,12 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/nonascii.texi
+@defun char-to-name char
+This function returns the Unicode name of @var{char}.  It returns
+@code{nil} if @var{char} is not a character or has no Unicode name.
+@end defun
+
 @c copied from lispref/symbols.texi
 @defun obarray-clear obarray
 This function removes all symbols from @var{obarray}.
