@@ -74,6 +74,7 @@ Support
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
+* Emacs 30.1::                   Compatibility support for Emacs 30.1
 
 @end detailmenu
 @end menu
@@ -309,6 +310,7 @@ manage to provide for each Emacs version.
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
+* Emacs 30.1::                   Compatibility support for Emacs 30.1
 @end menu
 
 @node Emacs 25.1
