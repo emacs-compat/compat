@@ -1796,31 +1796,32 @@ entire text in the current buffer is copied over.
 @end defun
 
 @c copied from lispref/searching.texi
-@defun replace-string-in-region regexp replacement &optional start end
-This function replaces all the occurrences of @var{regexp} with
-@var{replacement} in the region of buffer text between @var{start} and
-@var{end}; @var{start} defaults to position of point, and @var{end}
-defaults to the last accessible position of the buffer.  The search
-for @var{regexp} is case-sensitive, and @var{replacement} is inserted
-without changing its letter-case.  The @var{replacement} string can
-use the same special elements starting with @samp{\} as
-@code{replace-match} does.  The function returns the number of
-replaced occurrences, or @code{nil} if @var{regexp} is not found.  The
-function preserves the position of point.
-
-@example
-(replace-regexp-in-region "foo[ \t]+bar" "foobar")
-@end example
-@xref{Search and Replace,,,elisp}.
-@end defun
-
-@c copied from lispref/searching.texi
-@defun replace-regexp-in-string string replacement &optional start end
+@defun replace-string-in-region string replacement &optional start end
   This function works similarly to @code{replace-regexp-in-region},
 but searches for, and replaces, literal @var{string}s instead of
 regular expressions.
+@end defun
 
-@xref{Search and Replace,,,elisp}.
+@c copied from lispref/searching.texi
+@defun replace-regexp-in-string regexp rep string &optional fixedcase literal subexp start
+This function copies @var{string} and searches it for matches for
+@var{regexp}, and replaces them with @var{rep}.  It returns the
+modified copy.  If @var{start} is non-@code{nil}, the search for
+matches starts at that index in @var{string}, and the returned value
+does not include the first @var{start} characters of @var{string}.
+To get the whole transformed string, concatenate the first
+@var{start} characters of @var{string} with the return value.
+
+This function uses @code{replace-match} to do the replacement, and it
+passes the optional arguments @var{fixedcase}, @var{literal} and
+@var{subexp} along to @code{replace-match}.
+
+Instead of a string, @var{rep} can be a function.  In that case,
+@code{replace-regexp-in-string} calls @var{rep} for each match,
+passing the text of the match as its sole argument.  It collects the
+value @var{rep} returns and passes that to @code{replace-match} as the
+replacement string.  The match data at this point are the result
+of matching @var{regexp} against a substring of @var{string}.
 @end defun
 
 @c copied from lispref/variables
