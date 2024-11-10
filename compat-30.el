@@ -50,6 +50,9 @@ See also `find-buffer-visiting'."
 
 ;;;; Defined in files.el
 
+;; TODO: Right now there is bug#74289 in the implementation of
+;; `require-with-check' in Emacs 30.  Update the implementation after
+;; the bug has been fixed.
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
   "If FEATURE is not already loaded, load it from FILENAME.
 This is like `require' except if FEATURE is already a member of the list
