@@ -50,30 +50,53 @@ See also `find-buffer-visiting'."
 
 ;;;; Defined in files.el
 
-;; TODO: Right now there is bug#74289 in the implementation of
-;; `require-with-check' in Emacs 30.  Update the implementation after
-;; the bug has been fixed.
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
   "If FEATURE is not already loaded, load it from FILENAME.
 This is like `require' except if FEATURE is already a member of the list
-`features’, then we check if this was provided by a different file than the
-one that we would load now (presumably because `load-path' has been
-changed since the file was loaded).
-If it's the case, we either signal an error (the default), or forcibly reload
-the new file (if NOERROR is equal to `reload'), or otherwise emit a warning."
+`features’, then check if it was provided by a different file than the
+one that is about to be loaded now (presumably because `load-path' has
+been changed since FILENAME was loaded).  If that is the case, either
+signal an error (the default), or forcibly reload the new file (if
+NOERROR is equal to `reload'), or otherwise emit a warning."
   (let ((lh load-history)
         (res (require feature filename (if (eq noerror 'reload) nil noerror))))
     ;; If the `feature' was not yet provided, `require' just loaded the right
     ;; file, so we're done.
-    (when (eq lh load-history)
+    (when (and res (eq lh load-history))
       ;; If `require' did nothing, we need to make sure that was warranted.
-      (let ((fn (locate-file (or filename (symbol-name feature))
-                             load-path (get-load-suffixes))))
+      (let* ((fn (locate-file (or filename (symbol-name feature))
+                              load-path (get-load-suffixes) nil
+                              )) ;; load-prefer-newer
+             ;; We used to look for `fn' in `load-history' with `assoc'
+             ;; which works in most cases, but in some cases (e.g. when
+             ;; `load-prefer-newer' is set) `locate-file' can return a
+             ;; different file than the file that `require' would load,
+             ;; so the file won't be found in `load-history' even though
+             ;; we did load "it".  (bug#74040)
+             ;; So use a "permissive" search which doesn't pay attention to
+             ;; differences between file extensions.
+             (prefix (if (string-match
+                          (concat (regexp-opt (get-load-suffixes)) "\\'") fn)
+                         (concat (substring fn 0 (match-beginning 0)) ".")
+                       fn))
+             (lh load-history))
+        (while (and lh (let ((file (car-safe (car lh))))
+                         (not (and file (string-prefix-p prefix file)))))
+          (setq lh (cdr lh)))
         (cond
-         ((assoc fn load-history) nil)  ;We loaded the right file.
+         (lh nil)                       ;We loaded the right file.
          ((eq noerror 'reload) (load fn nil 'nomessage))
-         (t (funcall (if noerror #'warn #'error)
-                     "Feature provided by other file: %S" feature)))))
+         ((and fn (memq feature features))
+          (funcall (if noerror #'warn #'error)
+                   "Feature `%S' is now provided by a different file %s"
+                   feature fn))
+         (fn
+          (funcall (if noerror #'warn #'error)
+                   "Could not load file %s" fn))
+         (t
+          (funcall (if noerror #'warn #'error)
+                   "Could not locate file %s in load path"
+                   (or filename (symbol-name feature)))))))
     res))
 
 ;;;; Defined in minibuffer.el
