@@ -3172,9 +3172,6 @@
                  (lambda (_) (error "cycle")))))
 
 (ert-deftest compat-require-with-check ()
-  ;; TODO Reenable test on Emacs 30 as soon as CI Emacs packages have
-  ;; been updated. This usually happens in about a week or two.
-  (static-if (< emacs-major-version 30) (progn
   (ert-with-temp-directory dir1
     (ert-with-temp-directory dir2
       (dolist (dir (list dir1 dir2))
@@ -3190,7 +3187,7 @@
       (let ((load-path (cons dir2 load-path)))
         (should-error (require-with-check 'compat-reload))
         (should-equal 'compat-reload (require-with-check 'compat-reload nil 'noerror))
-        (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload))))))))
+        (should-equal 'compat-reload (require-with-check 'compat-reload nil 'reload))))))
 
 (defvar compat-tests-find-buffer nil)
 (ert-deftest compat-find-buffer ()
