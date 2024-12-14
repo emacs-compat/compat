@@ -3232,5 +3232,31 @@
       (let ((completion-category-overrides '((compat-test (a . 10)))))
         (should-equal 10 (compat-call completion-metadata-get md 'a))))))
 
+(ert-deftest compat-untrusted-content ()
+  (should (local-variable-if-set-p 'untrusted-content)))
+
+(ert-deftest compat-trusted-files ()
+  (static-if (< emacs-major-version 30) ;; TODO reenable on Emacs 30
+      (progn
+        (should (boundp 'trusted-files))
+        (should (risky-local-variable-p 'trusted-files)))))
+
+(ert-deftest compat-trusted-content-p ()
+  (static-if (< emacs-major-version 30) ;; TODO reenable on Emacs 30
+      (progn
+        (should-not (trusted-content-p))
+        (let ((untrusted-content t)
+              (buffer-file-truename user-init-file))
+          (should-not (trusted-content-p)))
+        (let ((buffer-file-truename (expand-file-name "compat-tests.el")))
+          (should-not (trusted-content-p)))
+        (let ((buffer-file-truename (expand-file-name "compat-tests.el"))
+              (trusted-files '("compat-tests.el")))
+          (should (trusted-content-p)))
+        (let ((untrusted-content t)
+              (buffer-file-truename (expand-file-name "compat-tests.el"))
+              (trusted-files '("compat-tests.el")))
+          (should-not (trusted-content-p))))))
+
 (provide 'compat-tests)
 ;;; compat-tests.el ends here

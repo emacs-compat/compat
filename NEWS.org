@@ -2,6 +2,12 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-30: New variable =untrusted-content=.
+- compat-30: New variable =trusted-files=.
+- compat-30: New function =trusted-content-p=.
+
 * Release of "Compat" Version 30.0.0.0
 
 - compat-28: Mark =subr-native-elisp-p= as obsolete (renamed in Emacs 30).

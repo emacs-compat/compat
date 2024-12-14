@@ -24,6 +24,15 @@
 (eval-when-compile (load "compat-macs.el" nil t t))
 (compat-require compat-29 "29.1")
 
+(compat-version "29.3")
+(compat-defvar untrusted-content nil ;; <compat-tests:untrusted-content>
+  "Non-nil means that current buffer originated from an untrusted source.
+Email clients and some other modes may set this non-nil to mark the
+buffer contents as untrusted.
+
+This variable might be subject to change without notice."
+  :local permanent)
+
 ;; TODO Update to 30.1 as soon as the Emacs emacs-30 branch version bumped
 (compat-version "30.0.50")
 
@@ -49,6 +58,52 @@ See also `find-buffer-visiting'."
   (find-buffer 'buffer-file-truename filename))
 
 ;;;; Defined in files.el
+
+(compat-defvar trusted-files nil ;; <compat-tests:trusted-files>
+  "List of files and directories whose content we trust.
+Be extra careful here since trusting means that Emacs might execute the
+code contained within those files and directories without an explicit
+request by the user.
+One important case when this might happen is when `flymake-mode' is
+enabled (for example, when it is added to a mode hook).
+Each element of the list should be a string:
+- If it ends in \"/\", it is considered as a directory name and means that
+  Emacs should trust all the files whose name has this directory as a prefix.
+- else it is considered as a file name.
+Use abbreviated file names.  For example, an entry \"~/mycode\" means
+that Emacs will trust all the files in your directory \"mycode\".
+This variable can also be set to `:all', in which case Emacs will trust
+all files, which opens a gaping security hole."
+  :risky t)
+
+(compat-defun trusted-content-p () ;; <compat-tests:trusted-content-p>
+  "Return non-nil if we trust the contents of the current buffer.
+Here, \"trust\" means that we are willing to run code found inside of it.
+See also `trusted-files'."
+  ;; We compare with `buffer-file-truename' i.s.o `buffer-file-name'
+  ;; to try and avoid marking as trusted a file that's merely accessed
+  ;; via a symlink that happens to be inside a trusted dir.
+  (and (not untrusted-content)
+       buffer-file-truename
+       (with-demoted-errors "trusted-content-p: %S"
+         (let ((exists (file-exists-p buffer-file-truename)))
+           (or
+            (eq trusted-files :all)
+            ;; We can't avoid trusting the user's init file.
+            (if (and exists user-init-file)
+                (file-equal-p buffer-file-truename user-init-file)
+              (equal buffer-file-truename user-init-file))
+            (let ((file (abbreviate-file-name buffer-file-truename))
+                  (trusted nil))
+              (dolist (tf trusted-files)
+                (when (or (if exists (file-equal-p tf file) (equal tf file))
+                          ;; We don't use `file-in-directory-p' here, because
+                          ;; we want to err on the conservative side: "guilty
+                          ;; until proven innocent".
+                          (and (string-suffix-p "/" tf)
+                               (string-prefix-p tf file)))
+                  (setq trusted t)))
+              trusted))))))
 
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
   "If FEATURE is not already loaded, load it from FILENAME.

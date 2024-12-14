@@ -221,6 +221,8 @@ definition is generated.
 
 - :constant :: Mark the variable as constant if t.
 
+- :risky :: Mark the variable as risky if t.
+
 - :local :: Make the variable buffer-local if t.  If the value is
   `permanent' make the variable additionally permanently local.
 
@@ -232,11 +234,13 @@ definition is generated.
            (doc-string 3) (indent 2))
   (compat-macs--guard
       attrs (list :constant #'booleanp
+                  :risky #'booleanp
                   :local (lambda (x) (memq x '(nil t permanent)))
                   :obsolete (lambda (x) (or (booleanp x) (stringp x))))
-    (lambda (constant local obsolete)
+    (lambda (constant risky local obsolete)
       (compat-macs--strict (not (boundp name)) "%s already defined" name)
       (compat-macs--assert (not (and constant local)) "Both :constant and :local")
+      (compat-macs--assert (not (and local risky)) "Both :risky and :local")
       ;; The boundp check is performed at runtime to make sure that we never
       ;; redefine an existing definition if Compat is loaded on a newer Emacs
       ;; version.
@@ -250,6 +254,7 @@ definition is generated.
                  ',name ,(if (stringp obsolete) obsolete "No substitute")
                  ,compat-macs--version))))
         ,@(and local `((make-variable-buffer-local ',name)))
+        ,@(and risky `((put ',name 'risky-local-variable t)))
         ,@(and (eq local 'permanent) `((put ',name 'permanent-local t)))))))
 
 (defmacro compat-version (version)
