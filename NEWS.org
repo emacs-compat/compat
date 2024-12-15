@@ -2,11 +2,13 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 30.0.1.0
 
 - compat-30: New variable =untrusted-content=.
 - compat-30: New variable =trusted-files=.
 - compat-30: New function =trusted-content-p=.
+
+(Release <2024-12-15 Sun>)
 
 * Release of "Compat" Version 30.0.0.0
 
