@@ -80,30 +80,25 @@ all files, which opens a gaping security hole."
   "Return non-nil if we trust the contents of the current buffer.
 Here, \"trust\" means that we are willing to run code found inside of it.
 See also `trusted-content'."
-  ;; We compare with `buffer-file-truename' i.s.o `buffer-file-name'
-  ;; to try and avoid marking as trusted a file that's merely accessed
-  ;; via a symlink that happens to be inside a trusted dir.
   (and (not untrusted-content)
-       buffer-file-truename
-       (with-demoted-errors "trusted-content-p: %S"
-         (let ((exists (file-exists-p buffer-file-truename)))
-           (or
-            (eq trusted-content :all)
-            ;; We can't avoid trusting the user's init file.
-            (if (and exists user-init-file)
-                (file-equal-p buffer-file-truename user-init-file)
-              (equal buffer-file-truename user-init-file))
-            (let ((file (abbreviate-file-name buffer-file-truename))
-                  (trusted nil))
-              (dolist (tf trusted-content)
-                (when (or (if exists (file-equal-p tf file) (equal tf file))
-                          ;; We don't use `file-in-directory-p' here, because
-                          ;; we want to err on the conservative side: "guilty
-                          ;; until proven innocent".
-                          (and (string-suffix-p "/" tf)
-                               (string-prefix-p tf file)))
-                  (setq trusted t)))
-              trusted))))))
+       (or
+        (eq trusted-content :all)
+        (and
+         buffer-file-truename
+         (with-demoted-errors "trusted-content-p: %S"
+           (let ((exists (file-exists-p buffer-file-truename)))
+             (or
+              (if (and exists user-init-file)
+                  (file-equal-p buffer-file-truename user-init-file)
+                (equal buffer-file-truename user-init-file))
+              (let ((file (abbreviate-file-name buffer-file-truename))
+                    (trusted nil))
+                (dolist (tf trusted-content)
+                  (when (or (if exists (file-equal-p tf file) (equal tf file))
+                            (and (string-suffix-p "/" tf)
+                                 (string-prefix-p tf file)))
+                    (setq trusted t)))
+                trusted))))))))
 
 (compat-defun require-with-check (feature &optional filename noerror) ;; <compat-tests:require-with-check>
   "If FEATURE is not already loaded, load it from FILENAME.
