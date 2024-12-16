@@ -3333,7 +3333,7 @@ older than 30.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
-@defvar trusted-files
+@defvar trusted-content
 List of files and directories whose content we trust.  Be extra careful
 here since trusting means that Emacs might execute the code contained
 within those files and directories without an explicit request by the
@@ -3352,7 +3352,7 @@ files, which opens a gaping security hole.
 @defun trusted-content-p
 Return non-nil if we trust the contents of the current buffer.  Here,
 "trust" means that we are willing to run code found inside of it.  See
-also @code{trusted-files}.
+also @code{trusted-content}.
 @end defun
 
 @c copied from lispref/nonascii.texi

@@ -2,6 +2,10 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-30: Rename =trusted-files= to =trusted-content=.
+
 * Release of "Compat" Version 30.0.1.0
 
 - compat-30: New variable =untrusted-content=.
