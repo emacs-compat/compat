@@ -6,7 +6,7 @@
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
 ;; Version: 30.0.2.0
 ;; URL: https://github.com/emacs-compat/compat
-;; Package-Requires: ((emacs "24.4") (seq "2.23"))
+;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: lisp, maint
 
 ;; This program is free software; you can redistribute it and/or modify

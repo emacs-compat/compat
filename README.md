@@ -1,7 +1,7 @@
 COMPATibility Library for Emacs
 ===============================
 This is the source of compat.el, the forwards-compatibility library for (GNU)
-Emacs Lisp, versions 24.4 and newer. The intended audience are package
+Emacs Lisp, versions 25.1 and newer. The intended audience are package
 developers that are interested in using newer developments, without having to
 break compatibility.
 

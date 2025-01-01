@@ -103,7 +103,7 @@ REST are attributes and the function BODY."
     (lambda (extended obsolete body)
       (when (stringp extended)
         (compat-macs--assert
-         (and (version< extended compat-macs--version) (version< "24.4" extended))
+         (and (version< extended compat-macs--version) (version< "25.1" extended))
          "Invalid :extended version %s for %s %s" extended type name)
         (setq extended (version<= extended emacs-version)))
       (compat-macs--strict (eq extended (fboundp name))

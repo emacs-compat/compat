@@ -44,9 +44,8 @@
 ;; calling convention or behavior changed between Emacs versions.
 
 ;; The functions tested here are guaranteed to work on the Emacs versions
-;; tested by continuous integration.  This includes 24.4, 24.5, 25.1, 25.2,
-;; 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2, 29.1 and the current
-;; Emacs master branch.
+;; tested by continuous integration.  This includes the versions 25.x,
+;; 26.x, 27.x, 28.x, 29.x, 30.x and the current Emacs master branch.
 
 ;;; Code:
 
@@ -2890,12 +2889,10 @@
 
 (ert-deftest compat-region-bounds ()
   (should-error (region-bounds))
-  ;; FIXME: On Emacs 24 `region-bounds' always returns a continuous region.
-  (when (> emacs-major-version 24)
-    (let ((region-extract-function #'ignore))
-      (should-not (region-bounds)))
-    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
-      (should-equal (region-bounds) '((2 . 3) (6 . 7)))))
+  (let ((region-extract-function #'ignore))
+    (should-not (region-bounds)))
+  (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+    (should-equal (region-bounds) '((2 . 3) (6 . 7))))
   (with-temp-buffer
     (insert "abc\ndef\n")
     (set-mark 2)
@@ -2903,9 +2900,8 @@
     (should-equal (region-bounds) '((2 . 7)))))
 
 (ert-deftest compat-region-noncontiguous-p ()
-  (when (> emacs-major-version 24)
-    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
-      (should (region-noncontiguous-p))))
+  (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+    (should (region-noncontiguous-p)))
   (with-temp-buffer
     (insert "abc\ndef\n")
     (set-mark 2)
@@ -2914,11 +2910,9 @@
     (should-not (region-noncontiguous-p))
     (should-not (use-region-noncontiguous-p))
     (should (use-region-p))
-    ;; FIXME: On Emacs 24 `region-bounds' always returns a continuous region.
-    (when (> emacs-major-version 24)
-      (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
-        (should (region-noncontiguous-p))
-        (should (use-region-noncontiguous-p))))))
+    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+      (should (region-noncontiguous-p))
+      (should (use-region-noncontiguous-p)))))
 
 (ert-deftest compat-get-scratch-buffer-create ()
   (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))

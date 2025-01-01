@@ -67,11 +67,7 @@ SEQUENCE may be a list, a vector, a boolean vector, or a string."
 Value is a list of one or more cons cells of the form (START . END).
 It will have more than one cons cell when the region is non-contiguous,
 see `region-noncontiguous-p' and `extract-rectangle-bounds'."
-  (if (eval-when-compile (< emacs-major-version 25))
-      ;; FIXME: The `region-extract-function' of Emacs 24 has no support for the
-      ;; bounds argument.
-      (list (cons (region-beginning) (region-end)))
-    (funcall region-extract-function 'bounds)))
+  (funcall region-extract-function 'bounds))
 
 ;;;; Defined in subr.el
 
@@ -108,7 +104,7 @@ If you just want to check `major-mode', use `derived-mode-p'."
 
 (compat-defun alist-get (key alist &optional default remove testfn) ;; <compat-tests:alist-get>
   "Handle optional argument TESTFN."
-  :extended "25.1"
+  :extended t
   (ignore remove)
   (let ((x (if (not testfn)
                (assq key alist)

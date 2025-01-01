@@ -40,8 +40,7 @@ endif
 
 EMACS = emacs
 MAKEINFO = makeinfo
-BYTEC = compat-25.elc \
-	compat-26.elc \
+BYTEC = compat-26.elc \
 	compat-27.elc \
 	compat-28.elc \
 	compat-29.elc \

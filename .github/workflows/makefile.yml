@@ -19,15 +19,12 @@ jobs:
     strategy:
       matrix:
         # See https://github.com/purcell/setup-emacs/blob/master/.github/workflows/test.yml
-        emacs-version: [24.4, 24.5, 25.1, 25.2, 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2, 29.1, 29.2, 29.3, 29.4, 30.1] # release-snapshot, snapshot
+        emacs-version: [25.1, 25.2, 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2, 29.1, 29.2, 29.3, 29.4, 30.1] # release-snapshot, snapshot
     steps:
     - uses: actions/checkout@v4
     - uses: purcell/setup-emacs@master
       with:
         version: ${{ matrix.emacs-version }}
-    - name: Provide seq.el on Emacs 24
-      if: ${{ startsWith(matrix.emacs-version, '24.') }}
-      run: mv .github/workflows/seq-24.el seq.el
     - name: Basic checks
       run: make check
     - name: Run interpreted tests

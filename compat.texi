@@ -69,7 +69,6 @@ Introduction
 
 Support
 
-* Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
@@ -97,7 +96,7 @@ for Emacs Lisp.  By using Compat, an Elisp package does not have to
 make the decision to either use new and useful functionality or
 support old versions of Emacs.
 
-The library provides support back until Emacs 24.4.  The intended
+The library provides support back until Emacs 25.1.  The intended
 audience are package developers that are interested in using newer
 developments, without having to break compatibility.
 
@@ -110,10 +109,10 @@ mirrors the version of Emacs releases.  The current version of Compat
 corresponds to the current Emacs release.
 
 @example
-;; Package-Requires: ((emacs "24.4") (compat "30.0.2.0"))
+;; Package-Requires: ((emacs "25.1") (compat "30.0.2.0"))
 @end example
 
-There is no need to depend on @code{emacs 24.4} specifically.  One can
+There is no need to depend on @code{emacs 25.1} specifically.  One can
 choose any newer version, if features not provided by Compat
 necessitate it, for example bug fixes or UI improvements.
 
@@ -207,11 +206,11 @@ technical reasons.  The scope is intentionally restricted in order to
 limit the size of Compat and to ensure that the library stays
 maintainable.
 
-Emacs version 24.4 is chosen as the oldest version supported by
-Compat, since Elisp has seen significant changes at that version.
-Since 24.4 Emacs major versions consistently bump the major version
-number. On the library level, subr-x was introduced in 24.4.  Most
-popular Emacs packages already require 24.4 or even newer versions of
+Emacs version 25.1 is chosen as the oldest version supported by Compat,
+since Elisp has seen significant changes at that version.  Since 25.1
+Emacs major versions consistently bump the major version number. On the
+library level, seq and generics were introduced in 25.1.  Most popular
+Emacs packages already require 25.1 or even newer versions of
 Emacs. Supporting for more historical Emacs versions would complicate
 maintenance while only few packages and users would benefit.
 
@@ -306,7 +305,6 @@ This section goes into the features that Compat manages and doesn't
 manage to provide for each Emacs version.
 
 @menu
-* Emacs 25.1::                   Compatibility support for Emacs 25.1
 * Emacs 26.1::                   Compatibility support for Emacs 26.1
 * Emacs 27.1::                   Compatibility support for Emacs 27.1
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
@@ -314,275 +312,6 @@ manage to provide for each Emacs version.
 * Emacs 30.1::                   Compatibility support for Emacs 30.1
 * Emacs 31.1::                   Compatibility support for Emacs 31.1
 @end menu
-
-@node Emacs 25.1
-@section Emacs 25.1
-
-@subsection Added Definitions
-The following functions and macros are implemented in Emacs
-25.1. These functions are made available by Compat on Emacs versions
-older than 25.1.
-
-@c copied from lispref/help.texi
-@defopt text-quoting-style
-The value of this user option is a symbol that specifies the style
-Emacs should use for single quotes in the wording of help and
-messages.  If the option's value is @code{curve}, the style is
-@t{‘like this’} with curved single quotes.  If the value is
-@code{straight}, the style is @t{'like this'} with straight
-apostrophes.  If the value is @code{grave}, quotes are not translated
-and the style is @t{`like this'} with grave accent and apostrophe, the
-standard style before Emacs version 25.  The default value @code{nil}
-acts like @code{curve} if curved single quotes seem to be displayable,
-and like @code{grave} otherwise.
-
-This option is useful on platforms that have problems with curved
-quotes.  You can customize it freely according to your personal
-preference.
-@end defopt
-
-@c based on lisp/simple.el
-@defun region-bounds
-Return the boundaries of the region.  Value is a list of one or more
-cons cells of the form @code{(start . end)}.  It will have more than
-one cons cell when the region is non-contiguous, see
-@code{region-noncontiguous-p} and @code{extract-rectangle-bounds}.
-@end defun
-
-@c based on lisp/simple.el
-@defun region-noncontiguous-p
-Return non-nil if the region contains several pieces.  An example is a
-rectangular region handled as a list of separate contiguous regions
-for each line.
-@end defun
-
-@c copied from lispref/positions.texi
-@defmac save-mark-and-excursion body@dots{}
-This macro is like @code{save-excursion}, but also saves and restores
-the mark location and @code{mark-active}.  This macro does what
-@code{save-excursion} did before Emacs 25.1.
-@end defmac
-
-@c copied from lispref/strings.texi
-@defun format-message string &rest objects
-This function acts like @code{format}, except it also converts any
-grave accents (@t{`}) and apostrophes (@t{'}) in @var{string} as per
-the value of @code{text-quoting-style}.
-
-Typically grave accent and apostrophe in the format translate to
-matching curved quotes, e.g., @t{"Missing `%s'"} might result in
-@t{"Missing ‘foo’"}.  @xref{Text Quoting Style,,,elisp}, for how to
-influence or inhibit this translation.
-
-@ref{Formatting Strings,,,elisp}.
-@end defun
-
-@c copied from lispref/files.texi
-@defun directory-name-p filename
-This function returns non-@code{nil} if @var{filename} ends with a
-directory separator character.  This is the forward slash @samp{/} on
-GNU and other POSIX-like systems; MS-Windows and MS-DOS recognize both
-the forward slash and the backslash @samp{\} as directory separators.
-
-@xref{Directory Names,,,elisp}.
-@end defun
-
-@c copied from lispref/strings.texi
-@defun string-greaterp string1 string2
-This function returns the result of comparing @var{string1} and
-@var{string2} in the opposite order, i.e., it is equivalent to calling
-@code{(string-lessp @var{string2} @var{string1})}.
-
-@xref{Text Comparison,,,elisp}.
-@end defun
-
-@c copied from lispref/files.texi
-@defmac with-file-modes mode body@dots{}
-This macro evaluates the @var{body} forms with the default permissions
-for new files temporarily set to @var{modes} (whose value is as for
-@code{set-file-modes} above).  When finished, it restores the original
-default file permissions, and returns the value of the last form in
-@var{body}.
-
-This is useful for creating private files, for example.
-
-@xref{Changing Files,,,elisp}.
-@end defmac
-
-@c copied from lispref/lists.texi
-@defun alist-get key alist &optional default remove
-This function is similar to @code{assq}.  It finds the first association
-@w{@code{(@var{key} . @var{value})}} by comparing @var{key} with
-@var{alist} elements, and, if found, returns the @var{value} of that
-association.  If no association is found, the function returns
-@var{default}.
-
-This is a generalized variable (@pxref{Generalized Variables,,,elisp})
-that can be used to change a value with @code{setf}.  When using it to
-set a value, optional argument @var{remove} non-@code{nil} means to
-remove @var{key}'s association from @var{alist} if the new value is
-@code{eql} to @var{default}.
-
-@ref{Association Lists,,,elisp}.
-@end defun
-
-@defmac if-let (bindings@dots{}) then &rest else@dots{}
-As with @code{let*}, @var{bindings} will consist of
-@code{(@var{symbol} @var{value-form})} entries that are evaluated and
-bound sequentially.  If all @var{value-form} evaluate to
-non-@code{nil} values, then @var{then} is evaluated as were the case
-with a regular @code{let*} expression, with all the variables bound.
-If any @var{value-form} evaluates to @code{nil}, @var{else} is
-evaluated, without any bound variables.
-
-A binding may also optionally drop the @var{symbol}, and simplify to
-@code{(@var{value-form})} if only the test is of interest.
-
-For the sake of backwards compatibility, it is possible to write a
-single binding without a binding list:
-
-@example
-@group
-(if-let* (@var{symbol} (test)) foo bar)
-@equiv{}
-(if-let* ((@var{symbol} (test))) foo bar)
-@end group
-@end example
-@end defmac
-
-@defmac when-let (bindings@dots{}) &rest body
-As with @code{when}, if one is only interested in the case where all
-@var{bindings} are non-nil.  Otherwise @var{bindings} are interpreted
-just as they are by @code{if-let*}.
-@end defmac
-
-@c based on lisp/subr-x.el
-@defun hash-table-empty hash-table
-Check whether @var{hash-table} is empty (has 0 elements).
-@end defun
-
-@c based on lisp/subr-x.el
-@defmac thread-first &rest forms
-Combine @var{forms} into a single expression by ``threading'' each
-element as the @emph{first} argument of their successor.  Elements of
-@var{forms} can either be an list of an atom.
-
-For example, consider the threading expression and it's equivalent
-macro expansion:
-
-@example
-(thread-first
-  5
-  (+ 20)
-  (/ 25)
-  -
-  (+ 40))
-@equiv{}
-(+ (- (/ (+ 5 20) 25)) 40)
-@end example
-
-Note how the single @code{-} got converted into a list before threading.
-This example uses arithmetic functions, but @code{thread-first} is not
-restricted to arithmetic or side-effect free code.
-@end defmac
-
-@defmac thread-last &rest forms
-Combine @var{forms} into a single expression by ``threading'' each
-element as the @emph{last} argument of their successor.  Elements of
-@var{forms} can either be an list of an atom.
-
-For example, consider the threading expression and it's equivalent
-macro expansion:
-
-@example
-(thread-first
-  5
-  (+ 20)
-  (/ 25)
-  -
-  (+ 40))
-@equiv{}
-(+ 40 (- (/ 25 (+ 20 5))))
-@end example
-
-Note how the single @code{-} got converted into a list before threading.
-This example uses arithmetic functions, but @code{thread-last} is not
-restricted to arithmetic or side-effect free code.
-@end defmac
-
-@c copied from lispref/macros.texi
-@defun macroexpand-1 form &optional environment
-This function expands macros like @code{macroexpand}, but it only
-performs one step of the expansion: if the result is another macro call,
-@code{macroexpand-1} will not expand it.
-
-@xref{Expansion,Expansion,,elisp}.
-@end defun
-
-@c based on lisp/emacs-lisp/macroexp.el
-@defun macroexp-quote e
-Return an expression @var{e} such that @code{(eval e)} is @var{v}.
-@end defun
-
-@c based on lisp/emacs-lisp/macroexp.el
-@defun macroexp-parse body
-Parse a function @var{body} into @code{(declarations . exps)}.
-@end defun
-
-@defun bool-vector &rest objects
-This function creates and returns a bool-vector whose elements are the
-arguments, @var{objects}.
-
-@xref{Bool-Vectors,,,elisp}.
-@end defun
-
-@subsection Missing Definitions
-Compat does not provide support for the following Lisp features
-implemented in 25.1:
-
-@itemize
-@item
-The function @code{macroexp-macroexpand}.
-@item
-The macro @code{macroexp-let2*}.
-@item
-The function @code{directory-files-recursively}.
-@item
-New @code{pcase} patterns.
-@item
-The hook @code{prefix-command-echo-keystrokes-functions} and
-@code{prefix-command-preserve-state-hook}.
-@item
-The hook @code{pre-redisplay-functions}.
-@item
-The function @code{make-process}.
-@item
-Support for the variable @code{inhibit-message}.
-@item
-The @code{define-inline} functionality.
-@item
-The functions @code{string-collate-lessp} and
-@code{string-collate-equalp}.
-@item
-The function @code{funcall-interactively}.
-@item
-The function @code{buffer-substring-with-bidi-context}.
-@item
-The function @code{font-info}.
-@item
-The function @code{default-font-width}.
-@item
-The function @code{window-font-height} and @code{window-font-width}.
-@item
-The function @code{window-max-chars-per-line}.
-@item
-The function @code{set-binary-mode}.
-@item
-The functions @code{bufferpos-to-filepos} and
-@code{filepos-to-bufferpos}.
-@item
-The @code{thunk} library.
-@end itemize
 
 @node Emacs 26.1
 @section Emacs 26.1

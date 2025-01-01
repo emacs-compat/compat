@@ -8,6 +8,8 @@
 - compat-31: New functions =minusp= and =plusp=.
 - compat-31: New macros =incf= and =decf=.
 - compat-31: New function =color-blend=.
+- Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
+  Emacs 24.x support is still needed, Compat 30 can be used.
 
 * Release of "Compat" Version 30.0.2.0
 
