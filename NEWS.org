@@ -2,9 +2,11 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 30.0.2.0
 
 - compat-30: Rename =trusted-files= to =trusted-content=.
+
+(Release <2025-01-04 Sat>)
 
 * Release of "Compat" Version 30.0.1.0
 
