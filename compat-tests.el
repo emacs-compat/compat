@@ -3236,27 +3236,23 @@
   (should (local-variable-if-set-p 'untrusted-content)))
 
 (ert-deftest compat-trusted-content ()
-  (static-if (< emacs-major-version 30) ;; TODO reenable on Emacs 30
-      (progn
-        (should (boundp 'trusted-content))
-        (should (risky-local-variable-p 'trusted-content)))))
+  (should (boundp 'trusted-content))
+  (should (risky-local-variable-p 'trusted-content)))
 
 (ert-deftest compat-trusted-content-p ()
-  (static-if (< emacs-major-version 30) ;; TODO reenable on Emacs 30
-      (progn
-        (should-not (trusted-content-p))
-        (let ((untrusted-content t)
-              (buffer-file-truename user-init-file))
-          (should-not (trusted-content-p)))
-        (let ((buffer-file-truename (expand-file-name "compat-tests.el")))
-          (should-not (trusted-content-p)))
-        (let ((buffer-file-truename (expand-file-name "compat-tests.el"))
-              (trusted-content '("compat-tests.el")))
-          (should (trusted-content-p)))
-        (let ((untrusted-content t)
-              (buffer-file-truename (expand-file-name "compat-tests.el"))
-              (trusted-content '("compat-tests.el")))
-          (should-not (trusted-content-p))))))
+  (should-not (trusted-content-p))
+  (let ((untrusted-content t)
+        (buffer-file-truename user-init-file))
+    (should-not (trusted-content-p)))
+  (let ((buffer-file-truename (expand-file-name "compat-tests.el")))
+    (should-not (trusted-content-p)))
+  (let ((buffer-file-truename (expand-file-name "compat-tests.el"))
+        (trusted-content '("compat-tests.el")))
+    (should (trusted-content-p)))
+  (let ((untrusted-content t)
+        (buffer-file-truename (expand-file-name "compat-tests.el"))
+        (trusted-content '("compat-tests.el")))
+    (should-not (trusted-content-p))))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
