@@ -32,6 +32,12 @@
 .PHONY: all compile force-compile test clean check
 .SUFFIXES: .el .elc
 
+ifeq ($(CI),true)
+        STRICT = --eval '(setq compat-strict t byte-compile-error-on-warn t)'
+else
+        STRICT =
+endif
+
 EMACS = emacs
 MAKEINFO = makeinfo
 BYTEC = compat-25.elc \
@@ -78,9 +84,7 @@ $(BYTEC): compat-macs.el
 
 .el.elc:
 	@echo "Compiling $<"
-	@$(EMACS) -Q --batch -L . \
-		--eval '(setq compat-strict t byte-compile-error-on-warn t)' \
-		-f batch-byte-compile $<
+	@$(EMACS) -Q --batch -L . $(STRICT) -f batch-byte-compile $<
 
 compat.info: compat.texi
 	$(MAKEINFO) $<
