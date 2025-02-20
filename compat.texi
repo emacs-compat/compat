@@ -75,6 +75,7 @@ Support
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
 * Emacs 30.1::                   Compatibility support for Emacs 30.1
+* Emacs 31.1::                   Compatibility support for Emacs 31.1
 
 @end detailmenu
 @end menu
@@ -311,6 +312,7 @@ manage to provide for each Emacs version.
 * Emacs 28.1::                   Compatibility support for Emacs 28.1
 * Emacs 29.1::                   Compatibility support for Emacs 29.1
 * Emacs 30.1::                   Compatibility support for Emacs 30.1
+* Emacs 31.1::                   Compatibility support for Emacs 31.1
 @end menu
 
 @node Emacs 25.1
@@ -3685,6 +3687,30 @@ argument must not contain cycles.
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features
 implemented in 30.1:
+
+@node Emacs 31.1
+@section Emacs 31.1
+
+@subsection Added Definitions
+The following functions and macros are implemented in Emacs
+31.1. These functions are made available by Compat on Emacs versions
+older than 31.1.  Note that due to upstream changes, it might happen
+that there will be the need for changes, so use these functions with
+care.
+
+@c Placeholder
+
+@subsection Extended Definitions
+These functions must be called explicitly via @code{compat-call},
+since their calling convention or behavior was extended in Emacs 31.1:
+
+@c Placeholder
+
+@subsection Missing Definitions
+Compat does not provide support for the following Lisp features
+implemented in 31.1:
+
+@c Placeholder
 
 @node Development
 @chapter Development
