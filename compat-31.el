@@ -27,6 +27,15 @@
 ;; TODO Update to 31.1 as soon as the Emacs emacs-31 branch version bumped
 (compat-version "31.0.50")
 
+;;;; Defined in subr.el
+
+(compat-defun oddp (integer)
+  "Return t if INTEGER is odd."
+  (not (eq (% integer 2) 0)))
+
+(compat-defun evenp (integer)
+  "Return t if INTEGER is even."
+  (eq (% integer 2) 0))
 
 (provide 'compat-31)
 ;;; compat-31.el ends here
