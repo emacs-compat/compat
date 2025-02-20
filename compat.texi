@@ -3699,6 +3699,18 @@ that there will be the need for changes, so use these functions with
 care.
 
 @c copied from lispref/numbers.texi
+@defun plusp number
+This predicate tests whether its argument is positive, and returns
+@code{t} if so, @code{nil} otherwise.  The argument must be a number.
+@end defun
+
+@c copied from lispref/numbers.texi
+@defun minusp number
+This predicate tests whether its argument is negative, and returns
+@code{t} if so, @code{nil} otherwise.  The argument must be a number.
+@end defun
+
+@c copied from lispref/numbers.texi
 @defun oddp integer
 This predicate tests whether its argument is an odd number, and returns
 @code{t} if so, @code{nil} otherwise.  The argument must be an integer.

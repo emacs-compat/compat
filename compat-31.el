@@ -37,5 +37,13 @@
   "Return t if INTEGER is even."
   (eq (% integer 2) 0))
 
+(compat-defun plusp (number)
+  "Return t if NUMBER is positive."
+  (> number 0))
+
+(compat-defun minusp (number)
+  "Return t if NUMBER is negative."
+  (< number 0))
+
 (provide 'compat-31)
 ;;; compat-31.el ends here
