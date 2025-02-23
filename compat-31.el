@@ -29,19 +29,19 @@
 
 ;;;; Defined in subr.el
 
-(compat-defun oddp (integer)
+(compat-defun oddp (integer) ;; <compat-tests:oddp>
   "Return t if INTEGER is odd."
   (not (eq (% integer 2) 0)))
 
-(compat-defun evenp (integer)
+(compat-defun evenp (integer) ;; <compat-tests:evenp>
   "Return t if INTEGER is even."
   (eq (% integer 2) 0))
 
-(compat-defun plusp (number)
+(compat-defun plusp (number) ;; <compat-tests:plusp>
   "Return t if NUMBER is positive."
   (> number 0))
 
-(compat-defun minusp (number)
+(compat-defun minusp (number) ;; <compat-tests:minusp>
   "Return t if NUMBER is negative."
   (< number 0))
 
