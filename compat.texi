@@ -3728,9 +3728,10 @@ This macro increments the number stored in @var{place} by one, or
 by @var{delta} if specified.  It returns the incremented value.
 
 @var{place} can be a symbol or a generalized variable,
-@pxref{Generalized Variables}.  For example, @w{@samp{(incf i)}} is
-equivalent to @w{@samp{(setq i (1+ i))}}, and @w{@samp{(incf (car x)
-2)}} is equivalent to @w{@samp{(setcar x (+ (car x) 2))}}.
+@pxref{generalised variable,Generalized Variables,,elisp}.  For example,
+@w{@samp{(incf i)}} is equivalent to @w{@samp{(setq i (1+ i))}}, and
+@w{@samp{(incf (car x) 2)}} is equivalent to @w{@samp{(setcar x (+ (car
+x) 2))}}.
 @end defmac
 
 @c copied from lispref/numbers.texi
