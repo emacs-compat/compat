@@ -45,5 +45,23 @@
   "Return t if NUMBER is negative."
   (< number 0))
 
+(compat-defmacro incf (place &optional delta) ;; <compat-tests:incf>
+  "Increment PLACE by DELTA (default to 1).
+
+The DELTA is first added to PLACE, and then stored in PLACE.
+Return the incremented value of PLACE.
+
+See also `decf'."
+  `(setf ,place (+ ,place (or ,delta 1))))
+
+(compat-defmacro decf (place &optional delta) ;; <compat-tests:decf>
+  "Decrement PLACE by DELTA (default to 1).
+
+The DELTA is first subtracted from PLACE, and then stored in PLACE.
+Return the decremented value of PLACE.
+
+See also `incf'."
+  `(setf ,place (- ,place (or ,delta 1))))
+
 (provide 'compat-31)
 ;;; compat-31.el ends here

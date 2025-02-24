@@ -3722,6 +3722,24 @@ This predicate tests whether its argument is an even number, and returns
 @code{t} if so, @code{nil} otherwise.  The argument must be an integer.
 @end defun
 
+@c copied from lispref/numbers.texi
+@defmac incf place &optional delta
+This macro increments the number stored in @var{place} by one, or
+by @var{delta} if specified.  It returns the incremented value.
+
+@var{place} can be a symbol or a generalized variable,
+@pxref{Generalized Variables}.  For example, @w{@samp{(incf i)}} is
+equivalent to @w{@samp{(setq i (1+ i))}}, and @w{@samp{(incf (car x)
+2)}} is equivalent to @w{@samp{(setcar x (+ (car x) 2))}}.
+@end defmac
+
+@c copied from lispref/numbers.texi
+@defmac decf place &optional delta
+This macro decrements the number stored in @var{place} by one, or
+by @var{delta} if specified.  It returns the decremented value.
+@end defmac
+
+
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 31.1:
