@@ -3355,7 +3355,8 @@
   (should-error (eval '(incf [a b c]) t))
   (let ((x 0))
     (should-error (eval '(incf x 'symb) t))
-    (should-error (eval '(incf x [a b c]) t))))
+    (should-error (eval '(incf x [a b c]) t))
+    (ignore x)))
 
 (ert-deftest compat-decf ()
   (let ((x 3))
@@ -3382,7 +3383,8 @@
   (should-error (eval '(decf [a b c]) t))
   (let ((x 0))
     (should-error (eval '(decf x 'symb) t))
-    (should-error (eval '(decf x [a b c]) t))))
+    (should-error (eval '(decf x [a b c]) t))
+    (ignore x)))
 
 (provide 'compat-tests)
 ;;; compat-tests.el ends here
