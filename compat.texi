@@ -3740,6 +3740,16 @@ This macro decrements the number stored in @var{place} by one, or
 by @var{delta} if specified.  It returns the decremented value.
 @end defmac
 
+@defun color-blend a b &optional alpha
+Interpolate between the two colors @var{a} and @var{b}.  Both arguments
+are a list of three numbers @samp{(RED GREEN BLUE)} representing a
+coordinate in a (0,1)-RGB color space.  The optional argument
+@var{alpha} should be a value between 0 and 1 and adjusts how strongly
+the function will skew in either direction: Values towards 1 tend
+towards @var{a}, while values towards 0 tend towards @var{b}.  By
+default, the argument defaults to 0.5.
+@end defun
+
 
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},

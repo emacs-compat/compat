@@ -7,6 +7,7 @@
 - compat-31: New functions =oddp= and =evenp=.
 - compat-31: New functions =minusp= and =plusp=.
 - compat-31: New macros =incf= and =decf=.
+- compat-31: New function =color-blend=.
 
 * Release of "Compat" Version 30.0.2.0
 
