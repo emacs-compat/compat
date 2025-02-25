@@ -2,6 +2,12 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-31: New functions =oddp= and =evenp=.
+- compat-31: New functions =minusp= and =plusp=.
+- compat-31: New macros =incf= and =decf=.
+
 * Release of "Compat" Version 30.0.2.0
 
 - compat-30: Rename =trusted-files= to =trusted-content=.
