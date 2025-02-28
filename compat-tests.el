@@ -3357,7 +3357,10 @@
   (let ((x 0))
     (should-error (eval '(incf x 'symb) t))
     (should-error (eval '(incf x [a b c]) t))
-    (ignore x)))
+    (ignore x))
+  (let ((vec (vector 1 2 3)) (i 0))
+    (incf (aref vec (incf i)))
+    (should (equal [1 3 3] vec))))
 
 (ert-deftest compat-decf ()
   (let ((x 3))
@@ -3385,7 +3388,10 @@
   (let ((x 0))
     (should-error (eval '(decf x 'symb) t))
     (should-error (eval '(decf x [a b c]) t))
-    (ignore x)))
+    (ignore x))
+  (let ((vec (vector 1 2 3)) (i 2))
+    (decf (aref vec (decf i)))
+    (should (equal [1 1 3] vec))))
 
 (ert-deftest compat-color-blend ()
   ;; example from the docstring

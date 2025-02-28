@@ -52,7 +52,8 @@ The DELTA is first added to PLACE, and then stored in PLACE.
 Return the incremented value of PLACE.
 
 See also `decf'."
-  `(setf ,place (+ ,place (or ,delta 1))))
+  (gv-letplace (getter setter) place
+    (funcall setter `(+ ,getter ,(or delta 1)))))
 
 (compat-defmacro decf (place &optional delta) ;; <compat-tests:decf>
   "Decrement PLACE by DELTA (default to 1).
@@ -61,7 +62,8 @@ The DELTA is first subtracted from PLACE, and then stored in PLACE.
 Return the decremented value of PLACE.
 
 See also `incf'."
-  `(setf ,place (- ,place (or ,delta 1))))
+  (gv-letplace (getter setter) place
+    (funcall setter `(- ,getter ,(or delta 1)))))
 
 ;;;; Defined in color.el
 
