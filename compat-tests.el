@@ -911,42 +911,6 @@
   (should-error (ignore-error foo
                   (read ""))))
 
-(ert-deftest compat-hash-table-empty-p ()
-  (should (hash-table-empty-p (make-hash-table)))
-  (let ((ht (make-hash-table)))
-    (puthash 'k 'v ht)
-    (should-not (hash-table-empty-p ht))))
-
-(ert-deftest compat-thread-first ()
-  (should-equal (thread-first (+ 40 2)) 42)
-  (should-equal (thread-first
-                   5
-                   (+ 20)
-                   (/ 25)
-                   -
-                   (+ 40)) 39)
-  (should-equal (thread-first
-                   "this-is-a-string"
-                   (split-string "-")
-                   (nbutlast 2)
-                   (append (list "good")))
-                 (list "this" "is" "good")))
-
-(ert-deftest compat-thread-last ()
-  (should-equal (thread-last (+ 40 2)) 42)
-  (should-equal (thread-last
-                   5
-                   (+ 20)
-                   (/ 25)
-                   -
-                   (+ 40)) 39)
-  (should-equal (thread-last
-                   (list 1 -2 3 -4 5)
-                   (mapcar #'abs)
-                   (cl-reduce #'+)
-                   (format "abs sum is: %s"))
-                 "abs sum is: 15"))
-
 (ert-deftest compat-ntake ()
   (should-not (ntake 5 nil))
   (should-equal '(1 2) (ntake 5 (list 1 2)))
@@ -960,9 +924,6 @@
 (ert-deftest compat-drop ()
   (should-not (drop 5 nil))
   (should-equal '(3 4 5) (drop 2 '(1 2 3 4 5))))
-
-(ert-deftest compat-format-message ()
-  (should-equal (format-message "a=%s b=%s" 1 2) "a=1 b=2"))
 
 (defvar compat-tests--boundp)
 (defvar compat-tests--global-boundp)
@@ -1152,15 +1113,6 @@
         (insert "def")
         (insert-into-buffer other 2 3))
       (should-equal (buffer-string) "abce"))))
-
-(ert-deftest compat-bool-vector ()
-  (should-equal (bool-vector) (bool-vector-not (bool-vector)))
-  (should-equal (bool-vector t) (bool-vector-not (bool-vector nil)))
-  (should-equal (bool-vector nil) (bool-vector-not (bool-vector t)))
-  (should-equal (bool-vector t t) (bool-vector-not (bool-vector nil nil)))
-  (should-equal (bool-vector t nil) (bool-vector-not (bool-vector nil t)))
-  (should-equal (bool-vector nil t) (bool-vector-not (bool-vector t nil)))
-  (should-equal (bool-vector nil nil) (bool-vector-not (bool-vector t t))))
 
 (ert-deftest compat-assoc ()
   ;; Fallback behaviour:
@@ -1530,20 +1482,6 @@
   (should-equal 1 (length (compat-call directory-files-and-attributes "." nil nil nil nil 1)))
   (should-equal 2 (length (compat-call directory-files-and-attributes "." nil nil nil nil 2))))
 
-(ert-deftest compat-directory-name-p ()
-  (should (directory-name-p "/"))
-  (should-not (directory-name-p "/file"))
-  (should-not (directory-name-p "/dir/file"))
-  (should (directory-name-p "/dir/"))
-  (should-not (directory-name-p "/dir"))
-  (should (directory-name-p "/dir/subdir/"))
-  (should-not (directory-name-p "/dir/subdir"))
-  (should (directory-name-p "dir/"))
-  (should-not (directory-name-p "file"))
-  (should-not (directory-name-p "dir/file"))
-  (should (directory-name-p "dir/subdir/"))
-  (should-not (directory-name-p "dir/subdir")))
-
 (ert-deftest compat-directory-empty-p ()
   (ert-with-temp-directory dir
     (should (directory-empty-p dir))
@@ -1653,12 +1591,6 @@
   (should-equal "1kA" (compat-call file-size-human-readable 1000 'si nil "A"))
   (should-equal "1 k" (compat-call file-size-human-readable 1000 'si " "))
   (should-equal "1 kA" (compat-call file-size-human-readable 1000 'si " " "A")))
-
-(ert-deftest compat-with-file-modes ()
-  (let ((old (default-file-modes)))
-    (with-file-modes (1+ old)
-      (should-equal (default-file-modes) (1+ old)))
-    (should-equal (default-file-modes) old)))
 
 (ert-deftest compat-file-modes-number-to-symbolic ()
   (should-equal "-rwx------" (file-modes-number-to-symbolic #o700))
@@ -1951,12 +1883,6 @@
   (should (string-equal-ignore-case "abc" "abC"))
   (should-not (string-equal-ignore-case "abc" "abCD"))
   (should (string-equal-ignore-case "S" "s")))
-
-(ert-deftest compat-string-greaterp ()
-  (should (string-greaterp "b" "a"))
-  (should-not (string-greaterp "a" "b"))
-  (should (string-greaterp "aaab" "aaaa"))
-  (should-not (string-greaterp "aaaa" "aaab")))
 
 (ert-deftest compat-string-clean-whitespace ()
   (should-equal "a b c" (string-clean-whitespace "a b c"))
@@ -2318,68 +2244,6 @@
   (should-equal "else"
    (if-let* (((= 5 6))) "then" "else")))
 
-(ert-deftest compat-when-let ()
-  ;; FIXME Broken on Emacs 25
-  (static-if (= emacs-major-version 25)
-      (should-equal "second"
-                    (when-let
-                        ((x 3)
-                         (y 2)
-                         (z (+ x y))
-                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
-                         (true t))
-                      "first" "second"))
-    (should-equal "second"
-                  (when-let
-                      ((x 3)
-                       (y 2)
-                       (z (+ x y))
-                       ((= z 5))
-                       (true t))
-                    "first" "second"))
-    (should-equal "then" (when-let (((= 5 5))) "then"))
-    (should-not (when-let (((= 5 6))) t)))
-  (should-equal "last"
-                (when-let (e (memq 0 '(1 2 3 0 5 6)))
-                  "first" "last"))
-  (should-equal "last" (when-let ((e (memq 0 '(1 2 3 0 5 6))))
-                         "first" "last"))
-  (should-not (when-let ((e (memq 0 '(1 2 3 5 6)))
-                               (d (memq 0 '(1 2 3 0 5 6))))
-                  "first" "last")))
-
-(ert-deftest compat-if-let ()
-  ;; FIXME Broken on Emacs 25
-  (static-if (= emacs-major-version 25)
-      (should-equal "then"
-                    (if-let
-                        ((x 3)
-                         (y 2)
-                         (z (+ x y))
-                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
-                         (true t))
-                        "then" "else"))
-    (should-equal "then"
-                  (if-let
-                      ((x 3)
-                       (y 2)
-                       (z (+ x y))
-                       ((= z 5))
-                       (true t))
-                      "then" "else"))
-    (should-equal "else" (if-let (((= 5 6))) "then" "else"))
-    (should-not (if-let (((= 5 6))) t nil)))
-  (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
-              e))
-  (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
-              e))
-  (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
-                               (d (memq 0 '(1 2 3 0 5 6))))
-                  t))
-  (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
-                               (e (memq 0 '(1 2 3 5 6))))
-                  t)))
-
 (ert-deftest compat-and-let* ()
   (should                               ;trivial body
    (and-let*
@@ -2703,27 +2567,6 @@
 (ert-deftest compat-macroexp-warn-and-return ()
   (should-equal (macroexp-warn-and-return "test warning" '(some form)) '(some form)))
 
-(ert-deftest compat-macroexp-parse-body ()
-  (should-equal '(((declare test)) . (a b c))
-                (macroexp-parse-body '((declare test) a b c)))
-  (should-equal '(((interactive)) . (a b c))
-                (macroexp-parse-body '((interactive) a b c)))
-  (should-equal '(((interactive) (cl-declare)) . (a b c))
-                (macroexp-parse-body '((interactive) (cl-declare) a b c))))
-
-(ert-deftest compat-macroexp-quote ()
-  (should-equal nil (macroexp-quote nil))
-  (should-equal t (macroexp-quote t))
-  (should-equal :key (macroexp-quote :key))
-  (should-equal "str" (macroexp-quote "str"))
-  (should-equal ''sym (macroexp-quote 'sym))
-  (should-equal ''(1 2 3) (macroexp-quote '(1 2 3))))
-
-(ert-deftest compat-macroexpand-1 ()
-  (should-equal '(if a b c) (macroexpand-1 '(if a b c)))
-  (should-equal '(if a (progn b)) (macroexpand-1 '(when a b)))
-  (should-equal '(if a (progn (unless b c))) (macroexpand-1 '(when a (unless b c)))))
-
 ;; NOTE: `with-suppressed-warnings' does not work inside of `ert-deftest'?!
 (defun compat-tests--with-suppressed-warnings ()
   (with-suppressed-warnings ((interactive-only goto-line)
@@ -2899,21 +2742,6 @@
     (goto-char 7)
     (should-equal (region-bounds) '((2 . 7)))))
 
-(ert-deftest compat-region-noncontiguous-p ()
-  (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
-    (should (region-noncontiguous-p)))
-  (with-temp-buffer
-    (insert "abc\ndef\n")
-    (set-mark 2)
-    (goto-char 7)
-    (transient-mark-mode)
-    (should-not (region-noncontiguous-p))
-    (should-not (use-region-noncontiguous-p))
-    (should (use-region-p))
-    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
-      (should (region-noncontiguous-p))
-      (should (use-region-noncontiguous-p)))))
-
 (ert-deftest compat-get-scratch-buffer-create ()
   (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))
   (should-equal initial-major-mode
@@ -2949,21 +2777,6 @@
     (ring-resize ring 3)
     (should-equal (ring-size ring) 3)
     (should-equal (ring-elements ring) '(5 4 3))))
-
-(ert-deftest compat-save-mark-and-excursion ()
-  (with-temp-buffer
-    (insert "a\nb\nc")
-    (goto-char 1)
-    (set-mark 2)
-    (should-equal (point) 1)
-    (should-equal (mark) 2)
-    (save-mark-and-excursion
-      (goto-char 3)
-      (set-mark 4)
-      (should-equal (point) 3)
-      (should-equal (mark) 4))
-    (should-equal (point) 1)
-    (should-equal (mark) 2)))
 
 (ert-deftest compat-text-quoting-style ()
   (should (text-quoting-style))
