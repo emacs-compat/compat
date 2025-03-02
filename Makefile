@@ -78,7 +78,7 @@ check:
 	@grep "compat-tests:" *.el | \
 		sed -E "s/.*<compat-tests:([^)]+)>|.*\\[\\[compat-tests:([^)]+)\\]\\]/\1\2/g" | \
 		sort | uniq > /tmp/compat-links
-	@ (diff /tmp/compat-defs /tmp/compat-defs)
+	@diff /tmp/compat-defs /tmp/compat-links
 
 $(BYTEC): compat-macs.el
 
