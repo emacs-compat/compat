@@ -2742,6 +2742,21 @@
     (goto-char 7)
     (should-equal (region-bounds) '((2 . 7)))))
 
+(ert-deftest compat-region-noncontiguous-p ()
+  (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+    (should (region-noncontiguous-p)))
+  (with-temp-buffer
+    (insert "abc\ndef\n")
+    (set-mark 2)
+    (goto-char 7)
+    (transient-mark-mode)
+    (should-not (region-noncontiguous-p))
+    (should-not (use-region-noncontiguous-p))
+    (should (use-region-p))
+    (let ((region-extract-function (lambda (_) '((2 . 3) (6 . 7)))))
+      (should (region-noncontiguous-p))
+      (should (use-region-noncontiguous-p)))))
+
 (ert-deftest compat-get-scratch-buffer-create ()
   (should-equal "*scratch*" (buffer-name (get-scratch-buffer-create)))
   (should-equal initial-major-mode
