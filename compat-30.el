@@ -37,7 +37,7 @@ This variable might be subject to change without notice."
 
 ;;;; Defined in lread.c
 
-(compat-defun obarray-clear (ob) ;; <compat-tests:obarray>
+(compat-defun obarray-clear (ob) ;; <compat-tests:obarray-clear>
   "Remove all symbols from obarray OB."
   (fillarray ob 0))
 
