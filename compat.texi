@@ -132,7 +132,7 @@ A minimal version of Compat will be present in Emacs version 30 and
 newer. Packages which are part of Emacs itself and want to take
 advantage of Compat, can also use @code{(require 'compat)}.  The
 advantage of the inclusion of a minimal Compat in Emacs is that Compat
-will not be installed if you require a version newer or equal than the
+will not be installed if you require a version older or equal than the
 current Emacs version.  For example, if a package depending on Emacs
 25.1 and Compat 29.1 is installed on Emacs 30.1, Compat will not be
 pulled in as dependency, since Emacs 30.1 already provides the
