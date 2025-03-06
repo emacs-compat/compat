@@ -83,5 +83,16 @@ For instance:
       (push (+ (* (nth i a) alpha) (* (nth i b) (- 1 alpha))) blend))
     (nreverse blend)))
 
+;;;; Defined in minibuffer.el
+
+(compat-defun completion-table-with-metadata (table metadata) ;; <compat-tests:completion-table-with-metadata>
+  "Return new completion TABLE with METADATA.
+METADATA should be an alist of completion metadata.  See
+`completion-metadata' for a list of supported metadata."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata . ,metadata)
+      (complete-with-action action table string pred))))
+
 (provide 'compat-31)
 ;;; compat-31.el ends here

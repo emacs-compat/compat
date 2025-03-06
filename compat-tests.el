@@ -3055,6 +3055,13 @@
       (let ((completion-category-overrides '((compat-test (a . 10)))))
         (should-equal 10 (compat-call completion-metadata-get md 'a))))))
 
+(ert-deftest compat-completion-table-with-metadata ()
+  (let* ((md '((category . text)))
+         (table (completion-table-with-metadata '("word") md))
+         (md2 (completion-metadata "" table nil)))
+    (should-equal (car md2) 'metadata)
+    (should (eq (cdr md2) md))))
+
 (ert-deftest compat-untrusted-content ()
   (should (local-variable-if-set-p 'untrusted-content)))
 
