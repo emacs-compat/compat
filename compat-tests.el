@@ -1088,6 +1088,15 @@
           (with-current-buffer inner
             (should-not (buffer-modified-p))))))))
 
+(ert-deftest compat-with-work-buffer ()
+  (with-work-buffer
+   (should (string-match-p "\\` \\*work\\*" (buffer-name)))
+   (let ((outer (current-buffer)))
+     (with-work-buffer
+      (should (string-match-p "\\` \\*work\\*" (buffer-name)))
+      (let ((inner (current-buffer)))
+        (should-not (eq outer inner)))))))
+
 (ert-deftest compat-insert-into-buffer ()
   ;; Without optional compat--arguments
   (with-temp-buffer

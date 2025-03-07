@@ -9,6 +9,7 @@
 - compat-31: New macros =incf= and =decf=.
 - compat-31: New function =color-blend=.
 - compat-31: New function =completion-table-with-metadata=.
+- compat-31: New macro =with-work-buffer=.
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
 

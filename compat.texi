@@ -3427,6 +3427,13 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lisp/emacs-lisp/subr-x.el
+@defmac with-work-buffer &rest body
+Create a work buffer, and evaluate @var{body} there like @code{progn}.
+Like @code{with-temp-buffer}, but reuse an already created temporary
+buffer when possible, instead of creating a new one on each call.
+@end defmac
+
 @c copied from lispref/numbers.texi
 @defun plusp number
 This predicate tests whether its argument is positive, and returns
