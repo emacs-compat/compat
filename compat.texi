@@ -454,12 +454,12 @@ As with @code{when}, if one is only interested in the case where all
 just as they are by @code{if-let*}.
 @end defmac
 
-@c based on lisp/subr-x.el
+@c based on lisp/emacs-lisp/subr-x.el
 @defun hash-table-empty hash-table
 Check whether @var{hash-table} is empty (has 0 elements).
 @end defun
 
-@c based on lisp/subr-x.el
+@c based on lisp/emacs-lisp/subr-x.el
 @defmac thread-first &rest forms
 Combine @var{forms} into a single expression by ``threading'' each
 element as the @emph{first} argument of their successor.  Elements of
@@ -2505,7 +2505,7 @@ Properties,Examining
 Properties,,elisp,}).
 @end defun
 
-@c copied from lisp/subr-x.el
+@c copied from lisp/emacs-lisp/subr-x.el
 @defun add-display-text-property start end prop value &optional object
 Add display property @var{prop} with @var{value} to the text from
 @var{start} to @var{end}.  If any text in the region has a non-nil
@@ -2683,7 +2683,7 @@ you can say:
 @xref{Size of Displayed Text,,,elisp}.
 @end defun
 
-@c based on lisp/subr-x.el
+@c based on lisp/emacs-lisp/subr-x.el
 @defmac with-buffer-unmodified-if-unchanged &rest body@dots{}
 Evaluate @var{body} like @code{progn}, but change buffer-modified
 status only if buffer text changes.  If the buffer was unmodified
