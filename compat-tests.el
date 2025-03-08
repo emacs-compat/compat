@@ -3077,10 +3077,12 @@
     (with-current-buffer "*Completions*"
       (goto-char (point-min))
       (search-forward ":")
+      (should-not (completion-list-candidate-at-point))
       (forward-line 1)
-      (should-equal "first" (car (completion-list-candidate-at-point)))
-      (should (integerp (nth 1 (completion-list-candidate-at-point))))
-      (should (integerp (nth 2 (completion-list-candidate-at-point)))))))
+      (let ((cand (completion-list-candidate-at-point)))
+        (should-equal "first" (car cand))
+        (should (integerp (nth 1 cand)))
+        (should-equal (+ 5 (nth 1 cand)) (nth 2 cand))))))
 
 (ert-deftest compat-untrusted-content ()
   (should (local-variable-if-set-p 'untrusted-content)))
