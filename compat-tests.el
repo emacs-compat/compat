@@ -3071,6 +3071,17 @@
     (should-equal (car md2) 'metadata)
     (should (eq (cdr md2) md))))
 
+(ert-deftest compat-completion-list-candidate-at-point ()
+  (let ((minibuffer-completion-table (list "first" "second" "third")))
+    (minibuffer-completion-help (point-max) (point-max))
+    (with-current-buffer "*Completions*"
+      (goto-char (point-min))
+      (search-forward ":")
+      (forward-line 1)
+      (should-equal "first" (car (completion-list-candidate-at-point)))
+      (should (integerp (nth 1 (completion-list-candidate-at-point))))
+      (should (integerp (nth 2 (completion-list-candidate-at-point)))))))
+
 (ert-deftest compat-untrusted-content ()
   (should (local-variable-if-set-p 'untrusted-content)))
 

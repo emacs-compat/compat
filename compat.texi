@@ -3427,6 +3427,20 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lisp/minibuffer.el
+@defun completion-table-with-metadata table metadata
+Return new completion @var{table} with @var{metadata}.  @var{metadata}
+should be an alist of completion metadata.  See
+@code{completion-metadata} for a list of supported metadata.
+@end defun
+
+@c based on lisp/minibuffer.el
+@defun completion-list-candidate-at-point &optional pt
+Candidate string and bounds at @var{pt} in completions buffer.  The
+return value has the format (@var{str} @var{beg} @var{end}).  The
+optional argument @var{pt} defaults to @code{(point)}.
+@end defun
+
 @c based on lisp/emacs-lisp/subr-x.el
 @defmac with-work-buffer &rest body
 Create a work buffer, and evaluate @var{body} there like @code{progn}.

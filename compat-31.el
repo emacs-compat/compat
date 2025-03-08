@@ -85,6 +85,23 @@ For instance:
 
 ;;;; Defined in minibuffer.el
 
+(compat-defun completion-list-candidate-at-point (&optional pt) ;; <compat-tests:completion-list-candidate-at-point>
+  "Candidate string and bounds at PT in completions buffer.
+The return value has the format (STR BEG END).
+The optional argument PT defaults to (point)."
+  (let ((pt (or pt (point))) beg end)
+    (cond
+     ((and (/= pt (point-max)) (get-text-property pt 'mouse-face))
+      (setq end pt beg (1+ pt)))
+     ((and (/= pt (point-min)) (get-text-property (1- pt) 'mouse-face))
+      (setq end (1- pt) beg pt)))
+    (when (and beg end)
+      (setq beg (previous-single-property-change beg 'mouse-face))
+      (setq end (or (next-single-property-change end 'mouse-face) (point-max)))
+      (list (or (get-text-property beg 'completion--string)
+                (buffer-substring beg end))
+            beg end))))
+
 (compat-defun completion-table-with-metadata (table metadata) ;; <compat-tests:completion-table-with-metadata>
   "Return new completion TABLE with METADATA.
 METADATA should be an alist of completion metadata.  See
