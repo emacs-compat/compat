@@ -1,7 +1,7 @@
 ;;; Directory Local Variables
 ;;; For more information see (info "(emacs) Directory Variables")
 
-((nil
+((emacs-lisp-mode
   (fill-column . 72)
   (sentence-end-double-space . t)
   (show-trailing-whitespace . t)
