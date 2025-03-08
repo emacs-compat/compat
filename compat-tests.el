@@ -2908,7 +2908,7 @@
 
 (ert-deftest compat-cl-once-only ()
   (let ((x 0))
-    (should-equal (cons 1 1) (compat-tests--once-only (cl-incf x)))
+    (should-equal (cons 1 1) (compat-tests--once-only (incf x)))
     (should-equal 1 x)))
 
 (ert-deftest compat-cl-constantly ()
@@ -3211,7 +3211,7 @@
     (ignore x))
   (let ((vec (vector 1 2 3)) (i 0))
     (incf (aref vec (incf i)))
-    (should (equal [1 3 3] vec))))
+    (should-equal [1 3 3] vec)))
 
 (ert-deftest compat-decf ()
   (let ((x 3))
@@ -3242,20 +3242,20 @@
     (ignore x))
   (let ((vec (vector 1 2 3)) (i 2))
     (decf (aref vec (decf i)))
-    (should (equal [1 1 3] vec))))
+    (should-equal [1 1 3] vec)))
 
 (ert-deftest compat-color-blend ()
   ;; example from the docstring
-  (should (equal (color-blend '(1 0.5 1) '(0 0 0) 0.75)
-                 '(0.75 0.375 0.75)))
+  (should-equal (color-blend '(1 0.5 1) '(0 0 0) 0.75)
+                '(0.75 0.375 0.75))
   ;; tests from test/lisp/color-tests.el
-  (should (equal (color-blend '(1.0 0.0 0.0) '(0.0 1.0 0.0)) '(0.5 0.5 0.0)))
-  (should (equal (color-blend '(1.0 1.0 1.0) '(0.0 1.0 0.0)) '(0.5 1.0 0.5)))
-  (should (equal (color-blend '(0.0 0.39215686274509803 0.0) '(0.9607843137254902 0.8705882352941177 0.7019607843137254))
-                 '(0.4803921568627451 0.6313725490196078 0.3509803921568627)))
+  (should-equal (color-blend '(1.0 0.0 0.0) '(0.0 1.0 0.0)) '(0.5 0.5 0.0))
+  (should-equal (color-blend '(1.0 1.0 1.0) '(0.0 1.0 0.0)) '(0.5 1.0 0.5))
+  (should-equal (color-blend '(0.0 0.39215686274509803 0.0) '(0.9607843137254902 0.8705882352941177 0.7019607843137254))
+                '(0.4803921568627451 0.6313725490196078 0.3509803921568627))
   ;; other tests
-  (should (equal (color-blend '(1 0.5 1) '(0 0 0) 1)
-                 '(1 0.5 1)))
+  (should-equal (color-blend '(1 0.5 1) '(0 0 0) 1)
+                '(1 0.5 1))
   (should (cl-equalp (color-blend '(1 0.5 1) '(0 0 0) 0)
                      '(0 0 0)))
   (should (cl-equalp (color-blend '(1 0.5 1) '(0 0 0) 1.0)
