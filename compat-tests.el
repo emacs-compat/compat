@@ -2712,6 +2712,25 @@
   (should-equal '(nil nil nil 9 4 2020 nil nil nil) (date-ordinal-to-time 2020 100))
   (should-equal '(nil nil nil 19 7 2021 nil nil nil) (date-ordinal-to-time 2021 200)))
 
+(ert-deftest compat-seconds-to-string ()
+  (should-equal (compat-call seconds-to-string 0) "0s")
+  (should-equal (compat-call seconds-to-string 9) "9.00s")
+  (should-equal (compat-call seconds-to-string 99) "99.00s")
+  (should-equal (compat-call seconds-to-string 999) "16.65m")
+  (should-equal (compat-call seconds-to-string 9999) "2.78h")
+  (should-equal (compat-call seconds-to-string 99999) "27.78h")
+  (should-equal (compat-call seconds-to-string 999999) "11.57d")
+  (should-equal (compat-call seconds-to-string 9999999) "115.74d")
+  (should-equal (compat-call seconds-to-string 99999999) "3.17y")
+  (should-equal (compat-call seconds-to-string 999999999) "31.69y")
+  ;; New functionality
+  (should-equal (compat-call seconds-to-string 999 'readable) "17 minutes")
+  (should-equal (compat-call seconds-to-string 999 'readable 'abbrev) "17m")
+  (should-equal (compat-call seconds-to-string 999 'readable 'abbrev 2) "16.65m")
+  (should-equal (compat-call seconds-to-string 999999 'readable) "2 weeks")
+  (should-equal (compat-call seconds-to-string 999999 'readable 'abbrev) "2w")
+  (should-equal (compat-call seconds-to-string 999999 'readable 'abbrev 4) "1.6534w"))
+
 (ert-deftest compat-regexp-opt ()
   ;; Ensure `regexp-opt' doesn't change the existing
   ;; behaviour:

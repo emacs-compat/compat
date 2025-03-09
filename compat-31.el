@@ -83,6 +83,93 @@ For instance:
       (push (+ (* (nth i a) alpha) (* (nth i b) (- 1 alpha))) blend))
     (nreverse blend)))
 
+;;;; Defined in time-date.el
+
+(compat-defvar seconds-to-string ;; <compat-tests:seconds-to-string>
+  (list (list 1 "ms" 0.001)
+        (list 100 "s" 1)
+        (list (* 60 100) "m" 60.0)
+        (list (* 3600 30) "h" 3600.0)
+        (list (* 3600 24 400) "d" (* 3600.0 24.0))
+        (list nil "y" (* 365.25 24 3600)))
+  "Formatting used by the function `seconds-to-string'.")
+
+(compat-defvar seconds-to-string-readable ;; <compat-tests:seconds-to-string>
+  `(("Y" "year"   "years"   ,(round (* 60 60 24 365.2425)))
+    ("M" "month"  "months"  ,(round (* 60 60 24 30.436875)))
+    ("w" "week"   "weeks"   ,(* 60 60 24 7))
+    ("d" "day"    "days"    ,(* 60 60 24))
+    ("h" "hour"   "hours"   ,(* 60 60))
+    ("m" "minute" "minutes" 60)
+    ("s" "second" "seconds" 1))
+  "Formatting used by the function `seconds-to-string' with READABLE set.
+The format is an alist, with string keys ABBREV-UNIT, and elements like:
+
+  (ABBREV-UNIT UNIT UNIT-PLURAL SECS)
+
+where UNIT is a unit of time, ABBREV-UNIT is the abbreviated form of
+UNIT, UNIT-PLURAL is the plural form of UNIT, and SECS is the number of
+seconds per UNIT.")
+
+(compat-defun seconds-to-string (delay &optional readable abbrev precision) ;; <compat-tests:seconds-to-string>
+  "Handle optional arguments READABLE, ABBREV and PRECISION."
+  :extended t
+  (cond
+   ((< delay 0)
+    (concat "-" (seconds-to-string (- delay) readable precision)))
+   (readable
+    (let* ((stsa seconds-to-string-readable)
+           (expanded (eq readable 'expanded))
+           digits
+           (round-to (cond
+                      ((wholenump precision)
+                       (setq digits precision)
+                       (expt 10 (- precision)))
+                      ((and (floatp precision) (< precision 1.))
+                       (setq digits (- (floor (log precision 10))))
+                       precision)
+                      (t (setq digits 0) 1)))
+           (dformat (if (> digits 0) (format "%%0.%df" digits)))
+           (padding (if abbrev "" " "))
+           here cnt cnt-pre here-pre cnt-val isfloatp)
+      (if (= (round delay round-to) 0)
+          (format "0%s" (if abbrev "s" " seconds"))
+        (while (and (setq here (pop stsa)) stsa
+                    (< (/ delay (nth 3 here)) 1)))
+        (or (and
+             expanded stsa 	; smaller unit remains
+             (progn
+               (setq
+                here-pre here here (car stsa)
+                cnt-pre (floor (/ (float delay) (nth 3 here-pre)))
+                cnt (round
+                     (/ (- (float delay) (* cnt-pre (nth 3 here-pre)))
+                        (nth 3 here))
+                     round-to))
+               (if (> cnt 0) t (setq cnt cnt-pre here here-pre here-pre nil))))
+            (setq cnt (round (/ (float delay) (nth 3 here)) round-to)))
+        (setq cnt-val (* cnt round-to)
+              isfloatp (and (> digits 0)
+                            (> (- cnt-val (floor cnt-val)) 0.)))
+        (cl-labels
+            ((unit (val here &optional plural)
+               (cond (abbrev (car here))
+                     ((and (not plural) (<= (floor val) 1)) (nth 1 here))
+                     (t (nth 2 here)))))
+          (concat
+           (when here-pre
+             (concat (number-to-string cnt-pre) padding
+                     (unit cnt-pre here-pre) " "))
+           (if isfloatp (format dformat cnt-val)
+             (number-to-string (floor cnt-val)))
+           padding
+           (unit cnt-val here isfloatp)))))) ; float formats are always plural
+   ((= 0 delay) "0s")
+   (t (let ((sts seconds-to-string) here)
+        (while (and (car (setq here (pop sts)))
+                    (<= (car here) delay)))
+        (concat (format "%.2f" (/ delay (car (cddr here)))) (cadr here))))))
+
 ;;;; Defined in minibuffer.el
 
 (compat-defun completion-list-candidate-at-point (&optional pt) ;; <compat-tests:completion-list-candidate-at-point>

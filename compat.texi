@@ -3427,6 +3427,29 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/os.texi
+@defun compat-call@ seconds-to-string delay &optional readable abbrev precision
+Return a string describing a given @var{delay} (in seconds).  By
+default, this function formats the returned string as a floating-point
+number in units selected according to the value of @var{delay}.  For
+example, a delay of 9861.5 seconds yields @samp{2.74h}, since the value
+of @var{delay} is longer than 1 hour, but shorter than 1 day.  The
+output formatting can be further controlled by the optional arguments,
+if optional argument @var{readable} is non-@code{nil}.  If
+@var{readable}'s value is @code{expanded}, the returned string will
+describe @var{delay} using two units; for example, a delay of 9861.5
+seconds with @var{readable} set to the symbol @code{expanded} returns
+@samp{2 hours 44 minutes}, but if @var{readable} is @code{t}, the
+function returns @samp{3 hours}.  Optional argument @var{abbrev}, if
+non-@code{nil}, means to abbreviate the units: use @samp{h} instead of
+@samp{hours}, @samp{m} instead of @samp{minutes}, etc.  If
+@var{precision} is a whole integer number, the function rounds the value
+of the smallest unit it produces to that many digits after the decimal
+point; thus, 9861.5 with @var{precision} set to 3 yields @samp{2.739
+hours}.  If @var{precision} is a non-negative float smaller than 1, the
+function rounds to that value.
+@end defun
+
 @c based on lisp/minibuffer.el
 @defun completion-table-with-metadata table metadata
 Return new completion @var{table} with @var{metadata}.  @var{metadata}
