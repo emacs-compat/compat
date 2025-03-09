@@ -2208,6 +2208,7 @@ will be called when the user clicks on the button.  The optional
 is called.  If @code{nil}, the button is used as the parameter instead.
 @end defun
 
+@c copied from lispref/display.texi
 @defun buttonize-region start end callback &optional data help-echo
 Make the region between @var{start} and @var{end} into a button. When
 clicked, @var{callback} will be called with the @var{data} as the
@@ -3427,27 +3428,10 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
-@c copied from lispref/os.texi
-@defun compat-call@ seconds-to-string delay &optional readable abbrev precision
-Return a string describing a given @var{delay} (in seconds).  By
-default, this function formats the returned string as a floating-point
-number in units selected according to the value of @var{delay}.  For
-example, a delay of 9861.5 seconds yields @samp{2.74h}, since the value
-of @var{delay} is longer than 1 hour, but shorter than 1 day.  The
-output formatting can be further controlled by the optional arguments,
-if optional argument @var{readable} is non-@code{nil}.  If
-@var{readable}'s value is @code{expanded}, the returned string will
-describe @var{delay} using two units; for example, a delay of 9861.5
-seconds with @var{readable} set to the symbol @code{expanded} returns
-@samp{2 hours 44 minutes}, but if @var{readable} is @code{t}, the
-function returns @samp{3 hours}.  Optional argument @var{abbrev}, if
-non-@code{nil}, means to abbreviate the units: use @samp{h} instead of
-@samp{hours}, @samp{m} instead of @samp{minutes}, etc.  If
-@var{precision} is a whole integer number, the function rounds the value
-of the smallest unit it produces to that many digits after the decimal
-point; thus, 9861.5 with @var{precision} set to 3 yields @samp{2.739
-hours}.  If @var{precision} is a non-negative float smaller than 1, the
-function rounds to that value.
+@c copied from lispref/display.texi
+@defun unbuttonize-region start end
+This function removes all buttons between @var{start} and @var{end} in
+the current buffer (both overlay and text-property based ones).
 @end defun
 
 @c based on lisp/minibuffer.el
@@ -3523,12 +3507,32 @@ towards @var{a}, while values towards 0 tend towards @var{b}.  By
 default, the argument defaults to 0.5.
 @end defun
 
-
 @subsection Extended Definitions
 These functions must be called explicitly via @code{compat-call},
 since their calling convention or behavior was extended in Emacs 31.1:
 
-@c Placeholder
+@c copied from lispref/os.texi
+@defun compat-call@ seconds-to-string delay &optional readable abbrev precision
+Return a string describing a given @var{delay} (in seconds).  By
+default, this function formats the returned string as a floating-point
+number in units selected according to the value of @var{delay}.  For
+example, a delay of 9861.5 seconds yields @samp{2.74h}, since the value
+of @var{delay} is longer than 1 hour, but shorter than 1 day.  The
+output formatting can be further controlled by the optional arguments,
+if optional argument @var{readable} is non-@code{nil}.  If
+@var{readable}'s value is @code{expanded}, the returned string will
+describe @var{delay} using two units; for example, a delay of 9861.5
+seconds with @var{readable} set to the symbol @code{expanded} returns
+@samp{2 hours 44 minutes}, but if @var{readable} is @code{t}, the
+function returns @samp{3 hours}.  Optional argument @var{abbrev}, if
+non-@code{nil}, means to abbreviate the units: use @samp{h} instead of
+@samp{hours}, @samp{m} instead of @samp{minutes}, etc.  If
+@var{precision} is a whole integer number, the function rounds the value
+of the smallest unit it produces to that many digits after the decimal
+point; thus, 9861.5 with @var{precision} set to 3 yields @samp{2.739
+hours}.  If @var{precision} is a non-negative float smaller than 1, the
+function rounds to that value.
+@end defun
 
 @subsection Missing Definitions
 Compat does not provide support for the following Lisp features

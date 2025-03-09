@@ -231,7 +231,10 @@
     (should-equal 'd (get-text-property 2 'button-data))
     (should-equal 'd (get-text-property 6 'button-data))
     (should-equal 'h (get-text-property 2 'help-echo))
-    (should-equal 'h (get-text-property 6 'help-echo))))
+    (should-equal 'h (get-text-property 6 'help-echo))
+    (unbuttonize-region 2 7)
+    (should-not (get-text-property 2 'action))
+    (should-not (get-text-property 6 'action))))
 
 (ert-deftest compat-with-restriction ()
   (with-temp-buffer

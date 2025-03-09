@@ -252,5 +252,17 @@ buffer when possible, instead of creating a new one on each call."
              (progn ,@body)
            (work-buffer--release ,work-buffer))))))
 
+;;;; Defined in button.el
+
+(compat-defun unbuttonize-region (start end) ;; <compat-tests:buttonize-region>
+  "Remove all the buttons between START and END.
+This removes both text-property and overlay based buttons."
+  (dolist (o (overlays-in start end))
+    (when (overlay-get o 'button)
+      (delete-overlay o)))
+  (with-silent-modifications
+    (remove-text-properties start end (button--properties nil nil nil))
+    (add-face-text-property start end 'button nil)))
+
 (provide 'compat-31)
 ;;; compat-31.el ends here
