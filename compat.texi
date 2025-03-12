@@ -3428,6 +3428,21 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/control.texi
+@defmac static-when condition body...
+Test @var{condition} at macro-expansion time.  If its value is
+non-@code{nil}, expand the macro to evaluate all @var{body} forms
+sequentially and return the value of the last one, or @code{nil} if there
+are none.
+@end defmac
+
+@c copied from lispref/control.texi
+@defmac static-unless condition body...
+Test @var{condition} at macro-expansion time.  If its value is @code{nil},
+expand the macro to evaluate all @var{body} forms sequentially and return
+the value of the last one, or @code{nil} if there are none.
+@end defmac
+
 @c copied from lispref/display.texi
 @defun unbuttonize-region start end
 This function removes all buttons between @var{start} and @var{end} in

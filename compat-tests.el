@@ -3006,6 +3006,14 @@
   (should-not (static-if nil "true"))
   (should-equal "else2" (static-if nil "true" "else1" "else2")))
 
+(ert-deftest compat-static-when ()
+  (should-equal "true2" (static-when t "true1" "true2"))
+  (should-not (static-when nil "true1" "true2")))
+
+(ert-deftest compat-static-unless ()
+  (should-not (static-unless t "false1" "false2"))
+  (should-equal "false2" (static-unless nil "false1" "false2")))
+
 (ert-deftest compat-completion-lazy-hilit ()
   (let ((completion-lazy-hilit t)
         (completion-lazy-hilit-fn (lambda (x) (concat "<" x ">"))))

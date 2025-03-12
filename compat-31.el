@@ -29,6 +29,32 @@
 
 ;;;; Defined in subr.el
 
+(compat-defmacro static-when (condition &rest body) ;; <compat-tests:static-when>
+  "A conditional compilation macro.
+Evaluate CONDITION at macro-expansion time.  If it is non-nil,
+expand the macro to evaluate all BODY forms sequentially and return
+the value of the last one, or nil if there are none."
+  (declare (indent 1) (debug t))
+  (if body
+      (if (eval condition lexical-binding)
+          (cons 'progn body)
+        nil)
+    (macroexp-warn-and-return (format-message "`static-when' with empty body")
+                              (list 'progn nil nil) '(empty-body static-when) t)))
+
+(compat-defmacro static-unless (condition &rest body) ;; <compat-tests:static-unless>
+  "A conditional compilation macro.
+Evaluate CONDITION at macro-expansion time.  If it is nil,
+expand the macro to evaluate all BODY forms sequentially and return
+the value of the last one, or nil if there are none."
+  (declare (indent 1) (debug t))
+  (if body
+      (if (eval condition lexical-binding)
+          nil
+        (cons 'progn body))
+    (macroexp-warn-and-return (format-message "`static-unless' with empty body")
+                              (list 'progn nil nil) '(empty-body static-unless) t)))
+
 (compat-defun oddp (integer) ;; <compat-tests:oddp>
   "Return t if INTEGER is odd."
   (not (eq (% integer 2) 0)))
