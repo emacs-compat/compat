@@ -2921,6 +2921,14 @@
   (cl-with-gensyms (x y)
     `(let ((,x 1) (,y 2)) (+ ,x ,y))))
 
+(ert-deftest compat-pcase-cl-type ()
+  (should-equal "int" (pcase 1 ((cl-type fixnum) "int")))
+  (should-equal "int" (pcase 1 ((cl-type integer) "int")))
+  (should-equal "int" (pcase 1 ((cl-type (integer 0 10)) "int")))
+  (should-equal "bool" (pcase t ((cl-type boolean) "bool")))
+  (should-equal "bool" (pcase nil ((cl-type boolean) "bool")))
+  (should-not (pcase t ((cl-type fixnum) "fixnum"))))
+
 (ert-deftest compat-cl-with-gensyms ()
   (should-equal 3 (compat-tests--with-gensyms)))
 

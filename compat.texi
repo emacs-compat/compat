@@ -1408,8 +1408,8 @@ The following functions and macros are implemented in Emacs
 28.1. These functions are made available by Compat on Emacs versions
 older than 28.1.
 
-The @code{defcustom} type @code{natnum} introduced in Emacs 28.1 is
-made available by Compat.
+The @code{defcustom} type @code{natnum} and the @code{pcase} pattern
+@code{cl-type} introduced in Emacs 28.1 are made available by Compat.
 
 @c copied from lispref/processes.texi
 @defun process-lines-ignore-status program &rest args

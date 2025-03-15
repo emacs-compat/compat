@@ -849,5 +849,13 @@ function will never return nil."
     :type-error "This field should contain a nonnegative integer"
     :match-alternatives '(natnump)))
 
+;;;; Defined in pcase.el
+
+(compat-guard t ;; <compat-tests:pcase-cl-type>
+  (pcase-defmacro cl-type (type)
+    "Pcase pattern that matches objects of TYPE.
+TYPE is a type descriptor as accepted by `cl-typep', which see."
+    `(pred (lambda (x) (cl-typep x ',type)))))
+
 (provide 'compat-28)
 ;;; compat-28.el ends here

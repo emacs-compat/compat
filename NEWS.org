@@ -4,6 +4,7 @@
 
 * Development
 
+- compat-28: New pcase pattern =cl-type=.
 - compat-31: New macros =static-when= and =static-unless=.
 - compat-31: New functions =oddp= and =evenp=.
 - compat-31: New functions =minusp= and =plusp=.
