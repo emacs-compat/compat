@@ -2,6 +2,10 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-30: Add oklab color functions.
+
 * Release of "Compat" Version 30.0.2.0
 
 - compat-30: Rename =trusted-files= to =trusted-content=.

@@ -3355,6 +3355,30 @@ Return non-nil if we trust the contents of the current buffer.  Here,
 also @code{trusted-content}.
 @end defun
 
+@c based on lisp/color.el
+@defun color-oklab-to-xyz l a b
+Convert the OkLab color represented by @var{l} @var{a} @var{b} to CIE XYZ.
+Oklab is a perceptual color space created by Björn Ottosson
+<https://bottosson.github.io/posts/oklab/>.  It has the property that
+changes in the hue and saturation of a color can be made while maintaining
+the same perceived lightness.
+@end defun
+
+@c based on lisp/color.el
+@defun color-xyz-to-oklab x y z
+Convert the CIE XYZ color represented by @var{x} @var{y} @var{z} to Oklab.
+@end defun
+
+@c based on lisp/color.el
+@defun color-oklab-to-srgb l a b
+Convert the Oklab color represented by @var{l} @var{a} @var{b} to sRGB.
+@end defun
+
+@c based on lisp/color.el
+@defun color-srgb-to-oklab r g b
+Convert the sRGB color @var{r} @var{g} @var{b} to Oklab.
+@end defun
+
 @c copied from lispref/nonascii.texi
 @defun char-to-name char
 This function returns the Unicode name of @var{char}.  It returns
