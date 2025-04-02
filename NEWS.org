@@ -4,7 +4,6 @@
 
 * Development
 
-- compat-30: Add oklab color functions.
 - compat-28: New pcase pattern =cl-type=.
 - compat-31: New macros =static-when= and =static-unless=.
 - compat-31: New functions =oddp= and =evenp=.
@@ -18,6 +17,12 @@
 - compat-31: New extended function =seconds-to-string=.
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
+
+* Release of "Compat" Version 30.1.0.0
+
+- compat-30: Add oklab color functions.
+
+(Release <2025-04-02 Wed>)
 
 * Release of "Compat" Version 30.0.2.0
 
