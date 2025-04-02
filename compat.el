@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Compat Development <~pkal/compat-devel@lists.sr.ht>
-;; Version: 30.0.2.0
+;; Version: 30.1.0.0
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "24.4") (seq "2.23"))
 ;; Keywords: lisp, maint
@@ -50,7 +50,7 @@
 ;; time and runtime, but only if needed.
 (eval-when-compile
   (defmacro compat--maybe-require ()
-    (when (version< emacs-version "30.0.50")
+    (when (version< emacs-version "30.1")
       (require 'compat-30)
       '(require 'compat-30))))
 (compat--maybe-require)
