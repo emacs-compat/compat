@@ -2166,7 +2166,7 @@
   (should-not (string-search (compat-tests--string-to-multibyte "\370")
                              (compat-tests--string-to-multibyte "\303\270")))
   (should-equal 3 (string-search "\303\270" "foo\303\270"))
-  (when (version<= "27" emacs-version)
+  (when (<= 27 emacs-major-version)
     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1 in
     ;; emacs.git fixes the behaviour of regular expressions matching
     ;; raw bytes.  The compatibility functions should updated to
@@ -2196,7 +2196,7 @@
   (should-equal "labarbarbarzot" (string-replace "fo" "bar" "lafofofozot"))
   (should-equal "axb" (string-replace "\377" "x" "a\377b"))
   (should-equal "axø" (string-replace "\377" "x" "a\377ø"))
-  (when (version<= "27" emacs-version)
+  (when (<= 27 emacs-major-version)
     ;; FIXME The commit a1f76adfb03c23bb4242928e8efe6193c301f0c1
     ;; in emacs.git fixes the behaviour of regular
     ;; expressions matching raw bytes.  The compatibility
