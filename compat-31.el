@@ -29,6 +29,12 @@
 
 ;;;; Defined in subr.el
 
+(compat-defun hash-table-contains-p (key table) ;; <compat-tests:hash-table-contains-p>
+  "Return non-nil if TABLE has an element with KEY."
+  (declare (side-effect-free t))
+  (let ((missing '#:missing))
+    (not (eq (gethash key table missing) missing))))
+
 (compat-defmacro static-when (condition &rest body) ;; <compat-tests:static-when>
   "A conditional compilation macro.
 Evaluate CONDITION at macro-expansion time.  If it is non-nil,

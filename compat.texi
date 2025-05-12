@@ -3452,6 +3452,11 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c based on lisp/subr.el
+@defmac hash-table-contains-p key table
+Return non-nil if @var{table} has an element with @var{key}.
+@end defmac
+
 @c copied from lispref/control.texi
 @defmac static-when condition body...
 Test @var{condition} at macro-expansion time.  If its value is

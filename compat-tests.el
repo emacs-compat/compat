@@ -3012,6 +3012,14 @@
   (with-temp-buffer
     (should-equal (take 3 (widget-create 'key)) '(key :value ""))))
 
+(ert-deftest compat-hash-table-contains-p ()
+  (let ((h (make-hash-table :test #'equal)))
+    (puthash :foo t h)
+    (should (hash-table-contains-p :foo h))
+    (should-not (hash-table-contains-p :bar h))
+    (should-not (hash-table-contains-p 'missing h))
+    (should-not (hash-table-contains-p '#:missing h))))
+
 (ert-deftest compat-copy-tree ()
   ;; Adapted from Emacs /test/lisp/subr-tests.el
   ;; Check that values other than conses, vectors and records are
