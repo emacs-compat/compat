@@ -370,6 +370,7 @@
 (ert-deftest compat-read-multiple-choice ()
   (let ((orig-re (symbol-function #'read-event))
         (orig-rc (symbol-function #'read-char))
+        (orig-rk (symbol-function #'read-key))
         (orig-cr completing-read-function))
     (unwind-protect
         (dolist (test '(("Choose"
@@ -380,12 +381,14 @@
           (dolist (choice (cdr test))
             (fset #'read-char (lambda (&rest _) (car choice)))
             (fset #'read-event (lambda (&rest _) (car choice)))
+            (fset #'read-key (lambda (&rest _) (car choice)))
             (setq completing-read-function (lambda (&rest _) (cadr choice)))
             (should-equal choice (compat-call read-multiple-choice
                                               (car test) (cdr test) nil nil 'long))
             (should-equal choice (read-multiple-choice (car test) (cdr test)))))
       (fset #'read-event orig-re)
       (fset #'read-char orig-rc)
+      (fset #'read-key orig-rk)
       (setq completing-read-function orig-cr))))
 
 (ert-deftest compat-read-char-from-minibuffer ()
