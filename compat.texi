@@ -3452,6 +3452,45 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/display.texi
+@defun remove-display-text-property start end spec &optional object
+Remove the display specification @var{spec} from the text from
+@var{start} to @var{end}.  @var{spec} is the @sc{car} of the display
+specification to remove, e.g.@: @code{height} or @code{'(margin nil)}.
+
+If any text in the region has any other @code{display} properties, those
+properties are retained.  For instance:
+
+@lisp
+@group
+(add-display-text-property 1 8 'raise 0.5)
+(add-display-text-property 4 8 'height 2.0)
+(remove-display-text-property 2 6 'raise)
+@end group
+@end lisp
+
+After doing this, the text will have the following @code{display}
+properties:
+
+@itemize @bullet
+@item
+The region from 1 to 2, only @code{raise}
+
+@item
+The region from 2 to 4, no properties
+
+@item
+The region from 4 to 6, only @code{height}
+
+@item
+The region from 6 to 8, both @code{raise} and @code{height}
+
+@end itemize
+
+@var{object} is either a string or a buffer to remove the specification
+from. If omitted, @var{object} defaults to the current buffer.
+@end defun
+
 @c based on lisp/subr.el
 @defmac hash-table-contains-p key table
 Return non-nil if @var{table} has an element with @var{key}.

@@ -485,6 +485,18 @@
                      4 8 (display ((raise 0.5) (height 2.0)))
                      8 12 (display (raise 0.5))))))
 
+(ert-deftest compat-remove-display-text-property ()
+  (with-temp-buffer
+    (insert "Foo bar zot gazonk")
+    (add-display-text-property 4 12 'height 2.0)
+    (add-display-text-property 2 8 'raise 0.5)
+    (remove-display-text-property 6 10 'height)
+    (should-equal (get-text-property 2 'display) '(raise 0.5))
+    (should-equal (get-text-property 11 'display) '(height 2.0))
+    (should-equal (get-text-property 5 'display)
+                  '((raise 0.5) (height 2.0)))
+    (should-not (get-text-property 9 'display))))
+
 (ert-deftest compat-line-number-at-pos ()
   (with-temp-buffer
     (insert "\n\n\n")

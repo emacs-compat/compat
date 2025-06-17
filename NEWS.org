@@ -16,6 +16,7 @@
 - compat-31: New function =unbuttonize-region=.
 - compat-31: New extended function =seconds-to-string=.
 - compat-31: New function =hash-table-contains-p=.
+- compat-31: New function =remove-display-text-property=.
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
 

@@ -232,6 +232,71 @@ METADATA should be an alist of completion metadata.  See
 
 ;;;; Defined in subr-x.el
 
+(compat-defun add-remove--display-text-property (start end spec value &optional object remove)  ;; <compat-tests:add-display-text-property>
+  "Helper function for `add-display-text-property' and `remove-display-text-property'."
+  (let ((sub-start start)
+        (sub-end 0)
+        (limit (if (stringp object)
+                   (min (length object) end)
+                 (min end (point-max))))
+        disp)
+    (while (< sub-end end)
+      (setq sub-end (next-single-property-change sub-start 'display object
+                                                 limit))
+      (if (not (setq disp (get-text-property sub-start 'display object)))
+          ;; No old properties in this range.
+          (unless remove
+            (put-text-property sub-start sub-end 'display (list spec value)
+                               object))
+        ;; We have old properties.
+        (let ((changed nil)
+              type)
+          ;; Make disp into a list.
+          (setq disp
+                (cond
+                 ((vectorp disp)
+                  (setq type 'vector)
+                  (seq-into disp 'list))
+                 ((or (not (consp (car-safe disp)))
+                      ;; If disp looks like ((margin ...) ...), that's
+                      ;; still a single display specification.
+                      (eq (caar disp) 'margin))
+                  (setq type 'scalar)
+                  (list disp))
+                 (t
+                  (setq type 'list)
+                  disp)))
+          ;; Remove any old instances.
+          (when-let* ((old (assoc spec disp)))
+            ;; If the property value was a list, don't modify the
+            ;; original value in place; it could be used by other
+            ;; regions of text.
+            (setq disp (if (eq type 'list)
+                           (remove old disp)
+                         (delete old disp))
+                  changed t))
+          (unless remove
+            (setq disp (cons (list spec value) disp)
+                  changed t))
+          (when changed
+            (if (not disp)
+                (remove-text-properties sub-start sub-end '(display nil) object)
+              (when (eq type 'vector)
+                (setq disp (seq-into disp 'vector)))
+              ;; Finally update the range.
+              (put-text-property sub-start sub-end 'display disp object)))))
+      (setq sub-start sub-end))))
+
+(compat-defun remove-display-text-property (start end spec &optional object) ;; <compat-tests:remove-display-text-property>
+  "Remove the display specification SPEC from the text from START to END.
+SPEC is the car of the display specification to remove, e.g. `height'.
+If any text in the region has other display specifications, those specs
+are retained.
+
+OBJECT is either a string or a buffer to remove the specification from.
+If omitted, OBJECT defaults to the current buffer."
+  (add-remove--display-text-property start end spec nil object 'remove))
+
 (compat-defvar work-buffer--list nil ;; <compat-tests:with-work-buffer>
   "List of work buffers.")
 
