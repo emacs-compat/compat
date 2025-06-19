@@ -20,6 +20,12 @@
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
 
+* Release of "Compat" Version 30.1.0.1
+
+- compat-28: Fix =named-let= tail recursion.
+
+(Release <2025-06-19 Thu>)
+
 * Release of "Compat" Version 30.1.0.0
 
 - compat-30: Add oklab color functions.
