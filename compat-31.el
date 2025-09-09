@@ -320,15 +320,17 @@ automatically killed, which means that in a such case
         (generate-new-buffer " *work*")))))
 
 (compat-defun work-buffer--release (buffer) ;; <compat-tests:with-work-buffer>
-  "Release work BUFFER."
+  "Release work BUFFER.
+Note that the Compat backport does not kill permanentely local
+variables on Emacs 28 and older."
   (if (buffer-live-p buffer)
       (with-current-buffer buffer
         (let ((inhibit-read-only t) deactivate-mark)
           (erase-buffer))
         (delete-all-overlays)
         (let (change-major-mode-hook)
-          ;; TODO Port back the KILL-PERMANENT argument from Emacs 29
-          ;; Right now permanent variables are not killed.
+          ;; The KILL-PERMANENT argument is only supported by Emacs 29
+          ;; and newer.
           (static-if (>= emacs-major-version 29)
               (kill-all-local-variables t)
             (kill-all-local-variables)))
@@ -339,8 +341,10 @@ automatically killed, which means that in a such case
 
 (compat-defmacro with-work-buffer (&rest body) ;; <compat-tests:with-work-buffer>
   "Create a work buffer, and evaluate BODY there like `progn'.
-Like `with-temp-buffer', but reuse an already created temporary
-buffer when possible, instead of creating a new one on each call."
+Like `with-temp-buffer', but reuse an already created temporary buffer
+when possible, instead of creating a new one on each call.  Note that
+the Compat backport does not kill permanentely local variables on Emacs
+28 and older, see `work-buffer--release'."
   (declare (indent 0) (debug t))
   (let ((work-buffer (make-symbol "work-buffer")))
     `(let ((,work-buffer (work-buffer--get)))
