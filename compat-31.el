@@ -29,7 +29,7 @@
 
 ;;;; Defined in subr.el
 
-(compat-defun take-while (pred list)
+(compat-defun take-while (pred list) ;; <compat-tests:take-while>
   "Return the longest prefix of LIST whose elements satisfy PRED."
   (let ((r nil))
     (while (and list (funcall pred (car list)))
@@ -37,17 +37,17 @@
       (setq list (cdr list)))
     (nreverse r)))
 
-(compat-defun drop-while (pred list)
+(compat-defun drop-while (pred list) ;; <compat-tests:drop-while>
   "Skip initial elements of LIST satisfying PRED and return the rest."
   (while (and list (funcall pred (car list)))
     (setq list (cdr list)))
   list)
 
-(compat-defun all (pred list)
+(compat-defun all (pred list) ;; <compat-tests:all>
   "Non-nil if PRED is true for all elements in LIST."
   (not (drop-while pred list)))
 
-(compat-defun any (pred list)
+(compat-defun any (pred list) ;; <compat-tests:any>
   "Non-nil if PRED is true for at least one element in LIST.
 Returns the LIST suffix starting at the first element that satisfies PRED,
 or nil if none does."
