@@ -3452,6 +3452,65 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/lists.texi
+@defun drop-while pred list
+This function skips leading list elements for which the predicate @var{pred}
+returns non-@code{nil}, and returns the rest.
+
+@example
+@group
+(drop-while #'numberp '(1 2 a b 3 4))
+     @result{} (a b 3 4)
+@end group
+@end example
+@end defun
+
+@c copied from lispref/lists.texi
+@defun take-while pred list
+This function returns the leading list elements for which the predicate
+@var{pred} returns non-@code{nil}, and ignores the rest.
+
+In general,
+@code{(append (take-while @var{p} @var{list}) (drop-while @var{p} @var{list}))}
+will return a list equal to @var{list}.
+
+@example
+@group
+(take-while #'numberp '(1 2 a b 3 4))
+     @result{} (1 2)
+@end group
+@end example
+@end defun
+
+@c copied from lispref/lists.texi
+@defun all pred list
+This function returns @code{t} if @var{pred} is true for all elements in
+@var{list}.
+
+@example
+@group
+(all #'numberp '(1 2 3 4))     @result{} t
+(all #'numberp '(1 2 a b 3 4)) @result{} nil
+(all #'numberp '())            @result{} t
+@end group
+@end example
+@end defun
+
+@c copied from lispref/lists.texi
+@defun any pred list
+This function returns non-@code{nil} if @var{pred} is true for at least
+one element in @var{list}.  The returned value is the longest @var{list}
+suffix whose first element satisfies @var{pred}.
+
+@example
+@group
+(any #'symbolp '(1 2 3 4))     @result{} nil
+(any #'symbolp '(1 2 a b 3 4)) @result{} (a b 3 4)
+(any #'symbolp '())            @result{} nil
+@end group
+@end example
+@end defun
+
 @c copied from lispref/display.texi
 @defun remove-display-text-property start end spec &optional object
 Remove the display specification @var{spec} from the text from

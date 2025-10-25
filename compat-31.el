@@ -29,6 +29,30 @@
 
 ;;;; Defined in subr.el
 
+(compat-defun take-while (pred list)
+  "Return the longest prefix of LIST whose elements satisfy PRED."
+  (let ((r nil))
+    (while (and list (funcall pred (car list)))
+      (push (car list) r)
+      (setq list (cdr list)))
+    (nreverse r)))
+
+(compat-defun drop-while (pred list)
+  "Skip initial elements of LIST satisfying PRED and return the rest."
+  (while (and list (funcall pred (car list)))
+    (setq list (cdr list)))
+  list)
+
+(compat-defun all (pred list)
+  "Non-nil if PRED is true for all elements in LIST."
+  (not (drop-while pred list)))
+
+(compat-defun any (pred list)
+  "Non-nil if PRED is true for at least one element in LIST.
+Returns the LIST suffix starting at the first element that satisfies PRED,
+or nil if none does."
+  (drop-while (lambda (x) (not (funcall pred x))) list))
+
 (compat-defun hash-table-contains-p (key table) ;; <compat-tests:hash-table-contains-p>
   "Return non-nil if TABLE has an element with KEY."
   (declare (side-effect-free t))
