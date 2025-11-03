@@ -2683,6 +2683,27 @@ you can say:
 @xref{Size of Displayed Text,,,elisp}.
 @end defun
 
+@c copied from lisp/international/ucs-normalize.el
+@defun string-glyph-compose string
+Compose @var{string} according to the Unicode NFC.
+This returns a new string obtained by canonical decomposition
+of @var{string} (see @code{ucs-normalize-NFC-string}) followed by
+canonical composition, a.k.a. the \"Unicode Normalization Form C\"
+of @var{string}.  For instance:
+
+  @code{(string-glyph-compose \"Å\") => \"Å\"}
+@end defun
+
+@c copied from lisp/international/ucs-normalize.el
+@defun string-glyph-decompose string
+Decompose @var{string} according to the Unicode NFD.
+This returns a new string that is the canonical decomposition
+of @var{string}, a.k.a. the \"Unicode Normalization Form D\"
+of @var{string}.  For instance:
+
+  @code{(ucs-normalize-NFD-string \"Å\") => \"Å\""}
+@end defun
+
 @c based on lisp/emacs-lisp/subr-x.el
 @defmac with-buffer-unmodified-if-unchanged &rest body@dots{}
 Evaluate @var{body} like @code{progn}, but change buffer-modified

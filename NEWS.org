@@ -2,6 +2,10 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
+* Development
+
+- compat-29: Add =string-glyph-compose= and =string-glyph-decompose=.
+
 * Release of "Compat" Version 30.1.0.1
 
 - compat-28: Fix =named-let= tail recursion.
