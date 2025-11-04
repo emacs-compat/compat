@@ -1905,6 +1905,12 @@
   (should-equal '("a" "b" "c") (split-string "a b c"))
   (should-equal '("a" "b" "c") (string-split "a b c")))
 
+(ert-deftest compat-string-glyph-decompose ()
+  (should-equal 10 (length (string-to-list (string-glyph-decompose "àèìòù")))))
+
+(ert-deftest compat-string-glyph-compose ()
+  (should-equal "àèìòù" (string-glyph-compose (string-glyph-decompose "àèìòù"))))
+
 (ert-deftest compat-string-equal-ignore-case ()
   (should (string-equal-ignore-case "abc" "abc"))
   (should (string-equal-ignore-case "abc" "ABC"))
