@@ -364,9 +364,12 @@
       (fset #'read-char orig-rc)
       (fset #'read-from-minibuffer orig-rm))))
 
+(defvar read-char-choice-use-read-key)
 (ert-deftest compat-read-multiple-choice ()
-  (let ((orig-re (symbol-function #'read-event))
+  (let ((read-char-choice-use-read-key t)
+        (orig-re (symbol-function #'read-event))
         (orig-rc (symbol-function #'read-char))
+        (orig-rk (symbol-function #'read-key))
         (orig-cr completing-read-function))
     (unwind-protect
         (dolist (test '(("Choose"
@@ -375,6 +378,7 @@
                          (?c "third"))
                         ("Do it?" (?y "yes") (?n "no"))))
           (dolist (choice (cdr test))
+            (fset #'read-key (lambda (&rest _) (car choice)))
             (fset #'read-char (lambda (&rest _) (car choice)))
             (fset #'read-event (lambda (&rest _) (car choice)))
             (setq completing-read-function (lambda (&rest _) (cadr choice)))
@@ -383,6 +387,7 @@
             (should-equal choice (read-multiple-choice (car test) (cdr test)))))
       (fset #'read-event orig-re)
       (fset #'read-char orig-rc)
+      (fset #'read-key orig-rk)
       (setq completing-read-function orig-cr))))
 
 (ert-deftest compat-read-char-from-minibuffer ()
@@ -2326,66 +2331,70 @@
    (if-let* (((= 5 6))) "then" "else")))
 
 (ert-deftest compat-when-let ()
-  ;; FIXME Broken on Emacs 25
-  (static-if (= emacs-major-version 25)
-      (should-equal "second"
-                    (when-let
-                        ((x 3)
-                         (y 2)
-                         (z (+ x y))
-                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
-                         (true t))
-                      "first" "second"))
-    (should-equal "second"
-                  (when-let
-                      ((x 3)
-                       (y 2)
-                       (z (+ x y))
-                       ((= z 5))
-                       (true t))
-                    "first" "second"))
-    (should-equal "then" (when-let (((= 5 5))) "then"))
-    (should-not (when-let (((= 5 6))) t)))
-  (should-equal "last"
-                (when-let (e (memq 0 '(1 2 3 0 5 6)))
-                  "first" "last"))
-  (should-equal "last" (when-let ((e (memq 0 '(1 2 3 0 5 6))))
-                         "first" "last"))
-  (should-not (when-let ((e (memq 0 '(1 2 3 5 6)))
+  (static-if (< emacs-major-version 31) ;; deprecated on Emacs 31
+      (progn
+        ;; FIXME Broken on Emacs 25
+        (static-if (= emacs-major-version 25)
+            (should-equal "second"
+                          (when-let
+                              ((x 3)
+                               (y 2)
+                               (z (+ x y))
+                               ;; ((= z 5)) ;; FIXME Broken on Emacs 25
+                               (true t))
+                            "first" "second"))
+          (should-equal "second"
+                        (when-let
+                            ((x 3)
+                             (y 2)
+                             (z (+ x y))
+                             ((= z 5))
+                             (true t))
+                          "first" "second"))
+          (should-equal "then" (when-let (((= 5 5))) "then"))
+          (should-not (when-let (((= 5 6))) t)))
+        (should-equal "last"
+                      (when-let (e (memq 0 '(1 2 3 0 5 6)))
+                        "first" "last"))
+        (should-equal "last" (when-let ((e (memq 0 '(1 2 3 0 5 6))))
+                               "first" "last"))
+        (should-not (when-let ((e (memq 0 '(1 2 3 5 6)))
                                (d (memq 0 '(1 2 3 0 5 6))))
-                  "first" "last")))
+                      "first" "last")))))
 
 (ert-deftest compat-if-let ()
-  ;; FIXME Broken on Emacs 25
-  (static-if (= emacs-major-version 25)
-      (should-equal "then"
-                    (if-let
-                        ((x 3)
-                         (y 2)
-                         (z (+ x y))
-                         ;; ((= z 5)) ;; FIXME Broken on Emacs 25
-                         (true t))
-                        "then" "else"))
-    (should-equal "then"
-                  (if-let
-                      ((x 3)
-                       (y 2)
-                       (z (+ x y))
-                       ((= z 5))
-                       (true t))
-                      "then" "else"))
-    (should-equal "else" (if-let (((= 5 6))) "then" "else"))
-    (should-not (if-let (((= 5 6))) t nil)))
-  (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
-              e))
-  (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
-              e))
-  (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
-                               (d (memq 0 '(1 2 3 0 5 6))))
-                  t))
-  (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
-                               (e (memq 0 '(1 2 3 5 6))))
-                  t)))
+  (static-if (< emacs-major-version 31) ;; deprecated on Emacs 31
+      (progn
+        ;; FIXME Broken on Emacs 25
+        (static-if (= emacs-major-version 25)
+            (should-equal "then"
+                          (if-let
+                              ((x 3)
+                               (y 2)
+                               (z (+ x y))
+                               ;; ((= z 5)) ;; FIXME Broken on Emacs 25
+                               (true t))
+                              "then" "else"))
+          (should-equal "then"
+                        (if-let
+                            ((x 3)
+                             (y 2)
+                             (z (+ x y))
+                             ((= z 5))
+                             (true t))
+                            "then" "else"))
+          (should-equal "else" (if-let (((= 5 6))) "then" "else"))
+          (should-not (if-let (((= 5 6))) t nil)))
+        (should (if-let (e (memq 0 '(1 2 3 0 5 6)))
+                    e))
+        (should (if-let ((e (memq 0 '(1 2 3 0 5 6))))
+                    e))
+        (should-not (if-let ((e (memq 0 '(1 2 3 5 6)))
+                             (d (memq 0 '(1 2 3 0 5 6))))
+                        t))
+        (should-not (if-let ((d (memq 0 '(1 2 3 0 5 6)))
+                             (e (memq 0 '(1 2 3 5 6))))
+                        t)))))
 
 (ert-deftest compat-and-let* ()
   (should                               ;trivial body
