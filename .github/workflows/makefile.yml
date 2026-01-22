@@ -21,17 +21,17 @@ jobs:
         # See https://github.com/purcell/setup-emacs/blob/master/.github/workflows/test.yml
         emacs-version: [25.1, 25.2, 25.3, 26.1, 26.2, 26.3, 27.1, 27.2, 28.1, 28.2, 29.1, 29.2, 29.3, 29.4, 30.1, snapshot] # release-snapshot
     steps:
-    - uses: actions/checkout@v4
-    - uses: purcell/setup-emacs@master
-      with:
-        version: ${{ matrix.emacs-version }}
-    - name: Basic checks
-      run: make check
-    - name: Run interpreted tests
-      run: make test
-    - name: Byte compile all files
-      run: make force-compile
-    - name: Run compiled tests
-      run: make test
-    - name: Make info manual
-      run: make compat.info
+      - uses: actions/checkout@v4
+      - uses: purcell/setup-emacs@master
+        with:
+          version: ${{ matrix.emacs-version }}
+      - name: Basic checks
+        run: make check
+      - name: Run interpreted tests
+        run: make test
+      - name: Byte compile all files
+        run: make force-compile
+      - name: Run compiled tests
+        run: make test
+      - name: Make info manual
+        run: make compat.info
