@@ -343,11 +343,9 @@ last version, where compat.el raises an error during byte compilation.
 
 Two main changes have necessitated a new patch release:
 
-1. Fix issues related to the loading of compat when uncompiled.  See
-   [[https://lists.sr.ht/~pkal/compat-devel/%3C20220530191000.2183047-1-jonas%40bernoul.li%3E][this thread]] for more details on the problem.
+1. Fix issues related to the loading of compat when uncompiled.
 2. Fix issues related to the loading of compat on old pre-releases
-   (think of 28.0.50). See [[https://lists.sr.ht/~pkal/compat-devel/%3Cf8635d7d-e233-448f-b325-9e850363241c%40www.fastmail.com%3E][this thread]] for more details on the
-   problem.
+   (think of 28.0.50).
 
 (Released <2022-06-22 Wed>)
 
