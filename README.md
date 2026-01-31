@@ -30,11 +30,7 @@ builds].
 Bug and patches
 ---------------
 Patches, bug reports and comments can be sent via [GitHub]. These may include
-issues in the compatibility code, missing definitions or performance issues. We
-also provide a [development mailing list].
-
-[development mailing list]:
-    https://lists.sr.ht/~pkal/compat-devel
+issues in the compatibility code, missing definitions or performance issues.
 
 
 Contribute
