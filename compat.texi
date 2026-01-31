@@ -189,14 +189,6 @@ versions. We ensure this using continuous integration.  All functions
 provided by Compat are covered by the test suite.  There is a link to
 the corresponding test on the first line of each definition.
 
-You may want to subscribe to the
-@uref{https://lists.sr.ht/~pkal/compat-announce, compat-announce}
-mailing list to be notified when new versions are released or relevant
-changes are made.  We also provide a
-@uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
-list} (@email{~pkal/compat-devel@@lists.sr.ht,
-~pkal/compat-devel@@lists.sr.ht}).
-
 @node Limitations
 @section Limitations
 
@@ -3733,10 +3725,7 @@ Compat is developed on GitHub.
 Bug reports, patches and comments are best sent to the
 @uref{https://github.com/emacs-compat/compat/issues, issue tracker}.
 These may include issues in the compatibility code, missing
-definitions or performance issues. We also provide a
-@uref{https://lists.sr.ht/~pkal/compat-devel, development mailing
-list} (@email{~pkal/compat-devel@@lists.sr.ht,
-~pkal/compat-devel@@lists.sr.ht}).
+definitions or performance issues.
 
 Please note that as a GNU ELPA package, Compat requires contributors
 to have signed the
