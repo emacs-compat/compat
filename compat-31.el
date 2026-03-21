@@ -47,11 +47,13 @@
   "Non-nil if PRED is true for all elements in LIST."
   (not (drop-while pred list)))
 
-(compat-defun any (pred list) ;; <compat-tests:any>
+(compat-defun member-if (pred list) ;; <compat-tests:member-if>
   "Non-nil if PRED is true for at least one element in LIST.
 Returns the LIST suffix starting at the first element that satisfies PRED,
 or nil if none does."
   (drop-while (lambda (x) (not (funcall pred x))) list))
+
+(compat-defalias any member-if) ;; <compat-tests:member-if>
 
 (compat-defun hash-table-contains-p (key table) ;; <compat-tests:hash-table-contains-p>
   "Return non-nil if TABLE has an element with KEY."
