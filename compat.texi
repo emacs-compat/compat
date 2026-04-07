@@ -3459,6 +3459,34 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/control.texi
+@defun error-type-p symbol
+This function returns non-@code{nil} if @var{symbol} is a valid
+error condition name.
+@end defun
+
+@c copied from lispref/control.texi
+@defun error-has-type-p error condition
+This function tests whether @var{condition} is a parent of the error
+symbol of the error descriptor @var{error}.
+It returns non-@code{nil} if the type of the error descriptor
+@var{error} belongs to the condition name @var{condition}.
+@end defun
+
+@c copied from lispref/control.texi
+@defun error-type error
+This function returns the error symbol of the error descriptor @var{error}.
+@end defun
+
+@c copied from lispref/control.texi
+@defun error-slot-value error pos
+This function returns the value in the field number @var{pos} of the error
+descriptor @var{error}.  The fields are numbered starting with 1.  E.g.,
+for an error of type @code{wrong-type-argument}, @code{(error-slot-value
+@var{error} 2)} returns the object that failed the type test, and
+@code{(error-slot-value @var{error} 1)} returns the predicate that failed.
+@end defun
+
 @c copied from lispref/lists.texi
 @defun ensure-proper-list object
 This function returns @var{object} as a proper list (@pxref{(elisp) Cons

@@ -29,6 +29,28 @@
 
 ;;;; Defined in subr.el
 
+(compat-defun error-type-p (symbol) ;; <compat-tests:error-api>
+  "Return non-nil if SYMBOL is a condition type."
+  (get symbol 'error-conditions))
+
+(compat-defun error-has-type-p (error condition) ;; <compat-tests:error-api>
+  "Return non-nil if ERROR is of type CONDITION (or a subtype of it)."
+  (unless (let ((type (car-safe error)))
+            (and type (symbolp type) (listp (cdr error))
+                 (error-type-p type)))
+    (signal 'wrong-type-argument (list error)))
+  (or (eq condition t)
+      (memq condition (get (car error) 'error-conditions))))
+
+(compat-defalias error-type car ;; <compat-tests:error-api>
+ "Return the symbol which represents the type of ERROR.
+\n(fn ERROR)")
+
+(compat-defalias error-slot-value elt ;; <compat-tests:error-api>
+  "Access the SLOT of object ERROR.
+Slots are specified by position, and slot 0 is the error symbol.
+\n(fn ERROR SLOT)")
+
 (compat-defun ensure-proper-list (object) ;; <compat-tests:ensure-proper-list>
   "Return OBJECT as a list.
 If OBJECT is already a proper list, return OBJECT itself.  If it's not a
