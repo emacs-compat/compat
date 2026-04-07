@@ -967,7 +967,22 @@
                compat-tests--local-c 3)
   (should-equal compat-tests--local-a 1)
   (should-equal compat-tests--local-b 2)
-  (should-equal compat-tests--local-c 3))
+  (should-equal compat-tests--local-c 3)
+  (compat-call setq-local
+               compat-tests--local-a nil
+               compat-tests--local-b nil
+               compat-tests--local-c nil))
+
+(ert-deftest compat-set-local ()
+  (set-local 'compat-tests--local-a 1)
+  (set-local 'compat-tests--local-b 2)
+  (set-local 'compat-tests--local-c 3)
+  (should-equal compat-tests--local-a 1)
+  (should-equal compat-tests--local-b 2)
+  (should-equal compat-tests--local-c 3)
+  (set-local 'compat-tests--local-a nil)
+  (set-local 'compat-tests--local-b nil)
+  (set-local 'compat-tests--local-c nil))
 
 (defvar compat-tests--global)
 (defvar compat-tests--local)

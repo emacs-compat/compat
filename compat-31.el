@@ -29,6 +29,10 @@
 
 ;;;; Defined in subr.el
 
+(compat-defun set-local (variable value) ;; <compat-tests:set-local>
+  "Make VARIABLE buffer local and set it to VALUE."
+  (set (make-local-variable variable) value))
+
 (compat-defun take-while (pred list) ;; <compat-tests:take-while>
   "Return the longest prefix of LIST whose elements satisfy PRED."
   (let ((r nil))
