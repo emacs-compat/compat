@@ -18,6 +18,7 @@
 - compat-31: New function =remove-display-text-property=.
 - compat-31: New functions =drop-while=, =take-while=, =member-if=, =any=, =all=.
 - compat-31: New function =set-local=.
+- compat-31: New function =ensure-proper-list=.
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
 

@@ -1410,10 +1410,18 @@
   (should-error (length< 3 nil) :type 'wrong-type-argument))
 
 (ert-deftest compat-ensure-list ()
-  (should-not (ensure-list nil))           ;; empty list
-  (should-equal '(1) (ensure-list '(1)))         ;; single element list
-  (should-equal '(1 2 3) (ensure-list '(1 2 3))) ;; multiple element list
-  (should-equal '(1) (ensure-list 1)))           ;; atom
+  (should-not (ensure-list nil))                  ;; empty list
+  (should-equal '(1) (ensure-list '(1)))          ;; single element list
+  (should-equal '(1 2 3) (ensure-list '(1 2 3)))  ;; multiple element list
+  (should-equal '(1) (ensure-list 1))             ;; atom
+  (should-equal '(1 . 2) (ensure-list '(1 . 2)))) ;; cons
+
+(ert-deftest compat-ensure-proper-list ()
+  (should-not (ensure-list nil))                           ;; empty list
+  (should-equal '(1) (ensure-proper-list '(1)))            ;; single element list
+  (should-equal '(1 2 3) (ensure-proper-list '(1 2 3)))    ;; multiple element list
+  (should-equal '(1) (ensure-proper-list 1))               ;; atom
+  (should-equal '((1 . 2)) (ensure-proper-list '(1 . 2)))) ;; cons
 
 (ert-deftest compat-proper-list-p ()
   (should-equal 0 (proper-list-p ()))            ;; empty list

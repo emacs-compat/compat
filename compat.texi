@@ -3459,6 +3459,27 @@ older than 31.1.  Note that due to upstream changes, it might happen
 that there will be the need for changes, so use these functions with
 care.
 
+@c copied from lispref/lists.texi
+@defun ensure-proper-list object
+This function returns @var{object} as a proper list (@pxref{(elisp) Cons
+Cells}).  If @var{object} is already a proper list, the function returns
+it; otherwise, the function returns a one-element list containing
+@var{object}.
+
+If @var{object} might be a long list, prefer @code{ensure-list}, because
+the latter function runs in constant time, whereas
+@code{ensure-proper-list} runs in linear time.  For short lists this
+function is a convenient way to treat cons-cells as non-lists:
+
+@lisp
+(ensure-list '(1 . 2))
+    @result{}(1 . 2)
+
+(ensure-proper-list '(1 . 2))
+    @result{}((1 . 2))
+@end lisp
+@end defun
+
 @c based on lisp/subr.el
 @defun set-local variable value
 Make @var{variable} buffer local and set it to @var{value}.
