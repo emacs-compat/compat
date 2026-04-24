@@ -389,10 +389,11 @@ Note that the Compat backport does not kill permanentely local
 variables on Emacs 28 and older."
   (if (buffer-live-p buffer)
       (with-current-buffer buffer
-        (let ((inhibit-read-only t) deactivate-mark)
-          (erase-buffer))
-        (delete-all-overlays)
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (delete-all-overlays))
         (let (change-major-mode-hook)
+          (setq buffer-read-only nil)
           ;; The KILL-PERMANENT argument is only supported by Emacs 29
           ;; and newer.
           (static-if (>= emacs-major-version 29)
@@ -406,9 +407,11 @@ variables on Emacs 28 and older."
 (compat-defmacro with-work-buffer (&rest body) ;; <compat-tests:with-work-buffer>
   "Create a work buffer, and evaluate BODY there like `progn'.
 Like `with-temp-buffer', but reuse an already created temporary buffer
-when possible, instead of creating a new one on each call.  Note that
-the Compat backport does not kill permanentely local variables on Emacs
-28 and older, see `work-buffer--release'."
+when possible, instead of creating a new one on each call.  Avoid
+retaining state referring to a work buffer, and kill any indirect
+buffers you create that use a work buffer as a base.  Note that the
+Compat backport does not kill permanentely local variables on Emacs 28
+and older, see `work-buffer--release'."
   (declare (indent 0) (debug t))
   (let ((work-buffer (make-symbol "work-buffer")))
     `(let ((,work-buffer (work-buffer--get)))
