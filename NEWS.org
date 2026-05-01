@@ -1,7 +1,7 @@
 #+link:    compat-gh   https://github.com/emacs-compat/compat/issues/
 #+options: toc:nil num:nil author:nil
 
-* Development
+* Release of "Compat" Version 31.0.0.0
 
 - compat-28: New pcase pattern =cl-type=.
 - compat-29: Add =string-glyph-compose= and =string-glyph-decompose=.
@@ -24,6 +24,8 @@
   and =error-slot-value=.
 - Drop support for Emacs 24.x. Emacs 25.1 is required now. In case
   Emacs 24.x support is still needed, Compat 30 can be used.
+
+(Release <2026-05-01 Fri>)
 
 * Release of "Compat" Version 30.1.0.1
 

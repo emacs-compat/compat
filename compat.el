@@ -4,7 +4,7 @@
 
 ;; Author: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Philip Kaludercic <philipk@posteo.net>, Daniel Mendler <mail@daniel-mendler.de>
-;; Version: 30.1.0.1
+;; Version: 31.0.0.0
 ;; URL: https://github.com/emacs-compat/compat
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: lisp, maint

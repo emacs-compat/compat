@@ -93,7 +93,7 @@
 (defconst compat-tests--version (package-get-version))
 (ert-deftest compat-package-get-version ()
   (should (stringp compat-tests--version))
-  (should-equal 30 (car (version-to-list compat-tests--version))))
+  (should-equal 31 (car (version-to-list compat-tests--version))))
 
 (ert-deftest compat-buffer-match-p ()
   (let ((b "*compat-test-buffer*")
