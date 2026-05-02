@@ -308,33 +308,24 @@ METADATA should be an alist of completion metadata.  See
       (setq sub-end (next-single-property-change sub-start 'display object
                                                  limit))
       (if (not (setq disp (get-text-property sub-start 'display object)))
-          ;; No old properties in this range.
           (unless remove
             (put-text-property sub-start sub-end 'display (list spec value)
                                object))
-        ;; We have old properties.
         (let ((changed nil)
               type)
-          ;; Make disp into a list.
           (setq disp
                 (cond
                  ((vectorp disp)
                   (setq type 'vector)
                   (seq-into disp 'list))
                  ((or (not (consp (car-safe disp)))
-                      ;; If disp looks like ((margin ...) ...), that's
-                      ;; still a single display specification.
                       (eq (caar disp) 'margin))
                   (setq type 'scalar)
                   (list disp))
                  (t
                   (setq type 'list)
                   disp)))
-          ;; Remove any old instances.
           (when-let* ((old (assoc spec disp)))
-            ;; If the property value was a list, don't modify the
-            ;; original value in place; it could be used by other
-            ;; regions of text.
             (setq disp (if (eq type 'list)
                            (remove old disp)
                          (delete old disp))
@@ -347,7 +338,6 @@ METADATA should be an alist of completion metadata.  See
                 (remove-text-properties sub-start sub-end '(display nil) object)
               (when (eq type 'vector)
                 (setq disp (seq-into disp 'vector)))
-              ;; Finally update the range.
               (put-text-property sub-start sub-end 'display disp object)))))
       (setq sub-start sub-end))))
 
@@ -367,13 +357,48 @@ When this limit is exceeded, newly allocated work buffers are
 automatically killed, which means that in a such case
 `with-work-buffer' becomes equivalent to `with-temp-buffer'.")
 
+;; On Emacs 29 and newer `kill-all-local-variables' has a KILL-PERMANENT argument.
+(static-if (< emacs-major-version 29) nil
+  (compat-defvar work-buffer--list nil ;; <compat-tests:with-work-buffer>
+    "List of work buffers.")
+
+  (compat-defun work-buffer--get () ;; <compat-tests:with-work-buffer>
+    "Get a work buffer."
+    (let ((buffer (pop work-buffer--list)))
+      (if (buffer-live-p buffer)
+          buffer
+        (generate-new-buffer " *work*" t))))
+
+  (compat-defun work-buffer--release (buffer) ;; <compat-tests:with-work-buffer>
+    "Release work BUFFER."
+    (if (buffer-live-p buffer)
+        (with-current-buffer buffer
+          (let ((inhibit-read-only t))
+            (erase-buffer)
+            (delete-all-overlays))
+          (let (change-major-mode-hook)
+            (setq buffer-read-only nil)
+            (kill-all-local-variables t))
+          (push buffer work-buffer--list)))
+    (when (> (length work-buffer--list) work-buffer-limit)
+      (mapc #'kill-buffer (nthcdr work-buffer-limit work-buffer--list))
+      (setq work-buffer--list (ntake work-buffer-limit work-buffer--list)))))
+
 (compat-defmacro with-work-buffer (&rest body) ;; <compat-tests:with-work-buffer>
   "Create a work buffer, and evaluate BODY there like `progn'.
-The compatibility macro simply falls back to `with-temp-buffer',
-since we cannot guarantee that the work buffer is pristine, given
-that Compat cannot clear permanently local variables."
+Like `with-temp-buffer', but reuse an already created temporary buffer
+when possible, instead of creating a new one on each call.  Avoid
+retaining state referring to a work buffer, and kill any indirect
+buffers you create that use a work buffer as a base."
   (declare (indent 0) (debug t))
-  `(with-temp-buffer ,@body))
+  (static-if (< emacs-major-version 29)
+      `(with-temp-buffer ,@body)
+    (let ((work-buffer (make-symbol "work-buffer")))
+      `(let ((,work-buffer (work-buffer--get)))
+         (with-current-buffer ,work-buffer
+           (unwind-protect
+               (progn ,@body)
+             (work-buffer--release ,work-buffer)))))))
 
 ;;;; Defined in button.el
 
