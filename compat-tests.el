@@ -2839,6 +2839,8 @@
   (should-equal (compat-call seconds-to-string 999 'readable) "17 minutes")
   (should-equal (compat-call seconds-to-string 999 'readable 'abbrev) "17m")
   (should-equal (compat-call seconds-to-string 999 'readable 'abbrev 2) "16.65m")
+  (should-equal (compat-call seconds-to-string 999999 'expanded) "1 week 5 days")
+  (should-equal (compat-call seconds-to-string 999999 'expanded 'abbrev) "1w 5d")
   (should-equal (compat-call seconds-to-string 999999 'readable) "2 weeks")
   (should-equal (compat-call seconds-to-string 999999 'readable 'abbrev) "2w")
   (should-equal (compat-call seconds-to-string 999999 'readable 'abbrev 4) "1.6534w"))
