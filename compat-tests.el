@@ -1142,10 +1142,10 @@
 
 (ert-deftest compat-with-work-buffer ()
   (with-work-buffer
-   (should (string-match-p "\\` \\*work\\*" (buffer-name)))
+   (should (string-match-p "\\` \\*\\(work\\|temp\\)\\*" (buffer-name)))
    (let ((outer (current-buffer)))
      (with-work-buffer
-      (should (string-match-p "\\` \\*work\\*" (buffer-name)))
+      (should (string-match-p "\\` \\*\\(work\\|temp\\)\\*" (buffer-name)))
       (let ((inner (current-buffer)))
         (should-not (eq outer inner)))))))
 
