@@ -1021,16 +1021,15 @@
 
 (ert-deftest compat-obarray-clear ()
   ;; obarray APIs are only available since 26
-  (static-if (> emacs-major-version 25)
-      (progn
-        (let ((ob (obarray-make)))
-          (should-not (obarray-get ob "sym1"))
-          (should (intern "sym1" ob))
-          (should (obarray-get ob "sym1"))
-          (obarray-clear ob)
-          (should-not (obarray-get ob "sym1"))
-          (should (intern "sym2" ob))
-          (should (obarray-get ob "sym2"))))))
+  (static-when (> emacs-major-version 25)
+    (let ((ob (obarray-make)))
+      (should-not (obarray-get ob "sym1"))
+      (should (intern "sym1" ob))
+      (should (obarray-get ob "sym1"))
+      (obarray-clear ob)
+      (should-not (obarray-get ob "sym1"))
+      (should (intern "sym2" ob))
+      (should (obarray-get ob "sym2")))))
 
 (ert-deftest compat-gensym ()
   (let ((orig gensym-counter))
@@ -1329,8 +1328,8 @@
 
 (ert-deftest compat-obsolete-subr-native-elisp-p ()
   (with-no-warnings
-    (static-if (< emacs-major-version 30)
-        (should-not (subr-native-elisp-p (symbol-function 'identity))))))
+    (static-when (< emacs-major-version 30)
+      (should-not (subr-native-elisp-p (symbol-function 'identity))))))
 
 (ert-deftest compat-closurep ()
   (should (interpreted-function-p (eval '(lambda (x) x) t)))
