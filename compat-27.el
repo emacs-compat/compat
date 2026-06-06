@@ -1,4 +1,4 @@
-;;; compat-27.el --- Functionality added in Emacs 27.1 -*- lexical-binding: t; -*-
+;;; compat-27.el --- Functionality added in Emacs 27 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021-2026 Free Software Foundation, Inc.
 
@@ -17,7 +17,7 @@
 
 ;;; Commentary:
 
-;; Functionality added in Emacs 27.1, needed by older Emacs versions.
+;; Functionality added in Emacs 27, needed by older Emacs versions.
 
 ;;; Code:
 
