@@ -78,7 +78,7 @@
 
 (ert-deftest compat-loaded-features ()
   (let ((version 0))
-    (while (< version 31)
+    (while (< version 32)
       (should-equal (> version emacs-major-version)
                     (featurep (intern (format "compat-%s" version))))
       (setq version (1+ version)))))

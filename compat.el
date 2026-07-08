@@ -50,9 +50,9 @@
 ;; time and runtime, but only if needed.
 (eval-when-compile
   (defmacro compat--maybe-require ()
-    (when (< emacs-major-version 31)
-      (require 'compat-31)
-      '(require 'compat-31))))
+    (when (< emacs-major-version 32)
+      (require 'compat-32)
+      '(require 'compat-32))))
 (compat--maybe-require)
 
 ;;;; Macros for extended compatibility function calls
