@@ -212,7 +212,7 @@ seconds per UNIT.")
   :extended t
   (cond
    ((< delay 0)
-    (concat "-" (seconds-to-string (- delay) readable precision)))
+    (concat "-" (compat--seconds-to-string (- delay) readable precision)))
    (readable
     (let* ((stsa seconds-to-string-readable)
            (expanded (eq readable 'expanded))

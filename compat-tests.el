@@ -2835,6 +2835,7 @@
   (should-equal (compat-call seconds-to-string 99999999) "3.17y")
   (should-equal (compat-call seconds-to-string 999999999) "31.69y")
   ;; New functionality
+  (should-equal (compat-call seconds-to-string -1 'readable) "-1 second")
   (should-equal (compat-call seconds-to-string 999 'readable) "17 minutes")
   (should-equal (compat-call seconds-to-string 999 'readable 'abbrev) "17m")
   (should-equal (compat-call seconds-to-string 999 'readable 'abbrev 2) "16.65m")
