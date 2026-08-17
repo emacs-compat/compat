@@ -1,7 +1,7 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 @setfilename compat.info
-@settitle "Compat" Manual
+@settitle Compat Manual
 @documentencoding UTF-8
 @documentlanguage en
 @c %**end of header
@@ -30,7 +30,7 @@ modify this GNU manual.”
 
 @finalout
 @titlepage
-@title "Compat" Manual
+@title Compat Manual
 @subtitle For version 31.0.0.2
 @author Philip Kaludercic, Daniel Mendler
 @page
@@ -42,9 +42,9 @@ modify this GNU manual.”
 
 @ifnottex
 @node Top
-@top "Compat" Manual
+@top Compat Manual
 
-This manual documents the usage of the "Compat" Emacs lisp library,
+This manual documents the usage of the Compat Elisp library,
 the forward-compatibility library for Emacs Lisp, corresponding to
 version 31.0.0.2.
 

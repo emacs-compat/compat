@@ -2628,9 +2628,8 @@
 
 (defun compat-tests--color-approx-equal (color1 color2)
   "Return t if COLOR1 and COLOR2 are approximately equal."
-  (seq-every-p
-   (lambda (x) (< (abs x) 0.00001))
-   (cl-mapcar #'- color1 color2)))
+  (all (lambda (x) (< (abs x) 0.00001))
+       (cl-mapcar #'- color1 color2)))
 
 (ert-deftest compat-color-oklab-to-xyz ()
   (should (compat-tests--color-approx-equal (compat-call color-oklab-to-xyz 0 0 0) '(0.0 0.0 0.0)))

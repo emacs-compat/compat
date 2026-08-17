@@ -24,8 +24,7 @@
 (eval-when-compile (load "compat-macs.el" nil t t))
 (compat-require compat-30 "30.1")
 
-;; TODO Update to 31.1 as soon as the Emacs emacs-31 branch version bumped
-(compat-version "31.0.50")
+(compat-version "31.1")
 
 ;;;; Defined in subr.el
 
