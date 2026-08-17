@@ -1,6 +1,6 @@
 ;;; compat-32.el --- Functionality added in Emacs 32 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2026  Free Software Foundation, Inc.
+;; Copyright (C) 2026 Free Software Foundation, Inc.
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 ;;; Code:
 
 (eval-when-compile (load "compat-macs.el" nil t t))
-(compat-require compat-31 "31.0.50") ;; TODO Update to 31.1 as soon as Emacs 31 is released
+(compat-require compat-31 "31.1")
 
 ;; TODO Update to 32.1 as soon as the Emacs emacs-32 branch version bumped
 (compat-version "32.0.50")
