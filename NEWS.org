@@ -1,6 +1,10 @@
 #+title: Compat News
 #+link: compat-gh https://github.com/emacs-compat/compat/issues/
 
+* Version 31.1.0.0 (2026-09-13)
+
+- Release to synchronize version with the Emacs 31.1 release.
+
 * Version 31.0.0.2 (2026-07-09)
 
 - compat-31: Fix extended function =seconds-to-string=.
